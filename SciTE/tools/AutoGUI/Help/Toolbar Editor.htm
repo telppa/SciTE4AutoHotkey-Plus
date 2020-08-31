@@ -1,0 +1,115 @@
+<html>
+<head>
+<title>Toolbar Editor - Help</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="icon" href="Images\AutoGUI.ico" type="image/x-icon"/>
+
+<style>
+BODY {
+    margin-top: 6px;
+    font-family: Segoe UI, MS Shell Dlg;
+}
+
+H3 {
+    margin: 0px;
+}
+
+DL {
+    margin: 5px;
+    padding-bottom: 20px;
+}
+
+DT {
+    color: #003399;
+}
+
+DD {
+    font-size: 10pt;
+    padding-bottom: 8px;
+}
+</style>
+</head>
+
+<body>
+    <h3>Toolbar Options</h3>
+    <hr>
+    <dl>
+        <dt>Tooltips</dt>
+        <dd>Creates a ToolTip control that an application can use to display descriptive text for the buttons in the toolbar.</dd>
+
+        <dt>Flat</dt>
+        <dd>This style is needed to show separators.</dd>
+
+        <dt>List</dt>
+        <dd>Omit this style to show the button text under the button icon.</dd>
+
+        <dt>Show Text</dt>
+        <dd>Creates a toolbar with button text to the right of the icon. Use in combination with LIST.</dd>
+
+        <dt>Text Only</dt>
+        <dd>Creates a toolbar that resembles a menu bar.</dd>
+
+        <dt>Bottom</dt>
+        <dd>Causes the control to position itself at the bottom of the parent window's client area.</dd>
+
+        <dt>Vertical</dt>
+        <dd>Creates a vertical toolbar.</dd>
+
+        <dt>No Divider</dt>
+        <dd>Prevents a two-pixel highlight from being drawn at the top of the control.</dd>
+
+        <dt>Border</dt>
+        <dd>Creates a toolbar that has a thin-line border.</dd>
+
+        <dt>Tabstop</dt>
+        <dd>Specifies that a control can receive the keyboard focus when the user presses the TAB key.</dd>
+
+        <dt>Wrappable (WRAPABLE)</dt>
+        <dd>Creates a toolbar that can have multiple lines of buttons. Toolbar buttons can "wrap" to the next line when the toolbar becomes too narrow to include all buttons on the same line.</dd>
+
+        <!--
+        <dt>Adjustable</dt>
+        <dd>Allows users to change a toolbar button's position by dragging it while holding down the SHIFT key and to open customization dialog by double clicking Toolbar empty area, or separator.</dd>
+        -->
+    </dl>
+
+    <h3>Toolbar Button Styles</h3>
+    <hr>
+    <dl>
+        <dt>AUTOSIZE</dt>
+        <dd>Specifies that the toolbar control should not assign the standard width to the button. Instead, the button's width will be calculated based on the width of the text plus the image of the button.</dd>
+
+        <dt>Stay Pressed (CHECK)</dt>
+        <dd>Creates a dual-state push button that toggles between the pressed and non-pressed states each time the user clicks it.</dd>
+
+        <dt>Grouped (CHECKGROUP)</dt>
+        <dd>Creates a button that stays pressed until another button in the group is pressed, similar to radio buttons.</dd>
+
+        <dt>Drop-Down (DROPDOWN)</dt>
+        <dd>Creates a drop-down style button that can display a list when the button is clicked.</dd>
+
+        <dt>WHOLEDROPDOWN</dt>
+        <dd>Specifies that the button will have a drop-down arrow, but not as a separate section.</dd>
+
+        <dt>No Prefix (NOPREFIX)</dt>
+        <dd>Specifies that the button text will not have an accelerator prefix associated with it.</dd>
+
+        <dt>Show Text (SHOWTEXT)</dt>
+        <dd>Specifies that button text should be displayed. All buttons can have text, but only those buttons with the SHOWTEXT button style will display it. This button style must be used with the LIST style. If you set text for buttons that do not have the SHOWTEXT style, the toolbar control will automatically display it as a ToolTip when the cursor hovers over the button. For this to work you must create the toolbar with TOOLTIPS style. You can create multiline tooltips by using `r in the tooltip caption. Each `r will be replaced with new line.</dd>
+    </dl>
+
+    <h3>Toolbar Button States</h3>
+    <hr>
+    <dl>
+        <dt>Start Pressed (CHECKED)</dt>
+<dd>The button has the CHECK style and is being clicked/pressed.</dd>
+        <dt>Disabled</dt>
+<dd>The button does not accept user input. The button icon and/or text is grayed out.</dd>
+        <dt>Hidden</dt>
+<dd>The button is not visible and cannot receive user input.</dd>
+        <dt>Break Row (WRAP)</dt>
+<dd>The button is followed by a line break. Toolbar must not have WRAPPABLE style.</dd>
+    </dl>
+
+</body>
+<html>

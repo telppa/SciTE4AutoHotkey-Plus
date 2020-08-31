@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<HelpMenu>
+    <MenuItem name="Beginner Tutorial" url="/docs/Tutorial.htm" />
+    <MenuItem name="Variables and Expressions" url="/docs/Variables.htm" />
+    <MenuItem name="Commands and Functions" url="/docs/commands/index.htm" />
+    <MenuItem name="Scripts" url="/docs/Scripts.htm" />
+    <MenuItem name="Functions" url="/docs/Functions.htm" />
+    <MenuItem name="Frequently Asked Questions" url="/docs/FAQ.htm" />
+
+    <Menu name="GUI">
+        <MenuItem name="Gui Command" url="/docs/commands/Gui.htm" />
+        <MenuItem name="GUI Control Types" url="/docs/commands/GuiControls.htm" />
+        <MenuItem name="GUI Styles" url="/docs/misc/Styles.htm" />
+        <MenuItem name="ListView Controls" url="/docs/commands/ListView.htm" />
+        <MenuItem name="Menus" url="/docs/commands/Menu.htm" />
+        <MenuItem name="GuiControl" url="/docs/commands/GuiControl.htm" />
+        <MenuItem name="GuiControlGet" url="/docs/commands/GuiControlGet.htm" />
+        <MenuItem name="ControlGet" url="/docs/commands/ControlGet.htm" />
+        <MenuItem name="WinGet" url="/docs/commands/WinGet.htm" />
+        <MenuItem name="WinExist" url="/docs/commands/WinExist.htm" />
+        <MenuItem name="MsgBox" url="/docs/commands/MsgBox.htm" />
+        <MenuItem name="FileSelectFile" url="/docs/commands/FileSelectFile.htm" />
+    </Menu>
+
+    <Menu name="Keyboard and Mouse">
+        <MenuItem name="Hotkeys" url="/docs/Hotkeys.htm" />
+        <MenuItem name="Hotkey command" url="/docs/commands/Hotkey.htm" />
+        <MenuItem name="List of Keys" url="/docs/KeyList.htm" />
+        <MenuItem name="Remapping Keys and Buttons" url="/docs/misc/Remap.htm" />
+        <MenuItem name="Hotstrings" url="/docs/Hotstrings.htm" />
+        <MenuItem name="Send" url="/docs/commands/Send.htm" />
+        <MenuItem name="GetKeyState" url="/docs/commands/GetKeyState.htm" />
+        <MenuItem name="MouseGetPos" url="/docs/commands/MouseGetPos.htm" />
+    </Menu>
+
+    <Menu name="Files">
+        <MenuItem name="FileExist" url="/docs/commands/FileExist.htm" />
+        <MenuItem name="FileRead" url="/docs/commands/FileRead.htm" />
+        <MenuItem name="FileAppend" url="/docs/commands/FileAppend.htm" />
+        <MenuItem name="Loop (files and folders)" url="/docs/commands/LoopFile.htm" />
+        <MenuItem name="Loop (read file contents)" url="/docs/commands/LoopReadFile.htm" />
+        <MenuItem name="SplitPath" url="/docs/commands/SplitPath.htm" />
+        <MenuItem name="IniRead" url="/docs/commands/IniRead.htm" />
+        <MenuItem name="FileOpen" url="/docs/commands/FileOpen.htm" />
+        <MenuItem name="File Object" url="/docs/objects/File.htm" />
+    </Menu>
+
+    <Menu name="Strings">
+        <MenuItem name="InStr" url="/docs/commands/InStr.htm" />
+        <MenuItem name="SubStr" url="/docs/commands/SubStr.htm" />
+        <MenuItem name="StrLen" url="/docs/commands/StringLen.htm" />
+        <MenuItem name="StrSplit" url="/docs/commands/StringSplit.htm" />
+        <MenuItem name="Trim" url="/docs/commands/Trim.htm" />
+        <MenuItem name="Format" url="/docs/commands/Format.htm" />
+        <MenuItem name="StrReplace" url="/docs/commands/StringReplace.htm" />
+        <MenuItem name="RegExMatch" url="/docs/commands/RegExMatch.htm" />
+        <MenuItem name="RegExReplace" url="/docs/commands/RegExReplace.htm" />
+        <MenuItem name="RegEx Reference" url="/docs/misc/RegEx-QuickRef.htm" />
+    </Menu>
+
+    <Menu name="Miscellaneous">
+        <MenuItem name="Run" url="/docs/commands/Run.htm" />
+        <MenuItem name="Clipboard" url="/docs/misc/Clipboard.htm" />
+        <MenuItem name="SetTimer" url="/docs/commands/SetTimer.htm" />
+        <MenuItem name="Process" url="/docs/commands/Process.htm" />
+        <MenuItem name="Round" url="/docs/commands/Math.htm#Round" />
+        <MenuItem name="Sort" url="/docs/commands/Sort.htm" />
+        <MenuItem name="Random" url="/docs/commands/Random.htm" />
+        <MenuItem name="UrlDownloadToFile" url="/docs/commands/URLDownloadToFile.htm" />
+        <MenuItem name="RegRead" url="/docs/commands/RegRead.htm" />
+        <MenuItem name="PixelGetColor" url="/docs/commands/PixelGetColor.htm" />
+        <MenuItem name="ListVars" url="/docs/commands/ListVars.htm" />
+        <MenuItem name="OutputDebug" url="/docs/commands/OutputDebug.htm" />
+    </Menu>
+
+    <Menu name="Objects">
+        <MenuItem name="Objects and Arrays" url="/docs/Objects.htm" />
+        <MenuItem name="Object Methods" url="/docs/objects/Object.htm" />
+        <MenuItem name="Function Objects" url="/docs/objects/Functor.htm" />
+        <MenuItem name="COM Objects" url="/docs/commands/ComObjCreate.htm" />
+    </Menu>
+
+    <Menu name="Windows API">
+        <MenuItem name="Sendmessage" url="/docs/commands/PostMessage.htm" />
+        <MenuItem name="OnMessage" url="/docs/commands/OnMessage.htm" />
+        <MenuItem name="Using DllCall" url="/docs/commands/DllCall.htm" />
+        <MenuItem name="Windows API Index" url="https://msdn.microsoft.com/en-us/library/windows/desktop/ff818516(v=vs.85).aspx" />
+        <MenuItem name="Functions by Category" url="https://msdn.microsoft.com/en-us/library/aa383686(v=vs.85).aspx" />
+    </Menu>
+</HelpMenu>

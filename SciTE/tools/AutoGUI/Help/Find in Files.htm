@@ -1,0 +1,116 @@
+<html>
+<head>
+<title>Find in Files - Help</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="icon" href="Images\AutoGUI.ico" type="image/x-icon"/>
+
+<style>
+body {
+    background: #fff;
+}
+
+html {
+    font: .875em/1.75 Arial,sans-serif
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: 700;
+    border-bottom-color: #FFF;
+    border-bottom-width: 2px;
+    margin-top: 8px;
+    color: #008EBC;
+    word-wrap: break-word;
+    overflow-wrap: break-word
+}
+
+h3 {
+    color: #1F609F
+}
+
+h1,h3 {
+    border-bottom: 1px solid #ddd
+}
+
+dt {
+    color: #1F609F;
+    margin-left: .5em;
+}
+
+dd {
+    padding-top: 0;
+    margin-left: 1.5em;
+    padding-left: 1em;
+    border-left: .3em solid #e0e0e0;
+    margin-bottom: 1em;
+}
+
+dd > p:first-child {
+    margin-top: .3em
+}
+</style>
+</head>
+
+<body>
+    <h1>Find in Files</h1>
+
+    <h3>Search Criteria</h3>
+    <dl>
+        <dt>Directory</dt>
+        <dd><p>Starting directory or file for the search. Multiple directories/files must be separated by ";" (semicolon).</p></dd>
+
+        <dt>Filters</dt>
+        <dd><p>Restrict the scope of the search to certain file types or file names. Multiple filters must be separated by ";". Wildcards can be used: "*" matches any number of characters, "?" matches a single character. Example: "*.ahk; *.txt".</p></dd>
+
+        <dt>Find Text</dt>
+        <dd><p>The text to search for.</p></dd>
+    </dl>
+
+    <h3>Options</h3>
+    <dl>
+        <dt>Search subdirectories</dt>
+        <dd><p>Include all subdirectories in the search.</p></dd>
+
+        <dt>One match per file</dt>
+        <dd><p>Only one occurrence of the text to be found is displayed in the search results for each file.</p></dd>
+
+        <dt>Case sensitive</dt>
+        <dd><p>Differentiate between uppercase and lowercase letters.</p></dd>
+
+        <dt>Match whole words</dt>
+        <dd><p>Discard partial matches.</p></dd>
+
+        <dt>Regular Expression</dt>
+        <dd><p>Search using regular expressions. Options such as "i)" (ignore case) follow the AHK convention.</p></dd>
+
+        <dt>Convert backslashes</dt>
+        <dd><p>Convert some escape sequences. "\n" is for line breaks, "\t" is for tabstops and "\\" escapes a backslash.</p></dd>
+
+        <dt>Not containing the text</dt>
+        <dd><p>Only the files not containing the text to be found are displayed in the search results.</p></dd>
+
+        <dt>Hexadecimal search</dt>
+        <dd><p>Search byte by byte. Each value must be separated by a space. Example: "EF BB BF".</p></dd>
+    </dl>
+
+    <h3>Buttons</h3>
+    <dl>
+        <dt>Browse</dt>
+        <dd><p>The Browse button can display a menu when Find in Files is launched from AutoGUI. This menu has the following items:<br/>
+         - Current Directory<br/>
+         - Current File<br/>
+         - Current File and its Includes<br/>
+         - All Open Files</p></dd>
+
+        <dt>Start</dt>
+        <dd><p>Perform the search.</p></dd>
+
+        <dt>Cancel</dt>
+        <dd><p>When the desired result has already been obtained or the search is taking too long to finish, the operation can be stopped with the Cancel button. If the Esc key is pressed when a search is in progress, the search is interrupted. Otherwise the window is closed.</p></dd>
+    </dl>
+
+    <h3>Search Results</h3>
+    <p>Double-click a file with extension AHK or TXT in the list of search results to open it in AutoGUI, jumping to the respective line.<br/>Right-click a file in the list to show the shell context menu.<br/>Press F3 to quickly display the file contents in a read-only window.</p>
+
+</body>
+<html>

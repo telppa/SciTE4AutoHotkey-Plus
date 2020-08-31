@@ -1,0 +1,9 @@
+DEBUG = 0
+Menu, Tray, Icon, %A_ScriptDir%\..\..\toolicon.icl, 15
+
+; Quick and dirty look for SciTE to grab initial filename.
+_SciTE := GetSciTEInstance()
+if _SciTE
+	_DefaultFName := _SciTE.CurrentFile, _SciTE := ""
+	
+#include %A_ScriptDir%\..\Lib\GetSciTEInstance.ahk

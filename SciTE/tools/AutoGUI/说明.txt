@@ -1,0 +1,17 @@
+极其强悍的工具，来自
+https://autohotkey.com/boards/viewtopic.php?f=6&t=10157
+
+作者似乎不仅仅将其作为gui工具，更想作为ide。
+自带3个小工具，分别是“正则测试”、“界面克隆”、“ahk变量查看”。
+“正则测试”和我的“正则终结者”原理，代码均如出一辙，但是界面比我好看，高亮性能优于我，可惜高亮没有区分每个匹配结果并且不支持中文！
+
+之所以不去掉自带的SciLexer.dll并改用scite的SciLexer.dll，是因为这样修改会出现问题。
+
+放置在其它目录中（R:\AutoGUI）：
+替换为scite版本的SciLexer.dll，无问题。
+替换为scite版本的SciLexer.dll，并将AutoGUI.ahk中路径改为“\..\SciLexer.dll”，无问题。
+
+放置在scite的tools目录中：
+替换为scite版本的SciLexer.dll，无问题。
+替换为scite版本的SciLexer.dll，并将AutoGUI.ahk中路径改为“\..\SciLexer.dll”，有问题。
+怀疑是同时使用同一个dll文件导致的某种创建sci界面上的冲突（或许使用了同个类名？），暂无法具体定位问题代码。

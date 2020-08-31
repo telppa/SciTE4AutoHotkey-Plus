@@ -1,0 +1,469 @@
+﻿<html>
+<head>
+<title>AHK-WinAPI Table</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="icon" href="Images\Windows.ico" type="image/x-icon"/>
+
+<style>
+TABLE {
+    background-color: #EFEDE6;
+    border: 2px white solid;
+    border-collapse: collapse;
+    font: .875em/1.75 Arial,sans-serif
+}
+
+TH {
+    background-color: #0099CC;
+    color: white;
+    text-align: left;
+    padding-left: 4px;
+}
+
+TR:nth-child(even) {
+    background-color: #F5F5F5;
+}
+
+TR:hover {
+    background-color: #EEFFCC;
+}
+
+TD {
+    border-right: #1C9AD5 dotted 1px;
+    padding-left: 5px;
+    vertical-align: top;
+}
+</style>
+</head>
+
+<body style="background-color: gray">
+<center>
+    <table border="0">
+        <col width="220px" />
+        <col width="480px" />
+        <col width="620px" />
+
+        <tr><th>AutoHotkey</th><th>Windows API or C Function</th><th>Additional Information</th></tr>
+
+        <!--
+        <tr><td></td><td></td><td></td></tr>
+        -->
+
+        <tr><td>A_AhkPath</td><td>GetModuleFileName</td><td></td></tr>
+        <tr><td>A_AppData</td><td>SHGetFolderPath</td><td>CSIDL_APPDATA</td></tr>
+        <tr><td>A_AppDataCommon</td><td>SHGetFolderPath</td><td>CSIDL_COMMON_APPDATA</td></tr>
+        <tr><td>A_Args</td><td>__argc and __targv</td><td></td></tr>
+        <tr><td>A_CaretX/Y</td><td>GetWindowThreadProcessId + GetGUIThreadInfo</td><td>GUITHREADINFO.rcCaret left (x) and top (y).</td></tr>
+        <tr><td>A_ComputerName</td><td>GetComputerName</td><td></td></tr>
+        <tr><td>A_ComSpec</td><td>GetEnvironmentVariable</td><td>comspec</td></tr>
+        <tr><td>A_Cursor</td><td>GetCursorInfo</td><td>Load all system cursors with LoadCursor and compare each one with CURSORINFO.hCursor</td></tr>
+        <tr><td>A_DD / A_MDay</td><td>GetLocalTime</td><td>_stprintf(Buf, _T("%02d"), SYSTEMTIME.wDay);</td></tr>
+        <tr><td>A_DDDD / A_DDD</td><td>GetDateFormat</td><td>GetDateFormat(LOCALE_USER_DEFAULT, 0, NULL, _T("dddd"), Buf, BufSize)</td></tr>
+        <tr><td>A_Desktop</td><td>SHGetFolderPath</td><td>CSIDL_DESKTOPDIRECTORY</td></tr>
+        <tr><td>A_DesktopCommon</td><td>SHGetFolderPath</td><td>CSIDL_COMMON_DESKTOPDIRECTORY</td></tr>
+        <tr><td>A_GuiWidth / A_GuiHeight</td><td>Set in WM_SIZE</td><td>Width: LOWORD(lParam). Height: HIWORD(lParam).</td></tr>
+        <tr><td>A_GuiX / A_GuiY</td><td>GetMessage (message loop)</td><td>MSG.pt (X and Y coordinates for GuiContextMenu and GuiDropFiles events)</td></tr>
+        <tr><td>A_Hour</td><td>GetLocalTime</td><td>SYSTEMTIME.wHour</td></tr>
+        <tr><td>A_IPAddress1-4</td><td>WSAStartup + gethostname + gethostbyname + WSACleanup</td><td></td></tr>
+        <tr><td>A_Is64bitOS</td><td>#ifdef _WIN64 or IsWow64Process</td><td></td></tr>
+        <tr><td>A_IsAdmin</td><td>OpenSCManager + LockServiceDatabase</td><td>Alternatives: IsUserAnAdmin, CheckTokenMembership, GetTokenInformation</td></tr>
+        <tr><td>A_IsUnicode</td><td>#ifdef UNICODE</td><td></td></tr>
+        <tr><td>A_Language</td><td>GetSystemDefaultUILanguage</td><td></td></tr>
+        <tr><td>A_LastError</td><td>GetLastError</td><td></td></tr>
+        <tr><td>A_LoopFile...</td><td>See <i>Loop (Files and Folders)</i></td><td></td></tr>
+        <tr><td>A_LoopReg...</td><td>See <i>Loop (Registry)</i></td><td></td></tr>
+        <tr><td>A_Min</td><td>GetLocalTime</td><td>SYSTEMTIME.wMinute</td></tr>
+        <tr><td>A_MM/A_Mon</td><td>GetLocalTime</td><td>SYSTEMTIME.wMonth</td></tr>
+        <tr><td>A_MMMM/A_MMM</td><td>GetDateFormat</td><td>GetDateFormat(LOCALE_USER_DEFAULT, 0, NULL, _T("MMMM"), Buf, BufSize)</td></tr>
+        <tr><td>A_MSec</td><td>GetLocalTime</td><td>_stprintf(aBuf, _T("%03d"), SYSTEMTIME.wMilliseconds);</td></tr>
+        <tr><td>A_MyDocuments</td><td>SHGetFolderPath</td><td>CSIDL_MYDOCUMENTS</td></tr>
+        <tr><td>A_Now</td><td>GetLocalTime</td><td>The time string is formated with _stprintf from a SYSTEMTIME structure.</td></tr>
+        <tr><td>A_NowUTC</td><td>GetSystemTime</td><td></td></tr>
+        <tr><td>A_OSType</td><td>RtlGetVersion</td><td>OSVERSIONINFOW.dwPlatformId returns VER_PLATFORM_WIN32_NT if the OS is NT-based.</td></tr>
+        <tr><td>A_OSVersion</td><td>RtlGetVersion</td><td>Checks OSVERSIONINFOW dwMajorVersion and dwMinorVersion</td></tr>
+        <tr><td>A_ProgramFiles</td><td>SHGetFolderPath</td><td>CSIDL_PROGRAM_FILES</td></tr>
+        <tr><td>A_Programs</td><td>SHGetFolderPath</td><td>CSIDL_PROGRAMS</td></tr>
+        <tr><td>A_ProgramsCommon</td><td>SHGetFolderPath</td><td>CSIDL_COMMON_PROGRAMS</td></tr>
+        <tr><td>A_PtrSize</td><td>sizeof(void *)</td><td></td></tr>
+        <tr><td>A_Sec</td><td>GetLocalTime</td><td>SYSTEMTIME.wSecond</td></tr>
+        <tr><td>A_ScreenDPI</td><td>GetDeviceCaps</td><td>GetDeviceCaps(hdc, LOGPIXELSX);</td></tr>
+        <tr><td>A_ScreenHeight</td><td>GetSystemMetrics</td><td>SM_CYSCREEN</td></tr>
+        <tr><td>A_ScreenWidth</td><td>GetSystemMetrics</td><td>SM_CXSCREEN</td></tr>
+        <tr><td>A_StartMenu</td><td>SHGetFolderPath</td><td>CSIDL_STARTMENU</td></tr>
+        <tr><td>A_StartMenuCommon</td><td>SHGetFolderPath</td><td>CSIDL_COMMON_STARTMENU</td></tr>
+        <tr><td>A_Startup</td><td>SHGetFolderPath</td><td>CSIDL_STARTUP</td></tr>
+        <tr><td>A_StartupCommon</td><td>SHGetFolderPath</td><td>CSIDL_COMMON_STARTUP</td></tr>
+        <tr><td>A_Temp</td><td>GetTempPath</td><td></td></tr>
+        <tr><td>A_TickCount</td><td>GetTickCount</td><td></td></tr>
+        <tr><td>A_TimeIdle</td><td>GetLastInputInfo</td><td>GetTickCount() - LASTINPUTINFO.dwTime</td></tr>
+        <tr><td>A_UserName</td><td>GetUserName</td><td></td></tr>
+        <tr><td>A_WDay</td><td>GetLocalTime</td><td>SYSTEMTIME.wDayOfWeek + 1</td></tr>
+        <tr><td>A_WinDir</td><td>GetWindowsDirectory</td><td></td></tr>
+        <tr><td>A_WorkingDir</td><td>GetCurrentDirectory</td><td></td></tr>
+        <tr><td>A_YDay</td><td></td><td></td></tr>
+        <tr><td>A_Year/A_YYYY</td><td>GetLocalTime</td><td>SYSTEMTIME.wYear</td></tr>
+        <tr><td>A_YWeek</td><td></td><td></td></tr>
+        <tr><td>Abs</td><td>qmathFabs (qmath.h, assembly code)</td><td>Alternative: abs (stdlib.h)</td></tr>
+        <tr><td>Acos</td><td>qmathAcos (qmath.h, assembly code)</td><td>Alternative: acos (math.h)</td></tr>
+        <tr><td>ASin</td><td>qmathAsin (qmath.h, assembly code)</td><td>Alternative: asin (math.h)</td></tr>
+        <tr><td>ATan</td><td>qmathAtan (qmath.h, assembly code)</td><td>Alternative: atan (math.h)</td></tr>
+        <tr><td>BlockInput</td><td>Involves keyboard and mouse hooking.</td><td></td></tr>
+        <tr><td>Ceil</td><td>qmathCeil (qmath.h, assembly code)</td><td>Alternative: ceil (math.h)</td></tr>
+        <tr><td>Chr</td><td>int to LPTSTR</td><td></td></tr>
+        <tr><td>Clipboard</td><td>Get: IsClipboardFormatAvailable + OpenClipboard + GetClipboardData + GlobalLock + _tcscpy or DragQueryFile (if CF_HDROP) + GlobalUnlock + CloseClipboard<br/>Set: GlobalAlloc + GlobalLock + tcslcpy + EmptyClipboard + GlobalUnlock + GlobalFree + SetClipboardData + CloseClipboard</td><td></td></tr>
+        <tr><td>ClipboardAll</td><td>Get: OpenClipboard + EnumClipboardFormats + GetClipboardFormatName (for unregistered formats) + GetClipboardData...<br/>Set: OpenClipboard + EmptyClipboard + GlobalAlloc + GlobalLock + memcpy + GlobalUnlock + SetClipboardData + CloseClipboard</td><td></td></tr>
+        <tr><td>ClipWait</td><td>CountClipboardFormats or IsClipboardFormatAvailable</td><td>The sleep duration is checked with GetTickCount in a for-loop.</td></tr>
+        <tr><td>ComObjCreate</td><td>CoCreateInstance</td><td></td></tr>
+        <tr><td>Control Add</td><td>ComboBox: CB_ADDSTRING. ListBox: LB_ADDSTRING</td><td></td></tr>
+        <tr><td>Control Check / Uncheck</td><td>BM_GETCHECK + SetActiveWindow + GetWindowRect + WM_LBUTTONDOWN + WM_LBUTTONUP</td><td>Thread input: GetWindowThreadProcessId + AttachThreadInput</td></tr>
+        <tr><td>Control Choose</td><td>ComboBox: CB_SETCURSEL. ListBox: LB_SETCURSEL or LB_SETSEL (multi-select)</td><td>Additionally: WM_COMMAND CBN_SELCHANGE and CBN_SELENDOK or LBN_SELCHANGE and LBN_DBLCLK</td></tr>
+        <tr><td>Control ChooseString</td><td>ComboBox: CB_SELECTSTRING. ListBox: LB_SELECTSTRING or LB_FINDSTRING (multi-select)</td><td>Additionally: WM_COMMAND CBN_SELCHANGE and CBN_SELENDOK or LBN_SELCHANGE and LBN_DBLCLK</td></tr>
+        <tr><td>Control Delete</td><td>ComboBox: CB_DELETESTRING. ListBox: LB_DELETESTRING</td><td></td></tr>
+        <tr><td>Control EditPaste</td><td>EM_REPLACESEL</td><td></td></tr>
+        <tr><td>Control Enable / Disable</td><td>EnableWindow</td><td></td></tr>
+        <tr><td>Control Show / Hide</td><td>ShowWindow</td><td>SW_SHOWNOACTIVATE / SW_HIDE</td></tr>
+        <tr><td>Control Style / ExStyle</td><td>GetWindowLong + SetWindowLong</td><td>GWL_STYLE / GWL_EXSTYLE. May also call InvalidateRect to redraw.</td></tr>
+        <tr><td>Control Show/HideDropDown</td><td>CB_SHOWDROPDOWN</td><td>wParam: TRUE shows the list box, FALSE hides it. </td></tr>
+        <tr><td>Control TabLeft / TabRight</td><td>WM_KEYDOWN + WM_KEYUP (PostMessage)</td><td>lParam: VK_LEFT / VK_RIGHT << 16 | 0x00000001 (for key down), 0xC0000001 (for key up)</td></tr>
+        <tr><td>ControlClick</td><td>PostMessage</td><td>For a left click: WM_LBUTTONDOWN and WM_LBUTTONUP with MK_LBUTTON as wParam.</td></tr>
+        <tr><td>ControlFocus</td><td>SetFocus</td><td></td></tr>
+        <tr><td>ControlGet Checked</td><td>BM_GETCHECK</td><td></td></tr>
+        <tr><td>ControlGet Choice</td><td>ComboBox: CB_GETCURSEL + CB_GETLBTEXTLEN + CB_GETLBTEXT. ListBox: LB_GETCURSEL + LB_GETTEXTLEN + LB_GETTEXT</td><td></td></tr>
+        <tr><td>ControlGet CurrentCol</td><td>EM_GETSEL + EM_LINEFROMCHAR + for-loop + EM_LINEFROMCHAR</td><td></td></tr>
+        <tr><td>ControlGet CurrentLine</td><td>EM_LINEFROMCHAR</td><td></td></tr>
+        <tr><td>ControlGet Enabled</td><td>IsWindowEnabled</td><td></td></tr>
+        <tr><td>ControlGet FindString</td><td>ComboBox: CB_FINDSTRINGEXACT. ListBox: LB_FINDSTRINGEXACT</td><td></td></tr>
+        <tr><td>ControlGet Line</td><td>EM_GETLINE</td><td></td></tr>
+        <tr><td>ControlGet LineCount</td><td>EM_GETLINECOUNT</td><td></td></tr>
+        <tr><td>ControlGet List</td><td>ComboBox: CB_GETCOUNT + CB_GETLBTEXTLEN + CB_GETLBTEXT in a for-loop. ListBox: LB_GETCOUNT + LB_GETTEXTLEN + LB_GETTEXT in a for-loop</td><td></td></tr>
+        <tr><td>ControlGet List (ListView)</td><td>LVM_GETITEMCOUNT + LVM_GETHEADER + HDM_GETITEMCOUNT + for-loop: WriteProcessMemory + LVM_GETITEMTEXT + ReadProcessMemory.<br/>Selected / focused: for-loop: LVM_GETNEXTITEM (LVNI_SELECTED / LVNI_FOCUSED)
+</td><td>Allocate interprocess memory: GetWindowThreadProcessId + OpenProcess + VirtualAllocEx for a local LVITEM with UINT (32-bit) or UINT64 (64-bit)</td></tr>
+        <tr><td>ControlGet List, Count...</td><td>LVM_GETITEMCOUNT. Selected: LVM_GETSELECTEDCOUNT.<br/>Focused: LVM_GETNEXTITEM (wParam: -1, lParam: LVNI_FOCUSED).<br/>Col: LVM_GETHEADER + HDM_GETITEMCOUNT</td><td></td></tr>
+        <tr><td>ControlGet Selected</td><td>EM_GETSEL + WM_GETTEXTLENGTH + malloc + WM_GETTEXT</td><td></td></tr>
+        <tr><td>ControlGet Style / ExStyle</td><td>GetWindowLong</td><td>GWL_STYLE / GWL_EXSTYLE</td></tr>
+        <tr><td>ControlGet Tab</td><td>TCM_GETCURSEL</td><td></td></tr>
+        <tr><td>ControlGet Visible</td><td>IsWindowVisible</td><td></td></tr>
+        <tr><td>ControlGetFocus</td><td>GetGUIThreadInfo</td><td>GUITHREADINFO.hwndFocus</td></tr>
+        <tr><td>ControlGetPos</td><td>GetWindowRect</td><td>The coordinates are subtracted from the non-child parent (GetAncestor).</td></tr>
+        <tr><td>ControlGetText</td><td>WM_GETTEXTLENGTH + WM_GETTEXT</td><td>SendMessageTimeout with the flag SMTO_ABORTIFHUNG.</td></tr>
+        <tr><td>ControlMove</td><td>GetWindowRect + GetParent + ScreenToClient + MoveWindow</td><td>The first three functions are needed if either coordinate is unspecified.</td></tr>
+        <tr><td>ControlSend</td><td></td><td></td></tr>
+        <tr><td>ControlSendRaw</td><td></td><td></td></tr>
+        <tr><td>ControlSetText</td><td>WM_SETTEXT</td><td></td></tr>
+        <tr><td>Cos</td><td>qmathCos (qmath.h, assembly code)</td><td>Alternative: cos (math.h)</td></tr>
+        <tr><td>Drive Eject</td><td>GetDriveType + mciSendString</td><td>"set cdaudio door %s wait" (%s = "closed" or "open"). Other commands for specific drive letter.</td></tr>
+        <tr><td>Drive Label</td><td>SetVolumeLabel</td><td></td></tr>
+        <tr><td>Drive Lock</td><td>CreateFile + DeviceIoControl</td><td>IOCTL_STORAGE_MEDIA_REMOVAL, PREVENT_MEDIA_REMOVAL.PreventMediaRemoval</td></tr>
+        <tr><td>Drive Unlock</td><td>CreateFile + DeviceIoControl</td><td>IOCTL_STORAGE_MEDIA_REMOVAL</td></tr>
+        <tr><td>DriveGet Capacity</td><td>GetDiskFreeSpaceEx</td><td>lpTotalNumberOfBytes</td></tr>
+        <tr><td>DriveGet Filesystem</td><td>GetVolumeInformation</td><td></td></tr>
+        <tr><td>DriveGet Label</td><td>GetVolumeInformation or SetVolumeLabel</td><td></td></tr>
+        <tr><td>DriveGet List</td><td>GetDriveType</td><td>For-loop A through Z.</td></tr>
+        <tr><td>DriveGet Serial</td><td>GetVolumeInformation</td><td></td></tr>
+        <tr><td>DriveGet Status</td><td>GetDiskFreeSpace + GetLastError</td><td></td></tr>
+        <tr><td>DriveGet StatusCD</td><td>mciSendString</td><td>"status cdaudio mode" or "open %s type cdaudio alias cd wait shareable"</td></tr>
+        <tr><td>DriveGet Type</td><td>GetDriveType</td><td></td></tr>
+        <tr><td>DriveSpaceFree</td><td>GetDiskFreeSpaceEx</td><td>lpFreeBytesAvailable</td></tr>
+        <tr><td>EnvUpdate</td><td>WM_SETTINGCHANGE</td><td>Target: HWND_BROADCAST, lParam: (LPARAM)_T("Environment"), flag: SMTO_BLOCK</td></tr>
+        <tr><td>ExitApp</td><td>DestroyWindow + PostQuitMessage + deactivate all hooks</td><td></td></tr>
+        <tr><td>Exp</td><td>qmathExp (qmath.h, assembly code)</td><td>Alternative: exp (math.h)</td></tr>
+        <tr><td>FileAppend</td><td>See <i>FileOpen</i></td><td></td></tr>
+        <tr><td>FileCopy</td><td>GetFullPathName + CopyFile</td><td>A do-while loop with FindFirstFile and FindNextFile is performed to operate on multiple files.</td></tr>
+        <tr><td>FileCopyDir</td><td>GetFullPathName + GetFileAttributes + CreateDirectory + SHFileOperation</td><td>SHFILEOPSTRUCT.wFunc = FO_COPY</td></tr>
+        <tr><td>FileCreateDir</td><td>GetFileAttributes + CreateDirectory</td><td>FileCreateDir recursively creates all needed ancestor directories. GetFileAttributes checks if the directory already exists.</td></tr>
+        <tr><td>FileCreateShortcut</td><td>IShellLink interface</td><td>CLSID_ShellLink, IID_IShellLink</td></tr>
+        <tr><td>FileDelete</td><td>DeleteFile</td><td></td></tr>
+        <tr><td>FileExist</td><td>FindFirstFile or GetFileAttributes</td><td></td></tr>
+        <tr><td>FileGetAttrib</td><td>GetFileAttributes</td><td></td></tr>
+        <tr><td>FileGetShortcut</td><td>IShellLink interface</td><td></td></tr>
+        <tr><td>FileGetSize</td><td>CreateFile + GetFileSizeEx</td><td>Alternative: FindFirstFile nFileSizeHigh << 32 | nFileSizeLow</td></tr>
+        <tr><td>FileGetTime</td><td>FindFirstFile + FileTimeToLocalFileTime</td><td>The time string is formated with _stprintf from a SYSTEMTIME structure.</td></tr>
+        <tr><td>FileGetVersion</td><td>GetFileVersionInfo + VerQueryValue</td><td></td></tr>
+        <tr><td>FileInstall</td><td>CreateFile + FindResource + LoadResource + LockResource + WriteFile + SizeofResource + CloseHandle</td><td>FileInstall includes the specified file inside the compiled version of the script (this operation is performed by a script compiler, which invokes UpdateResource to add the raw binary data as RC data in the .rsrc section of the PE executable). Later, when the compiled script is run, the files are extracted back out onto the disk.</td></tr>
+        <tr><td>FileMove</td><td>GetFullPathName + MoveFile</td><td>A do-while loop with FindFirstFile and FindNextFile is performed to operate on multiple files.</td></tr>
+        <tr><td>FileMoveDir</td><td>GetFullPathName + GetFileAttributes + SHFileOperation</td><td>SHFILEOPSTRUCT.wFunc = FO_MOVE (the directory is copied and deleted if source and destination are on different volumes. See FileCopyDir and FileRemoveDir).</td></tr>
+        <tr><td>FileOpen</td><td>CreateFile + GetCPInfo + ReadFile (detect UTF-8 and UTF-16 LE BOMs) + WriteFile (write/append) + SetFilePointerEx (append).<br/>Standard streams (stdin/stdout/stderr): GetStdHandle.</td><td>CreateFile flags:<br/>
+dwDesiredAccess: GENERIC_READ (read), GENERIC_WRITE (write), GENERIC_WRITE | GENERIC_READ (append)<br/>dwShareMode: ((aFlags >> 8) & (FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE));<br/>dwCreationDisposition: OPEN_EXISTING (read), CREATE_ALWAYS (write), OPEN_ALWAYS (append)</td></tr>
+        <tr><td>File.Length</td><td>GetFileSizeEx</td><td></td></tr>
+        <tr><td>File.Read</td><td></td><td></td></tr>
+        <tr><td>File.Write</td><td></td><td></td></tr>
+        <tr><td>File.ReadLine</td><td></td><td></td></tr>
+        <tr><td>File.WriteLine</td><td></td><td></td></tr>
+        <tr><td>File.Read<i>NumType</i></td><td></td><td></td></tr>
+        <tr><td>File.Write<i>NumType</i></td><td></td><td></td></tr>
+        <tr><td>File.RawRead</td><td></td><td></td></tr>
+        <tr><td>File.RawWrite</td><td></td><td></td></tr>
+        <tr><td>File.Seek</td><td>SetFilePointerEx</td><td>liDistanceToMove</td></tr>
+        <tr><td>File.Tell</td><td>SetFilePointerEx</td><td>lpNewFilePointer</td></tr>
+        <tr><td>File.Close</td><td>CloseHandle</td><td></td></tr>
+        <tr><td>FileRead</td><td>CreateFile + GetFileSize + ReadFile + CloseHandle</td><td></td></tr>
+        <tr><td>FileReadLine</td><td></td><td></td></tr>
+        <tr><td>FileRecycle</td><td>SHFileOperation</td><td>With the parameters FO_DELETE and FOF_ALLOWUNDO.</td></tr>
+        <tr><td>FileRecycleEmpty</td><td>SHEmptyRecycleBin</td><td></td></tr>
+        <tr><td>FileRemoveDir</td><td>RemoveDirectory or SHFileOperation (FO_DELETE)</td><td></td></tr>
+        <tr><td>FileSelectFile</td><td>GetOpenFileName or GetSaveFileName</td><td>The working directory is changed as a side-effect.</td></tr>
+        <tr><td>FileSelectFolder</td><td>SHBrowseForFolder + SHGetPathFromIDList</td><td></td></tr>
+        <tr><td>FileSetAttrib</td><td>SetFileAttributes</td><td>A do-while loop with FindFirstFile and FindNextFile is performed to operate on multiple files.</td></tr>
+        <tr><td>FileSetTime</td><td>LocalFileTimeToFileTime + CreateFile + SetFileTime</td><td></td></tr>
+        <tr><td>Floor</td><td>qmathFloor (qmath.h, assembly code)</td><td>Alternative: floor (cmath.h)</td></tr>
+        <tr><td>Format</td><td>_sctprintf ("ULT" options: CharUpper and CharLower)</td><td>Alternative: inumerous variants of sprintf (_stprintf, StringCchPrintf, etc).</td></tr>
+        <tr><td>FormatTime</td><td></td><td></td></tr>
+        <tr><td>GetKeyState</td><td>GetKeyState</td><td></td></tr>
+        <tr><td>Gui Add, (Control Type)</td><td>CreateWindowEx</td><td>All controls have the styles WS_CHILD and WS_VISIBLE. Almost all controls have WS_TABSTOP. Specific styles for each control type are described below.<br/>The font is applied with WM_SETFONT.<br/>The initial text, with the exception of Tab (TabCtrl_InsertItem), ListView (ListView_InsertColumn), ComboBox/DDL (CB_ADDSTRING) and ListBox (LB_ADDSTRING), is defined with SetWindowText.</td></tr>
+        <tr><td>Gui Add, Text</td><td>CreateWindowEx: Static</td><td></td></tr>
+        <tr><td>Gui Add, Link</td><td>CreateWindowEx: SysLink</td><td></td></tr>
+        <tr><td>Gui Add, Picture</td><td>CreateWindowEx: Static</td><td>LoadPicture (internal AHK function), SS_BITMAP or SS_ICON, STM_SETIMAGE</td></tr>
+        <tr><td>Gui Add, GroupBox</td><td>CreateWindowEx: Button</td><td>BS_GROUPBOX</td></tr>
+        <tr><td>Gui Add, Button</td><td>CreateWindowEx: Button</td><td>Default button (BS_DEFPUSHBUTTON): DM_SETDEFID and BM_SETSTYLE</td></tr>
+        <tr><td>Gui Add, CheckBox</td><td>CreateWindowEx: Button</td><td>BS_AUTOCHECKBOX or BS_AUTO3STATE. Initial state: BM_SETCHECK.</td></tr>
+        <tr><td>Gui Add, Radio</td><td>CreateWindowEx: Button</td><td>BS_AUTORADIOBUTTON. CheckRadioButton or BM_SETCHECK. Styles: BS_AUTORADIOBUTTON | BS_NOTIFY | WS_GROUP (WS_TABSTOP is applied only to the first radio in the group).</td></tr>
+        <tr><td>Gui Add, ComboBox</td><td>CreateWindowEx: Combobox</td><td>WS_VSCROLL|CBS_AUTOHSCROLL|CBS_DROPDOWN|CBS_NOINTEGRALHEIGHT</td></tr>
+        <tr><td>Gui Add, DropDownList</td><td>CreateWindowEx: Combobox</td><td>WS_VSCROLL|CBS_DROPDOWNLIST|CBS_NOINTEGRALHEIGHT</td></tr>
+        <tr><td>Gui Add, Listbox</td><td>CreateWindowEx: Listbox</td><td>WS_VSCROLL|LBS_USETABSTOPS|LBS_NOTIFY, WS_EX_CLIENTEDGE</td></tr>
+        <tr><td>Gui Add, ListView</td><td>CreateWindowEx: WC_LISTVIEW (SysListView32)</td><td>LVS_SHOWSELALWAYS|LVS_REPORT, WS_EX_CLIENTEDGE, LVS_EX_FULLROWSELECT|LVS_EX_HEADERDRAGDROP</td></tr>
+        <tr><td>Gui Add, TreeView</td><td>CreateWindowEx: WC_TREEVIEW (SysTreeView32)</td><td>TVS_SHOWSELALWAYS|TVS_HASLINES|TVS_LINESATROOT|TVS_HASBUTTONS, WS_EX_CLIENTEDGE</td></tr>
+        <tr><td>Gui Add, Edit</td><td>CreateWindowEx: Edit</td><td>WS_EX_CLIENTEDGE. Additional operations for some styles/options.</td></tr>
+        <tr><td>Gui Add, DateTime</td><td>CreateWindowEx: DATETIMEPICK_CLASS (SysDateTimePick32)</td><td>DTS_SHORTDATECENTURYFORMAT</td></tr>
+        <tr><td>Gui Add, MonthCal</td><td>CreateWindowEx: MONTHCAL_CLASS (SysMonthCal32)</td><td></td></tr>
+        <tr><td>Gui Add, Hotkey</td><td>CreateWindowEx: HOTKEY_CLASS (msctls_hotkey32)</td><td></td></tr>
+        <tr><td>Gui Add, UpDown</td><td>CreateWindowEx: UPDOWN_CLASS (msctls_updown32)</td><td>UDS_SETBUDDYINT|UDS_ALIGNRIGHT|UDS_AUTOBUDDY|UDS_ARROWKEYS</td></tr>
+        <tr><td>Gui Add, Slider</td><td>CreateWindowEx: TRACKBAR_CLASS (msctls_trackbar32)</td><td></td></tr>
+        <tr><td>Gui Add, Progress</td><td>CreateWindowEx: PROGRESS_CLASS (msctls_progress32)</td><td>PBS_SMOOTH</td></tr>
+        <tr><td>Gui Add, Tab / Tab2 / Tab3</td><td>CreateWindowEx: WC_TABCONTROL (SysTabControl32)</td><td>Styles: TCS_MULTILINE|WS_CLIPSIBLINGS. Tab3: CreateDialogIndirect, SetProp "ahk_dlg", EnableThemeDialogTexture, WS_EX_CONTROLPARENT. The Tab3 dialog procedure creates a pattern brush based on a bitmap of the tab dialog's background: GetClientRect + CreateCompatibleDC + CreateCompatibleBitmap + SelectObject + WM_PRINTCLIENT + CreatePatternBrush... SetTextColor + MapWindowPoints + SetBrushOrgEx + SetBkMode</td></tr>
+        <tr><td>Gui Add, ActiveX</td><td>AtlAxWinInit + CreateWindowEx: AtlAxWin</td><td>WS_CLIPSIBLINGS</td></tr>
+        <tr><td>Gui Add, StatusBar</td><td>CreateStatusWindow</td><td>SBARS_SIZEGRIP (if the window is resizable (WS_SIZEBOX)) and SBARS_TOOLTIPS</td></tr>
+        <tr><td>Gui Cancel/Hide</td><td>ShowWindow</td><td>SW_HIDE</td></tr>
+        <tr><td>Gui Color</td><td>CreateSolidBrush...</td><td>Alternative: WNDCLASSEX.hbrBackground</td></tr>
+        <tr><td>Gui Destroy</td><td>DestroyWindow</td><td>Destroy icons, bitmaps, brushes, remove the menu (SetMenu), calls DragFinish, DestroyAcceleratorTable, etc.</td></tr>
+        <tr><td>Gui Flash</td><td>FlashWindow</td><td></td></tr>
+        <tr><td>Gui Font</td><td>CreateFont...</td><td></td></tr>
+        <tr><td>Gui Menu</td><td>CreateMenu or CreatePopupMenu + SetMenuInfo + SetMenu + CreateAcceleratorTable</td><td>MENUINFO.dwStyle = MNS_CHECKORBMP</td></tr>
+        <tr><td>Gui Minimize / Maximize / Restore</td><td>ShowWindow</td><td>SW_MINIMIZE / SW_MAXIMIZE / SW_RESTORE</td></tr>
+        <tr><td>Gui New</td><td>RegisterClassEx + CreateWindowEx + WM_SETICON, parse options, SetWindowText (title), etc</td><td> WNDCLASSEX style: CS_DBLCLKS, cbWndExtra: DLGWINDOWEXTRA. The window can also be created with "Gui Add" or "Gui Show".</td></tr>
+        <tr><td>Gui Show</td><td>SetWindowText (for title), IsZoomed, IsIconic, IsWindowVisible, AdjustWindowRectEx, GetSystemMetrics, WM_NCCALCSIZE, SystemParametersInfo (SPI_GETWORKAREA), GetWindowRect, GetClientRect, ShowWindow, etc</td><td></td></tr>
+        <tr><td>Gui Submit</td><td>See <i>GuiControlGet (Contents)</i>.</td><td>NoHide skips ShowWindow(mHwnd, SW_HIDE).</td></tr>
+        <tr><td>GuiClose</td><td>WM_CLOSE</td><td></td></tr>
+        <tr><td>GuiContextMenu</td><td>WM_CONTEXTMENU</td><td></td></tr>
+        <tr><td>GuiControl (Set Text)</td><td>SetWindowText</td><td></td></tr>
+        <tr><td>GuiControl (CheckBox)</td><td>BM_SETCHECK</td><td></td></tr>
+        <tr><td>GuiControl (Edit)</td><td>SetWindowText</td><td>LF is converted to CRLF if the control has the style ES_MULTILINE.</td></tr>
+        <tr><td>GuiControl (DateTime)</td><td>DateTime_SetSystemtime or DateTime_SetFormat</td><td></td></tr>
+        <tr><td>GuiControl (MonthCal)</td><td>MonthCal_SetSelRange or MonthCal_SetCurSel</td><td></td></tr>
+        <tr><td>GuiControl (Hotkey)</td><td>HKM_SETHOTKEY</td><td></td></tr>
+        <tr><td>GuiControl (UpDown)</td><td>UDM_GETPOS32 or UDM_GETPOS + UDM_SETPOS32 or UDM_SETPOS</td><td></td></tr>
+        <tr><td>GuiControl (Slider)</td><td>TBM_SETPOS</td><td></td></tr>
+        <tr><td>GuiControl (Progress)</td><td>PBM_SETPOS or PBM_DELTAPOS</td><td></td></tr>
+        <tr><td>GuiControl (StatusBar)</td><td>SetWindowText</td><td>Sets the text of the first part only. See SB_SetText.</td></tr>
+        <tr><td>GuiControl (Tab)</td><td>TabCtrl_InsertItem</td><td></td></tr>
+        <tr><td>GuiControl (ComboBox/DDL)</td><td>CB_ADDSTRING</td><td></td></tr>
+        <tr><td>GuiControl (ListBox)</td><td>LB_ADDSTRING</td><td></td></tr>
+        <tr><td>GuiControl (Picture)</td><td>LoadPicture (internal AHK function) + STM_SETIMAGE</td><td></td></tr>
+        <tr><td>GuiControl (Radio)</td><td>CheckRadioButton or BM_SETCHECK</td><td></td></tr>
+        <tr><td>GuiControl +/-Option</td><td></td><td></td></tr>
+        <tr><td>GuiControl Choose</td><td>Tab: TabCtrl_SetCurSel or TabCtrl_SetCurFocus. ComboBox/DDL: CB_SETCURSEL. ListBox: LB_SETSEL (multiple selection) or LB_SETCURSEL</td><td></td></tr>
+        <tr><td>GuiControl ChooseString</td><td>Tab: TabCtrl_GetItemCount + TabCtrl_GetItem + _tcscmp or lstrcmpi (to find the tab index by name) + TabCtrl_SetCurSel or TabCtrl_SetCurFocus. ComboBox/DDL: CB_SELECTSTRING. ListBox: LB_FINDSTRING + LB_SETSEL (multiple selection) or LB_SELECTSTRING</td><td></td></tr>
+        <tr><td>GuiControl Enable/Disable</td><td>EnableWindow</td><td></td></tr>
+        <tr><td>GuiControl Focus</td><td>SetFocus</td><td></td></tr>
+        <tr><td>GuiControl Font</td><td>WM_SETFONT. ListView: ListView_SetTextColor. TreeView: TreeView_SetTextColor. DateTime: DateTime_SetMonthCalColor. MonthCal: MonthCal_SetColor. InvalidateRect</td><td></td></tr>
+        <tr><td>GuiControl Move</td><td>MoveWindow and (if unspecified coords) GetWindowRect + ScreenToClient</td><td>Alternative: SetWindowPos</td></tr>
+        <tr><td>GuiControl MoveDraw</td><td>The same as above + GetWindowRect + MapWindowPoints + InvalidateRect</td><td></td></tr>
+        <tr><td>GuiControl Show/Hide</td><td>ShowWindow</td><td>SW_SHOWNOACTIVATE or SW_HIDE</td></tr>
+        <tr><td>GuiControlGet (Contents)</td><td>UpDown: UDM_GETPOS32 or UDM_GETPOS. Slider: TBM_GETPOS. Progress: PBM_GETPOS. DateTime: DateTime_GetSystemtime. MonthCal: MonthCal_GetCurSel or MonthCal_GetSelRange. Hotkey: HKM_GETHOTKEY. CheckBox/Radio: BM_GETCHECK. DDL (+AltSubmit: position): CB_GETCURSEL. ComboBox: CB_GETCURSEL + GetWindowText + CB_FINDSTRINGEXACT + CB_GETLBTEXT. ListBox: LB_GETCURSEL + LB_GETTEXTLEN + LB_GETTEXT (single selection) or LB_GETSELCOUNT + LB_GETSELITEMS + for-loop LB_GETTEXT (multiple selection). Tab: TabCtrl_GetCurSel + TabCtrl_GetItem. ActiveX: AtlAxGetControl + QueryInterface etc. Others or "Text" param: GetWindowTextLength + GetWindowText</td><td></td></tr>
+        <tr><td>GuiControlGet Focus</td><td>GetFocus</td><td></td></tr>
+        <tr><td>GuiControlGet Enabled</td><td>IsWindowEnabled</td><td></td></tr>
+        <tr><td>GuiControlGet Pos</td><td>GetWindowRect + ScreenToClient</td><td></td></tr>
+        <tr><td>GuiControlGet Visible</td><td>IsWindowVisible</td><td></td></tr>
+        <tr><td>GuiDropFiles</td><td>WM_DROPFILES + DragQueryFile</td><td>The window must have WS_EX_ACCEPTFILES (added by AHK). wParam is a handle to an internal Windows structure describing the dropped files.</td></tr>
+        <tr><td>GuiEscape</td><td>WM_KEYDOWN (VK_ESCAPE)</td><td></td></tr>
+        <tr><td>GuiSize</td><td>WM_SIZE</td><td></td></tr>
+        <tr><td>Hotkey</td><td>RegisterHotkey</td><td>See also: <i>Keyboard and mouse hook</i>.</td></tr>
+        <tr><td>Hotstring</td><td>Keyboard hook</td><td></td></tr>
+        <tr><td>IL_Add</td><td>ImageList_AddMasked (bitmaps), ImageList_AddIcon (icons)</td><td>LoadPicture (AHK internal function) is used to load and determine the type of the file.</td></tr>
+        <tr><td>IL_Create</td><td>ImageList_Create</td><td>GetSystemMetrics is used to determine width and height. Flags: ILC_MASK | ILC_COLOR32</td></tr>
+        <tr><td>IL_Delete</td><td>ImageList_Destroy</td><td></td></tr>
+        <tr><td>IniRead</td><td>GetPrivateProfileString</td><td></td></tr>
+        <tr><td>IniWrite</td><td>WritePrivateProfileString</td><td></td></tr>
+        <tr><td>InStr</td><td>For-loops</td><td>Case insensitive comparisson converts the characters to lowercase with CharLower or "char | 0x20". Alternatives: strstr, wcsstr, _tcsstr, etc.</td></tr>
+        <tr><td><i>Keyboard and mouse hook</i></td><td>SetWindowsHookEx + CallNextHookEx etc</td><td>WH_KEYBOARD_LL and WH_MOUSE_LL</td></tr>
+        <tr><td>KeyWait</td><td>For-loop, GetTickCount + GetKeyState or GetAsyncKeyState or (for joystick buttons) joyGetDevCaps + joyGetPosEx</td><td></td></tr>
+        <tr><td>Ln</td><td>qmathLog (qmath.h, assembly code)</td><td>Alternative: log (Math.h)</td></tr>
+        <tr><td>LoadPicture</td><td>ExtractIconEx, LoadImage, etc.</td><td>FindResource, CreateIconFromResourceEx, ExtractIconEx, PrivateExtractIcons, LoadImage, OleLoadPicture...</td></tr>
+        <tr><td>Log</td><td>qmathLog10 (qmath.h, assembly code)</td><td>Alternative: log10 (math.h)</td></tr>
+        <tr><td>Loop (Files and Folders)</td><td>FindFirstFile + FindNextFile + FindClose</td><td>Recursively.</td></tr>
+        <tr><td>Loop (Registry)</td><td>RegOpenKeyEx + RegQueryInfoKey + RegEnumValue + RegEnumKeyEx + RegCloseKey</td><td>Recursively.</td></tr>
+        <tr><td>LV_Add</td><td>ListView_InsertItem</td><td></td></tr>
+        <tr><td>LV_Add / Modify Check</td><td>ListView_InsertItem / ListView_SetItem + ListView_SetCheckState</td><td>LVITEM.state |= 0x1000 (checked) or 0x2000 (unchecked)</td></tr>
+        <tr><td>LV_Add / Modify Col</td><td>ListView_InsertItem / ListView_SetItem</td><td>LVITEM.iSubItem</td></tr>
+        <tr><td>LV_Add / Modify Focus</td><td>ListView_InsertItem / ListView_SetItem</td><td>LVITEM.state |= LVIS_FOCUSED</td></tr>
+        <tr><td>LV_Add / Modify Icon</td><td>ListView_InsertItem / ListView_SetItem</td><td>LVITEM.iImage</td></tr>
+        <tr><td>LV_Add / Modify Select</td><td>ListView_InsertItem / ListView_SetItem</td><td>LVITEM.state |= LVIS_SELECTED</td></tr>
+        <tr><td>LV_Delete</td><td>LVM_DELETEITEM or LVM_DELETEALLITEMS</td><td></td></tr>
+        <tr><td>LV_DeleteCol</td><td>ListView_DeleteColumn + MoveMemory</td><td></td></tr>
+        <tr><td>LV_GetCount (Items)</td><td>LVM_GETITEMCOUNT</td><td></td></tr>
+        <tr><td>LV_GetCount Column</td><td>LVM_GETHEADER + HDM_GETITEMCOUNT</td><td></td></tr>
+        <tr><td>LV_GetCount Selected</td><td>LVM_GETSELECTEDCOUNT</td><td></td></tr>
+        <tr><td>LV_GetNext (Selected)</td><td>ListView_GetNextItem</td><td>LVNI_SELECTED</td></tr>
+        <tr><td>LV_GetNext Checked</td><td>ListView_GetItemCount + for-loop + ListView_GetCheckState</td><td></td></tr>
+        <tr><td>LV_GetNext Focused</td><td>ListView_GetNextItem</td><td>LVNI_FOCUSED</td></tr>
+        <tr><td>LV_GetText (Header)</td><td>LVM_GETCOLUMN</td><td>LVCOLUMN.pszText, LVCF_TEXT mask</td></tr>
+        <tr><td>LV_GetText (Row)</td><td>LVM_GETITEM</td><td>LVITEM.pszText, LVIF_TEXT mask</td></tr>
+        <tr><td>LV_Insert</td><td>ListView_InsertItem</td><td></td></tr>
+        <tr><td>LV_InsertCol</td><td>ListView_InsertColumn</td><td></td></tr>
+        <tr><td>LV_Modify</td><td>ListView_SetItem</td><td></td></tr>
+        <tr><td>LV_Modify Vis</td><td>LVM_ENSUREVISIBLE</td><td></td></tr>
+        <tr><td>LV_ModifyCol (no params)</td><td>ListView_SetColumnWidth</td><td>For report mode only (LVS_REPORT). Param: LVSCW_AUTOSIZE.</td></tr>
+        <tr><td>LV_...Col <i>N</i> (width)</td><td>ListView_InsertColumn / ListView_SetColumn</td><td>LVCOLUMN.mask |= LVCF_WIDTH; LVCOLUMN.cx</td></tr>
+        <tr><td>LV_...Col Auto / AutoHdr</td><td>ListView_SetColumnWidth</td><td>LVSCW_AUTOSIZE / LVSCW_AUTOSIZE_USEHEADER</td></tr>
+        <tr><td>LV_...Col Icon</td><td>ListView_InsertColumn / ListView_SetColumn</td><td>LVCOLUMN.fmt |= LVCFMT_IMAGE, LVCOLUMN.iImage</td></tr>
+        <tr><td>LV_...Col IconRight</td><td>ListView_InsertColumn / ListView_SetColumn</td><td>LVCOLUMN.fmt |= LVCFMT_BITMAP_ON_RIGHT</td></tr>
+        <tr><td>LV_...Col (alignment)</td><td>ListView_InsertColumn / ListView_SetColumn</td><td>LVCFMT_RIGHT, LVCFMT_LEFT, LVCFMT_CENTER</td></tr>
+        <tr><td>LV_...Col (set text)</td><td>ListView_InsertColumn / ListView_SetColumn</td><td>LVCOLUMN.mask |= LVCF_TEXT;</td></tr>
+        <tr><td>LV_...Col (sort by type)</td><td>ListView_InsertColumn / ListView_SetColumn</td><td>LV_COL_INTEGER, LV_COL_FLOAT, LV_COL_TEXT</td></tr>
+        <tr><td>LV_...Col (sorting commands)</td><td>LVM_SORTITEMS or LVM_SORTITEMSEX + LVM_GETITEM + ListView_SetItem</td><td>StrCmpLogicalW (shlwapi.dll) is used for "Logical" sorting.</td></tr>
+        <tr><td>LV_...Col (sorting options)</td><td>ListView_InsertColumn / ListView_SetColumn</td><td>Sorting options: Case, CaseLocale, Desc, Logical, NoSort, Sort, SortDesc, Uni.</td></tr>
+        <tr><td>LV_SetImageList</td><td>ListView_SetImageList</td><td>Icon size is determined with ImageList_GetIconSize and GetSystemMetrics(SM_CXSMICON).</td></tr>
+        <tr><td>Menu ... Add</td><td>InsertMenuItem + CreatePopupMenu (for submenus) + SetMenuItemInfo (options) + CreateAcceleratorTable</td><td>MENUITEMINFO.fMask = MIIM_ID | MIIM_FTYPE | MIIM_STRING | MIIM_STATE... (it may also include MIIM_SUBMENU and MIIM_BITMAP)</td></tr>
+        <tr><td>Menu ... Add (Separator)</td><td>InsertMenuItem</td><td>MENUITEMINFO.fType = MFT_SEPARATOR</td></tr>
+        <tr><td>Menu ... Add +Radio</td><td>SetMenuItemInfo</td><td>MENUITEMINFO.fType |= MFT_RADIOCHECK</td></tr>
+        <tr><td>Menu ... Add +Right</td><td>SetMenuItemInfo</td><td>MENUITEMINFO.fType |= MFT_RIGHTJUSTIFY</td></tr>
+        <tr><td>Menu ... Add +Break</td><td>SetMenuItemInfo</td><td>MENUITEMINFO.fType |= MFT_MENUBREAK</td></tr>
+        <tr><td>Menu ... Add +BarBreak</td><td>SetMenuItemInfo</td><td>MENUITEMINFO.fType |= MFT_MENUBARBREAK</td></tr>
+        <tr><td>Menu ... Check / Uncheck</td><td>SetMenuItemInfo</td><td>MENUITEMINFO.fState |= MFS_CHECKED or MFS_UNCHECKED</td></tr>
+        <tr><td>Menu ... Color</td><td>SetMenuInfo</td><td>MENUINFO.fMask = MIM_BACKGROUND | MIM_APPLYTOSUBMENUS, MENUINFO.hbrBack</td></tr>
+        <tr><td>Menu ... Default</td><td>SetMenuDefaultItem</td><td>Makes the menu item bold.</td></tr>
+        <tr><td>Menu ... Delete</td><td>RemoveMenu</td><td>Additionally, the icon is destroyed and the menu bar is updated.</td></tr>
+        <tr><td>Menu ... DeleteAll</td><td>RemoveMenu (in a for-loop)</td><td></td></tr>
+        <tr><td>Menu ... Enable / Disable</td><td>SetMenuItemInfo</td><td>MENUITEMINFO.fState |= MFS_ENABLED or MFS_DISABLED</td></tr>
+        <tr><td>Menu ... Icon</td><td>Internal AHK functions LoadPicture and IconToBitmap32 + SetMenuItemInfo</td><td>MENUITEMINFO.hbmpItem (the icon must be a bitmap). To remove the icon, set hbmpItem to NULL.</td></tr>
+        <tr><td>Menu ... Insert</td><td>InsertMenuItem</td><td></td></tr>
+        <tr><td>Menu ... Rename</td><td>SetMenuItemInfo</td><td>MENUITEMINFO.dwTypeData</td></tr>
+        <tr><td>Menu ... Show, [X, Y]</td><td>GetCursorPos + TrackPopupMenuEx</td><td>Flags: TPM_LEFTALIGN | TPM_LEFTBUTTON</td></tr>
+        <tr><td>Menu Tray, Click</td><td>Handled in MainWindowProc (AHK_NOTIFYICON)</td><td>WM_LBUTTONDOWN or WM_LBUTTONDBLCLK</td></tr>
+        <tr><td>Menu Tray, Icon</td><td>Shell_NotifyIcon, NOTIFYICONDATA</td><td>NIM_ADD, Flags: NIF_MESSAGE | NIF_TIP | NIF_ICON,<br/>NOTIFYICONDATA.uCallbackMessage = AHK_NOTIFYICON</td></tr>
+        <tr><td>Menu Tray, NoIcon</td><td>Shell_NotifyIcon</td><td>NIM_DELETE</td></tr>
+        <tr><td>Menu Tray, Tip</td><td>Shell_NotifyIcon</td><td>NIM_MODIFY, NOTIFYICONDATA.szTip</td></tr>
+        <tr><td>Min / Max</td><td>Loop params, Min ? Val1 < Val2 : Val1 > Val2, etc.</td><td>BIF_MinMax</td></tr>
+        <tr><td>Mod</td><td>qmathFmod (qmath.h, assembly code)</td><td>Alternative: modulus operator ("%")</td></tr>
+        <tr><td>MouseClick</td><td>mouse_event (move) + GetCursorPos + WindowFromPoint + GetWindowThreadProcessId + WM_NCHITTEST + BringWindowToTop... + mouse_event (mouse button)</td><td>mouse_event is called twice at the end for "down" and "up" events (a left click involves MOUSEEVENTF_LEFTDOWN and MOUSEEVENTF_LEFTUP).</td></tr>
+        <tr><td>MouseClickDrag</td><td>mouse_event (move), mouse_event (mouse button down), mouse_event (move), mouse_event (mouse button up)</td><td></td></tr>
+        <tr><td>MouseGetPos</td><td>GetCursorPos + WindowFromPoint or EnumChildWindows</td><td></td></tr>
+        <tr><td>MouseMove</td><td>mouse_event</td><td>Flags: MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE. The Speed parameter invokes mouse_event in a loop for every calculated intermediary point. Relative coordinates are converted to absolute coordinates.</td></tr>
+        <tr><td>MsgBox</td><td>MessageBox</td><td>Alternative: MessageBoxTimeout</td></tr>
+        <tr><td>NumGet</td><td></td><td></td></tr>
+        <tr><td>NumPut</td><td></td><td></td></tr>
+        <tr><td>OnMessage</td><td>Messages are handled in the window procedure.</td><td></td></tr>
+        <tr><td>Ord</td><td>TBYTE typecasting</td><td></td></tr>
+        <tr><td>OutputDebug</td><td>OutputDebugString</td><td></td></tr>
+        <tr><td>PixelGetColor</td><td>GetDC or CreateDC + GetPixel + ReleaseDC or DeleteDC</td><td></td></tr>
+        <tr><td>PixelSearch</td><td></td><td></td></tr>
+        <tr><td>Process Close</td><td>OpenProcess + TerminateProcess + CloseHandle</td><td></td></tr>
+        <tr><td>Process Exist</td><td>EnumProcesses + (for process name) EnumProcessModules + GetModuleBaseName + _tsplitpath + _tcscat + _tcsicmp + CloseHandle</td><td>Without parameters: GetCurrentProcessId.</td></tr>
+        <tr><td>Process Priority</td><td>OpenProcess + SetPriorityClass + CloseHandle</td><td></td></tr>
+        <tr><td>Process Wait / WaitClose</td><td>for (;;) + GetTickCount + "Process Exist"</td><td></td></tr>
+        <tr><td>Random</td><td>genrand_int32 (mt19937ar-cok.cpp)</td><td>Alternatives: srand(time(NULL)), rand() % (max - min)) + min; CryptGenRandom, RtlRandomEx, rand_s (msvcrt.dll)</td></tr>
+        <tr><td>Random (NewSeed)</td><td>init_genrand (mt19937ar-cok.cpp)</td><td>Alternative: srand</td></tr>
+        <tr><td>RegDelete</td><td>RegOpenKeyEx + RegDeleteKey or RegDeleteValue + RegCloseKey</td><td>Recursively: RegEnumKeyEx + RegOpenKeyEx + RegDeleteKey or RegDeleteKeyEx</td></tr>
+        <tr><td>RegExMatch</td><td>pcre_compile2 + pcre_fullinfo + pcre_exec</td><td>PCRE library</td></tr>
+        <tr><td>RegExReplace</td><td>pcre_compile2 + pcre_fullinfo + pcre_exec...</td><td>PCRE library</td></tr>
+        <tr><td>RegRead</td><td>RegOpenKeyEx + RegQueryValueEx + RegCloseKey</td><td></td></tr>
+        <tr><td>RegWrite</td><td>RegCreateKeyEx + RegSetValueEx + RegCloseKey</td><td></td></tr>
+        <tr><td>Round</td><td>qmathFloor or qmathCeil + qmathPow (qmath.h, assembly code)</td><td>Alternative: round + pow (for decimal places)</td></tr>
+        <tr><td>Run</td><td>CreateProcess or ShellExecuteEx</td><td>ShellExecuteEx accepts verbs (edit, explore, find, open, print, properties).</td></tr>
+        <tr><td>RunAs</td><td>CreateProcessWithLogonW</td><td></td></tr>
+        <tr><td>SB_SetIcon</td><td>SB_SETICON</td><td>Retrieves and destroys the old icon (SB_GETICON and DestroyIcon). See also: LoadPicture.</td></tr>
+        <tr><td>SB_SetParts</td><td>SB_SETPARTS</td><td></td></tr>
+        <tr><td>SB_SetText</td><td>SB_SETTEXT</td><td></td></tr>
+        <tr><td>SetRegView</td><td>KEY_WOW64_64KEY or KEY_WOW64_32KEY</td><td>Flags for RegCreateKeyEx,  RegDeleteKeyEx, RegOpenKeyEx</td></tr>
+        <tr><td>SetTimer</td><td></td><td></td></tr>
+        <tr><td>SetWorkingDir</td><td>SetCurrentDirectory</td><td></td></tr>
+        <tr><td>Shutdown</td><td>ExitWindowsEx</td><td></td></tr>
+        <tr><td>Sin</td><td>qmathSin (qmath.h, assembly code)</td><td>Alternative: sin (math.h)</td></tr>
+        <tr><td>Sleep</td><td>For-loop + GetTickCount etc (<i>MsgSleep</i> in application.cpp)</td><td>Alternative: Sleep</td></tr>
+        <tr><td>Sort</td><td></td><td></td></tr>
+        <tr><td>SoundBeep</td><td>Beep</td><td></td></tr>
+        <tr><td>SoundGet / Set</td><td>Interfaces: IMMDeviceEnumerator, IAudioEndpointVolume, IMMDevice, IDeviceTopology, IConnector, IPart, IAudioVolumeLevel, IAudioMute.</td><td>XP: mixerOpen, mixerGetDevCaps, mixerGetLineInfo, mixerGetLineControls, mixerGetControlDetails, mixerSetControlDetails, mixerClose.</td></tr>
+        <tr><td>SoundGet/SetWaveVolume</td><td></td><td></td></tr>
+        <tr><td>SoundPlay</td><td>PlaySound</td><td></td></tr>
+        <tr><td>SplitPath</td><td>Parsing (_tcsrchr, etc)</td><td>Alternative: _tsplitpath</td></tr>
+        <tr><td>Sqrt</td><td>qmathSqrt (qmath.h, assembly code)</td><td>Alternative: sqrt (math.h)</td></tr>
+        <tr><td>StatusBarGetText</td><td>SB_GETPARTS, SB_GETTEXTLENGTH, SB_GETTEXT</td><td>Memory is allocated in the remote process with VirtualAllocEx and read with ReadProcessMemory.</td></tr>
+        <tr><td>StringLower</td><td>CharLower</td><td>Title case: For-loop IsCharAlpha + CharUpper or CharLower</td></tr>
+        <tr><td>StringUpper</td><td>CharUpper</td><td></td></tr>
+        <tr><td>StrLen</td><td>_tcslen (string.h)</td><td></td></tr>
+        <tr><td>StrReplace</td><td></td><td></td></tr>
+        <tr><td>StrSplit</td><td>For-loops</td><td>Alternative: strtok or _tcstok (string.h)</td></tr>
+        <tr><td>SubStr</td><td></td><td></td></tr>
+        <tr><td>SysGet</td><td>GetSystemMetrics</td><td></td></tr>
+        <tr><td>Tan</td><td>qmathTan (qmath.h, assembly code)</td><td>Alternative: tan (math.h)</td></tr>
+        <tr><td>ToolTip</td><td>CreateWindowEx (tooltips_class32) + ToolTip messages</td><td>Messages: TTM_ADDTOOL, TTM_SETMAXTIPWIDTH, TTM_TRACKPOSITION, TTM_TRACKACTIVATE, TTM_UPDATETIPTEXT</td></tr>
+        <tr><td>Trim / LTrim / RTrim</td><td>For-loops</td><td></td></tr>
+        <tr><td>TV_Add</td><td>TreeView_InsertItem</td><td>TVINSERTSTRUCT.hInsertAfter = TVI_LAST</td></tr>
+        <tr><td>TV_Add / Modify Bold</td><td>TreeView_InsertItem / TreeView_SetItem</td><td>TVITEM.state |= TVIS_BOLD</td></tr>
+        <tr><td>TV_Add / Modify Check</td><td>TreeView_InsertItem / TreeView_SetItem</td><td>TVITEM.state |= adding ? 0x2000 (unchecked) : 0x1000 (checked)</td></tr>
+        <tr><td>TV_Add / Modify Expand</td><td>TreeView_InsertItem / TreeView_SetItem or TreeView_Expand</td><td>TreeView_Expand flag: TVE_EXPAND. TVITEM.state |= TVIS_EXPANDED</td></tr>
+        <tr><td>TV_Add / Modify First</td><td>TreeView_InsertItem / TreeView_SetItem</td><td>TVINSERTSTRUCT.hInsertAfter = TVI_FIRST</td></tr>
+        <tr><td>TV_Add / Modify Icon</td><td>TreeView_InsertItem / TreeView_SetItem</td><td>TVITEM.iImage and TVITEM.iSelectedImage, mask |= TVIF_IMAGE|TVIF_SELECTEDIMAGE</td></tr>
+        <tr><td>TV_Add / Modify Select</td><td>TreeView_InsertItem / TreeView_SetItem</td><td>Adding: TreeView_Select, TVGN_CARET</td></tr>
+        <tr><td>TV_Add / Modify Sort</td><td>TreeView_InsertItem / TreeView_SortChildren</td><td>Adding: TVINSERTSTRUCT.hInsertAfter = TVI_SORT</td></tr>
+        <tr><td>TV_Add / Modify Vis</td><td>TVM_ENSUREVISIBLE</td><td></td></tr>
+        <tr><td>TV_Add / Modify VisFirst</td><td>TreeView_Select | TVGN_FIRSTVISIBLE</td><td></td></tr>
+        <tr><td>TV_Delete</td><td>TVM_DELETEITEM</td><td></td></tr>
+        <tr><td>TV_Get Bold</td><td>TVM_GETITEMSTATE</td><td>TVIS_BOLD</td></tr>
+        <tr><td>TV_Get Check</td><td>TVM_GETITEMSTATE</td><td>TVIS_STATEIMAGEMASK result == 0x2000</td></tr>
+        <tr><td>TV_Get Expand</td><td>TVM_GETITEMSTATE</td><td>TVIS_EXPANDED</td></tr>
+        <tr><td>TV_GetChild</td><td>TVM_GETNEXTITEM</td><td>TVGN_CHILD</td></tr>
+        <tr><td>TV_GetCount</td><td>TVM_GETCOUNT</td><td></td></tr>
+        <tr><td>TV_GetNext</td><td>TVM_GETNEXTITEM</td><td>TVGN_NEXT or TVGN_ROOT (when all parameters are omitted)</td></tr>
+        <tr><td>TV_GetNext Checked</td><td>For-loop: TreeView_GetChild or TreeView_GetNextSibling + TreeView_GetCheckState</td><td></td></tr>
+        <tr><td>TV_GetParent</td><td>TVM_GETNEXTITEM</td><td>TVGN_PARENT</td></tr>
+        <tr><td>TV_GetPrev</td><td>TVM_GETNEXTITEM</td><td>TVGN_PREVIOUS</td></tr>
+        <tr><td>TV_GetSelection</td><td>TVM_GETNEXTITEM</td><td>TVGN_CARET</td></tr>
+        <tr><td>TV_GetText</td><td>TVM_GETITEM</td><td>TVITEM.mask = TVIF_TEXT, text = TVITEM.pszText</td></tr>
+        <tr><td>TV_Modify</td><td>TreeView_SetItem</td><td></td></tr>
+        <tr><td>TV_SetImageList</td><td>TreeView_SetImageList</td><td></td></tr>
+        <tr><td>UrlDownloadToFile</td><td>InternetOpen + InternetOpenUrl + _tfopen + InternetReadFileExA or InternetReadFile + InternetCloseHandle</td><td>InternetOpenUrl flags: INTERNET_FLAG_RELOAD | INTERNET_FLAG_NO_CACHE_WRITE</td></tr>
+        <tr><td>VarSetCapacity</td><td>FillMemory</td><td>Alternative: ZeroMemory</td></tr>
+        <tr><td>WinActivate / WinActivateBottom</td><td>BringWindowToTop etc</td><td></td></tr>
+        <tr><td>WinActive</td><td>GetForegroundWindow</td><td></td></tr>
+        <tr><td>WinClose</td><td>WM_CLOSE</td><td>See also: WinKill.</td></tr>
+        <tr><td>WinExist</td><td>IsWindow or EnumWindows</td><td></td></tr>
+        <tr><td>WinGet ControlListHwnd</td><td></td><td></td></tr>
+        <tr><td>WinGet List</td><td>EnumWindows</td><td></td></tr>
+        <tr><td>WinGet MinMax</td><td>IsZoomed or IsIconic</td><td></td></tr>
+        <tr><td>WinGet PID</td><td>GetWindowThreadProcessId</td><td></td></tr>
+        <tr><td>WinGet ProcessName</td><td>GetModuleBaseName</td><td></td></tr>
+        <tr><td>WinGet ProcessPath</td><td>GetModuleFileNameEx</td><td></td></tr>
+        <tr><td>WinGet Style / ExStyle</td><td>GetWindowLong</td><td>GWL_STYLE / GWL_EXSTYLE</td></tr>
+        <tr><td>WinGet TransColor</td><td>GetLayeredWindowAttributes</td><td>pcrKey, if (pdwFlags & LWA_COLORKEY)</td></tr>
+        <tr><td>WinGet Transparent</td><td>GetLayeredWindowAttributes</td><td>pbAlpha, if (pdwFlags & LWA_ALPHA)</td></tr>
+        <tr><td>WinGetActiveStats</td><td>GetForegroundWindow + GetWindowTextLength + GetWindowText + GetWindowRect</td><td></td></tr>
+        <tr><td>WinGetActiveTitle</td><td>GetForegroundWindow + GetWindowTextLength + GetWindowText</td><td></td></tr>
+        <tr><td>WinGetClass</td><td>GetClassName</td><td></td></tr>
+        <tr><td>WinGetPos</td><td>GetWindowRect</td><td></td></tr>
+        <tr><td>WinGetText</td><td>EnumChildWindows + WM_GETTEXTLENGTH + WM_GETTEXT</td><td></td></tr>
+        <tr><td>WinGetTitle</td><td>GetWindowTextLength + GetWindowText</td><td></td></tr>
+        <tr><td>WinHide</td><td>ShowWindowAsync</td><td>SW_HIDE</td></tr>
+        <tr><td>WinKill</td><td>WM_CLOSE</td><td>Or: GetWindowThreadProcessId + OpenProcess + TerminateProcess + CloseHandle</td></tr>
+        <tr><td>WinMaximize</td><td>ShowWindowAsync</td><td>SW_MAXIMIZE</td></tr>
+        <tr><td>WinMenuSelectItem</td><td>GetMenu or GetSystemMenu + GetMenuItemCount + GetMenuItemID + (recurse if ItemID is 0xFFFFFFFF or -1) GetSubMenu + GetMenuString + PostMessage (WM_COMMAND or WM_SYSCOMMAND)</td><td></td></tr>
+        <tr><td>WinMinimize</td><td>ShowWindowAsync</td><td>SW_MINIMIZE or SW_FORCEMINIMIZE</td></tr>
+        <tr><td>WinMove</td><td>GetWindowRect (for unspecified coords) + MoveWindow</td><td></td></tr>
+        <tr><td>WinRestore</td><td>ShowWindowAsync</td><td>SW_RESTORE</td></tr>
+        <tr><td>WinSet AlwaysOnTop On / Off</td><td>SetWindowPos</td><td>HWND_TOPMOST / HWND_NOTOPMOST. </td></tr>
+        <tr><td>WinSet AlwaysOnTop Toggle</td><td>GetWindowLong + SetWindowPos</td><td>GWL_EXSTYLE, WS_EX_TOPMOST</td></tr>
+        <tr><td>WinSet Bottom / Top</td><td>SetWindowPos</td><td>HWND_BOTTOM / HWND_TOP</td></tr>
+        <tr><td>WinSet Disable / Enable</td><td>EnableWindow</td><td></td></tr>
+        <tr><td>WinSet Redraw</td><td>InvalidateRect</td><td></td></tr>
+        <tr><td>WinSet Region</td><td>CreateRectRgn or CreateRoundRectRgn or CreateEllipticRgn or CreatePolygonRgn + SetWindowRgn</td><td></td></tr>
+        <tr><td>WinSet Style / ExStyle</td><td>GetWindowLong + SetWindowLong</td><td>GWL_STYLE / GWL_EXSTYLE. May also call SetWindowPos and InvalidateRect to redraw.</td></tr>
+        <tr><td>WinSet TransColor</td><td>SetWindowLong</td><td>GWL_EXSTYLE, WS_EX_LAYERED, LWA_COLORKEY, LWA_ALPHA</td></tr>
+        <tr><td>WinSet Transparent</td><td>SetWindowLong + SetLayeredWindowAttributes</td><td>GWL_EXSTYLE, WS_EX_LAYERED, LWA_ALPHA</td></tr>
+        <tr><td>WinSetTitle</td><td>SetWindowText</td><td></td></tr>
+        <tr><td>WinShow</td><td>ShowWindow</td><td></td></tr>
+
+        <!--
+        <tr><td></td><td></td><td></td></tr>
+        -->
+    </table>
+</center>
+</body>
+</html>

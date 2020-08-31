@@ -1,0 +1,4 @@
+*.bak
+/Demo/TestLib-doc/
+*.db
+*~

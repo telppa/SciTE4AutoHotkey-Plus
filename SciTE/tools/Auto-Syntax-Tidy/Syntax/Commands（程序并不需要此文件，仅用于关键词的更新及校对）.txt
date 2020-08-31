@@ -1,0 +1,253 @@
+#AllowSameLineComments
+#ClipboardTimeout Milliseconds \nChanges how long the script keeps trying to access the clipboard when the first attempt fails.
+#CommentFlag NewString \nNot recommended
+#ErrorStdOut
+#EscapeChar NewChar \nNot recommended
+#HotkeyInterval Value
+#HotkeyModifierTimeout Milliseconds
+#Hotstring NewOptions
+#If [expression] \nMakes subsequent hotkeys and hotstrings only function when the specified expression is true.
+#IfTimeout Timeout \nSets the maximum time that may be spent evaluating a single #If expression.
+#IfWinActive [, WinTitle, WinText] \nMakes subsequent hotkeys and hotstrings only function when the specified window is active.
+#IfWinExist [, WinTitle, WinText] \nMakes subsequent hotkeys and hotstrings only function when the specified window exists.
+#IfWinNotActive [, WinTitle, WinText] \nMakes subsequent hotkeys and hotstrings only function when the specified window is not active.
+#IfWinNotExist [, WinTitle, WinText] \nMakes subsequent hotkeys and hotstrings only function when the specified window doesn't exist.
+#Include FileName \nCauses the script to behave as though the specified file's contents are present at this exact position.
+#IncludeAgain FileName \nCauses the script to behave as though the specified file's contents are present at this exact position.
+#InputLevel [, Level] \nControls which artificial keyboard and mouse events are ignored by hotkeys and hotstrings.
+#InstallKeybdHook
+#InstallMouseHook
+#KeyHistory MaxEvents
+#LTrim [On|Off]
+#MaxHotkeysPerInterval Value
+#MaxMem Megabytes
+#MaxThreads Value
+#MaxThreadsBuffer On|Off
+#MaxThreadsPerHotkey Value
+#MenuMaskKey KeyName \nChanges which key is used to mask Win or Alt keyup events.
+#NoEnv
+#NoTrayIcon
+#Persistent
+#SingleInstance [Force|Ignore|Off]
+#UseHook [On|Off]
+#Warn [WarningType, WarningMode] \nEnables or disables warnings for selected load-time or run-time conditions that may be indicative of developer errors.
+#WinActivateForce
+AutoTrim , On|Off
+BlockInput , On|Off|Send|Mouse|SendAndMouse|Default|MouseMove|MouseMoveOff
+break [, LoopLabel]
+Click
+ClipWait [, SecondsToWait, 1]
+catch [, OutputVar]
+continue [, LoopLabel]
+Control , Cmd [, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlClick [, Control-or-Pos, WinTitle, WinText, WhichButton, ClickCount, Options, ExcludeTitle, ExcludeText]
+ControlFocus [, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlGet , OutputVar, Cmd [, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlGetFocus , OutputVar [WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlGetPos [, X, Y, Width, Height, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlGetText , OutputVar [, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlMove , Control, X, Y, Width, Height [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlSend [, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlSendRaw [, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlSetText , Control, NewText [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+CoordMode , ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Relative|Window|Client]
+Critical [, On|Off]
+DetectHiddenText , On|Off
+DetectHiddenWindows , On|Off
+Drive , Sub-command [, Drive , Value]
+DriveGet , OutputVar, Cmd [, Value]
+DriveSpaceFree , OutputVar, Path
+Edit
+else
+EnvAdd , Var, Value [, TimeUnits]
+EnvDiv , Var, Value
+EnvGet , OutputVar, EnvVarName
+EnvMult , Var, Value
+EnvSet , EnvVar, Value
+EnvSub , Var, Value [, TimeUnits]
+EnvUpdate
+Exit [, ExitCode]
+ExitApp [, ExitCode]
+FileAppend [, Text, Filename, Encoding]
+FileCopy , Source, Dest [, Flag (1 = overwrite)]
+FileCopyDir , Source, Dest [, Flag (1 = overwrite)]
+FileCreateDir , Path
+FileCreateShortcut , Target, ShortcutFile [, WorkingDir, Args, Description, IconFile, ShortcutKey, IconNumber, RunState]
+FileDelete , FilePattern
+FileEncoding [, UTF-8|UTF-16|UTF-8-RAW|UTF-16-RAW|CPnnn] \nSets the default encoding for FileRead, FileReadLine, Loop Read, FileAppend, and FileOpen.
+FileGetAttrib , OutputVar(RASHNDOCT) [, Filename]
+FileGetShortcut , ShortcutFile [, OutTarget, OutDir, OutArgs, OutDescription, OutIcon, OutIconNum, OutRunState]
+FileGetSize , OutputVar [, Filename, Units]
+FileGetTime , OutputVar [, Filename, WhichTime (M (default), C, or A)]
+FileGetVersion , OutputVar [, Filename]
+FileInstall , Source, Dest [, Flag (1 = overwrite)]
+FileMove , Source, Dest [, Flag (1 = overwrite)]
+FileMoveDir , Source, Dest [, Flag (2 = overwrite, R = rename)]
+FileRead , OutputVar, Filename
+FileReadLine , OutputVar, Filename, LineNum
+FileRecycle , FilePattern
+FileRecycleEmpty [, Path]
+FileRemoveDir , Path [, Recurse? (1 = yes)]
+FileSelectFile , OutputVar [, Options, RootDir[\\DefaultFilename], Prompt, Filter]
+FileSelectFolder , OutputVar [, *StartingFolder, Options, Prompt]
+FileSetAttrib , Attributes(+-^RASHNOT) [, FilePattern, OperateOnFolders?, Recurse?]
+FileSetTime [, YYYYMMDDHH24MISS, FilePattern, WhichTime (M|C|A), OperateOnFolders?, Recurse?]
+finally
+for Key [,Value] in Obj
+FormatTime , OutputVar [, YYYYMMDDHH24MISS, Format]
+GetKeyState , OutputVar, WhichKey [, Mode (P|T)]
+gosub , Label \nJumps to the specified label and continues execution until Return is encountered.
+goto , Label \nJumps to the specified label and continues execution.
+GroupActivate , GroupName [, R]
+GroupAdd , GroupName, WinTitle [, WinText, Label, ExcludeTitle, ExcludeText]
+GroupClose , GroupName [, A|R]
+GroupDeactivate , GroupName [, R]
+Gui , Sub-command [, Param2, Param3, Param4]
+GuiControl , Sub-command, ControlID [, Param3]
+GuiControlGet , OutputVar [, Sub-command, ControlID, Param4]
+Hotkey , KeyName [, Label, Options]
+if Var = Value\n{\n	commands\n}else{\n	commands\n} \nSpecifies the command(s) to perform if Var = Value (can be for other operators).
+if (Expression){\n	commands\n}else{\n	commands\n} \nSpecifies the command(s) to perform if an expression evaluates to TRUE.
+if Var [not] between Low and High
+if Var [not] contains value1,value2,...
+if Var [not] in value1,value2,...
+if Var is [not] integer|float|number|digit|xdigit|alpha|upper|lower|alnum|space|time
+IfEqual , Var, Value
+IfExist , File|Dir|Pattern
+IfGreater , Var, Value
+IfGreaterOrEqual , Var, Value
+IfInString , Var, SearchString
+IfLess , Var, Value
+IfLessOrEqual , Var, Value
+IfMsgBox , Yes|No|OK|Cancel|Abort|Ignore|Retry|Timeout
+IfNotEqual , Var, Value
+IfNotExist , File|Dir|Pattern
+IfNotInString , Var, SearchString
+IfWinActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+IfWinExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+IfWinNotActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+IfWinNotExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ImageSearch , OutputVarX, OutputVarY, X1, Y1, X2, Y2, ImageFile
+IniDelete , Filename, Section [, Key]
+IniRead , OutputVar, Filename [, Section, Key, Default]
+IniWrite , Value, Filename, Section [, Key]
+Input [, OutputVar, Options, EndKeys, MatchList]
+InputBox , OutputVar [, Title, Prompt, HIDE, Width, Height, X, Y, Font, Timeout, Default]
+KeyHistory
+KeyWait , KeyName [, Options]
+ListHotkeys
+ListLines
+ListVars
+Loop [, Count]\nLoop, FilePattern [, IncludeFolders?, Recurse?]\nLoop, Parse, InputVar [, Delimiters|CSV, OmitChars]\nLoop, Read, InputFile [, OutputFile]\nLoop, HKLM|HKU|HKCU|HKCR|HKCC [, Key, IncludeSubkeys?, Recurse?]\n{\n	commands\n} \nPerforms a repetition/file/file reading/parsing/registry loop.
+Menu , MenuName, Cmd [, P3, P4, P5]
+MouseClick , WhichButton [, X, Y, ClickCount, Speed, D|U, R]
+MouseClickDrag , WhichButton, X1, Y1, X2, Y2 [, Speed, R]
+MouseGetPos [, OutputVarX, OutputVarY, OutputVarWin, OutputVarControl, 1|2|3]
+MouseMove , X, Y [, Speed, R]
+MsgBox [, Options, Title, Text, Timeout] \nDisplays the specified text in a small window containing one or more buttons  (such as Yes and No).
+OnExit [, Label]
+OutputDebug , Text
+Pause [, On|Off|Toggle, OperateOnUnderlyingThread?]
+PixelGetColor , OutputVar, X, Y [, Alt|Slow|RGB]
+PixelSearch , OutputVarX, OutputVarY, X1, Y1, X2, Y2, ColorID [, Variation, Fast|RGB]
+PostMessage , Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+Process , Cmd, PID-or-Name [, Param3]
+Progress , Param1 [, SubText, MainText, WinTitle, FontName]
+Random , OutputVar [, Min, Max]
+RegDelete , HKLM|HKU|HKCU|HKCR|HKCC, SubKey [, ValueName]
+RegRead , OutputVar, HKLM|HKU|HKCU|HKCR|HKCC, SubKey [, ValueName]
+RegWrite , REG_SZ|REG_EXPAND_SZ|REG_MULTI_SZ|REG_DWORD|REG_BINARY, HKLM|HKU|HKCU|HKCR|HKCC, SubKey [, ValueName, Value]
+Reload
+Repeat
+return [, Expression]
+Run , Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
+RunAs [, User, Password, Domain] 
+RunWait , Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
+Send , Keys
+SendEvent , Keys
+SendInput , Keys
+SendLevel [, Level] \nControls which artificial keyboard and mouse events are ignored by hotkeys and hotstrings.
+SendMessage , Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+SendMode , Event|Play|Input|InputThenPlay
+SendPlay , Keys
+SendRaw , Keys
+SetBatchLines , -1|20ms|LineCount
+SetCapsLockState , On|Off|AlwaysOn|AlwaysOff
+SetControlDelay , Delay
+SetDefaultMouseSpeed , Speed
+SetEnv , Var, Value
+SetFormat , FloatFast|IntegerFast, TotalWidth.DecimalPlaces|H|D
+SetKeyDelay [, Delay, PressDuration]
+SetMouseDelay , Delay
+SetNumLockState , On|Off|AlwaysOn|AlwaysOff
+SetRegView , RegView \nSets the default encoding for FileRead, FileReadLine, Loop Read, FileAppend, and FileOpen.
+SetScrollLockState , On|Off|AlwaysOn|AlwaysOff
+SetStoreCapslockMode , On|Off
+SetTimer , Label [, Period|On|Off]
+SetTitleMatchMode , Fast|Slow|RegEx|1|2|3
+SetWinDelay , Delay
+SetWorkingDir , DirName
+Shutdown , Code
+Sleep , Delay
+Sort , VarName [, Options]
+SoundBeep [, Frequency, Duration]
+SoundGet , OutputVar [, ComponentType, ControlType, DeviceNumber]
+SoundGetWaveVolume , OutputVar [, DeviceNumber]
+SoundPlay , Filename [, Wait]
+SoundSet , NewSetting [, ComponentType, ControlType, DeviceNumber]
+SoundSetWaveVolume , Percent [, DeviceNumber]
+SplashImage [, ImageFile, Options, SubText, MainText, WinTitle, FontName]
+SplashTextOff
+SplashTextOn [, Width, Height, Title, Text]
+SplitPath , InputVar [, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive]
+StatusBarGetText , OutputVar [, Part#, WinTitle, WinText, ExcludeTitle, ExcludeText]
+StatusBarWait [, BarText, Seconds, Part#, WinTitle, WinText, Interval, ExcludeTitle, ExcludeText]
+StringCaseSense , On|Off|Locale
+StringGetPos , OutputVar, InputVar, SearchText [, L#|R#, Offset]
+StringLeft , OutputVar, InputVar, Count
+StringLen , OutputVar, InputVar
+StringLower , OutputVar, InputVar [, T]
+StringMid , OutputVar, InputVar, StartChar [, Count, L]
+StringReplace , OutputVar, InputVar, SearchText [, ReplaceText, All]
+StringRight , OutputVar, InputVar, Count
+StringSplit , OutputArray, InputVar [, Delimiters, OmitChars]
+StringTrimLeft , OutputVar, InputVar, Count
+StringTrimRight , OutputVar, InputVar, Count
+StringUpper , OutputVar, InputVar [, T]
+Suspend [, On|Off|Toggle|Permit]
+SysGet , OutputVar, Sub-command [, Param3]
+Thread , Setting, P2 [, P3]
+throw , Expression
+ToolTip [, Text, X, Y, WhichToolTip]
+Transform , OutputVar, Cmd, Value1 [, Value2]
+TrayTip [, Title, Text, Seconds, Options]
+try
+until Expression
+URLDownloadToFile , URL, Filename
+while Expression
+WinActivate [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinActivateBottom [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinClose [, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]
+WinGet , OutputVar [, Cmd, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinGetActiveStats , Title, Width, Height, X, Y
+WinGetActiveTitle , OutputVar
+WinGetClass , OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinGetPos [, X, Y, Width, Height, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinGetText , OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinGetTitle , OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinHide [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinKill [, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]
+WinMaximize [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinMenuSelectItem , WinTitle, WinText, Menu [, SubMenu1, SubMenu2, SubMenu3, SubMenu4, SubMenu5, SubMenu6, ExcludeTitle, ExcludeText]
+WinMinimize [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinMinimizeAll
+WinMinimizeAllUndo
+WinMove , WinTitle, WinText, X, Y [, Width, Height, ExcludeTitle, ExcludeText]
+WinRestore [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinSet , AlwaysOnTop|Trans, On|Off|Toggle|Value(0-255) [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinSetTitle , WinTitle, WinText, NewTitle [, ExcludeTitle, ExcludeText]
+WinShow [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinWait , WinTitle, WinText, Seconds [, ExcludeTitle, ExcludeText]
+WinWaitActive [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
+WinWaitClose , WinTitle, WinText, Seconds [, ExcludeTitle, ExcludeText]
+WinWaitNotActive [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]

@@ -1,0 +1,1252 @@
+( 特别注意
+( 此文件编码必须为“UTF-8无BOM”！！！！！！！！！！！！！！！
+( 原因是如果带BOM，那么从这里取出的中文关键字在自动完成列表中会被加上BOM。
+( 而从SciTE编辑框中读到的中文又必定不带BOM，因此作比较时就会因长度不一致而判断出错，无法自动完成。
+( 更新日志
+( 2020.08.30 使用“( ”的形式替代“# ”注释，以便被新的自动完成功能正确加载。
+( 2020.08.27 “(”“,”“空格”3个符号及后面的内容在被载入自动完成列表时会被清空。
+( 2020.07.30 使用“# ”的形式替代“;”注释，可以改善输入中文“迅雷”引起的自动完成框问题（现在只显示两个空白框了）。此问题应该是激活了“Ctrl+i”功能导致的。
+( 2019.12.03 根据1.1.32.00帮助文件中的更新日志，更新了从1.1.23.05到今天的变动。
+( 2016.05.06 此文件中的注释也会引起自动完成，例如中文“单引号”三个字就可以引起“;更新日志”的自动完成。
+( 2016.04.27 花了整整7天时间，根据1.1.23.05英文版帮助文件，反编译后逐文件逐内容手工校对3遍。保证命令、函数、“A_”变量、按键部分已经完美（包括补齐缺失、修正错误、统一名称等等），其它的（例如命令的某参数的各种选项）缺少校对途径，故只通过帮助文件的索引部分“Index.hhk”进行校对，补齐了所有索引中存在的部分，但无法保证完美。
+
+#AllowSameLineComments
+#ClipboardTimeout Milliseconds
+#CommentFlag NewString
+#Delimiter NewChar
+#DerefChar NewChar
+#ErrorStdOut
+#EscapeChar NewChar
+#HotkeyInterval Milliseconds
+#HotkeyModifierTimeout Milliseconds
+
+( “NoMouse”和“EndChars”都是真的单词
+#Hotstring NoMouse
+#Hotstring EndChars NewChars
+#Hotstring NewOptions
+#If [Expression]
+#IfTimeout Milliseconds
+#IfWinActive [, WinTitle, WinText]
+#IfWinExist [, WinTitle, WinText]
+#IfWinNotActive [, WinTitle, WinText]
+#IfWinNotExist [, WinTitle, WinText]
+#Include FileOrDirName|<LibName>
+#IncludeAgain FileOrDirName
+#InputLevel [Level]
+#InstallKeybdHook
+#InstallMouseHook
+#KeyHistory MaxEvents
+#LTrim [On|Off]
+#MaxHotkeysPerInterval Value
+#MaxMem Megabytes
+#MaxThreads Value
+#MaxThreadsBuffer On|Off
+#MaxThreadsPerHotkey Value
+#MenuMaskKey KeyName
+#NoEnv
+#NoTrayIcon
+#Persistent
+#SingleInstance [Force|Ignore|Off]
+#UseHook [On|Off]
+#Warn [, UseUnsetLocal|UseUnsetGlobal|UseEnv|LocalSameAsGlobal|ClassOverwrite|All, MsgBox|StdOut|OutputDebug|Off]
+#WinActivateForce
+
+AutoTrim , On|Off
+BlockInput , On|Off|Send|Mouse|SendAndMouse|Default|MouseMove|MouseMoveOff
+break [, LoopLabel]
+Click [, Value1, Value2, Value3, Value4]
+ClipWait [, SecondsToWait, 1]
+catch [, OutputVar]
+continue [, LoopLabel]
+Control , Cmd [, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlClick [, Control-or-Pos, WinTitle, WinText, WhichButton, ClickCount, NA|D|U|Pos|Xn|Yn, ExcludeTitle, ExcludeText]
+ControlFocus [, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlGet , OutputVar, Cmd [, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlGetFocus , OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlGetPos [, X, Y, Width, Height, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlGetText , OutputVar [, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlMove , Control, X, Y, Width, Height [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlSend [, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlSendRaw [, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ControlSetText [, Control, NewText, WinTitle, WinText, ExcludeTitle, ExcludeText]
+CoordMode , ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Relative|Window|Client]
+Critical [, On|Off]
+DetectHiddenText , On|Off
+DetectHiddenWindows , On|Off
+Drive , Label|Lock|Unlock|Eject [, Drive, Value]
+DriveGet , OutputVar, Cmd [, Value]
+DriveSpaceFree , OutputVar, Path
+Edit
+else
+EnvAdd , Var, Value [, TimeUnits]
+EnvDiv , Var, Value
+EnvGet , OutputVar, EnvVarName
+EnvMult , Var, Value
+EnvSet , EnvVarName, Value
+EnvSub , Var, Value [, TimeUnits]
+EnvUpdate
+Exit [, ExitCode]
+ExitApp [, ExitCode]
+FileAppend [, Text, *Filename, Encoding]
+FileCopy , Source, Dest [, 0|1]
+FileCopyDir , Source, Dest [, 0|1]
+FileCreateDir , DirName
+FileCreateShortcut , Target, LinkFile [, WorkingDir, Args, Description, IconFile, ShortcutKey, IconNumber, RunState]
+FileDelete , FilePattern
+FileEncoding [, UTF-8|UTF-16|UTF-8-RAW|UTF-16-RAW|CPnnn]
+FileGetAttrib , OutputVar [, Filename]
+FileGetShortcut , LinkFile [, OutTarget, OutDir, OutArgs, OutDescription, OutIcon, OutIconNum, OutRunState]
+FileGetSize , OutputVar [, Filename, K|M]
+FileGetTime , OutputVar [, Filename, M|C|A]
+FileGetVersion , OutputVar [, Filename]
+FileInstall , Source, Dest [, 0|1]
+FileMove , Source, Dest [, 0|1]
+FileMoveDir , Source, Dest [, 0|1|2|R]
+FileRead , OutputVar, *Filename
+FileReadLine , OutputVar, Filename, LineNum
+FileRecycle , FilePattern
+FileRecycleEmpty [, DriveLetter]
+FileRemoveDir , DirName [, 0|1]
+FileSelectFile , OutputVar [, Options, RootDir\\Filename, Prompt, Filter]
+FileSelectFolder , OutputVar [, StartingFolder, Options, Prompt]
+FileSetAttrib , Attributes [, FilePattern, 0|1|2, 0|1]
+FileSetTime [, YYYYMMDDHH24MISS, FilePattern, M|C|A, 0|1|2, 0|1]
+finally
+for Key [,Value] in Obj
+FormatTime , OutputVar [, YYYYMMDDHH24MISS, Format]
+GetKeyState , OutputVar, KeyName [, P|T]
+gosub , Label
+goto , Label
+GroupActivate , GroupName [, R]
+GroupAdd , GroupName [, WinTitle, WinText, Label, ExcludeTitle, ExcludeText]
+GroupClose , GroupName [, A|R]
+GroupDeactivate , GroupName [, R]
+Gui , Sub-command [, Param2, Param3, Param4]
+GuiControl , Sub-command, ControlID [, Param]
+GuiControlGet , OutputVar [, Sub-command, ControlID, Param]
+Hotkey , If [, Expression]
+Hotkey , IfWinActive|IfExist [, WinTitle, WinText]
+Hotkey , KeyName [, Label, Options]
+if Var = Value
+if Var [not] between Low and High
+if Var [not] contains Value1, Value2, ..., Value_n
+if Var [not] in Value1, Value2, ..., Value_n
+if Var is [not] integer|float|number|digit|xdigit|alpha|upper|lower|alnum|space|time
+if (Expression)
+IfEqual , Var, Value
+IfExist , FilePattern
+IfGreater , Var, Value
+IfGreaterOrEqual , Var, Value
+IfInString , Var, SearchString
+IfLess , Var, Value
+IfLessOrEqual , Var, Value
+IfMsgBox , Yes|No|OK|Cancel|Abort|Ignore|Retry|Continue|TryAgain|Timeout
+IfNotEqual , Var, Value
+IfNotExist , FilePattern
+IfNotInString , Var, SearchString
+IfWinActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+IfWinExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+IfWinNotActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+IfWinNotExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+ImageSearch , OutputVarX, OutputVarY, X1, Y1, X2, Y2, *ImageFile
+IniDelete , Filename, Section [, Key]
+IniRead , OutputVar, Filename [, Section, Key, Default]
+IniWrite , Value, Filename, Section [, Key]
+Input [, OutputVar, Options, EndKeys, MatchList]
+InputBox , OutputVar [, Title, Prompt, HIDE, Width, Height, X, Y, Locale, Timeout, Default]
+KeyHistory
+KeyWait , KeyName [, D|L|Tn]
+ListHotkeys
+ListLines [, On|Off]
+ListVars
+loop [, Count]
+loop, Files, FilePattern [, D|F|R]
+loop, Parse, InputVar [, Delimiters, OmitChars]
+loop, Read, InputFile [, *OutputFile]
+loop, Reg, HKLM|HKU|HKCU|HKCR|HKCC[\\Key, K|V|R]
+Menu , MenuName, Cmd [, P3, P4, P5]
+MouseClick [, WhichButton, X, Y, ClickCount, Speed, D|U, R]
+MouseClickDrag , WhichButton, X1, Y1, X2, Y2 [, Speed, R]
+MouseGetPos [, OutputVarX, OutputVarY, OutputVarWin, OutputVarControl, 1|2|3]
+MouseMove , X, Y [, Speed, R]
+MsgBox , Text
+MsgBox [, Options, Title, Text, Timeout]
+OnExit [, Label]
+OutputDebug , Text
+Pause [, On|Off|Toggle, 0|1]
+PixelGetColor , OutputVar, X, Y [, Alt|Slow|RGB]
+PixelSearch , OutputVarX, OutputVarY, X1, Y1, X2, Y2, ColorID [, Variation, Fast|RGB]
+PostMessage , Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+SendMessage , Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+Process , Exist|Close|List|Priority|Wait|WaitClose [, PID-or-Name, Param]
+Progress , Off|Param [, SubText, MainText, WinTitle, FontName]
+Random , , NewSeed
+Random , OutputVar [, Min, Max]
+RegDelete , HKLM|HKU|HKCU|HKCR|HKCC\\SubKey [, ValueName]
+RegRead , OutputVar, HKLM|HKU|HKCU|HKCR|HKCC\\SubKey [, ValueName]
+RegWrite , REG_SZ|REG_EXPAND_SZ|REG_MULTI_SZ|REG_DWORD|REG_BINARY, HKLM|HKU|HKCU|HKCR|HKCC\\SubKey [, ValueName, Value]
+Reload
+return [, Expression]
+Run , Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
+RunWait , Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
+RunAs [, User, Password, Domain]
+Send , Keys
+SendRaw , Keys
+SendInput , Keys
+SendPlay , Keys
+SendEvent , Keys
+SendLevel , Level
+SendMode , Input|Play|Event|InputThenPlay
+SetBatchLines , -1|20ms|LineCount
+SetControlDelay , Milliseconds
+SetDefaultMouseSpeed , Speed
+SetEnv , Var, Value
+SetFormat , IntegerFast|FloatFast, TotalWidth.DecimalPlaces|H|D
+SetKeyDelay [, Milliseconds, PressDuration, Play]
+SetMouseDelay , Milliseconds [, Play]
+SetCapsLockState [, On|Off|AlwaysOn|AlwaysOff]
+SetNumLockState [, On|Off|AlwaysOn|AlwaysOff]
+SetScrollLockState [, On|Off|AlwaysOn|AlwaysOff]
+SetRegView , 32|64|Default
+SetStoreCapslockMode , On|Off
+SetTimer [, Label, Period|On|Off|Delete, Priority]
+SetTitleMatchMode , Fast|Slow|RegEx|1|2|3
+SetWinDelay , Milliseconds
+SetWorkingDir , DirName
+Shutdown , Code
+Sleep , Milliseconds
+Sort , VarName [, Options]
+SoundBeep [, 37-to-32767, Milliseconds]
+SoundGet , OutputVar [, ComponentType, ControlType, DeviceNumber]
+SoundGetWaveVolume , OutputVar [, DeviceNumber]
+SoundPlay , Filename [, Wait]
+SoundSet , NewSetting [, ComponentType, ControlType, DeviceNumber]
+SoundSetWaveVolume , Percent [, DeviceNumber]
+SplashImage [, Off|ImageFile, Options, SubText, MainText, WinTitle, FontName]
+SplashTextOff
+SplashTextOn [, Width, Height, Title, Text]
+SplitPath , InputVar [, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive]
+StatusBarGetText , OutputVar [, Part, WinTitle, WinText, ExcludeTitle, ExcludeText]
+StatusBarWait [, BarText, Seconds, Part, WinTitle, WinText, Interval, ExcludeTitle, ExcludeText]
+StringCaseSense , On|Off|Locale
+StringGetPos , OutputVar, InputVar, SearchText [, L|R|Ln|Rn, Offset]
+StringLeft , OutputVar, InputVar, Count
+StringLen , OutputVar, InputVar
+StringLower , OutputVar, InputVar [, T]
+StringMid , OutputVar, InputVar, StartChar [, Count, L]
+StringReplace , OutputVar, InputVar, SearchText [, ReplaceText, All]
+StringRight , OutputVar, InputVar, Count
+StringSplit , OutputArray, InputVar [, Delimiters, OmitChars]
+StringTrimLeft , OutputVar, InputVar, Count
+StringTrimRight , OutputVar, InputVar, Count
+StringUpper , OutputVar, InputVar [, T]
+Suspend [, On|Off|Toggle|Permit]
+SysGet , OutputVar, Sub-command [, Param]
+Thread , NoTimers [, false]
+Thread , Priority, n
+Thread , Interrupt [, Duration, LineCount]
+throw [, Expression]
+ToolTip [, Text, X, Y, WhichToolTip]
+Transform , OutputVar, Cmd, Value1 [, Value2]
+TrayTip [, Title, Text, Seconds, Options]
+try
+until (Expression)
+URLDownloadToFile , URL, Filename
+while (Expression)
+switch [, SwitchValue]
+WinActivate [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinActivateBottom [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinClose [, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]
+WinGet , OutputVar [, Cmd, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinGetActiveStats , Title, Width, Height, X, Y
+WinGetActiveTitle , OutputVar
+WinGetClass , OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinGetPos [, X, Y, Width, Height, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinGetText , OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinGetTitle , OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinHide [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinKill [, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]
+WinMaximize [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinMenuSelectItem , WinTitle, WinText, Menu [, SubMenu1, SubMenu2, SubMenu3, SubMenu4, SubMenu5, SubMenu6, ExcludeTitle, ExcludeText]
+WinMinimize [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinMinimizeAll
+WinMinimizeAllUndo
+WinMove , X, Y
+WinMove , WinTitle, WinText, X, Y [, Width, Height, ExcludeTitle, ExcludeText]
+WinRestore [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinSet , Attribute, Value [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinSetTitle , NewTitle
+WinSetTitle , WinTitle, WinText, NewTitle [, ExcludeTitle, ExcludeText]
+WinShow [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+WinWait [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
+WinWaitActive [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
+WinWaitClose [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
+WinWaitNotActive [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
+
+FileExist (FilePattern)
+GetKeyState (KeyName [, "P|T"])
+InStr (String, Needle [, CaseSensitive, StartingPos, Occurrence])
+RegExMatch (String, NeedleRegEx [, OutputVar, StartingPos])
+RegExReplace (String, NeedleRegEx [, Replacement, OutputVarCount, Limit, StartingPos])
+.Len
+.Value
+.Mark
+SubStr (String, StartingPos [, Length])
+StrLen (String)
+StrSplit (String [, Delimiters, OmitChars, MaxParts])
+WinActive ([WinTitle, WinText, ExcludeTitle, ExcludeText])
+WinExist ([WinTitle, WinText, ExcludeTitle, ExcludeText])
+
+Asc (String)
+Ord (String)
+Chr (Number)
+DllCall ([DllFile\\]Function [, Type1, Arg1, Type2, Arg2, ..., ..., Type_n, Arg_n, "Cdecl ReturnType"])
+Hotstring (String|NewOptions|EndChars|MouseReset|Reset [, Replacement, 1|0|-1])
+GetKeyName (Key)
+GetKeyVK (Key)
+GetKeySC (Key)
+InputHook ([Options, EndKeys, MatchList])
+.KeyOpt (Keys, KeyOptions)
+.Start ()
+.Wait ([MaxTime])
+.Stop ()
+.EndKey
+.EndMods
+.EndReason
+.InProgress
+.Input
+.Match
+.OnEnd
+.OnChar
+.OnKeyDown
+.OnKeyUp
+.BackspaceIsUndo
+.CaseSensitive
+.FindAnywhere
+.MinSendLevel
+.NotifyNonText
+.Timeout
+.VisibleNonText
+.VisibleText
+
+IsByRef (Var)
+IsFunc (FunctionName)
+IsLabel (LabelName)
+IsObject (Param)
+NumGet (VarOrAddress [, Offset, "UInt|Int|Int64|Short|UShort|Char|UChar|Double|Float|Ptr|UPtr"])
+NumPut (Number, VarOrAddress [, Offset, "UInt|Int|Int64|Short|UShort|Char|UChar|Double|Float|Ptr|UPtr"])
+OnMessage (MsgNumber [, Function, MaxThreads])
+StrGet (Address [, Length, Encoding])
+StrPut (String [, Encoding])
+StrPut (String, Address [, Length, Encoding])
+RegisterCallback (FunctionName [, "Fast|CDecl", ParamCount, EventInfo])
+Trim (String [, OmitChars])
+LTrim (String [, OmitChars])
+RTrim (String [, OmitChars])
+VarSetCapacity (Var [, RequestedCapacity, FillByte])
+
+Abs (Number)
+Ceil (Number)
+Exp (N)
+Floor (Number)
+Log (Number)
+Ln (Number)
+Max (Number1 [, Number2, ..., Number_n])
+Min (Number1 [, Number2, ..., Number_n])
+Mod (Dividend, Divisor)
+Round (Number [, N])
+Sqrt (Number)
+
+Sin (Number)
+Cos (Number)
+Tan (Number)
+ASin (Number)
+ACos (Number)
+ATan (Number)
+
+Exception (Message [, What, Extra])
+StrReplace (String, SearchText [, ReplaceText, OutputVarCount, Limit])
+Format (FormatStr [, Value1, Value2, ..., Value_n])
+LoadPicture (Filename [, "Wn|Hn|Iconn|GDI+", ByRef ImageType])
+MenuGetHandle (MenuName)
+MenuGetName (Handle)
+OnClipboardChange (Func [, 1|-1|0])
+OnExit (Func [, 1|-1|0])
+OnError (Func [, 1|-1|0])
+
+ComObjActive (CLSID)
+ComObject (VarType, Value [, Flags])
+ComObjMissing ()
+ComObjEnwrap (DispPtr)
+ComObjUnwrap (ComObject)
+ComObjValue (ComObject)
+ComObjType (ComObject [, "Name|IID|Class|CLSID"])
+ComObjArray (VarType, Count1 [, Count2, ..., Count8])
+ComObjConnect (ComObject [, Prefix])
+ComObjCreate (CLSID [, IID])
+ComObjError ([0|1])
+ComObjFlags (ComObject [, NewFlags, Mask])
+ComObjGet (Name)
+ComObjQuery (ComObject [, SID], IID)
+ObjAddRef (Ptr)
+ObjRelease (Ptr)
+ObjBindMethod (Obj, Method [, Param1, Param2, ..., Param_n])
+
+LV_Add ([Options, Col1, Col2, ..., Col_n])
+LV_Insert (RowNumber [, Options, Col1, Col2, ..., Col_n])
+LV_Modify (RowNumber [, Options, NewCol1, NewCol2, ..., NewCol_n])
+LV_Delete ([RowNumber])
+LV_ModifyCol ([ColumnNumber, Options, ColumnTitle])
+LV_InsertCol (ColumnNumber [, Options, ColumnTitle])
+LV_DeleteCol (ColumnNumber)
+LV_GetCount (["Selected|Col"])
+
+( 斟酌再三，没有将这里的“StartingRowNumber”改为“RowNumber”
+LV_GetNext ([StartingRowNumber, "Checked|Focused"])
+LV_GetText (OutputVar, RowNumber [, ColumnNumber])
+LV_SetImageList (ImageListID [, 0|1|2])
+IL_Create ([InitialCount, GrowCount, LargeIcons])
+IL_Add (ImageListID, Filename [, IconNumber, ResizeNonIcon])
+IL_Destroy (ImageListID)
+
+TV_SetImageList (ImageListID [, 0|2])
+TV_Add (Name [, ParentItemID, Options])
+TV_Modify (ItemID [, Options, NewName])
+TV_Delete ([ItemID])
+TV_GetSelection ()
+TV_GetCount ()
+TV_GetParent (ItemID)
+TV_GetChild (ParentItemID)
+TV_GetPrev (ItemID)
+TV_GetNext ([ItemID, "Checked|Full"])
+TV_GetText (OutputVar, ItemID)
+TV_Get (ItemID, "Expanded|Checked|Bold")
+
+SB_SetText (NewText [, PartNumber, Style])
+SB_SetParts ([Width1, Width2, ..., Width255])
+SB_SetIcon (Filename [, IconNumber, PartNumber])
+
+FileOpen (Filename, Flags [, Encoding])
+.Read ([Characters])
+.Write (String)
+.ReadLine ()
+.WriteLine ([String])
+.ReadUInt ()
+.ReadInt ()
+.ReadInt64 ()
+.ReadShort ()
+.ReadUShort ()
+.ReadChar ()
+.ReadUChar ()
+.ReadDouble ()
+.ReadFloat ()
+.WriteUInt (Number)
+.WriteInt (Number)
+.WriteInt64 (Number)
+.WriteShort (Number)
+.WriteUShort (Number)
+.WriteChar (Number)
+.WriteUChar (Number)
+.WriteDouble (Number)
+.WriteFloat (Number)
+.RawRead (VarOrAddress, Bytes)
+.RawWrite (VarOrAddress, Bytes)
+.Seek (Distance [, SEEK_SET|SEEK_CUR|SEEK_END])
+.Position ([Distance])
+.Pos ([Distance])
+.Tell ()
+.Length ([NewSize])
+.AtEOF ()
+.Close ()
+.Encoding ([Encoding])
+.__Handle ()
+
+Array ([Value1, Value2, ..., Value_n])
+Object (Obj)
+Object ([Key1, Value1, Key2, Value2, ..., ..., Key_n, Value_n])
+
+.InsertAt (Pos, Value1 [, Value2, ..., Value_n])
+.RemoveAt (Pos [, Length])
+.Push ([Value1, Value2, ..., Value_n])
+.Pop ()
+.Delete (Key)
+.Delete (FirstKey, LastKey)
+.MinIndex ()
+.MaxIndex ()
+.Length ()
+.Count ()
+.SetCapacity (Maxitems)
+.SetCapacity (Key, ByteSize)
+.GetCapacity ([Key])
+.GetAddress (Key)
+._NewEnum ()
+
+( “.Next()”存在于单独页面，但可在“._NewEnum()”处链接过去，故合并于此
+.Next (OutputVar1 [, OutputVar2, ..., OutputVar_n])
+.HasKey (Key)
+.Clone ()
+ObjRawGet (Object, Key)
+ObjRawSet (Object, Key, Value)
+ObjGetBase (Object)
+ObjSetBase (Object, Base)
+
+.Insert (Value)
+.Insert (Key, Value)
+.Insert (Index, Value1, Value2, ..., Value_n)
+.Remove (Key)
+.Remove (First, "")
+.Remove (First, Last)
+
+Func (Funcname)
+.Call (Param1, Param2, ..., Param_n)
+.Bind (Param1, Param2, ..., Param_n)
+.Name ()
+.IsBuiltIn ()
+.IsVariadic ()
+.MinParams ()
+.MaxParams ()
+.IsByRef (ParamIndex)
+.IsOptional (ParamIndex)
+
+Class ClassName [extends BaseClassName]
+new
+extends
+base
+.base
+this
+__New ([Param1, Param2, ..., Param_n])
+__Delete ()
+__Get ([Key1, Key2, ..., Key_n])
+__Set ([Key1, Key2, ..., Key_n,] Value)
+__Call (Name [, Param1, Param2, ..., Param_n])
+.__New ([Param1, Param2, ..., Param_n])
+.__Delete ()
+.__Get ([Key1, Key2, ..., Key_n])
+.__Set ([Key1, Key2, ..., Key_n,] Value)
+.__Call (Name [, Param1, Param2, ..., Param_n])
+
+Shift
+LShift
+RShift
+Alt
+LAlt
+RAlt
+Control
+LControl
+RControl
+Ctrl
+LCtrl
+RCtrl
+LWin
+RWin
+AppsKey
+
+AltDown
+AltUp
+ShiftDown
+ShiftUp
+CtrlDown
+CtrlUp
+LWinDown
+LWinUp
+RWinDown
+RWinUp
+
+LButton
+RButton
+MButton
+WheelUp
+WheelDown
+WheelLeft
+WheelRight
+XButton1
+XButton2
+Blind
+Click
+Raw
+
+Joy1
+Joy2
+Joy3
+Joy4
+Joy5
+Joy6
+Joy7
+Joy8
+Joy9
+Joy10
+Joy11
+Joy12
+Joy13
+Joy14
+Joy15
+Joy16
+Joy17
+Joy18
+Joy19
+Joy20
+Joy21
+Joy22
+Joy23
+Joy24
+Joy25
+Joy26
+Joy27
+Joy28
+Joy29
+Joy30
+Joy31
+Joy32
+JoyX
+JoyY
+JoyZ
+JoyR
+JoyU
+JoyV
+JoyPOV
+JoyName
+JoyButtons
+JoyAxes
+JoyInfo
+
+Space
+Tab
+Enter
+Escape
+Esc
+BackSpace
+BS
+Delete
+Del
+Insert
+Ins
+PgUp
+PgDn
+Home
+End
+Up
+Down
+Left
+Right
+DownR
+
+PrintScreen
+CtrlBreak
+Pause
+Sleep
+ScrollLock
+CapsLock
+NumLock
+
+Numpad0
+Numpad1
+Numpad2
+Numpad3
+Numpad4
+Numpad5
+Numpad6
+Numpad7
+Numpad8
+Numpad9
+NumpadMult
+NumpadAdd
+NumpadSub
+NumpadDiv
+NumpadDot
+NumpadDel
+NumpadIns
+NumpadClear
+NumpadUp
+NumpadDown
+NumpadLeft
+NumpadRight
+NumpadHome
+NumpadEnd
+NumpadPgUp
+NumpadPgDn
+NumpadEnter
+
+F1
+F2
+F3
+F4
+F5
+F6
+F7
+F8
+F9
+F10
+F11
+F12
+F13
+F14
+F15
+F16
+F17
+F18
+F19
+F20
+F21
+F22
+F23
+F24
+
+Browser_Back
+Browser_Forward
+Browser_Refresh
+Browser_Stop
+Browser_Search
+Browser_Favorites
+Browser_Home
+Volume_Mute
+Volume_Down
+Volume_Up
+Media_Next
+Media_Prev
+Media_Stop
+Media_Play_Pause
+Launch_Mail
+Launch_Media
+Launch_App1
+Launch_App2
+
+A_AhkPath
+A_AhkVersion
+A_AppData
+A_AppDataCommon
+A_AutoTrim
+A_BatchLines
+A_CaretX
+A_CaretY
+A_ComputerName
+A_ControlDelay
+A_CoordModeCaret
+A_CoordModeMenu
+A_CoordModeMouse
+A_CoordModePixel
+A_CoordModeToolTip
+A_Cursor
+A_DD
+A_DDD
+A_DDDD
+A_DefaultGui
+A_DefaultListView
+A_DefaultMouseSpeed
+A_DefaultTreeView
+A_Desktop
+A_DesktopCommon
+A_DetectHiddenText
+A_DetectHiddenWindows
+A_EndChar
+A_EventInfo
+A_ExitReason
+A_FileEncoding
+A_FormatFloat
+A_FormatInteger
+A_Gui
+A_GuiControl
+A_GuiControlEvent
+A_GuiEvent
+A_GuiHeight
+A_GuiWidth
+A_GuiX
+A_GuiY
+A_Hour
+A_IconFile
+A_IconHidden
+A_IconNumber
+A_IconTip
+A_Index
+A_IPAddress1
+A_IPAddress2
+A_IPAddress3
+A_IPAddress4
+A_Is64bitOS
+A_IsAdmin
+A_IsCompiled
+A_IsCritical
+A_IsPaused
+A_IsSuspended
+A_IsUnicode
+A_KeyDelay
+A_KeyDelayPlay
+A_KeyDuration
+A_KeyDurationPlay
+A_Language
+A_LastError
+A_LineFile
+A_LineNumber
+A_LoopField
+A_LoopFileAttrib
+A_LoopFileDir
+A_LoopFileExt
+A_LoopFileFullPath
+A_LoopFileLongPath
+A_LoopFileName
+A_LoopFileShortName
+A_LoopFileShortPath
+A_LoopFileSize
+A_LoopFileSizeKB
+A_LoopFileSizeMB
+A_LoopFileTimeAccessed
+A_LoopFileTimeCreated
+A_LoopFileTimeModified
+A_LoopReadLine
+A_LoopRegKey
+A_LoopRegName
+A_LoopRegSubKey
+A_LoopRegTimeModified
+A_LoopRegType
+A_MDay
+A_Min
+A_MM
+A_MMM
+A_MMMM
+A_Mon
+A_MouseDelay
+A_MouseDelayPlay
+A_MSec
+A_MyDocuments
+A_Now
+A_NowUTC
+A_NumBatchLines
+A_OSType
+A_OSVersion
+A_PriorHotkey
+A_PriorKey
+A_ProgramFiles
+A_Programs
+A_ProgramsCommon
+A_PtrSize
+A_RegView
+A_ScreenDPI
+A_ScreenHeight
+A_ScreenWidth
+A_ScriptDir
+A_ScriptFullPath
+A_ScriptHwnd
+A_ScriptName
+A_Sec
+A_SendLevel
+A_SendMode
+A_Space
+A_StartMenu
+A_StartMenuCommon
+A_Startup
+A_StartupCommon
+A_StoreCapslockMode
+A_StringCaseSense
+A_Tab
+A_Temp
+A_ThisFunc
+A_ThisHotkey
+A_ThisLabel
+A_ThisMenu
+A_ThisMenuItem
+A_ThisMenuItemPos
+A_TickCount
+A_TimeIdle
+A_TimeIdlePhysical
+A_TimeSincePriorHotkey
+A_TimeSinceThisHotkey
+A_TitleMatchMode
+A_TitleMatchModeSpeed
+A_UserName
+A_WDay
+A_WinDelay
+A_WinDir
+A_WorkingDir
+A_YDay
+A_Year
+A_YWeek
+A_YYYY
+A_Args
+A_TimeIdleKeyboard
+A_TimeIdleMouse
+A_ListLines
+A_ComSpec
+A_LoopFilePath
+
+Pixel
+Mouse
+Caret
+Screen
+Relative
+Window
+Client
+RGB
+
+LTrim
+RTrim
+Join
+
+Low
+BelowNormal
+Normal
+AboveNormal
+High
+Realtime
+
+ahk_id
+ahk_pid
+ahk_class
+ahk_group
+ahk_exe
+
+between
+contains
+in
+is
+Integer
+Float
+IntegerFast
+FloatFast
+number
+digit
+xdigit
+alpha
+upper
+lower
+alnum
+time
+date
+
+not
+or
+and
+
+AlwaysOnTop
+Topmost
+Top
+Bottom
+Transparent
+TransColor
+Redraw
+Region
+ID
+IDLast
+PID
+ProcessName
+ProcessPath
+MinMax
+ControlList
+ControlListHwnd
+Count
+List
+Capacity
+StatusCD
+Eject
+Lock
+Unlock
+Label
+FileSystem
+Label
+SetLabel
+Serial
+Type
+Status
+
+static
+global
+local
+ByRef
+
+Seconds
+Minutes
+Hours
+Days
+
+Files
+Reg
+Read
+Parse
+
+Logoff
+Close
+Error
+Single
+
+Tray
+Add
+Rename
+Check
+UnCheck
+ToggleCheck
+Enable
+Disable
+ToggleEnable
+Default
+NoDefault
+Standard
+NoStandard
+Color
+Delete
+DeleteAll
+Icon
+NoIcon
+Tip
+Click
+Show
+MainWindow
+NoMainWindow
+UseErrorLevel
+
+Text
+Picture
+Pic
+GroupBox
+Button
+Checkbox
+Radio
+DropDownList
+DDL
+ComboBox
+ListBox
+ListView
+DateTime
+MonthCal
+Slider
+StatusBar
+Tab
+Tab2
+Tab3
+TreeView
+UpDown
+ActiveX
+Link
+Custom
+
+IconSmall
+Tile
+Report
+SortDesc
+NoSort
+NoSortHdr
+Grid
+Hdr
+AutoSize
+Range
+xm
+ym
+ys
+xs
+xp
+yp
+
+Font
+Resize
+Owner
+Submit
+NoHide
+Minimize
+Maximize
+Restore
+NoActivate
+NA
+Cancel
+Destroy
+Center
+DPIScale
+
+Margin
+MaxSize
+MinSize
+OwnDialogs
+GuiEscape
+GuiClose
+GuiSize
+GuiContextMenu
+GuiDropFiles
+OnClipboardChange
+
+TabStop
+Section
+AltSubmit
+Wrap
+HScroll
+VScroll
+Border
+Top
+Bottom
+Buttons
+Expand
+First
+ImageList
+Lines
+WantCtrlA
+WantF2
+Vis
+VisFirst
+Number
+Uppercase
+Lowercase
+Limit
+Password
+Multi
+WantReturn
+WantTab
+Group
+Background
+Bold
+Italic
+Strike
+Underline
+Norm
+BackgroundTrans
+Theme
+Caption
+Delimiter
+MinimizeBox
+MaximizeBox
+SysMenu
+ToolWindow
+Flash
+Style
+ExStyle
+Hwnd
+Check3
+Checked
+CheckedGray
+ReadOnly
+Password
+Hidden
+Left
+Right
+Center
+NoTab
+Section
+Move
+Focus
+Hide
+Choose
+ChooseString
+Text
+Pos
+Enabled
+Disabled
+Visible
+LastFound
+LastFoundExist
+
+AltTab
+ShiftAltTab
+AltTabMenu
+AltTabAndMenu
+AltTabMenuDismiss
+
+NoTimers
+Interrupt
+Priority
+WaitClose
+Wait
+Exist
+Close
+
+Unicode
+Asc
+Chr
+ToCodePage
+FromCodePage
+Deref
+Mod
+Pow
+Exp
+Sqrt
+Log
+Ln
+Round
+Ceil
+Floor
+Abs
+Sin
+Cos
+Tan
+ASin
+ACos
+ATan
+BitNot
+BitAnd
+BitOr
+BitXOr
+BitShiftLeft
+BitShiftRight
+
+Yes
+No
+Ok
+Cancel
+Abort
+Retry
+Ignore
+TryAgain
+
+On
+Off
+Toggle
+All
+
+HKEY_LOCAL_MACHINE
+HKEY_USERS
+HKEY_CURRENT_USER
+HKEY_CLASSES_ROOT
+HKEY_CURRENT_CONFIG
+HKLM
+HKU
+HKCU
+HKCR
+HKCC
+
+REG_SZ
+REG_EXPAND_SZ
+REG_MULTI_SZ
+REG_DWORD
+REG_QWORD
+REG_BINARY
+REG_LINK
+REG_RESOURCE_LIST
+REG_FULL_RESOURCE_DESCRIPTOR
+REG_RESOURCE_REQUIREMENTS_LIST
+REG_DWORD_BIG_ENDIAN
+
+UseUnsetLocal
+UseUnsetGlobal
+UseEnv
+LocalSameAsGlobal
+ClassOverwrite
+
+Clipboard
+ClipboardAll
+ComSpec
+ErrorLevel
+ProgramFiles
+true
+false
+
+( StringCaseSense的第三个选项
+Locale
+
+( Image Handles
+HBITMAP
+HICON
+
+( Regular Expression Callouts
+NO_START_OPT
+
+( #SingleInstance的选项
+force
+
+( SysGet的选项
+MonitorCount
+MonitorName
+MonitorPrimary
+MonitorWorkArea
+
+( BlockInput的选项
+SendAndMouse
+MouseMove
+MouseMoveOff
+
+( SetTitleMatchMode的选项
+RegEx
+Fast
+Slow

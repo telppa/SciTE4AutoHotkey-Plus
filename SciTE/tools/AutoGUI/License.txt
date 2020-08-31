@@ -1,0 +1,1 @@
+No portion of AutoGUI or any code derived from it can be used in any software that is sold/licensed commercially, except when otherwise noted.
