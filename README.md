@@ -24,7 +24,7 @@
 ![代码格式化](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/7.%20代码格式化.gif)  
   
 ##### 8. 热键、标签、函数识别并跳转 F12或中键  
-![代码格式化](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/8.%20热键、标签、函数识别并跳转gif)  
+![代码格式化](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/8.%20热键、标签、函数识别并跳转.gif)  
   
 ##### 9. 重复行 ctrl+d  
 ![ctrl+d](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/9.%20ctrl+d.gif)  
