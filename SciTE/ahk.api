@@ -3,6 +3,7 @@
 ( 原因是如果带BOM，那么从这里取出的中文关键字在自动完成列表中会被加上BOM。
 ( 而从SciTE编辑框中读到的中文又必定不带BOM，因此作比较时就会因长度不一致而判断出错，无法自动完成。
 ( 更新日志
+( 2020.09.02 重新按顺序整理，添加更多注释，并添加漏掉的词。
 ( 2020.08.30 使用“( ”的形式替代“# ”注释，以便被新的自动完成功能正确加载。
 ( 2020.08.27 “(”“,”“空格”3个符号及后面的内容在被载入自动完成列表时会被清空。
 ( 2020.07.30 使用“# ”的形式替代“;”注释，可以改善输入中文“迅雷”引起的自动完成框问题（现在只显示两个空白框了）。此问题应该是激活了“Ctrl+i”功能导致的。
@@ -10,6 +11,7 @@
 ( 2016.05.06 此文件中的注释也会引起自动完成，例如中文“单引号”三个字就可以引起“;更新日志”的自动完成。
 ( 2016.04.27 花了整整7天时间，根据1.1.23.05英文版帮助文件，反编译后逐文件逐内容手工校对3遍。保证命令、函数、“A_”变量、按键部分已经完美（包括补齐缺失、修正错误、统一名称等等），其它的（例如命令的某参数的各种选项）缺少校对途径，故只通过帮助文件的索引部分“Index.hhk”进行校对，补齐了所有索引中存在的部分，但无法保证完美。
 
+( -----------------以下是“全局命令”-----------------
 #AllowSameLineComments
 #ClipboardTimeout Milliseconds
 #CommentFlag NewString
@@ -19,11 +21,10 @@
 #EscapeChar NewChar
 #HotkeyInterval Milliseconds
 #HotkeyModifierTimeout Milliseconds
-
 ( “NoMouse”和“EndChars”都是真的单词
 #Hotstring NoMouse
-#Hotstring EndChars NewChars
 #Hotstring NewOptions
+#Hotstring EndChars NewChars
 #If [Expression]
 #IfTimeout Milliseconds
 #IfWinActive [, WinTitle, WinText]
@@ -50,14 +51,82 @@
 #UseHook [On|Off]
 #Warn [, UseUnsetLocal|UseUnsetGlobal|UseEnv|LocalSameAsGlobal|ClassOverwrite|All, MsgBox|StdOut|OutputDebug|Off]
 #WinActivateForce
+( -----------------以上是“全局命令”-----------------
+( -----------------以下是“流程”-----------------
+if Var = Value
+if Var [not] between Low and High
+if Var [not] in Value1, Value2, ..., Value_n
+if Var [not] contains Value1, Value2, ..., Value_n
+if Var is [not] integer|float|number|digit|xdigit|alpha|upper|lower|alnum|space|time
+if (Expression)
+else
 
+IfEqual , Var, Value
+IfExist , FilePattern
+IfGreater , Var, Value
+IfGreaterOrEqual , Var, Value
+IfInString , Var, SearchString
+IfLess , Var, Value
+IfLessOrEqual , Var, Value
+IfMsgBox , Yes|No|OK|Cancel|Abort|Ignore|Retry|Continue|TryAgain|Timeout
+IfNotEqual , Var, Value
+IfNotExist , FilePattern
+IfNotInString , Var, SearchString
+IfWinActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+IfWinExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+IfWinNotActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+IfWinNotExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+
+for Key [,Value] in Obj
+loop [, Count]
+loop, Files, FilePattern [, D|F|R]
+loop, Read, InputFile [, *OutputFile]
+loop, Parse, InputVar [, Delimiters, OmitChars]
+loop, Reg, HKLM|HKU|HKCU|HKCR|HKCC[\\Key, K|V|R]
+until (Expression)
+while (Expression)
+break [, LoopLabel]
+continue [, LoopLabel]
+
+try
+catch [, OutputVar]
+throw [, Expression]
+finally
+
+switch [, SwitchValue]
+case , CaseValue
+default
+
+gosub , Label
+goto , Label
+return [, Expression]
+
+( 变量的作用域
+static
+global
+local
+ByRef
+Class ClassName [extends BaseClassName]
+
+Sleep , Milliseconds
+
+SetTimer [, Label, Period|On|Off|Delete, Priority]
+Critical [, On|Off]
+Thread , Priority, n
+Thread , NoTimers [, false]
+Thread , Interrupt [, Duration, LineCount]
+
+OnExit [, Label]
+Exit [, ExitCode]
+ExitApp [, ExitCode]
+Pause [, On|Off|Toggle, 0|1]
+Reload
+( -----------------以上是“流程”-----------------
+( -----------------以下是“命令”-----------------
 AutoTrim , On|Off
 BlockInput , On|Off|Send|Mouse|SendAndMouse|Default|MouseMove|MouseMoveOff
-break [, LoopLabel]
 Click [, Value1, Value2, Value3, Value4]
 ClipWait [, SecondsToWait, 1]
-catch [, OutputVar]
-continue [, LoopLabel]
 Control , Cmd [, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
 ControlClick [, Control-or-Pos, WinTitle, WinText, WhichButton, ClickCount, NA|D|U|Pos|Xn|Yn, ExcludeTitle, ExcludeText]
 ControlFocus [, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
@@ -70,14 +139,12 @@ ControlSend [, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]
 ControlSendRaw [, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]
 ControlSetText [, Control, NewText, WinTitle, WinText, ExcludeTitle, ExcludeText]
 CoordMode , ToolTip|Pixel|Mouse|Caret|Menu [, Screen|Relative|Window|Client]
-Critical [, On|Off]
 DetectHiddenText , On|Off
 DetectHiddenWindows , On|Off
 Drive , Label|Lock|Unlock|Eject [, Drive, Value]
 DriveGet , OutputVar, Cmd [, Value]
 DriveSpaceFree , OutputVar, Path
 Edit
-else
 EnvAdd , Var, Value [, TimeUnits]
 EnvDiv , Var, Value
 EnvGet , OutputVar, EnvVarName
@@ -85,8 +152,6 @@ EnvMult , Var, Value
 EnvSet , EnvVarName, Value
 EnvSub , Var, Value [, TimeUnits]
 EnvUpdate
-Exit [, ExitCode]
-ExitApp [, ExitCode]
 FileAppend [, Text, *Filename, Encoding]
 FileCopy , Source, Dest [, 0|1]
 FileCopyDir , Source, Dest [, 0|1]
@@ -111,12 +176,8 @@ FileSelectFile , OutputVar [, Options, RootDir\\Filename, Prompt, Filter]
 FileSelectFolder , OutputVar [, StartingFolder, Options, Prompt]
 FileSetAttrib , Attributes [, FilePattern, 0|1|2, 0|1]
 FileSetTime [, YYYYMMDDHH24MISS, FilePattern, M|C|A, 0|1|2, 0|1]
-finally
-for Key [,Value] in Obj
 FormatTime , OutputVar [, YYYYMMDDHH24MISS, Format]
 GetKeyState , OutputVar, KeyName [, P|T]
-gosub , Label
-goto , Label
 GroupActivate , GroupName [, R]
 GroupAdd , GroupName [, WinTitle, WinText, Label, ExcludeTitle, ExcludeText]
 GroupClose , GroupName [, A|R]
@@ -127,27 +188,6 @@ GuiControlGet , OutputVar [, Sub-command, ControlID, Param]
 Hotkey , If [, Expression]
 Hotkey , IfWinActive|IfExist [, WinTitle, WinText]
 Hotkey , KeyName [, Label, Options]
-if Var = Value
-if Var [not] between Low and High
-if Var [not] contains Value1, Value2, ..., Value_n
-if Var [not] in Value1, Value2, ..., Value_n
-if Var is [not] integer|float|number|digit|xdigit|alpha|upper|lower|alnum|space|time
-if (Expression)
-IfEqual , Var, Value
-IfExist , FilePattern
-IfGreater , Var, Value
-IfGreaterOrEqual , Var, Value
-IfInString , Var, SearchString
-IfLess , Var, Value
-IfLessOrEqual , Var, Value
-IfMsgBox , Yes|No|OK|Cancel|Abort|Ignore|Retry|Continue|TryAgain|Timeout
-IfNotEqual , Var, Value
-IfNotExist , FilePattern
-IfNotInString , Var, SearchString
-IfWinActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
-IfWinExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
-IfWinNotActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
-IfWinNotExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
 ImageSearch , OutputVarX, OutputVarY, X1, Y1, X2, Y2, *ImageFile
 IniDelete , Filename, Section [, Key]
 IniRead , OutputVar, Filename [, Section, Key, Default]
@@ -159,11 +199,6 @@ KeyWait , KeyName [, D|L|Tn]
 ListHotkeys
 ListLines [, On|Off]
 ListVars
-loop [, Count]
-loop, Files, FilePattern [, D|F|R]
-loop, Parse, InputVar [, Delimiters, OmitChars]
-loop, Read, InputFile [, *OutputFile]
-loop, Reg, HKLM|HKU|HKCU|HKCR|HKCC[\\Key, K|V|R]
 Menu , MenuName, Cmd [, P3, P4, P5]
 MouseClick [, WhichButton, X, Y, ClickCount, Speed, D|U, R]
 MouseClickDrag , WhichButton, X1, Y1, X2, Y2 [, Speed, R]
@@ -171,13 +206,10 @@ MouseGetPos [, OutputVarX, OutputVarY, OutputVarWin, OutputVarControl, 1|2|3]
 MouseMove , X, Y [, Speed, R]
 MsgBox , Text
 MsgBox [, Options, Title, Text, Timeout]
-OnExit [, Label]
 OutputDebug , Text
-Pause [, On|Off|Toggle, 0|1]
 PixelGetColor , OutputVar, X, Y [, Alt|Slow|RGB]
 PixelSearch , OutputVarX, OutputVarY, X1, Y1, X2, Y2, ColorID [, Variation, Fast|RGB]
 PostMessage , Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
-SendMessage , Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
 Process , Exist|Close|List|Priority|Wait|WaitClose [, PID-or-Name, Param]
 Progress , Off|Param [, SubText, MainText, WinTitle, FontName]
 Random , , NewSeed
@@ -185,36 +217,33 @@ Random , OutputVar [, Min, Max]
 RegDelete , HKLM|HKU|HKCU|HKCR|HKCC\\SubKey [, ValueName]
 RegRead , OutputVar, HKLM|HKU|HKCU|HKCR|HKCC\\SubKey [, ValueName]
 RegWrite , REG_SZ|REG_EXPAND_SZ|REG_MULTI_SZ|REG_DWORD|REG_BINARY, HKLM|HKU|HKCU|HKCR|HKCC\\SubKey [, ValueName, Value]
-Reload
-return [, Expression]
 Run , Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
-RunWait , Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
 RunAs [, User, Password, Domain]
+RunWait , Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
 Send , Keys
-SendRaw , Keys
-SendInput , Keys
-SendPlay , Keys
 SendEvent , Keys
+SendInput , Keys
 SendLevel , Level
+SendMessage , Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
 SendMode , Input|Play|Event|InputThenPlay
+SendPlay , Keys
+SendRaw , Keys
 SetBatchLines , -1|20ms|LineCount
+SetCapsLockState [, On|Off|AlwaysOn|AlwaysOff]
 SetControlDelay , Milliseconds
 SetDefaultMouseSpeed , Speed
 SetEnv , Var, Value
 SetFormat , IntegerFast|FloatFast, TotalWidth.DecimalPlaces|H|D
 SetKeyDelay [, Milliseconds, PressDuration, Play]
 SetMouseDelay , Milliseconds [, Play]
-SetCapsLockState [, On|Off|AlwaysOn|AlwaysOff]
 SetNumLockState [, On|Off|AlwaysOn|AlwaysOff]
-SetScrollLockState [, On|Off|AlwaysOn|AlwaysOff]
 SetRegView , 32|64|Default
+SetScrollLockState [, On|Off|AlwaysOn|AlwaysOff]
 SetStoreCapslockMode , On|Off
-SetTimer [, Label, Period|On|Off|Delete, Priority]
 SetTitleMatchMode , Fast|Slow|RegEx|1|2|3
 SetWinDelay , Milliseconds
 SetWorkingDir , DirName
 Shutdown , Code
-Sleep , Milliseconds
 Sort , VarName [, Options]
 SoundBeep [, 37-to-32767, Milliseconds]
 SoundGet , OutputVar [, ComponentType, ControlType, DeviceNumber]
@@ -242,18 +271,10 @@ StringTrimRight , OutputVar, InputVar, Count
 StringUpper , OutputVar, InputVar [, T]
 Suspend [, On|Off|Toggle|Permit]
 SysGet , OutputVar, Sub-command [, Param]
-Thread , NoTimers [, false]
-Thread , Priority, n
-Thread , Interrupt [, Duration, LineCount]
-throw [, Expression]
 ToolTip [, Text, X, Y, WhichToolTip]
 Transform , OutputVar, Cmd, Value1 [, Value2]
 TrayTip [, Title, Text, Seconds, Options]
-try
-until (Expression)
 URLDownloadToFile , URL, Filename
-while (Expression)
-switch [, SwitchValue]
 WinActivate [, WinTitle, WinText, ExcludeTitle, ExcludeText]
 WinActivateBottom [, WinTitle, WinText, ExcludeTitle, ExcludeText]
 WinClose [, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]
@@ -282,34 +303,328 @@ WinWait [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
 WinWaitActive [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
 WinWaitClose [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
 WinWaitNotActive [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
+( -----------------以上是“命令”-----------------
+( -----------------以下是“函数”-----------------
+Func (Funcname)
 
+FileOpen (Filename, Flags [, Encoding])
 FileExist (FilePattern)
-GetKeyState (KeyName [, "P|T"])
-InStr (String, Needle [, CaseSensitive, StartingPos, Occurrence])
-RegExMatch (String, NeedleRegEx [, OutputVar, StartingPos])
-RegExReplace (String, NeedleRegEx [, Replacement, OutputVarCount, Limit, StartingPos])
-.Len
-.Value
-.Mark
-SubStr (String, StartingPos [, Length])
-StrLen (String)
-StrSplit (String [, Delimiters, OmitChars, MaxParts])
-WinActive ([WinTitle, WinText, ExcludeTitle, ExcludeText])
+
 WinExist ([WinTitle, WinText, ExcludeTitle, ExcludeText])
+WinActive ([WinTitle, WinText, ExcludeTitle, ExcludeText])
 
 Asc (String)
-Ord (String)
 Chr (Number)
+Ord (String)
+StrLen (String)
+InStr (String, Needle [, CaseSensitive, StartingPos, Occurrence])
+SubStr (String, StartingPos [, Length])
+StrSplit (String [, Delimiters, OmitChars, MaxParts])
+StrReplace (String, SearchText [, ReplaceText, OutputVarCount, Limit])
+Trim (String [, OmitChars])
+LTrim (String [, OmitChars])
+RTrim (String [, OmitChars])
+Format (FormatStr [, Value1, Value2, ..., Value_n])
+RegExMatch (String, NeedleRegEx [, OutputVar, StartingPos])
+RegExReplace (String, NeedleRegEx [, Replacement, OutputVarCount, Limit, StartingPos])
+
+StrGet (Address [, Length, Encoding])
+StrPut (String [, Encoding])
+StrPut (String, Address [, Length, Encoding])
+
+VarSetCapacity (Var [, RequestedCapacity, FillByte])
+NumGet (VarOrAddress [, Offset, "UInt|Int|Int64|Short|UShort|Char|UChar|Double|Float|Ptr|UPtr"])
+NumPut (Number, VarOrAddress [, Offset, "UInt|Int|Int64|Short|UShort|Char|UChar|Double|Float|Ptr|UPtr"])
 DllCall ([DllFile\\]Function [, Type1, Arg1, Type2, Arg2, ..., ..., Type_n, Arg_n, "Cdecl ReturnType"])
+RegisterCallback (FunctionName [, "Fast|CDecl", ParamCount, EventInfo])
+
+InputHook ([Options, EndKeys, MatchList])
 Hotstring (String|NewOptions|EndChars|MouseReset|Reset [, Replacement, 1|0|-1])
+
+GetKeyState (KeyName [, "P|T"])
 GetKeyName (Key)
 GetKeyVK (Key)
 GetKeySC (Key)
-InputHook ([Options, EndKeys, MatchList])
+
+IsByRef (Var)
+IsFunc (FunctionName)
+IsLabel (LabelName)
+IsObject (Param)
+
+Abs (Number)
+Ceil (Number)
+Exp (N)
+Floor (Number)
+Log (Number)
+Ln (Number)
+Max (Number1 [, Number2, ..., Number_n])
+Min (Number1 [, Number2, ..., Number_n])
+Mod (Dividend, Divisor)
+Round (Number [, N])
+Sqrt (Number)
+Sin (Number)
+Cos (Number)
+Tan (Number)
+ASin (Number)
+ACos (Number)
+ATan (Number)
+
+OnClipboardChange (Func [, 1|-1|0])
+OnMessage (MsgNumber [, Function, MaxThreads])
+
+OnExit (Func [, 1|-1|0])
+OnError (Func [, 1|-1|0])
+Exception (Message [, What, Extra])
+
+ComObjActive (CLSID)
+ComObjArray (VarType, Count1 [, Count2, ..., Count8])
+ComObjConnect (ComObject [, Prefix])
+ComObjCreate (CLSID [, IID])
+ComObjEnwrap (DispPtr)
+ComObjError ([0|1])
+ComObjFlags (ComObject [, NewFlags, Mask])
+ComObjGet (Name)
+ComObjMissing ()
+ComObjQuery (ComObject [, SID], IID)
+ComObjType (ComObject [, "Name|IID|Class|CLSID"])
+ComObjUnwrap (ComObject)
+ComObjValue (ComObject)
+ComObject (VarType, Value [, Flags])
+
+LoadPicture (Filename [, "Wn|Hn|Iconn|GDI+", ByRef ImageType])
+MenuGetHandle (MenuName)
+MenuGetName (Handle)
+
+IL_Add (ImageListID, Filename [, IconNumber, ResizeNonIcon])
+IL_Create ([InitialCount, GrowCount, LargeIcons])
+IL_Destroy (ImageListID)
+LV_Add ([Options, Col1, Col2, ..., Col_n])
+LV_Delete ([RowNumber])
+LV_DeleteCol (ColumnNumber)
+LV_GetCount (["Selected|Col"])
+( 斟酌再三，没有将这里的“StartingRowNumber”改为“RowNumber”
+LV_GetNext ([StartingRowNumber, "Checked|Focused"])
+LV_GetText (OutputVar, RowNumber [, ColumnNumber])
+LV_Insert (RowNumber [, Options, Col1, Col2, ..., Col_n])
+LV_InsertCol (ColumnNumber [, Options, ColumnTitle])
+LV_Modify (RowNumber [, Options, NewCol1, NewCol2, ..., NewCol_n])
+LV_ModifyCol ([ColumnNumber, Options, ColumnTitle])
+LV_SetImageList (ImageListID [, 0|1|2])
+
+TV_Add (Name [, ParentItemID, Options])
+TV_Delete ([ItemID])
+TV_Get (ItemID, "Expanded|Checked|Bold")
+TV_GetChild (ParentItemID)
+TV_GetCount ()
+TV_GetNext ([ItemID, "Checked|Full"])
+TV_GetParent (ItemID)
+TV_GetPrev (ItemID)
+TV_GetSelection ()
+TV_GetText (OutputVar, ItemID)
+TV_Modify (ItemID [, Options, NewName])
+TV_SetImageList (ImageListID [, 0|2])
+
+SB_SetIcon (Filename [, IconNumber, PartNumber])
+SB_SetParts ([Width1, Width2, ..., Width255])
+SB_SetText (NewText [, PartNumber, Style])
+
+Array ([Value1, Value2, ..., Value_n])
+Object (Obj)
+Object ([Key1, Value1, Key2, Value2, ..., ..., Key_n, Value_n])
+ObjRawGet (Object, Key)
+ObjRawSet (Object, Key, Value)
+ObjGetBase (Object)
+ObjSetBase (Object, Base)
+ObjAddRef (Ptr)
+ObjRelease (Ptr)
+ObjBindMethod (Obj, Method [, Param1, Param2, ..., Param_n])
+
+( class 的函数
+__New ([Param1, Param2, ..., Param_n])
+__Delete ()
+__Get ([Key1, Key2, ..., Key_n])
+__Set ([Key1, Key2, ..., Key_n,] Value)
+__Call (Name [, Param1, Param2, ..., Param_n])
+( -----------------以上是“函数”-----------------
+( -----------------以下是“内置变量”-----------------
+Clipboard
+ClipboardAll
+
+ComSpec
+ErrorLevel
+ProgramFiles
+
+true
+false
+
+A_AhkPath
+A_AhkVersion
+A_AppData
+A_AppDataCommon
+A_Args
+A_AutoTrim
+A_BatchLines
+A_CaretX
+A_CaretY
+A_ComSpec
+A_ComputerName
+A_ControlDelay
+A_CoordModeCaret
+A_CoordModeMenu
+A_CoordModeMouse
+A_CoordModePixel
+A_CoordModeToolTip
+A_Cursor
+A_DD
+A_DDD
+A_DDDD
+A_DefaultGui
+A_DefaultListView
+A_DefaultMouseSpeed
+A_DefaultTreeView
+A_Desktop
+A_DesktopCommon
+A_DetectHiddenText
+A_DetectHiddenWindows
+A_EndChar
+A_EventInfo
+A_ExitReason
+A_FileEncoding
+A_FormatFloat
+A_FormatInteger
+A_Gui
+A_GuiControl
+A_GuiControlEvent
+A_GuiEvent
+A_GuiHeight
+A_GuiWidth
+A_GuiX
+A_GuiY
+A_Hour
+A_IPAddress1
+A_IPAddress2
+A_IPAddress3
+A_IPAddress4
+A_IconFile
+A_IconHidden
+A_IconNumber
+A_IconTip
+A_Index
+A_Is64bitOS
+A_IsAdmin
+A_IsCompiled
+A_IsCritical
+A_IsPaused
+A_IsSuspended
+A_IsUnicode
+A_KeyDelay
+A_KeyDelayPlay
+A_KeyDuration
+A_KeyDurationPlay
+A_Language
+A_LastError
+A_LineFile
+A_LineNumber
+A_ListLines
+A_LoopField
+A_LoopFileAttrib
+A_LoopFileDir
+A_LoopFileExt
+A_LoopFileFullPath
+A_LoopFileLongPath
+A_LoopFileName
+A_LoopFilePath
+A_LoopFileShortName
+A_LoopFileShortPath
+A_LoopFileSize
+A_LoopFileSizeKB
+A_LoopFileSizeMB
+A_LoopFileTimeAccessed
+A_LoopFileTimeCreated
+A_LoopFileTimeModified
+A_LoopReadLine
+A_LoopRegKey
+A_LoopRegName
+A_LoopRegSubKey
+A_LoopRegTimeModified
+A_LoopRegType
+A_MDay
+A_MM
+A_MMM
+A_MMMM
+A_MSec
+A_Min
+A_Mon
+A_MouseDelay
+A_MouseDelayPlay
+A_MyDocuments
+A_Now
+A_NowUTC
+A_NumBatchLines
+A_OSType
+A_OSVersion
+A_PriorHotkey
+A_PriorKey
+A_ProgramFiles
+A_Programs
+A_ProgramsCommon
+A_PtrSize
+A_RegView
+A_ScreenDPI
+A_ScreenHeight
+A_ScreenWidth
+A_ScriptDir
+A_ScriptFullPath
+A_ScriptHwnd
+A_ScriptName
+A_Sec
+A_SendLevel
+A_SendMode
+A_Space
+A_StartMenu
+A_StartMenuCommon
+A_Startup
+A_StartupCommon
+A_StoreCapslockMode
+A_StringCaseSense
+A_Tab
+A_Temp
+A_ThisFunc
+A_ThisHotkey
+A_ThisLabel
+A_ThisMenu
+A_ThisMenuItem
+A_ThisMenuItemPos
+A_TickCount
+A_TimeIdle
+A_TimeIdleKeyboard
+A_TimeIdleMouse
+A_TimeIdlePhysical
+A_TimeSincePriorHotkey
+A_TimeSinceThisHotkey
+A_TitleMatchMode
+A_TitleMatchModeSpeed
+A_UserName
+A_WDay
+A_WinDelay
+A_WinDir
+A_WorkingDir
+A_YDay
+A_YWeek
+A_YYYY
+A_Year
+( -----------------以上是“内置变量”-----------------
+( -----------------以下是“方法属性”-----------------
+( RegExMatch() 的正则匹配对象
+.Len
+.Value
+.Mark
+
+( InputHook() 的操作对象
 .KeyOpt (Keys, KeyOptions)
 .Start ()
-.Wait ([MaxTime])
 .Stop ()
+.Wait ([MaxTime])
 .EndKey
 .EndMods
 .EndReason
@@ -329,104 +644,7 @@ InputHook ([Options, EndKeys, MatchList])
 .VisibleNonText
 .VisibleText
 
-IsByRef (Var)
-IsFunc (FunctionName)
-IsLabel (LabelName)
-IsObject (Param)
-NumGet (VarOrAddress [, Offset, "UInt|Int|Int64|Short|UShort|Char|UChar|Double|Float|Ptr|UPtr"])
-NumPut (Number, VarOrAddress [, Offset, "UInt|Int|Int64|Short|UShort|Char|UChar|Double|Float|Ptr|UPtr"])
-OnMessage (MsgNumber [, Function, MaxThreads])
-StrGet (Address [, Length, Encoding])
-StrPut (String [, Encoding])
-StrPut (String, Address [, Length, Encoding])
-RegisterCallback (FunctionName [, "Fast|CDecl", ParamCount, EventInfo])
-Trim (String [, OmitChars])
-LTrim (String [, OmitChars])
-RTrim (String [, OmitChars])
-VarSetCapacity (Var [, RequestedCapacity, FillByte])
-
-Abs (Number)
-Ceil (Number)
-Exp (N)
-Floor (Number)
-Log (Number)
-Ln (Number)
-Max (Number1 [, Number2, ..., Number_n])
-Min (Number1 [, Number2, ..., Number_n])
-Mod (Dividend, Divisor)
-Round (Number [, N])
-Sqrt (Number)
-
-Sin (Number)
-Cos (Number)
-Tan (Number)
-ASin (Number)
-ACos (Number)
-ATan (Number)
-
-Exception (Message [, What, Extra])
-StrReplace (String, SearchText [, ReplaceText, OutputVarCount, Limit])
-Format (FormatStr [, Value1, Value2, ..., Value_n])
-LoadPicture (Filename [, "Wn|Hn|Iconn|GDI+", ByRef ImageType])
-MenuGetHandle (MenuName)
-MenuGetName (Handle)
-OnClipboardChange (Func [, 1|-1|0])
-OnExit (Func [, 1|-1|0])
-OnError (Func [, 1|-1|0])
-
-ComObjActive (CLSID)
-ComObject (VarType, Value [, Flags])
-ComObjMissing ()
-ComObjEnwrap (DispPtr)
-ComObjUnwrap (ComObject)
-ComObjValue (ComObject)
-ComObjType (ComObject [, "Name|IID|Class|CLSID"])
-ComObjArray (VarType, Count1 [, Count2, ..., Count8])
-ComObjConnect (ComObject [, Prefix])
-ComObjCreate (CLSID [, IID])
-ComObjError ([0|1])
-ComObjFlags (ComObject [, NewFlags, Mask])
-ComObjGet (Name)
-ComObjQuery (ComObject [, SID], IID)
-ObjAddRef (Ptr)
-ObjRelease (Ptr)
-ObjBindMethod (Obj, Method [, Param1, Param2, ..., Param_n])
-
-LV_Add ([Options, Col1, Col2, ..., Col_n])
-LV_Insert (RowNumber [, Options, Col1, Col2, ..., Col_n])
-LV_Modify (RowNumber [, Options, NewCol1, NewCol2, ..., NewCol_n])
-LV_Delete ([RowNumber])
-LV_ModifyCol ([ColumnNumber, Options, ColumnTitle])
-LV_InsertCol (ColumnNumber [, Options, ColumnTitle])
-LV_DeleteCol (ColumnNumber)
-LV_GetCount (["Selected|Col"])
-
-( 斟酌再三，没有将这里的“StartingRowNumber”改为“RowNumber”
-LV_GetNext ([StartingRowNumber, "Checked|Focused"])
-LV_GetText (OutputVar, RowNumber [, ColumnNumber])
-LV_SetImageList (ImageListID [, 0|1|2])
-IL_Create ([InitialCount, GrowCount, LargeIcons])
-IL_Add (ImageListID, Filename [, IconNumber, ResizeNonIcon])
-IL_Destroy (ImageListID)
-
-TV_SetImageList (ImageListID [, 0|2])
-TV_Add (Name [, ParentItemID, Options])
-TV_Modify (ItemID [, Options, NewName])
-TV_Delete ([ItemID])
-TV_GetSelection ()
-TV_GetCount ()
-TV_GetParent (ItemID)
-TV_GetChild (ParentItemID)
-TV_GetPrev (ItemID)
-TV_GetNext ([ItemID, "Checked|Full"])
-TV_GetText (OutputVar, ItemID)
-TV_Get (ItemID, "Expanded|Checked|Bold")
-
-SB_SetText (NewText [, PartNumber, Style])
-SB_SetParts ([Width1, Width2, ..., Width255])
-SB_SetIcon (Filename [, IconNumber, PartNumber])
-
-FileOpen (Filename, Flags [, Encoding])
+( FileOpen() 的文件对象
 .Read ([Characters])
 .Write (String)
 .ReadLine ()
@@ -461,10 +679,7 @@ FileOpen (Filename, Flags [, Encoding])
 .Encoding ([Encoding])
 .__Handle ()
 
-Array ([Value1, Value2, ..., Value_n])
-Object (Obj)
-Object ([Key1, Value1, Key2, Value2, ..., ..., Key_n, Value_n])
-
+( 对象的方法
 .InsertAt (Pos, Value1 [, Value2, ..., Value_n])
 .RemoveAt (Pos [, Length])
 .Push ([Value1, Value2, ..., Value_n])
@@ -480,16 +695,9 @@ Object ([Key1, Value1, Key2, Value2, ..., ..., Key_n, Value_n])
 .GetCapacity ([Key])
 .GetAddress (Key)
 ._NewEnum ()
-
-( “.Next()”存在于单独页面，但可在“._NewEnum()”处链接过去，故合并于此
-.Next (OutputVar1 [, OutputVar2, ..., OutputVar_n])
 .HasKey (Key)
 .Clone ()
-ObjRawGet (Object, Key)
-ObjRawSet (Object, Key, Value)
-ObjGetBase (Object)
-ObjSetBase (Object, Base)
-
+( 对象的过时的方法
 .Insert (Value)
 .Insert (Key, Value)
 .Insert (Index, Value1, Value2, ..., Value_n)
@@ -497,7 +705,10 @@ ObjSetBase (Object, Base)
 .Remove (First, "")
 .Remove (First, Last)
 
-Func (Funcname)
+( 枚举器对象
+.Next (OutputVar1 [, OutputVar2, ..., OutputVar_n])
+
+( Func 对象
 .Call (Param1, Param2, ..., Param_n)
 .Bind (Param1, Param2, ..., Param_n)
 .Name ()
@@ -508,23 +719,15 @@ Func (Funcname)
 .IsByRef (ParamIndex)
 .IsOptional (ParamIndex)
 
-Class ClassName [extends BaseClassName]
-new
-extends
-base
+( class 对象
 .base
-this
-__New ([Param1, Param2, ..., Param_n])
-__Delete ()
-__Get ([Key1, Key2, ..., Key_n])
-__Set ([Key1, Key2, ..., Key_n,] Value)
-__Call (Name [, Param1, Param2, ..., Param_n])
 .__New ([Param1, Param2, ..., Param_n])
 .__Delete ()
 .__Get ([Key1, Key2, ..., Key_n])
 .__Set ([Key1, Key2, ..., Key_n,] Value)
 .__Call (Name [, Param1, Param2, ..., Param_n])
-
+( -----------------以上是“方法属性”-----------------
+( -----------------以下是“按键”-----------------
 Shift
 LShift
 RShift
@@ -561,9 +764,6 @@ WheelLeft
 WheelRight
 XButton1
 XButton2
-Blind
-Click
-Raw
 
 Joy1
 Joy2
@@ -691,6 +891,7 @@ F22
 F23
 F24
 
+( 多媒体键
 Browser_Back
 Browser_Forward
 Browser_Refresh
@@ -709,164 +910,15 @@ Launch_Mail
 Launch_Media
 Launch_App1
 Launch_App2
+( -----------------以上是“按键”-----------------
+( -----------------以下是“命令选项”-----------------
+( Send 的选项
+Click
+Blind
+Raw
+Text
 
-A_AhkPath
-A_AhkVersion
-A_AppData
-A_AppDataCommon
-A_AutoTrim
-A_BatchLines
-A_CaretX
-A_CaretY
-A_ComputerName
-A_ControlDelay
-A_CoordModeCaret
-A_CoordModeMenu
-A_CoordModeMouse
-A_CoordModePixel
-A_CoordModeToolTip
-A_Cursor
-A_DD
-A_DDD
-A_DDDD
-A_DefaultGui
-A_DefaultListView
-A_DefaultMouseSpeed
-A_DefaultTreeView
-A_Desktop
-A_DesktopCommon
-A_DetectHiddenText
-A_DetectHiddenWindows
-A_EndChar
-A_EventInfo
-A_ExitReason
-A_FileEncoding
-A_FormatFloat
-A_FormatInteger
-A_Gui
-A_GuiControl
-A_GuiControlEvent
-A_GuiEvent
-A_GuiHeight
-A_GuiWidth
-A_GuiX
-A_GuiY
-A_Hour
-A_IconFile
-A_IconHidden
-A_IconNumber
-A_IconTip
-A_Index
-A_IPAddress1
-A_IPAddress2
-A_IPAddress3
-A_IPAddress4
-A_Is64bitOS
-A_IsAdmin
-A_IsCompiled
-A_IsCritical
-A_IsPaused
-A_IsSuspended
-A_IsUnicode
-A_KeyDelay
-A_KeyDelayPlay
-A_KeyDuration
-A_KeyDurationPlay
-A_Language
-A_LastError
-A_LineFile
-A_LineNumber
-A_LoopField
-A_LoopFileAttrib
-A_LoopFileDir
-A_LoopFileExt
-A_LoopFileFullPath
-A_LoopFileLongPath
-A_LoopFileName
-A_LoopFileShortName
-A_LoopFileShortPath
-A_LoopFileSize
-A_LoopFileSizeKB
-A_LoopFileSizeMB
-A_LoopFileTimeAccessed
-A_LoopFileTimeCreated
-A_LoopFileTimeModified
-A_LoopReadLine
-A_LoopRegKey
-A_LoopRegName
-A_LoopRegSubKey
-A_LoopRegTimeModified
-A_LoopRegType
-A_MDay
-A_Min
-A_MM
-A_MMM
-A_MMMM
-A_Mon
-A_MouseDelay
-A_MouseDelayPlay
-A_MSec
-A_MyDocuments
-A_Now
-A_NowUTC
-A_NumBatchLines
-A_OSType
-A_OSVersion
-A_PriorHotkey
-A_PriorKey
-A_ProgramFiles
-A_Programs
-A_ProgramsCommon
-A_PtrSize
-A_RegView
-A_ScreenDPI
-A_ScreenHeight
-A_ScreenWidth
-A_ScriptDir
-A_ScriptFullPath
-A_ScriptHwnd
-A_ScriptName
-A_Sec
-A_SendLevel
-A_SendMode
-A_Space
-A_StartMenu
-A_StartMenuCommon
-A_Startup
-A_StartupCommon
-A_StoreCapslockMode
-A_StringCaseSense
-A_Tab
-A_Temp
-A_ThisFunc
-A_ThisHotkey
-A_ThisLabel
-A_ThisMenu
-A_ThisMenuItem
-A_ThisMenuItemPos
-A_TickCount
-A_TimeIdle
-A_TimeIdlePhysical
-A_TimeSincePriorHotkey
-A_TimeSinceThisHotkey
-A_TitleMatchMode
-A_TitleMatchModeSpeed
-A_UserName
-A_WDay
-A_WinDelay
-A_WinDir
-A_WorkingDir
-A_YDay
-A_Year
-A_YWeek
-A_YYYY
-A_Args
-A_TimeIdleKeyboard
-A_TimeIdleMouse
-A_ListLines
-A_ComSpec
-A_LoopFilePath
-
+( CoordMode or PixelXXX 的选项
 Pixel
 Mouse
 Caret
@@ -876,10 +928,12 @@ Window
 Client
 RGB
 
+( 长变量的选项
 LTrim
 RTrim
 Join
 
+( Process 的选项
 Low
 BelowNormal
 Normal
@@ -887,20 +941,22 @@ AboveNormal
 High
 Realtime
 
+( 窗口操作 WinTitle 的几种类型
 ahk_id
 ahk_pid
 ahk_class
 ahk_group
 ahk_exe
 
-between
-contains
-in
-is
+( SetFormat 的选项
 Integer
 Float
 IntegerFast
 FloatFast
+
+( If var is [not] type 的选项
+integer
+float
 number
 digit
 xdigit
@@ -908,13 +964,22 @@ alpha
 upper
 lower
 alnum
+space
 time
 date
 
+( If var [not] 的参数
+between
+contains
+in
+is
+
+( if 的参数
 not
 or
 and
 
+( WinSet 的选项
 AlwaysOnTop
 Topmost
 Top
@@ -946,26 +1011,29 @@ Serial
 Type
 Status
 
-static
-global
-local
-ByRef
-
+( EnvAdd 的选项
 Seconds
 Minutes
 Hours
 Days
 
+( loop 的选项
 Files
 Reg
 Read
 Parse
 
+( Shutdown 的选项
 Logoff
+Shutdown
 Close
 Error
+Menu
+Exit
+Reload
 Single
 
+( Menu 的选项
 Tray
 Add
 Rename
@@ -991,10 +1059,12 @@ MainWindow
 NoMainWindow
 UseErrorLevel
 
+( Gui 的类型
 Text
+Edit
+UpDown
 Picture
 Pic
-GroupBox
 Button
 Checkbox
 Radio
@@ -1003,36 +1073,29 @@ DDL
 ComboBox
 ListBox
 ListView
+TreeView
+Link
+Hotkey
 DateTime
 MonthCal
 Slider
-StatusBar
+Progress
+GroupBox
 Tab
 Tab2
 Tab3
-TreeView
-UpDown
+StatusBar
 ActiveX
-Link
 Custom
 
-IconSmall
-Tile
-Report
-SortDesc
-NoSort
-NoSortHdr
-Grid
-Hdr
+( Gui 的选项
 AutoSize
-Range
 xm
 ym
 ys
 xs
 xp
 yp
-
 Font
 Resize
 Owner
@@ -1047,17 +1110,30 @@ Cancel
 Destroy
 Center
 DPIScale
-
 Margin
 MaxSize
 MinSize
 OwnDialogs
+
+( Gui 的标签
 GuiEscape
 GuiClose
 GuiSize
 GuiContextMenu
 GuiDropFiles
-OnClipboardChange
+
+( Gui UpDown 控件的选项
+Range
+
+( ListView 的选项
+Tile
+IconSmall
+Report
+SortDesc
+NoSort
+NoSortHdr
+Grid
+Hdr
 
 TabStop
 Section
@@ -1142,14 +1218,16 @@ Wait
 Exist
 Close
 
+( Transform 的选项 [v1.0.90+]: 已移除
+FromCodePage
+ToCodePage
+
 Unicode
+Deref
+HTML
 Asc
 Chr
-ToCodePage
-FromCodePage
-Deref
 Mod
-Pow
 Exp
 Sqrt
 Log
@@ -1164,6 +1242,7 @@ Tan
 ASin
 ACos
 ATan
+Pow
 BitNot
 BitAnd
 BitOr
@@ -1214,14 +1293,6 @@ UseEnv
 LocalSameAsGlobal
 ClassOverwrite
 
-Clipboard
-ClipboardAll
-ComSpec
-ErrorLevel
-ProgramFiles
-true
-false
-
 ( StringCaseSense的第三个选项
 Locale
 
@@ -1250,3 +1321,10 @@ MouseMoveOff
 RegEx
 Fast
 Slow
+
+( class的关键字
+new
+extends
+this
+base
+( -----------------以上是“命令选项”-----------------

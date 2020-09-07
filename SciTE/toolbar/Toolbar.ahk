@@ -35,6 +35,8 @@ RegRead, 检查字体, HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts, 
 if (检查字体!="Microsoft YaHei Mono.ttf")
 	Run, %runasverb%user\安装字体.ahk
 
+Run, %runasverb%user\自动更新.ahk
+
 if 0 < 2
 {
 	MsgBox, 16, SciTE4AutoHotkey Toolbar, This script cannot be run independently.

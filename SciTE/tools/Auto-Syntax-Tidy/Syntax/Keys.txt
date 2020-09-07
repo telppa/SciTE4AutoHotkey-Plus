@@ -98,18 +98,20 @@ Delete
 Del
 Insert
 Ins
-PGUP
-PGDN
+PgUp
+PgDn
 Home
 End
 Up
 Down
 Left
 Right
+DownR
 
 PrintScreen
 CtrlBreak
 Pause
+Sleep
 ScrollLock
 CapsLock
 NumLock
@@ -138,8 +140,8 @@ NumpadLeft
 NumpadRight
 NumpadHome
 NumpadEnd
-NumpadPgup
-NumpadPgdn
+NumpadPgUp
+NumpadPgDn
 NumpadEnter
 
 F1

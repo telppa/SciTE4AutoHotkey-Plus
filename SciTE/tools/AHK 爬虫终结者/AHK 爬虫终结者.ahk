@@ -1,4 +1,13 @@
-﻿#SingleInstance Force
+﻿/*
+更新日志：
+  2020.09.07
+    修正模板。
+    修正默认请求头。
+    增加库文件提示。
+    增加主页。
+    版本号1.1。
+*/
+#SingleInstance Force
 #NoEnv
 
 默认设置=
@@ -44,8 +53,6 @@ number_of_retries:
 不用管这些注释，不影响正常运行。
 
 GET /s?&wd=ggh HTTP/1.1
-Host: www.baidu.com
-Connection: keep-alive
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3314.0 Safari/537.36 SE 2.X MetaSr 1.0
 )
 
@@ -72,7 +79,11 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like
   Gui Add, Text, x1000 y496 w120 h24 +0x200 Center, 代码
   Gui Add, Edit, x920 y528 w280 h172 -Wrap v代码,
 
-  Gui Show, w1250 h740, AHK 爬虫终结者 ver. 1.0
+  Gui Add, StatusBar, v状态栏, %A_Space%%A_Space%%A_Space%%A_Space%主页
+  Gui Show, w1250 h750, AHK 爬虫终结者 ver. 1.1
+  global 手型光标:=DllCall("LoadCursor","UInt",NULL,"Int",32649,"UInt")
+  OnMessage(0x200, "WM_MouseMove")  ;监视鼠标移动消息
+  OnMessage(0x201, "WM_LButtonDOWN")    ;监视鼠标点击消息
 Return
 
 GuiEscape:
@@ -113,15 +124,15 @@ return
   代码模板=
   (LTrim
     网址=
-    `(
+    `(```%
     %网址%
     `)
     设置=
-    `(
+    `(```%
     %设置模板%
     `)
     请求头=
-    `(
+    `(```%
     %请求头模板%
     `)
 
@@ -129,6 +140,7 @@ return
     响应头:=WinHttp.解析对象为信息(WinHttp.ResponseHeaders)
     return
 
+    ;请将“SciTE\tools\AHK 爬虫终结者”目录中的以下两个库文件，自行复制到“本文件同目录”或“Lib目录”。
     #Include <WinHttp>
     #Include <正则全局模式>
   )
@@ -140,19 +152,19 @@ Post模板:
   代码模板=
   (LTrim
     网址=
-    `(
+    `(```%
     %网址%
     `)
     Post数据=
-    `(
+    `(```%
     %Post数据%
     `)
     设置=
-    `(
+    `(```%
     %设置模板%
     `)
     请求头=
-    `(
+    `(```%
     %请求头模板%
     `)
 
@@ -160,10 +172,23 @@ Post模板:
     响应头:=WinHttp.解析对象为信息(WinHttp.ResponseHeaders)
     return
 
+    ;请将“SciTE\tools\AHK 爬虫终结者”目录中的以下两个库文件，自行复制到“本文件同目录”或“Lib目录”。
     #Include <WinHttp>
     #Include <正则全局模式>
   )
 return
+
+WM_LBUTTONDOWN()    ;鼠标单击状态栏
+{
+  If (A_GuiControl="状态栏")
+    Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
+}
+
+WM_MOUSEMOVE()  ;鼠标移动到状态栏上改变图标
+{
+  If (A_GuiControl="状态栏")
+    DllCall("SetCursor","UInt",手型光标)
+}
 
 #Include <WinHttp>
 #Include <正则全局模式>

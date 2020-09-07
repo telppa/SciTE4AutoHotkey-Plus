@@ -38,9 +38,9 @@ sci2
   Menu Tray, Icon, %A_ScriptDir%\正则.ico
   Gui, +Hwnd主界面	+Resize +MinSize				;Gui 的 Hwnd , SCITE 编辑框需要使用. 同时支持界面大小调整,限制最小尺寸
   Gui, Color, , White							;设置控件背景色,主要为了使 Edit 控件背景色为白色,和 SCI框 匹配
-  Gui, Add, GroupBox, x5 y10 w325 h105 vGB正则表达式, 正则表达式
+  Gui, Add, GroupBox, x5 y10 h105 vGB正则表达式, 正则表达式
   ;scintilla 界面的大小完全由标签 GuiSize 控制了，这里的参数没有意义。
-  sci1 := new scintilla(主界面,13,30,309,50,DllPath)			;正则框
+  sci1 := new scintilla(主界面,"","","","",DllPath)			;正则框
           , sci1.SetMarginWidthn(1,0)					;隐藏 margin 1
           , sci1.SetCodepage(65001)					;设置代码页
           , sci1.StyleSetSize(32, 12)					;设置字体大小
@@ -53,13 +53,13 @@ sci2
   Gui, Add, Edit, x73 y85 w50 h20 -Multi Number v起始坐标 g实时响应
   Gui, Add, UpDown, 0x80 Range-999-999 g实时响应, 1
   Gui, Add, Checkbox, x135 y80 w65 h30 Checked v全局模式 g实时响应, 全局模式
-  Gui, Add, Checkbox, x210 y80 w65 h30 v替换模式 g实时响应, 替换模式
-  Gui, Add, Button, x285 y84 w36 h22 v提示, 提示
+  Gui, Add, Checkbox, x210 y80 w65 h30 v替换模式 g实时响应 +Disabled, 替换模式
+  Gui, Add, Button, y84 w36 h22 v提示, 提示
   gosub,创建正则提示菜单
 
-  Gui, Add, GroupBox, x5 y120 w325 h345 vGB文本, 文本
+  Gui, Add, GroupBox, x5 y120 vGB文本, 文本
   ;scintilla 界面的大小完全由标签 GuiSize 控制了，这里的参数没有意义。
-  sci2 := new scintilla(主界面,13,140,309,317,DllPath)			;文本框
+  sci2 := new scintilla(主界面,"","","","",DllPath)			;文本框
           , sci2.SetMarginWidthn(1,0)
           , sci2.SetCodepage(65001)					;使用 65001 ,需在 SCI 库文件中替换 5 个 "CP0" 为 "UTF-8". 意义在于, UTF-8 支持的字符比 ANSI 多
           , sci2.StyleSetSize(32, 12)
@@ -81,11 +81,12 @@ sci2
           , sci2.SetModEventMask(SC_MOD_INSERTTEXT|SC_MOD_DELETETEXT)
           , sci2.Notify := "Notify"
 
-  Gui, Add, Button, x5 y470 v关闭, 关闭
-  Gui, Add, Button, x50 y470 v存储正则, 存储正则
-  Gui, Add, Button, x120 y470 v复制代码, 复制代码
-  Gui, Add, Button, x280 y470 v高级按钮 g高级按钮, 高级>>
-  Gui, Show, CEnter w335 h500, AHK 正则终结者 ver. 0.2
+  Gui, Add, Button, v关闭, 关闭
+  Gui, Add, Button, v主页, 主页
+  Gui, Add, Button, v存储正则 +Disabled, 存储正则
+  Gui, Add, Button, v复制代码 +Disabled, 复制代码
+  Gui, Add, Button, v高级按钮 g高级按钮 +Disabled, 高级>>
+  Gui, Show, CEnter w370 h520, AHK 正则终结者 ver. 0.3
 return
 
 Button关闭:
@@ -98,8 +99,9 @@ GuiSize:
   缩放系数:=A_ScreenDPI/96
   GuiControl, Move, 提示, % "x" . a_Guiwidth - 50
   GuiControl, Move, 关闭, % "x" . 5 "y" . a_Guiheight - 30
-  GuiControl, Move, 存储正则, % "x" . 50 "y" . a_Guiheight - 30
-  GuiControl, Move, 复制代码, % "x" . 120 "y" . a_Guiheight - 30
+  GuiControl, Move, 主页, % "x" . 50 "y" . a_Guiheight - 30
+  GuiControl, Move, 存储正则, % "x" . 95 "y" . a_Guiheight - 30
+  GuiControl, Move, 复制代码, % "x" . 165 "y" . a_Guiheight - 30
   GuiControl, Move, 高级按钮, % "x" . a_Guiwidth - 55 "y" . a_Guiheight - 30
   GuiControl, Move, GB文本, % "w" . a_Guiwidth - 10 "h" . a_Guiheight - 155
   GuiControl, Move, GB正则表达式, % "w" . a_Guiwidth - 10
@@ -109,6 +111,10 @@ return
 
 Button提示:
   Menu, 正则提示菜单, Show
+return
+
+Button主页:
+  Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
 return
 
 Button存储正则:

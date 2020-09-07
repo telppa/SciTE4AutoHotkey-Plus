@@ -3,7 +3,7 @@
 ;requires AHK 1.0.44.09
 ;www.autohotkey.com/forum/topic7810.html
 
-Version = v12
+Version = v13
 ScriptName =  Auto-Syntax-Tidy %Version%
 
 ; Known limitations:
@@ -70,36 +70,49 @@ changes since version 11:
 - OwnHotKey is stored in INI file and has a control in the GUI
 
 2013.11.21
-修改AHKPath为脚本目录，语法文件目录为%AHKPath%\Syntax。
+修改AHKPath为脚本目录，语法文件目录为%AHKPath%\Syntax。bug #1
 采用截止今日最新的SCITE4AHK的ahk.api文件，与1.0.48.5的语法文件进行合并。
-保留旧的哪怕被移除了的命令，例如REPEAT。
-这样做的目的是为了支持代码格式化的正常工作。
-修改默认不对KEYWORDS进行大小写纠错。因为目前程序不够智能，当DLLCALL中函数名符合KEYWORDS时，也会进行纠错，而DLLCALL对大小写是敏感的，因此非常容易造成问题。
+保留旧的哪怕被移除了的命令，例如REPEAT。这样做的目的是为了支持代码格式化的正常工作。
+修改默认不对KEYWORDS进行大小写纠错。bug #2
+因为目前程序不够智能，当DLLCALL中函数名符合KEYWORDS时，也会进行纠错，而DLLCALL对大小写是敏感的，因此非常容易造成问题。
 
 2013.11.22
 修改代码，使其运行时直接格式化选中的或全部代码。
 
 2014.03.06
-修改代码，使其支持对for语句的格式化。
+修改代码，使其支持对for语句的格式化。feature #1
 
 2014.03.07
-修改代码，使其支持中文函数的格式化。
+修改代码，使其支持中文函数的格式化。bug #3
 修改默认格式化风格。
-修改代码，使其支持对While,Until,Try,Catch,Finally语句的格式化。
+修改代码，使其支持对While,Until,Try,Catch,Finally语句的格式化。feature #1
 
 2014.03.15
 修改代码，Until后面一句不应该缩进
 
 2014.03.26
-修改代码，改进大小写纠正的问题，以下单词总被纠正为全小写。
+修改代码，改进大小写纠正的问题，以下单词总被纠正为全小写。feature #2
 if
 else
 goto
 
 2016.04.23
-修改代码，改进大小写纠正的问题，以下单词总被纠正为全小写。
+修改代码，改进大小写纠正的问题，以下单词总被纠正为全小写。feature #2
 loop
 
+2020.09.01
+修复会丢掉“++num”这样的行的恶性bug。bug #4
+对操作剪贴板可能出现的bug做了处理。bug #5
+函数后面的花括号（花括号本身）不缩进。feature #3
+修改版本号为v13。
+
+2020.09.03
+支持对switch,class语句的格式化。feature #1
+大小写校正存在级别，从低到高依次是，Keywords、Keys、Variables、CommandNames、ListOfDirectives
+如果低级别和高级别单词存在重复，那么总会被高级别覆盖。
+例如Keys中存在单词“click”，CommandNames中也存在单词“Click”，那么大小写最终就会被纠正成后者。feature #4
+修复 Variables 列表的纠正。bug #6
+更新了语法文件。
 */
 
 #SingleInstance ignore
@@ -150,7 +163,8 @@ IniFile = %OutNameNoExt%.ini
 Gosub, ReadDataFromIni
 
 
-;find path to AHK
+; find path to AHK
+; 将工作目录固定为脚本目录，Syntax文件夹自然也固定在里面了。bug #1
 AHKPath:=A_ScriptDir
 IfNotExist %AHKPath%
 { MsgBox,,, Could not find the AutoHotkey folder.`nPlease edit the script:`n%A_ScriptFullPath%`nin Linenumber: %A_LineNumber%
@@ -236,14 +250,14 @@ Return
 ;#############   Read directives and commands from syntax file   ##############
 ReadSyntaxFiles:
 	;path to syntax files
-	PathSyntaxFiles = %AHKPath%\Syntax
+	PathSyntaxFiles = %AHKPath%\Syntax		; bug #1
 
 	;clear lists
 	ListOfDirectives =
-	;这个列表从文件中读取类似 IfInString 的以If开头的命令，然后进行缩进。
+	;这个列表从文件中读取类似 IfInString 的以If开头的命令，然后进行缩进。feature #1
 	;所以可以直接把后期没被支持的流程命令添加到这里面，让程序识别以进行缩进……
 	;当时改for的缩进时就没想到这一点……
-	ListOfIFCommands = ,For,While,Try,Catch,Finally,class
+	ListOfIFCommands = ,for,while,try,catch,finally,switch,class
 
 	;read each line of syntax file and search for directives and if-keywords
 	CommandNamesFile = %PathSyntaxFiles%\CommandNames.txt
@@ -254,6 +268,7 @@ ReadSyntaxFiles:
 	Loop, Read , %CommandNamesFile%   ;Read syntax file
 	{ ;remove spaces from read line
 		Line = %A_LoopReadLine%
+		Line:=Trim(Line, " `t`r`n`v`f")
 
 		;get first character and first 2 characters of line
 		StringLeft,FirstChar, Line ,1
@@ -280,25 +295,23 @@ ReadSyntaxFiles:
 	;remove multiple If
 	Sort, ListOfIFCommands, U D,
 
-	;read in all variable names
-	FileRead, Variables, *t %PathSyntaxFiles%\Variables.txt
-	StringReplace , Variables , Variables , `n , | , All
-
-	FilesSyntax = CommandNames|Keywords|Keys
+	FilesSyntax = CommandNames|Keywords|Keys|Variables
 
 	;Loop over all syntax files
-	Loop, Parse, FilesSyntax,|
+	Loop, Parse, FilesSyntax, |
 	{ String =
 		SyntaxFile = %PathSyntaxFiles%\%A_LoopField%.txt
 		IfNotExist %SyntaxFile%
 		{ MsgBox,,, Could not find the syntax file "%A_LoopField%.txt".`nPlease edit the script:`n%A_ScriptFullPath%`nin Linenumber: %A_LineNumber%
 			ExitApp
 		}
+		filename:=A_LoopField
 		;read each line of syntax file
 		Loop, Read , %SyntaxFile%
 		{
 			;remove spaces from read line
 			Line = %A_LoopReadLine%
+			Line:=Trim(Line, " `t`r`n`v`f")
 
 			;get first character, length of line and look for spaces
 			StringLeft,FirstChar, Line ,1
@@ -313,7 +326,10 @@ ReadSyntaxFiles:
 			Else If (FirstChar = ";")
 				Continue
 			;otherwise if word is longer than 4 character, remember it
-			Else If (StrLen(Line) > 4 )
+			; 原版单独处理的 Variables 列表，并且将其分隔符设置为了“|”。
+			; 搞不懂原版这么做的意义何在，因为 Variables 列表只在以后的大小写纠正处被使用。
+			; 而大小写纠正又是用“,”做分隔符的，所以原版 Variables 纠正是一直失效的…… bug #6
+			Else If (StrLen(Line) > 4 or filename="Variables")
 				String = %String%,%Line%
 		}
 		;remove first pipe
@@ -322,8 +338,9 @@ ReadSyntaxFiles:
 		%A_LoopField% := String
 	}
 
-	CommandNames = %CommandNames%,goto,Gui,Run,Exit,Send,Sort,Menu
-									,Parse,Read,Mouse,SendAndMouse,Default,Permit,Screen,Relative
+	; 这里的词都是没有被加入列表的
+	CommandNames = %CommandNames%,Gui,Run,Edit,Exit,goto,Send,Sort,Menu
+									,Files,Reg,Parse,Read,Mouse,SendAndMouse,Permit,Screen,Relative
 									,Pixel,Toggle,UseErrorLevel,AlwaysOn,AlwaysOff
 
 	;read in all function names
@@ -341,6 +358,7 @@ ReadSyntaxFiles:
 		;get first character, and name of function plus its braket, e.g. "ATan("
 		StringLeft,FirstChar, Line ,1
 		StringSplit, Line, Line, (
+		Line1:=Trim(Line1, " `t`r`n`v`f")
 
 		;if line is empty, continue with next line
 		If Line is Space
@@ -368,7 +386,7 @@ ReadDataFromIni:
 	IniRead, CaseCorrectVariables, %IniFile%, Settings, CaseCorrectVariables, 1
 	IniRead, CaseCorrectBuildInFunctions, %IniFile%, Settings, CaseCorrectBuildInFunctions, 1
 	IniRead, CaseCorrectKeys, %IniFile%, Settings, CaseCorrectKeys, 1
-	IniRead, CaseCorrectKeywords, %IniFile%, Settings, CaseCorrectKeywords, 0
+	IniRead, CaseCorrectKeywords, %IniFile%, Settings, CaseCorrectKeywords, 0		; bug #2
 	IniRead, CaseCorrectDirectives, %IniFile%, Settings, CaseCorrectDirectives, 1
 	IniRead, Statistic, %IniFile%, Settings, Statistic, 1
 	IniRead, ChkSpecialTabIndent, %IniFile%, Settings, ChkSpecialTabIndent, 1
@@ -441,7 +459,7 @@ BuildGui:
 		GuiControl,, IndentCont, 1
 
 	;get previous position and show Gui
-	IniRead, Pos_Gui, %IniFile%, General, Pos_Gui,CEnter
+	IniRead, Pos_Gui, %IniFile%, General, Pos_Gui, CEnter
 	Gui, Show, %Pos_Gui% %param_Hidden% ,%ScriptName%
 	Gui, +LastFound
 	GuiUniqueID := "ahk_id " WinExist()
@@ -478,6 +496,7 @@ IndentHighlightedText:
 	;Save and clear clipboard
 	ClipSaved := ClipboardAll
 	Clipboard =
+	Sleep, 50           ;一定要有这一句，才能在clipjump运行的同时，取到剪贴板的值。bug #5
 
 	;Cut highlight to clipboard
 	Send, ^c
@@ -547,6 +566,7 @@ IndentHighlightedText:
 		;Save and clear clipboard
 		ClipSaved := ClipboardAll
 		Clipboard =
+		Sleep, 50           ;一定要有这一句，才能在clipjump运行的同时，取到剪贴板的值bug #5
 
 		;put String into clipboard
 		;StringReplace, String, String, `n, `r`n, All
@@ -578,17 +598,23 @@ Return
 
 ;#############   Set words for case correction   ##############################
 SetCaseCorrectionSyntax:
-	CaseCorrectionSyntax =
-	If CaseCorrectCommands
-		CaseCorrectionSyntax = ,%CommandNames%
-	If CaseCorrectVariables
-		CaseCorrectionSyntax = %CaseCorrectionSyntax%,%Variables%
-	If CaseCorrectKeys
-		CaseCorrectionSyntax = %CaseCorrectionSyntax%,%Keys%
+	; 大小写校正原理是简单粗暴的使用“CaseCorrectionSyntax”列表中的每个词依次做校正。
+	; 所以修改它们的优先级别，从低到高依次是，Keywords、Keys、Variables、CommandNames、ListOfDirectives
+	; 如果低级别和高级别单词存在重复，那么总会被高级别覆盖。
+	; 例如Keys中存在单词“click”，CommandNames中也存在单词“Click”，那么大小写最终就会被纠正成后者。feature #4
+	; 这样设计的原因是，Keywords中存在大量和其它文件重复的单词，原来需要手工把它们标记出来注释掉，现在只需简单更新文件即可。
+	; 同时，在没有进行独立识别单词属性的前提下，也应该按这样的优先级进行处理（后者覆盖前者）。
+	CaseCorrectionSyntax:=""
 	If CaseCorrectKeywords
-		CaseCorrectionSyntax = %CaseCorrectionSyntax%,%Keywords%
+		CaseCorrectionSyntax.="," Keywords
+	If CaseCorrectKeys
+		CaseCorrectionSyntax.="," Keys
+	If CaseCorrectVariables
+		CaseCorrectionSyntax.="," Variables
+	If CaseCorrectCommands
+		CaseCorrectionSyntax.="," CommandNames
 	If CaseCorrectDirectives
-		CaseCorrectionSyntax = %CaseCorrectionSyntax%,%ListOfDirectives%
+		CaseCorrectionSyntax.="," ListOfDirectives
 	;remove first pipe
 	StringTrimLeft, CaseCorrectionSyntax, CaseCorrectionSyntax, 1
 Return
@@ -982,11 +1008,15 @@ DoSyntaxIndentation:
 			StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
 		String = %String%%Line%`n
 	}
-	Else If FirstChar in #,!,^,+,<,>,*,~,$     ;line is Hotkey (has be be after directives due to the #)
-	{ If InStr(FirstWord,"::"){
+	; bug #4
+	; 原版错误的用了2个if，导致通过首字符以为自己是热键。
+	; 进入到情况处理中，结果又识别不到“::”，发现自己不是热键，又跳不回去了，又没处理异常情况。
+	; 于是就出现了像 ++num 这样的行会被丢掉的情况。
+	; 解决方案就是把里面的if提出来，和外面的if做联合判断，避免错误进入情况处理。
+	Else If InStr("#!^+<>*~$", FirstChar) AND InStr(FirstWord,"::")		;line is Hotkey (has be be after directives due to the #)
+	{
 			String = %String%%Line%`n
 			MemorizeIndent("Sub",1,-1)
-		}
 	}
 	Else If (FirstChar = "," OR FirstTwoChars = "||" OR FirstTwoChars = "&&"
 									OR FirstWord = "and" OR FirstWord = "or" )                     ;line is a implicit continuation
@@ -1047,7 +1077,7 @@ DoSyntaxIndentation:
 			;else line is also start of If-Statement
 			If SecondWord in %ListOfIFCommands%          ;Line is an old  If-statement
 			{
-				StringReplace, Line, Line, if, if
+				StringReplace, Line, Line, if, if			; feature #2
 				StringReplace, ParsedCommand, StripedLine, ```, ,,All
 				;Search if a third comma exists
 				StringGetPos, ParsedCommand, ParsedCommand , `, ,L3
@@ -1125,8 +1155,8 @@ DoSyntaxIndentation:
 	}
 	Else If FirstWordIsFunction {                ;line is function
 		String = %String%%Line%`n
-		;注释掉这一行可使函数后面的花括号不缩进（花括号包围的内容依然缩进）
-		;~ MemorizeIndent("Func",1,-1)
+		; 注释掉这一行可使函数后面的花括号不缩进（花括号包围的内容依然缩进）。feature #3
+		; MemorizeIndent("Func",1,-1)
 
 		If (LastChar = "{") {                 ;it uses OTB
 			If FunctionName not in %CaseCorrectFuncList%
@@ -1462,7 +1492,7 @@ ExtractFunctionName(FirstWord,BracketPosition, ByRef FunctionName)  {
 		FunctionName =
 
 	;check each char in name if it is allowed
-	;检查函数名是否合法，原版这里用字母来判断，显然对中文函数名不适合。
+	;检查函数名是否合法，原版这里用字母来判断，显然对中文函数名不适合。bug #3
 	;另外函数名的合法化判断其实是很难的，因为比如009()每个字都合法，但是却是错的，并且不会报错。
 	RegExMatch(FunctionName, "SP)(*UCP)^[[:blank:]]*\K[\w#@\$\?\[\]]+", FunctionName_Len)
 	If (FunctionName_Len<>StrLen(FunctionName))

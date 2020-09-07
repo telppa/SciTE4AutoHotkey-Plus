@@ -1,16 +1,25 @@
-; Used with CoordMode or PixelXXX commands:
+; Send 的选项
+Click
+Blind
+Raw
+Text
+
+; CoordMode or PixelXXX 的选项
 Pixel
 Mouse
+Caret
 Screen
 Relative
+Window
+Client
 RGB
 
-; Continuation sections:
+; 长变量的选项
 LTrim
 RTrim
 Join
 
-; Priority of processes
+; Process 的选项
 Low
 BelowNormal
 Normal
@@ -18,22 +27,22 @@ AboveNormal
 High
 Realtime
 
-; Keywords inside the WinTitle parameter of various commands:
+; 窗口操作 WinTitle 的几种类型
 ahk_id
 ahk_pid
 ahk_class
 ahk_group
 ahk_exe
 
-; Used with SetFormat and/or "if Var is [not] type" & BETWEEN/IN
-between
-contains
-in
-is
+; SetFormat 的选项
 Integer
 Float
 IntegerFast
 FloatFast
+
+; If var is [not] type 的选项
+integer
+float
 number
 digit
 xdigit
@@ -41,16 +50,22 @@ alpha
 upper
 lower
 alnum
+space
 time
 date
-; Omitted because it's a key name too: SPACE
 
-; Expression keywords:
+; If var [not] 的参数
+between
+contains
+in
+is
+
+; if 的参数
 not
 or
 and
 
-; Used with Drive/DriveGet and/or WinGet/WinSet:
+; WinSet 的选项
 AlwaysOnTop
 Topmost
 Top
@@ -61,10 +76,12 @@ Redraw
 Region
 ID
 IDLast
+PID
 ProcessName
 ProcessPath
 MinMax
 ControlList
+ControlListHwnd
 Count
 List
 Capacity
@@ -80,34 +97,29 @@ Serial
 Type
 Status
 
-; For functions:
-static
-global
-local
-ByRef
-
-; Time units for use with addition and subtraction:
+; EnvAdd 的选项
 Seconds
 Minutes
 Hours
 Days
 
-; For use with the Loop command:
+; loop 的选项
+Files
+Reg
 Read
 Parse
 
-; A_ExitReason
+; Shutdown 的选项
 Logoff
+Shutdown
 Close
 Error
+Menu
+Exit
+Reload
 Single
-; The following are Commented out because they are already a keywords due to being a commands:
-;Shutdown
-;Menu
-;Exit
-;Reload
 
-; Keywords used with the "menu" command:
+; Menu 的选项
 Tray
 Add
 Rename
@@ -133,11 +145,12 @@ MainWindow
 NoMainWindow
 UseErrorLevel
 
-; Gui control types (note that Edit, Progress and Hotkey aren't included since they are already command keywords):
+; Gui 的类型
 Text
+Edit
+UpDown
 Picture
 Pic
-GroupBox
 Button
 Checkbox
 Radio
@@ -146,37 +159,29 @@ DDL
 ComboBox
 ListBox
 ListView
+TreeView
+Link
+Hotkey
 DateTime
 MonthCal
 Slider
-StatusBar
+Progress
+GroupBox
 Tab
 Tab2
-TreeView
-UpDown
+Tab3
+StatusBar
 ActiveX
-Link
 Custom
 
-; ListView:
-IconSmall
-Tile
-Report
-SortDesc
-NoSort
-NoSortHdr
-Grid
-Hdr
+; Gui 的选项
 AutoSize
-Range
-; General GUI keywords:
 xm
 ym
 ys
 xs
 xp
 yp
-
 Font
 Resize
 Owner
@@ -191,17 +196,30 @@ Cancel
 Destroy
 Center
 DPIScale
-
 Margin
 MaxSize
 MinSize
 OwnDialogs
+
+; Gui 的标签
 GuiEscape
 GuiClose
 GuiSize
 GuiContextMenu
 GuiDropFiles
-OnClipboardChange
+
+; Gui UpDown 控件的选项
+Range
+
+; ListView 的选项
+Tile
+IconSmall
+Report
+SortDesc
+NoSort
+NoSortHdr
+Grid
+Hdr
 
 TabStop
 Section
@@ -228,6 +246,7 @@ Limit
 Password
 Multi
 WantReturn
+WantTab
 Group
 Background
 Bold
@@ -246,6 +265,7 @@ ToolWindow
 Flash
 Style
 ExStyle
+Hwnd
 Check3
 Checked
 CheckedGray
@@ -269,24 +289,13 @@ Disabled
 Visible
 LastFound
 LastFoundExist
-; Already included with menu:
-;Show
-;Menu
-;Color
-;Edit
-;Default
-;Enable
-;Disable
-;Default
 
-; Keywords used with the Hotkey command:
 AltTab
 ShiftAltTab
 AltTabMenu
 AltTabAndMenu
 AltTabMenuDismiss
 
-; Keywords used with the Thread/Process commands
 NoTimers
 Interrupt
 Priority
@@ -295,30 +304,16 @@ Wait
 Exist
 Close
 
-; Keywords for Send (these key names are also listed in Keys.txt, but without braces):
-{Blind}
-{Click}
-{Raw}
-{AltDown}
-{AltUp}
-{ShiftDown}
-{ShiftUp}
-{CtrlDown}
-{CtrlUp}
-{LWinDown}
-{LWinUp}
-{RWinDown}
-{RWinUp}
+; Transform 的选项 [v1.0.90+]: 已移除
+FromCodePage
+ToCodePage
 
-; Keywords used with the Transform command:
 Unicode
+Deref
+HTML
 Asc
 Chr
-ToCodePage
-FromCodePage
-Deref
 Mod
-Pow
 Exp
 Sqrt
 Log
@@ -333,6 +328,7 @@ Tan
 ASin
 ACos
 ATan
+Pow
 BitNot
 BitAnd
 BitOr
@@ -340,7 +336,6 @@ BitXOr
 BitShiftLeft
 BitShiftRight
 
-; Keywords used with "IfMsgBox" ("continue" is not present here because it's a command too):
 Yes
 No
 Ok
@@ -350,12 +345,11 @@ Retry
 Ignore
 TryAgain
 
-; Misc. eywords used with various commands:
 On
 Off
+Toggle
 All
 
-; Registry root keys:
 HKEY_LOCAL_MACHINE
 HKEY_USERS
 HKEY_CURRENT_USER
@@ -367,15 +361,55 @@ HKCU
 HKCR
 HKCC
 
-; Registry value types:
 REG_SZ
 REG_EXPAND_SZ
 REG_MULTI_SZ
 REG_DWORD
+REG_QWORD
 REG_BINARY
+REG_LINK
+REG_RESOURCE_LIST
+REG_FULL_RESOURCE_DESCRIPTOR
+REG_RESOURCE_REQUIREMENTS_LIST
+REG_DWORD_BIG_ENDIAN
 
-; #Warn WarningType
 UseUnsetLocal
 UseUnsetGlobal
 UseEnv
 LocalSameAsGlobal
+ClassOverwrite
+
+; StringCaseSense的第三个选项
+Locale
+
+; Image Handles
+HBITMAP
+HICON
+
+; Regular Expression Callouts
+NO_START_OPT
+
+; #SingleInstance的选项
+force
+
+; SysGet的选项
+MonitorCount
+MonitorName
+MonitorPrimary
+MonitorWorkArea
+
+; BlockInput的选项
+SendAndMouse
+MouseMove
+MouseMoveOff
+
+; SetTitleMatchMode的选项
+RegEx
+Fast
+Slow
+
+; class的关键字
+new
+extends
+this
+base

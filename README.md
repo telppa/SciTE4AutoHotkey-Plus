@@ -2,9 +2,6 @@
   
 #### 这是最适合中文与新人用户的AHK IDE 由于原版早已不更新了 故多年来在原版基础上做了非常多的改进 目的只有一个 让大家用得更顺手  
   
-##### 0. 集成等宽字体  
-![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/0.%20集成等宽字体.png)  
-  
 ##### 1. 自动完成增强版  
 ![自动完成增强版](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/1.%20自动完成增强版.gif)  
   
@@ -14,52 +11,58 @@
 ##### 3. 智能F1  
 ![智能F1](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/3.%20智能F1.gif)  
   
-##### 4. 调试代码  
+##### 4. 调试代码 F7  
 ![调试代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/4.%20调试代码.gif)  
   
-##### 5. 运行选区代码  
+##### 5. 运行选区代码  ctrl+3  
 ![运行选区代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/5.%20运行选区代码.gif)  
   
 ##### 6. 自动缩进  
 ![自动缩进](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/6.%20自动缩进.gif)  
   
-##### 7. 代码格式化  
+##### 7. 代码格式化 ctrl+4  
 ![代码格式化](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/7.%20代码格式化.gif)  
   
-##### 8. 重复行 ctrl+d  
-![ctrl+d](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/8.%20ctrl+d.gif)  
+##### 8. 热键、标签、函数识别并跳转 F12或中键  
+![代码格式化](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/8.%20热键、标签、函数识别并跳转gif)  
   
-##### 9. 注释行 ctrl+q  
-![ctrl+q](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/9.%20ctrl+q.gif)  
+##### 9. 重复行 ctrl+d  
+![ctrl+d](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/9.%20ctrl+d.gif)  
   
-##### 10. 列编辑 alt+左键  
-![alt+左键](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/10.%20alt+左键.gif)  
+##### 10. 注释行 ctrl+q  
+![ctrl+q](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/10.%20ctrl+q.gif)  
   
-##### 11. 多点编辑 ctrl+左键  
-![ctrl+左键](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/11.%20ctrl+左键.gif)  
+##### 11. 列编辑 alt+左键  
+![alt+左键](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/11.%20alt+左键.gif)  
   
-##### 12. 缩略词 ctrl+b  
-![ctrl+b](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/12.%20ctrl+b.gif)  
+##### 12. 多点编辑 ctrl+左键  
+![ctrl+左键](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/12.%20ctrl+左键.gif)  
   
-##### 13. 创建GUI  
-![创建GUI](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/13.%20创建GUI.png)  
+##### 13. 缩略词 ctrl+b  
+![ctrl+b](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/13.%20ctrl+b.gif)  
   
-##### 14. 创建对话框  
-![创建对话框](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/14.%20创建对话框.png)  
+##### 14. 创建GUI ctrl+1  
+![创建GUI](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/14.%20创建GUI.png)  
   
-##### 15. 获取窗口信息  
-![获取窗口信息](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/15.%20获取窗口信息.png)  
+##### 15. 创建对话框 ctrl+2  
+![创建对话框](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/15.%20创建对话框.png)  
   
-##### 16. 获取窗口信息增强版  
-![获取窗口信息增强版](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/16.%20获取窗口信息增强版.png)  
+##### 16. 获取窗口信息 ctrl+6  
+![获取窗口信息](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/16.%20获取窗口信息.png)  
   
-##### 17. 调试正则表达式  
-![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/17.%20调试正则表达式%20(1).png)  
-![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/17.%20调试正则表达式%20(2).png)  
-![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/17.%20调试正则表达式%20(3).png)  
+##### 17. 获取窗口信息增强版 ctrl+7  
+![获取窗口信息增强版](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/17.%20获取窗口信息增强版.png)  
   
-##### 18. 调试爬虫  
-![调试爬虫](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/18.%20调试爬虫.png)  
+##### 18. 调试正则表达式 ctrl+8  
+![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/18.%20调试正则表达式%20(1).png)  
+![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/18.%20调试正则表达式%20(2).png)  
+![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/18.%20调试正则表达式%20(3).png)  
+  
+##### 19. 调试爬虫 ctrl+9  
+![调试爬虫](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/19.%20调试爬虫.png)    
+  
+##### 20. 集成等宽字体  
+![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/20.%20集成等宽字体.png)  
 ------------  
   
 - 技巧：  
@@ -83,6 +86,26 @@
 ------------  
   
 - 更新日志：  
+> 2020.09.07  
+> 更新“AHK 爬虫终结者”。  
+> 更新“AHK 正则终结者”。  
+> 增加“自动更新”功能。  
+  
+> 2020.09.03  
+> 更新“Auto-Syntax-Tidy”及其语法文件。  
+> 为“运行选区代码”功能添加快捷键Ctrl+3。  
+> 去掉“Scriptlet Utility”的快捷键。  
+> “AutoGUI”快捷键改为Ctrl+1。  
+  
+> 2020.09.02  
+> 整理并更新“ahk.api”“ahk.keywords.properties”“AhkAbbrevs.properties”。  
+> 修复已经打开了文件又新建空文档时自动完成功能失效的问题。  
+  
+> 2020.09.01  
+> 修复“Auto-Syntax-Tidy”处理类似“++num”行时的丢行bug。  
+> 进一步降低高亮配色对比度，缓和视疲劳。  
+> 增加“运行lua”功能，快捷键F10。  
+  
 > 2020.08.31  
 > 更改行注释符号，去掉了“~”，以便兼容其它编辑器创建的注释。  
   

@@ -1,8 +1,17 @@
--- ×Ô¶¯Íê³ÉÔöÇ¿°æ v1.0
+-- ×Ô¶¯Íê³ÉÔöÇ¿°æ v1.4
 -- base on AutoComplete v0.8 by Lexikos
 -- https://gist.github.com/Lexikos/bc17b8d55ae8a8102e35
 
 -- ¸üĞÂÈÕÖ¾£º
+-- 1.4
+-- ºÏ²¢µ÷ÊÔ¹¦ÄÜ¡£
+-- 1.3
+-- Ôö¼ÓÎÄ¼ş±àÂë¼ì²â¹¦ÄÜ¡£
+-- 1.2
+-- ºÏ²¢fincsºÍLexikosµÄÑùÊ½¡£
+-- 1.1
+-- ĞŞ¸´ÒÑ¾­´ò¿ªÁËÎÄ¼şÓÖĞÂ½¨¿ÕÎÄµµÊ±×Ô¶¯Íê³É¹¦ÄÜÊ§Ğ§µÄÎÊÌâ¡£bug #1
+-- 1.0
 -- ĞŞ¸´ÁËLexikosµÄ¹Ø¼ü×Ö¿³Í·¡¢È¡´Ê³¤¶È²»ÕıÈ·¡¢apiÎÄ¼ş²»´æÔÚ»á±¨´íµÄbug¡£
 -- ÊµÏÖÁËÖĞÎÄ¡¢Ó¢ÎÄ£¨Ó¦¸ÃÒ²°üÀ¨º«ÎÄÈÕÎÄµÈ£©¹Ø¼ü×ÖµÄÌáÊ¾¡£
 -- ÊµÏÖÁËÊµÊ±ÌáÈ¡¹Ø¼ü×Ö£¨Ô­°æ½öÔÚ´ò¿ªÎÄ¼şÊ±ÌáÈ¡£©£¬½â¾öÁËÊµÊ±ÌáÈ¡¹Ø¼ü×ÖµÄĞÔÄÜÎÊÌâ¡£
@@ -17,18 +26,14 @@
 -- Ô­À´µÄ×Ô¶¯Íê³É¿ÉÒÔÖ±½ÓÆ¥Åä¡°.¡±¿ªÍ·µÄ¹Ø¼ü×Ö£¬ÏÖÔÚÖ»ÄÜ¼ä½ÓÆ¥Åä¡£
 
 -- List of styles per lexer that autocomplete should not occur within.
--- ²»ÔÚÏÂÃæÑùÊ½ÁĞ±íÖĞÌáÈ¡¹Ø¼ü×Ö¡£
+-- ²»ÔÚÏÂÃæÑùÊ½ÁĞ±íÖĞÌáÈ¡¹Ø¼ü×Ö¡¢½øĞĞ»¨À¨ºÅ×Ô¶¯Ëõ½ø¡£
 local IGNORE_STYLES = { -- Should include comments, strings and errors.
     [SCLEX_AHK1] = {1,2,3,6,20},
     [SCLEX_AHK2] = {1,2,3,5,15},
     [SCLEX_LUA]  = {1,2,3,6,7,8,12}
 }
--- ²»ÔÚÏÂÃæÑùÊ½ÁĞ±íÖĞ½øĞĞ»¨À¨ºÅ×Ô¶¯Ëõ½ø¡£
-local ignoreStylesTable = {
-    [SCLEX_AHK1] = {SCE_AHK_COMMENTLINE, SCE_AHK_COMMENTBLOCK, SCE_AHK_STRING, SCE_AHK_ERROR, SCE_AHK_ESCAPE},
-    [SCLEX_AHK2] = {SCE_AHK2_COMMENTLINE, SCE_AHK2_COMMENTBLOCK, SCE_AHK2_STRING, SCE_AHK2_ERROR, SCE_AHK2_ESCAPE},
-}
 
+local DEBUG_MODE = false   -- µ÷ÊÔÄ£Ê½¡£
 local SHARING_KEYWORDS_BETWEEN_FILES = false   -- ¿çÎÄ¼ş¹Ø¼ü×Ö¹²Ïí¡£±ÈÈçÍ¬Ê±´ò¿ªA¡¢BÁ½¸öÎÄ¼ş£¬AÎÄ¼şÖĞ×¥µ½µÄ¹Ø¼ü×Ö¡°haha¡±£¬ÔÚBÎÄ¼şÖĞÒ²¿ÉÒÔÌáÊ¾¡£
 local INCREMENTAL = true    -- ¸ù¾İ¹Ø¼ü×Ö±ä»¯²»¶Ï¼õÉÙ×Ô¶¯Íê³ÉÁĞ±íÄÚÈİ¡£falseÔòºÍSciTEÔ­°æÒ»ÖÂ£¬Ö»±ä¶¯¹â±ê£¬²»¸Ä±äÁĞ±í¡£
 local IGNORE_CASE = true    -- ¹Ø¼ü×ÖÆ¥ÅäÊ±ºöÂÔ´óĞ¡Ğ´
@@ -125,6 +130,7 @@ local function buildNamesFromPos(_startPos, _endPos)
                 if endPos-startPos >= MIN_IDENTIFIER_LEN then   -- ĞŞ¸´ÁËLexikosµÄbug¡£Ô­°æÊÇ¡°endPos-startPos+1¡±¡£
                     -- Create one key-value pair per unique word:
                     local name = editor:textrange(startPos, endPos)
+                    if DEBUG_MODE then print("±¾´ÎÈ¡µ½µÄ¹Ø¼ü×Ö£º"..name) end
                     unique[normalize(name)] = name    -- normalize ÔÚºöÂÔ´óĞ¡Ğ´µÄÇé¿öÏÂ£¬Êµ¼ÊÉÏÊÇ°ÑËùÓĞµ¥´Ê×î´ó»¯ÁËÒ»±é£¬ÒÔ±ÜÃâÖØ¸´Ìí¼Óµ¥´Ê¡£
                 end
             end
@@ -169,11 +175,24 @@ local list_old = ""   -- ´¢´æ¾ÉµÄlistµÄÖµ£¬ÓÃÓÚºÍĞÂµÄlist×ö¶Ô±È£¬Ã»±ä»¯¾Í²»Ë¢ĞÂÁ
 local function handleChar(char, calledByHotkey)
     -- This function should only run when the Editor pane is focused.
     if not editor.Focus then return false end
+    if DEBUG_MODE then print("--------------------") end
+    -- Êµ¼ÊÉÏ£¬Èç¹û´ò¿ªSciTEÊ±Ã»ÓĞÈÎºÎÎÄ¼ş±»´ò¿ª£¬ÄÇÃ´´ËÊ±OnOpenÊÂ¼şÊÇ»á±»¼¤»îµÄ¡£
+    -- ÓĞÎÊÌâµÄ¾ÍÊÇÒÑ¾­´ò¿ªÁËÎÄ¼ş£¬´ËÊ±ĞÂ½¨ÎÄ¼ş£¬OnOpenÊÂ¼şÓÖ²»»á±»¼¤»î¡£
+    -- ´ËÊ± OnClear() ÊÇÎ¨Ò»ÄÜÔÚ´´½¨ĞÂÎÄ¼şÊ±±»¼¤»îµÄÊÂ¼ş¡£
+    -- µ«ÊÇ¼¤»î´ËÊÂ¼şÊ±£¬buffer²¢Ã»ÓĞ±»Çå¿Õ£¬Öµ»¹ÊÇÇ°Ò»¸öÎÄ¼şµÄ¡£
+    -- Ò²¾ÍÊÇËµÔÚÎ¨Ò»ÄÜ¹»±äÏà²¶»ñ´´½¨ĞÂÎÄ¼şµÄÊÂ¼şÖĞ£¬Ã»·¨×öÈÎºÎÊÂ¡£
+    -- Òò´ËÖ»ÄÜÔÚ´Ë´¦ÑéÖ¤²¢½¨Á¢¹Ø¼ü×ÖÁĞ±í¡£bug #1
+    if not buffer.namesCache then
+        if DEBUG_MODE then print("OnNewFile_no_cache|   endpos:"..editor.TextLength) end
+        -- Otherwise, build a new list.
+        buildNames()
+        saveCache()
+        buffer.namesCache = true
+    end
     if not INCREMENTAL and editor:AutoCActive() then
         -- Nothing to do.
         return false
     end
-    local ignoreStyles = ignoreStylesTable[editor.Lexer]
 
     -- ĞĞÄ£Ê½µÄÒâÒå¾ÍÊÇ¡ª¡ª¹Ø¼ü×ÖÔÚ»»ĞĞºó¾Í±»ÊµÊ±´´½¨£¬Í¬Ê±ÓÖ²»»áÒòÎªÃ¿´Î¸üĞÂ¹Ø¼ü×Ö¶¼ÊÇÈ«ÎÄ¸üĞÂ¶øÔì³ÉĞÔÄÜÎÊÌâ¡£
     -- È±µã¾ÍÊÇ×îÍêÃÀµÄ×ö·¨Êµ¼ÊÉÏÊÇ»ñÈ¡ÎÄ¼şËùÓĞ±»ĞŞ¸ÄµÄĞĞ£¬È»ºóÌáÈ¡ÕâĞ©ĞĞµÄ¹Ø¼ü×Ö¡£
@@ -189,17 +208,17 @@ local function handleChar(char, calledByHotkey)
         saveCache()
         -- ×Ô¶¯Ëõ½ø
         local prevStyle = editor.StyleAt[getPrevLinePos()]
-        if not isInTable(ignoreStyles, prevStyle) then
+        if not isInTable(IGNORE_STYLES[editor.Lexer], prevStyle) then
             return AutoIndent_OnNewLine()   -- fincsÔ­°æÕâÀï¾ÍÓÃµÄreturn¡£
         end
     elseif char == "{" then
         local curStyle = editor.StyleAt[editor.CurrentPos-2]
-        if not isInTable(ignoreStyles, curStyle) then
+        if not isInTable(IGNORE_STYLES[editor.Lexer], curStyle) then
             AutoIndent_OnOpeningBrace()
         end
     elseif char == "}" then
         local curStyle = editor.StyleAt[editor.CurrentPos-2]
-        if not isInTable(ignoreStyles, curStyle) then
+        if not isInTable(IGNORE_STYLES[editor.Lexer], curStyle) then
             AutoIndent_OnClosingBrace()
         end
     end
@@ -210,6 +229,7 @@ local function handleChar(char, calledByHotkey)
     if len < MIN_PREFIX_LEN then
         if editor:AutoCActive() then
             if len == 0 then
+            if DEBUG_MODE then print(1) end
                 -- Happens sometimes after typing ")".
                 editor:AutoCCancel()
                 return
@@ -218,6 +238,7 @@ local function handleChar(char, calledByHotkey)
             -- keep it updated even though len < MIN_PREFIX_LEN.
         else
             if char then
+            if DEBUG_MODE then print(2) end
                 -- Not enough text to trigger autocomplete, so return.
                 return
             end
@@ -225,6 +246,7 @@ local function handleChar(char, calledByHotkey)
         end
     end
     if not editor:AutoCActive() then
+    if DEBUG_MODE then print(3) end
         -- ÓÉÓÚ×Ô¶¯Íê³É¿ÉÒÔÍ¨¹ı°üÀ¨µ«²»ÏŞÓÚ ÖĞÍ¾{enter}¡¢ÖĞÍ¾{tab}¡¢È«²¿ÊäÍêµÈ·½Ê½Íê³É¡£
         -- ÎªÁË±ÜÃâbugÒ²ÎªÁË±ÜÃâµ½´¦È¥Çå¿Õlist_old£¬Òò´ËÍ³Ò»ÔÚÖ»ÒªÃ»ÓĞ×Ô¶¯Íê³É¿òÊ±¾ÍÇå¿Õ¾É±äÁ¿£¡
         list_old = ""
@@ -250,7 +272,9 @@ local function handleChar(char, calledByHotkey)
             end
         end
     end
+    if DEBUG_MODE then print("3.1|Æ¥ÅäÁĞ±í£º"..table.concat(menuItems, "\1")) end
     if notempty(menuItems) then
+    if DEBUG_MODE then print(4) end
         -- Show or update the auto-complete list.
         local list = table.concat(menuItems, "\1")
         editor.AutoCIgnoreCase = IGNORE_CASE
@@ -259,6 +283,7 @@ local function handleChar(char, calledByHotkey)
         editor.AutoCMaxHeight = 5
         -- if not editor:AutoCActive() then   -- ÁíÒ»ÖÖ½µµÍÉÁË¸µÄ·½Ê½£¬ºÍSciTEÔ­°æÒ»Ñù£¬Ö»Òª×Ô¶¯Íê³É¿ò³öÏÖÁË£¬¾ÍÖ»Ìø×ªÎ»ÖÃ¶ø²»Ë¢ĞÂ¡£
         if list~=list_old then    -- ½µµÍ×Ô¶¯Íê³É¿òµÄÉÁË¸£¬Ö»ÓĞÆ¥ÅäµÄ¹Ø¼ü×Ö·¢Éú±ä»¯Ê±²ÅË¢ĞÂ¡£
+        if DEBUG_MODE then print(5) end
             editor:AutoCShow(len, list)
             list_old=list
         end
@@ -267,26 +292,31 @@ local function handleChar(char, calledByHotkey)
             -- User has completely typed the only item, so cancel.
             if CASE_CORRECT then
                 if CASE_CORRECT_INSTANT or #menuItems == 1 then
+                if DEBUG_MODE then print(6) end
                     -- Make sure the correct item is selected.
                     editor:AutoCShow(len, menuItems[1])
                     editor:AutoCComplete()
                 end
                 if #menuItems > 1 then
+                if DEBUG_MODE then print(7) end
                     editor:AutoCShow(len, list)
                 end
             end
             if #menuItems == 1 then
+            if DEBUG_MODE then print(8) end
                 editor:AutoCCancel()
                 return
             end
         end
         lastAutoCItem = #menuItems - 1
         if lastAutoCItem == 0 and calledByHotkey and CHOOSE_SINGLE then
+        if DEBUG_MODE then print(9) end
             editor:AutoCComplete()
         end
     else
         -- No relevant items.
         if editor:AutoCActive() then
+        if DEBUG_MODE then print(10) end
             editor:AutoCCancel()
         end
     end
@@ -347,6 +377,19 @@ local function handleKey(key, shift, ctrl, alt)
 end
 
 
+local function checkCodepage()
+    if props['FileExt']=="ahk" then
+        if editor.CodePage ~= 65001 then
+            local FileNameExt = props['FileNameExt']
+            -- 3.5.6¿ªÊ¼²ÅÖ§³Öeditor:EncodedFromUTF8()¡­¡­
+            -- editor:EncodedFromUTF8(FileNameExt)
+            -- print("×¢Òâ£ºµ±Ç°ÎÄ¼ş "..FileNameExt.." ±àÂë²»ÊÇ¡°UTF-8´øBOM¡±¡£\nAHK±¾Éí¿ÉÄÜÒòÎª´íÎóµÄ±àÂëÔì³ÉÄÑÒÔ·¢ÏÖµÄ Bug¡£\nÍ¬Ê±ÕâÒ²Ó°ÏìTillaGotoµÄÌø×ª¡¢×Ô¶¯Íê³ÉÔöÇ¿°æ¶ÔÖĞÎÄ¹Ø¼ü×ÖµÄÖ§³Ö¡£\nËùÒÔÇ¿ÁÒ½¨ÒéÄã½«ÎÄ¼ş±àÂë×ª»»Îª¡°UTF-8´øBOM¡±¡£")
+            print("×¢Òâ£ºµ±Ç°ÎÄ¼ş±àÂë²»ÊÇ¡°UTF-8´øBOM¡±¡£\nAHK±¾Éí¿ÉÄÜÒòÎª´íÎóµÄ±àÂëÔì³ÉÄÑÒÔ·¢ÏÖµÄ Bug¡£Í¬Ê±ÕâÒ²Ó°Ïì TillaGoto µÄÌø×ª¡¢×Ô¶¯Íê³ÉÔöÇ¿°æ¶ÔÖĞÎÄ¹Ø¼ü×ÖµÄÖ§³Ö¡£\nËùÒÔÇ¿ÁÒ½¨ÒéÄã½«ÎÄ¼ş±àÂë×ª»»Îª¡°UTF-8´øBOM¡±¡£")
+        end
+    end
+end
+
+
 -- Event handlers
 local events = {
     OnChar          = handleChar,
@@ -355,17 +398,19 @@ local events = {
         -- ²»Í¬ÎÄ¼şµÄbufferÖµÊÇÎ¨Ò»µÄ£¬Òò´ËÓÃËüÀ´»º´æ¶ÔÓ¦ÎÄ¼şµÄ¹Ø¼ü×Ö¡£
         if not buffer.namesCache then
             -- ´ò¿ª»òÇĞ»»Ò»¸öÎÄ¼şÊ±£¬Õı³£µÄÊÂ¼şË³ĞòÊÇOnOpen¡¢OnSwitchFile¡£
-            -- µ«µ±´ò¿ªSciTEÊ±£¬ÒÑ¾­´ò¿ªÁËÒ»¸öahkÎÄ¼ş£¬ÄÇÃ´ÊÂ¼ş±»¼¤»îµÄË³Ğò»áÊÇOnSwitchFile¡¢OnOpen¡£
+            -- µ«µ±´ò¿ªSciTEÊ±£¬ÒÑ¾­´ò¿ªÁËÒ»¸öluaÎÄ¼ş£¬ÄÇÃ´ÊÂ¼ş±»¼¤»îµÄË³Ğò»áÊÇOnSwitchFile¡¢OnOpen¡£
             -- ÓÉÓÚOnSwitchFileÏÈ±»¼¤»î£¬´ËÊ±editor.TextLengthµÄÖµ¾Í»áÊÇ0¡£
             -- ËùÒÔ´ËÊ±buildNames()ÎŞ·¨»ñµÃÕıÈ·½á¹û¡£
             -- Òò´ËĞèÒªÌø¹ı£¬ÔÚOnOpenÊÂ¼şÖĞÔÙ´¦Àí¡£
             if editor.TextLength > 0 then
+                if DEBUG_MODE then print("OnSwitchFile_no_cache|   endpos:"..editor.TextLength) end
                 -- Otherwise, build a new list.
                 buildNames()
                 saveCache()
                 buffer.namesCache = true
             end
         else
+            if DEBUG_MODE then print("OnSwitchFile_have_cache|   endpos:"..editor.TextLength) end
             loadCache()
         end
     end,
@@ -374,12 +419,15 @@ local events = {
         -- words in comments and strings.
         editor:Colourise(0, editor.Length)
         -- Then do the real work.
+        checkCodepage()
         if not buffer.namesCache then
+            if DEBUG_MODE then print("OnOpen_no_cache|   endpos:"..editor.TextLength) end
             -- Otherwise, build a new list.
             buildNames()
             saveCache()
             buffer.namesCache = true
         else
+            if DEBUG_MODE then print("OnOpen_have_cache|   endpos:"..editor.TextLength) end
             loadCache()
         end
     end
