@@ -146,7 +146,7 @@ local function buildApiNames()  -- ´Ó¡°ahk.api¡±ºÍ¡°user\user.ahk.api¡±ÎÄ¼þÖÐÈ¡¹
                 if string.len(name) > 0 then
                     unique[normalize(name)] = name    -- This also "case-corrects"; e.g. "gui" -> "Gui".
                 end
-                if string.sub(name, 0, 1) == "." then   -- °Ñ¡°.MaxIndex¡±ÔÙ´æÒ»±é¡°MaxIndex¡±ÐÎÊ½µÄ¡£
+                if string.sub(name, 0, 1) == "." then   -- °Ñ¡°.MaxIndex¡±Ö®Àà´ø¡°.¡±µÄ¹Ø¼ü×ÖÔÙ´æÒ»±é¡°MaxIndex¡±ÐÎÊ½µÄ¡£
                     name = string.sub(name, 2)
                     unique[normalize(name)] = name
                 end
