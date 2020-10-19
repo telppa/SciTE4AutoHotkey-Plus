@@ -2,6 +2,9 @@
   
 #### 这是最适合中文与新人用户的AHK IDE 由于原版早已不更新了 故多年来在原版基础上做了非常多的改进 目的只有一个 让大家用得更顺手  
   
+#### 可在 [Github Releases](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases") 或 [蓝奏云](https://ahk.lanzous.com/ieNXmhjn6pa "蓝奏云") 下载最新打包版。
+---
+  
 ##### 1. 自动完成增强版  
 ![自动完成增强版](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/1.%20自动完成增强版.gif)  
   
