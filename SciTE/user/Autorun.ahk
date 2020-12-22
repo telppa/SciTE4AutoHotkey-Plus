@@ -252,6 +252,5 @@ class 智能标点
 ;这种发送原义字符的方式可以避开输入法的设置
 发送原义字符(字符)
 {
-	ascii:=Asc(字符)
-	SendInput, {Asc %ascii%}
+	SendInput, {Text}%字符%
 }
