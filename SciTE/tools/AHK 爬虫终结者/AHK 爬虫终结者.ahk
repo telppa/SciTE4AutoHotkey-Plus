@@ -190,5 +190,5 @@ WM_MOUSEMOVE()  ;鼠标移动到状态栏上改变图标
     DllCall("SetCursor","UInt",手型光标)
 }
 
-#Include <WinHttp>
-#Include <正则全局模式>
+#Include %A_ScriptDir%\WinHttp.ahk
+#Include %A_ScriptDir%\正则全局模式.ahk

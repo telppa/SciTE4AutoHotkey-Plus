@@ -2,7 +2,7 @@
   
 #### 这是最适合中文与新人用户的AHK IDE 由于原版早已不更新了 故多年来在原版基础上做了非常多的改进 目的只有一个 让大家用得更顺手  
   
-#### 可在 [Github Releases](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases") 或 [蓝奏云](https://ahk.lanzous.com/ieNXmhjn6pa "蓝奏云") 下载最新打包版。
+#### 可在 [Github Releases](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases") 或 [蓝奏云](https://ahk.lanzous.com/ilrMMjzqela "蓝奏云") 下载最新打包版。
 ---
   
 ##### 1. 自动完成增强版  
@@ -95,6 +95,11 @@
 > 如果常常写库的话，可以用“scriptlet utility”添加标准化的注释代码，之后可用“GenDocs”生成好看的文档。  
 > 快速运行和运行的区别就是前者可带4个参数，并且发生错误由ahk弹框提示；后者由scite捕获并提示。  
 ------------  
+  
+- 更新日志：  
+> 2021.01.03  
+> 使用可能可适应更多输入法的方法实现“发送原义字符”功能。  
+> 修正“爬虫终结者”无法启动的错误。  
   
 - 更新日志：  
 > 2020.12.22  

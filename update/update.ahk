@@ -1,9 +1,9 @@
-﻿Text := "增加工具 “AHK-Rare” 。`n更新 “智能Tab” 。`n更新配对括号的配色。`n更新技巧说明。`n`n“AHK-Rare” 内含数百种功能函数并支持搜索，同时还被我汉化了。"
+﻿Text := "修正与快捷键“Alt+Numpad4”冲突的问题。`n使用可能可适应更多输入法的方法实现“发送原义字符”功能。`n修正“爬虫终结者”无法启动的错误。"
 
-Result := MsgBoxEx(Text, "v20201018版已更新", "蓝奏云下载|Github 下载", 0, "", "AlwaysOnTop")
+Result := MsgBoxEx(Text, "v20210103版已更新", "蓝奏云下载|Github 下载", 0, "", "AlwaysOnTop")
 
 If (Result == "蓝奏云下载") {
-	Run, https://ahk.lanzous.com/ieNXmhjn6pa
+	Run, https://ahk.lanzous.com/ilrMMjzqela
 } Else If (Result == "Github 下载") {
 	Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
 } Else If (Result == "Cancel") {
