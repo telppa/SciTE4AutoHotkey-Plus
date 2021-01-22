@@ -113,6 +113,9 @@ loop
 例如Keys中存在单词“click”，CommandNames中也存在单词“Click”，那么大小写最终就会被纠正成后者。feature #4
 修复 Variables 列表的纠正。bug #6
 更新了语法文件。
+
+2021.01.16
+屏蔽GUI下的 Keywords 选项，避免此选项在GUI下被使用，因为它可能纠正dllcall里面的单词，导致代码运行失败。
 */
 
 #SingleInstance ignore
@@ -443,7 +446,7 @@ BuildGui:
 	Gui, Add, Checkbox, vCaseCorrectVariables Checked%CaseCorrectVariables%,Variables
 	Gui, Add, Checkbox, vCaseCorrectBuildInFunctions Checked%CaseCorrectBuildInFunctions%,Build in functions
 	Gui, Add, Checkbox, ys vCaseCorrectKeys Checked%CaseCorrectKeys%,Keys
-	Gui, Add, Checkbox, vCaseCorrectKeywords Checked%CaseCorrectKeywords%,Keywords
+	Gui, Add, Checkbox, vCaseCorrectKeywords Checked%CaseCorrectKeywords% Disabled,Keywords
 	Gui, Add, Checkbox, vCaseCorrectDirectives Checked%CaseCorrectDirectives%,Directives
 	Gui, Add, Text, xm Section, Information
 	Gui, Add, Checkbox, ys vStatistic Checked%Statistic%, Statistic

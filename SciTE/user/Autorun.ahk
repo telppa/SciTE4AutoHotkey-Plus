@@ -249,18 +249,12 @@ class 智能标点
 	}
 }
 
-;这种发送原义字符的方式可以避开输入法的设置
+; 这种发送原义字符的方式可以避开输入法的设置
 ; Send, {Text} 方式绕得过搜狗和微软输入法，但似乎绕不过某些输入法。
 ; Send, {Asc 41} 方式绕得过搜狗和微软输入法，似乎也绕得过某些输入法，但因为{Asc 41}实现方式就是按住alt再按41，所以会额外激活如alt+4的快捷键。
 发送原义字符(字符)
 {
 	dec:=Ord(字符)
-	dec:=Dec2Base(dec)
-	SendInput, {U+%dec%}
+	hex:=Format("{1:X}", dec)
+	SendInput, {U+%hex%}
 }
-
-Dec2Base( _Number, _Base = 16 ) {         										 ;-- 以十进制和
-    Loop % _BaseLen := _Base<10 ? Ceil( ( 10/_Base ) * Strlen( _Number ) ) : Strlen( _Number )
-        _D := Floor( _Number/( T := _Base**( _BaseLen-A_index ) ) ), _B .= !_D ? 0: ( _D>9 ? Chr( _D + 87 ) : _D ), _Number := _Number - _D * T
-    return Ltrim( _B, "0" )
-} ;</11.01.000006>

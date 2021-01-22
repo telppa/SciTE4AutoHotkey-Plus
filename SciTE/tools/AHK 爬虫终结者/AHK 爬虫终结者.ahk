@@ -84,7 +84,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like
   global 手型光标:=DllCall("LoadCursor","UInt",NULL,"Int",32649,"UInt")
   OnMessage(0x200, "WM_MouseMove")  ;监视鼠标移动消息
   OnMessage(0x201, "WM_LButtonDOWN")    ;监视鼠标点击消息
-Return
+return
 
 GuiEscape:
 GuiClose:

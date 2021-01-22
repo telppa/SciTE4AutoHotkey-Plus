@@ -8,12 +8,12 @@
 DetectHiddenWindows, On
 FileEncoding, UTF-8
 Menu, Tray, Icon, %A_ScriptDir%\..\toolicon.icl, 11
-progName = Scriptlet Utility
+progName := "脚本片段"
 
 scite := GetSciTEInstance()
 if !scite
 {
-	MsgBox, 16, %progName%, SciTE COM object not found!
+	MsgBox, 16, %progName%, 没有找到 SciTE COM 对象!
 	ExitApp
 }
 
@@ -24,7 +24,7 @@ scitehwnd := scite.SciTEHandle
 sdir = %LocalSciTEPath%\Scriptlets
 IfNotExist, %sdir%
 {
-	MsgBox, 16, %progName%, Scriptlet folder doesn't exist!
+	MsgBox, 16, %progName%, Scriptlet 文件夹(目录)不存在!
 	ExitApp
 }
 
@@ -33,16 +33,16 @@ if 1 = /insert
 {
 	if 2 =
 	{
-		MsgBox, 64, %progName%, Usage: %A_ScriptName% /insert scriptletName
+		MsgBox, 64, %progName%, 示例: %A_ScriptName% /insert 脚本片段名
 		ExitApp
 	}
 	IfNotExist, %sdir%\%2%.scriptlet
 	{
 		MsgBox, 52, %progName%,
 		(LTrim
-		Invalid scriptlet name: "%2%".
-		Perhaps you have clicked on a toolbar icon whose scriptlet attached no longer exists?
-		Press OK to edit the toolbar properties file.
+		无效的脚本片段: "%2%".
+		工具栏图标对应的脚本片段不存在.
+		点击“确定”编辑工具栏文件.
 		)
 		IfMsgBox, Yes
 			scite.OpenFile(LocalSciTEPath "\UserToolbar.properties")
@@ -58,27 +58,27 @@ if 1 = /addScriptlet
 	defaultScriptlet := scite.Selection
 	if defaultScriptlet =
 	{
-		MsgBox, 16, %progName%, Nothing is selected!
+		MsgBox, 16, %progName%, 没有选择内容!
 		ExitApp
 	}
 	gosub AddBut ; that does it all
 	if !_RC
 		ExitApp ; Maybe the user has cancelled the action.
-	MsgBox, 68, %progName%, Scriptlet added sucessfully. Do you want to open the scriptlet manager?
+	MsgBox, 68, %progName%, 脚本片段已成功添加。 是否打开脚本片段管理器?
 	IfMsgBox, Yes
 		Reload ; no parameters are passed to script
 	ExitApp
 }
 
 Gui, +MinSize Resize Owner%scitehwnd%
-Gui, Add, Button, Section gAddBut, New
-Gui, Add, Button, ys gRenBut, Rename
-Gui, Add, Button, ys gSubBut, Delete
+Gui, Add, Button, Section gAddBut, 新建
+Gui, Add, Button, ys gRenBut, 重命名
+Gui, Add, Button, ys gSubBut, 删除
 Gui, Add, ListBox, xs w160 h240 vMainListbox gSelectLB HScroll
-Gui, Add, Button, ys Section gToolbarBut, Add to toolbar
-Gui, Add, Button, ys gInsertBut, Insert into SciTE
-Gui, Add, Button, ys gSaveBut, Save
-Gui, Add, Button, ys gOpenInSciTE, Open in SciTE
+Gui, Add, Button, ys Section gToolbarBut, 添加到工具栏
+Gui, Add, Button, ys gInsertBut, 插入到 SciTE
+Gui, Add, Button, ys gSaveBut, 保存
+Gui, Add, Button, ys gOpenInSciTE, 在 SciTE 中打开
 Gui, Font, S9, %textFont%
 Gui, Add, Edit, xs w320 h240 vScriptPane -Wrap WantTab HScroll
 Gui, Show,, %progName%
@@ -111,7 +111,7 @@ Return
 
 AddBut:
 Gui +OwnDialogs
-InputBox, fname2create, %progName%, Enter the name of the scriptlet to create:
+InputBox, fname2create, %progName%, 输入要创建的脚本片段的名称:
 if ErrorLevel
 	return
 if !fname2create
@@ -140,7 +140,7 @@ Gui +OwnDialogs
 GuiControlGet, selected,, MainListbox
 if selected =
 	return
-MsgBox, 52, %progName%, Are you sure you want to delete '%selected%'?
+MsgBox, 52, %progName%,确定要删除 '%selected%'?
 IfMsgBox, No
 	return
 FileDelete, %sdir%\%selected%.scriptlet
@@ -153,7 +153,7 @@ Gui +OwnDialogs
 GuiControlGet, selected,, MainListbox
 if selected =
 	return
-InputBox, fname2create, %progName%, Enter the new name of the scriptlet:,,,,,,,, %selected%
+InputBox, fname2create, %progName%, 输入脚本片段的新名称:,,,,,,,, %selected%
 if ErrorLevel
 	return
 if !fname2create
@@ -163,7 +163,7 @@ if (fname2create = selected)
 fname2create := ValidateFilename(fname2create)
 IfExist, %sdir%\%fname2create%.scriptlet
 {
-	MsgBox, 48, %progName%, That name already exists!`nChoose another name please.
+	MsgBox, 48, %progName%, 该名称已存在！`n请选择其他名称.
 	return
 }
 FileMove, %sdir%\%selected%.scriptlet, %sdir%\%fname2create%.scriptlet
