@@ -30,7 +30,7 @@ return
 return
 
 执行更新:
-	网址:="https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/update/update.ahk"
+	网址:="https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/update.ahk"
 	路径:=A_ScriptDir "\..\update.ahk"
 	WinHttp.URLDownloadToFile(网址, 路径)
 	if (WinHttp.Status!=200)

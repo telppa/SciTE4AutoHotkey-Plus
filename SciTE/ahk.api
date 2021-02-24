@@ -3,6 +3,7 @@
 ( 原因是如果带BOM，那么从这里取出的中文关键字在自动完成列表中会被加上BOM。
 ( 而从SciTE编辑框中读到的中文又必定不带BOM，因此作比较时就会因长度不一致而判断出错，无法自动完成。
 ( 更新日志
+( 2021.02.09 补 #Warn 的 Unreachable，Gui 的 Parent 参数。
 ( 2020.09.02 重新按顺序整理，添加更多注释，并添加漏掉的词。
 ( 2020.08.30 使用“( ”的形式替代“# ”注释，以便被新的自动完成功能正确加载。
 ( 2020.08.27 “(”“,”“空格”3个符号及后面的内容在被载入自动完成列表时会被清空。
@@ -49,7 +50,7 @@
 #Persistent
 #SingleInstance [Force|Ignore|Off]
 #UseHook [On|Off]
-#Warn [, UseUnsetLocal|UseUnsetGlobal|UseEnv|LocalSameAsGlobal|ClassOverwrite|All, MsgBox|StdOut|OutputDebug|Off]
+#Warn [, UseUnsetLocal|UseUnsetGlobal|UseEnv|LocalSameAsGlobal|ClassOverwrite|Unreachable|All, MsgBox|StdOut|OutputDebug|Off]
 #WinActivateForce
 ( -----------------以上是“全局命令”-----------------
 ( -----------------以下是“流程”-----------------
