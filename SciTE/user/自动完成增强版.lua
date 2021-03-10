@@ -43,7 +43,7 @@ local WRAP_ARROW_KEYS = false
 local CHOOSE_SINGLE = props["autocomplete.choose.single"]
 
 -- Number of chars to type before the autocomplete list appears:
-local MIN_PREFIX_LEN = 1    -- 最少输入几个字符后，开始匹配自动完成列表。
+local MIN_PREFIX_LEN = 2    -- 最少输入几个字符后，开始匹配自动完成列表。
 -- Length of shortest word to add to the autocomplete list:
 local MIN_IDENTIFIER_LEN = 3    -- 添加到自动完成列表的关键字的最小长度（不影响从“ahk.api”添加关键字的长度）。
 -- List of regex patterns for finding suggestions for the autocomplete menu:

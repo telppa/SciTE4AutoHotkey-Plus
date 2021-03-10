@@ -60,10 +60,7 @@ return
 
 ;单词自动完成时使用TAB键，可自动补全命令、函数等，并设好参数。此时若继续按TAB则可以在参数间跳跃，高效连贯的完成输入。
 ;BUG：
-;	逗号左边不能是转义符或者引号。
-;	有时会莫名打开文件夹。
 ;	参数中含有特殊字符（例如英文引号，“\”“/”等等）时无法被自动选中。
-;	无缩略语时也会启动智能tab（例如单词password）。
 智能Tab:
 	标记 := 0
 return
@@ -104,7 +101,7 @@ $Tab::
 			Send, {Right}
 			Send, {Enter}
 			标记 := 0
-			ToolTip,
+			ToolTip
 			return
 		}
 		else if (SubStr(选中文本, 1, 2)="`r`n" or SubStr(选中文本, -1, 2)="`r`n")		;行末
@@ -112,7 +109,7 @@ $Tab::
 			Send, ^{Left}
 			Send, {Enter}
 			标记 := 0
-			ToolTip,
+			ToolTip
 			return
 		}
 		else if (SubStr(选中文本, 0, 1)=")")							;带闭括号的行末
@@ -136,7 +133,7 @@ $Tab::
 		}
 	}
 	标记 := 0
-	ToolTip,
+	ToolTip
 return
 
 ;仅在“自动完成框”与“搜狗输入法框”不存在时，回车键作用为“关闭智能tab”
@@ -153,7 +150,7 @@ $Enter::
 		Send, {Asc 41}			;使用“{Asc 41}”而非“)”，是因为前者在输入法为中文标点的情况下，依然可以发出英文符号。
 	Send, {Enter}
 	标记 := 0
-	ToolTip,
+	ToolTip
 return
 #If
 
@@ -194,6 +191,8 @@ return
 	$+9::发送原义字符("(")
 	$+0::发送原义字符(")")
 	$+-::发送原义字符("_")
+	$+[::发送原义字符("{")
+	$+]::发送原义字符("}")
 	$+;::发送原义字符(":")
 	$+'::发送原义字符("""")
 	$+,::发送原义字符("<")
@@ -209,15 +208,14 @@ class 智能标点
 	;获取Scintilla的hwnd
 	__New()
 	{
-		oSciTE := ComObjActive("SciTE4AHK.Application")
-		hEditor:=oSciTE.SciTEHandle
+		global SciTE_Hwnd
 		;Com得到的句柄SciTE的，而需要的是Scintilla的
 		;Get handle to focused control
-		ControlGetFocus, cSci, ahk_id %hEditor%
+		ControlGetFocus, cSci, ahk_id %SciTE_Hwnd%
 		;Check if it fits the class name
 		if InStr(cSci, "Scintilla")
 		{
-			ControlGet, hSci, Hwnd,, %cSci%, ahk_id %hEditor%
+			ControlGet, hSci, Hwnd,, %cSci%, ahk_id %SciTE_Hwnd%
 			this.hSci:=hSci
 			return,	this
 		}
