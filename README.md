@@ -1,8 +1,10 @@
 # SciTE4AutoHotkey-Plus  
   
-#### 这是最适合中文与新人用户的AHK IDE 由于原版早已不更新了 故多年来在原版基础上做了非常多的改进 目的只有一个 让大家用得更顺手  
+#### 这是最适合中文与新人用户的 AHK IDE  
+#### 由于原版早已不更新了，故多年来在原版基础上做了非常多的改进，目的只有一个，让大家用得更顺手。  
+---
   
-#### 可在 [Github Releases](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases") 或 [蓝奏云](https://ahk.lanzous.com/ilrMMjzqela "蓝奏云") 下载最新打包版。
+#### 可在 [Github Releases](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases") 或 [蓝奏云](https://ahk.lanzous.com/ilrMMjzqela "蓝奏云") 下载最新打包版。  
 ---
   
 ##### 1. 自动完成增强版  
@@ -97,8 +99,20 @@
 ------------  
   
 - 更新日志：  
+> 2021.03.17  
+> 更新“AHK 爬虫终结者”到2.0。（使用了 tmplinshi 的 JSONEditor）  
+> 关闭“Window Clone Tool”频繁刷新窗口。  
+  
+> 2021.03.10  
+> “AHK 正则终结者”里增加一个识别中文的例子。（帮助文件正则一章里的语法是错的！）  
+> 修复了一个也许会导致 com 接口有问题的问题。  
+> “发送原义字符”增加花括号。  
+> 进一步降低配色对比度与饱和度。  
+> 自动完成将在匹配第2个字时才工作。  
+  
 > 2021.02.24  
 > 更新“AhkSpy”到4.76。  
+> 删除部分无用文件。  
   
 > 2021.02.09  
 > 增加一个遗漏的关键字“Unreachable ”。  

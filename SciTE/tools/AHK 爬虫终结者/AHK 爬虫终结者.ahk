@@ -1,5 +1,8 @@
 ﻿/*
 更新日志：
+  2021.03.17
+    返回值框使用 JSONEditor 。
+    版本号2.0。
   2020.09.07
     修正模板。
     修正默认请求头。
@@ -57,33 +60,37 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like
 )
 
 界面:
-  ;设置图标必须放第一行，否则失效
-  Menu Tray, Icon, %A_ScriptDir%\爬虫.ico
+  ; 设置图标必须放第一行，否则失效
+  Menu, Tray, Icon, %A_ScriptDir%\爬虫.ico
 
-  Gui Add, GroupBox, x24 y16 w528 h700, 输入
-  Gui Add, Text, x224 y40 w120 h24 +0x200 Center, 网址
-  Gui Add, Edit, x48 y72 w480 h98 v网址,https://www.baidu.com/
-  Gui Add, Text, x224 y192 w120 h24 +0x200 Center, 设置
-  Gui Add, Edit, x48 y224 w480 h98 v设置, %默认设置%
-  Gui Add, Text, x224 y344 w120 h24 +0x200 Center, 请求头
-  Gui Add, Edit, x48 y376 w480 h98 -Wrap v请求头, %默认请求头%
-  Gui Add, Text, x224 y496 w120 h24 +0x200 Center, Post 数据
-  Gui Add, Edit, x48 y528 w480 h98 vPost数据,
-  Gui Add, Button, x48 y648 w480 h52 g发送, 发送
+  Gui, Add, GroupBox, x24 y16 w528 h700, 输入
+  Gui, Add, Text, x224 y40 w120 h24 +0x200 Center, 网址
+  Gui, Add, Edit, x48 y72 w480 h98 v网址,https://www.baidu.com/
+  Gui, Add, Text, x224 y192 w120 h24 +0x200 Center, 设置
+  Gui, Add, Edit, x48 y224 w480 h98 v设置, %默认设置%
+  Gui, Add, Text, x224 y344 w120 h24 +0x200 Center, 请求头
+  Gui, Add, Edit, x48 y376 w480 h98 -Wrap v请求头, %默认请求头%
+  Gui, Add, Text, x224 y496 w120 h24 +0x200 Center, Post 数据
+  Gui, Add, Edit, x48 y528 w480 h98 vPost数据,
+  Gui, Add, Button, x48 y648 w480 h52 g发送, 发送
 
-  Gui Add, GroupBox, x576 y16 w648 h700, 输出
-  Gui Add, Text, x842 y40 w120 h24 +0x200 Center, 返回值
-  Gui Add, Edit, x600 y72 w600 h400 v返回值,
-  Gui Add, Text, x680 y496 w120 h24 +0x200 Center, 响应头
-  Gui Add, Edit, x600 y528 w280 h172 -Wrap v响应头,
-  Gui Add, Text, x1000 y496 w120 h24 +0x200 Center, 代码
-  Gui Add, Edit, x920 y528 w280 h172 -Wrap v代码,
+  ; ActiveX 必须放 GroupBox 前面，否则显示不出来
+  Gui, Add, ActiveX, vWB x600 y72 w600 h400, %A_ScriptDir%\jsoneditor-5.15.0\jsonEditor.html
+  Gui, Add, GroupBox, x576 y16 w648 h700, 输出
+  Gui, Add, Text, x842 y40 w120 h24 +0x200 Center, 返回值
 
-  Gui Add, StatusBar, v状态栏, %A_Space%%A_Space%%A_Space%%A_Space%主页
-  Gui Show, w1250 h750, AHK 爬虫终结者 ver. 1.1
+  Gui, Add, Text, x680 y496 w120 h24 +0x200 Center, 响应头
+  Gui, Add, Edit, x600 y528 w280 h172 -Wrap v响应头,
+  Gui, Add, Text, x1000 y496 w120 h24 +0x200 Center, 代码
+  Gui, Add, Edit, x920 y528 w280 h172 -Wrap v代码,
+
+  Gui, Add, StatusBar, v状态栏, %A_Space%%A_Space%%A_Space%%A_Space%主页
+
+  Gui, Show, w1250 h750, AHK 爬虫终结者 ver. 2.0
   global 手型光标:=DllCall("LoadCursor","UInt",NULL,"Int",32649,"UInt")
-  OnMessage(0x200, "WM_MouseMove")  ;监视鼠标移动消息
-  OnMessage(0x201, "WM_LButtonDOWN")    ;监视鼠标点击消息
+  OnMessage(0x200, "WM_MouseMove")                ; 监视鼠标移动消息
+  OnMessage(0x201, "WM_LButtonDOWN")              ; 监视鼠标点击消息
+  OnMessage(WM_KEYDOWN:=0x100, "gui_KeyDown", 2)  ; JSONEditor 框响应回车、后退等按键
 return
 
 GuiEscape:
@@ -97,7 +104,7 @@ return
   待处理变量:=["网址", "设置", "请求头", "Post数据"]
   k:="", v:=""
   for k, v in 待处理变量
-    %v%:=Trim(%v%, " `t`r`n`v`f")     ;去除GUI控件中首尾空白符
+    %v%:=Trim(%v%, " `t`r`n`v`f")     ; 去除GUI控件中首尾空白符
 
   if (Post数据="")
   {
@@ -110,10 +117,10 @@ return
     gosub, Post模板
   }
 
-  ;把状态码和状态文字添加到响应头最前面
+  ; 把状态码和状态文字添加到响应头最前面
   响应头:="", 响应头:="Status:" WinHttp.Status "`r`n" "StatusText:" WinHttp.StatusText "`r`n" WinHttp.解析对象为信息(WinHttp.ResponseHeaders)
 
-  GuiControl,,返回值,%返回值%
+  wb.document.parentWindow.editor.setText(返回值)
   GuiControl,,响应头,%响应头%
   GuiControl,,代码,%代码模板%
 return
@@ -178,16 +185,36 @@ Post模板:
   )
 return
 
-WM_LBUTTONDOWN()    ;鼠标单击状态栏
+WM_LBUTTONDOWN()  ; 鼠标单击状态栏
 {
   If (A_GuiControl="状态栏")
     Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
 }
 
-WM_MOUSEMOVE()  ;鼠标移动到状态栏上改变图标
+WM_MOUSEMOVE()    ; 鼠标移动到状态栏上改变图标
 {
   If (A_GuiControl="状态栏")
     DllCall("SetCursor","UInt",手型光标)
+}
+
+gui_KeyDown(wParam, lParam, nMsg, hWnd) { ; http://www.autohotkey.com/board/topic/83954-problem-with-activex-gui/#entry535202
+	global wb
+	WinGetClass, ClassName, ahk_id %hWnd%
+	if (ClassName = "Internet Explorer_Server")
+  {
+    pipa := ComObjQuery(wb, "{00000117-0000-0000-C000-000000000046}")
+    VarSetCapacity(kMsg, 48), NumPut(A_GuiY, NumPut(A_GuiX
+    , NumPut(A_EventInfo, NumPut(lParam, NumPut(wParam
+    , NumPut(nMsg, NumPut(hWnd, kMsg)))), "uint"), "int"), "int")
+    Loop 2
+      r := DllCall(NumGet(NumGet(1*pipa)+5*A_PtrSize), "ptr", pipa, "ptr", &kMsg)
+    ; Loop to work around an odd tabbing issue (it's as if there
+    ; is a non-existent element at the end of the tab order).
+    until wParam != 9 || wb.Document.activeElement != ""
+    ObjRelease(pipa)
+    if r = 0  ; S_OK: the message was translated to an accelerator.
+      return 0
+  }
 }
 
 #Include %A_ScriptDir%\WinHttp.ahk
