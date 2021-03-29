@@ -534,7 +534,7 @@ WM_LBUTTONDOWN(wParam, lParam, msg, hwnd){       ;Copy-On-Click for controls
         Return
   
     If A_GuiControl contains Class               ;change data for specific fields
-        Content = ahk_class %Content%
+        Content = %Content%
     Else If A_GuiControl contains UID
         Content = ahk_id %Content%
     Else If A_GuiControl contains PID

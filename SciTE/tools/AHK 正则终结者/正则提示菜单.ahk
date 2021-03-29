@@ -34,6 +34,8 @@
   Menu, 正则提示菜单, Add, \`t转义符, InsertRegEx
   ; 注意是小写x，不需要 (*UCP) 选项。https://www.qqxiuzi.cn/zh/hanzi-unicode-bianma.php
   Menu, 正则提示菜单, Add, [\x{4e00}-\x{9fa5}]`t匹配汉字, InsertRegEx
+  ; 也可以直接用中文，等价于 [\x{4e00}-\x{9f9f}] ，比 9fa5 仅少6个生僻字。
+  Menu, 正则提示菜单, Add, [一-龟]`t匹配汉字, InsertRegEx
   Menu, 正则提示菜单, Add, `t正则表达式快速参考, InsertRegEx
 return
 

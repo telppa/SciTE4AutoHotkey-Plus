@@ -1,11 +1,12 @@
 ﻿;
 ; SciTE4AutoHotkey Toolbar
 ;
-;TillaGoto.iIncludeMode = 0x10111111
+; TillaGoto.iIncludeMode = 0x10111111
 
 #NoEnv
 #NoTrayIcon
-#SingleInstance Ignore
+; 这里要用 Force ，否则会出现 Toolbar 启动失败，但又无法退出造成一片空白的情况。
+#SingleInstance Force
 #Include %A_ScriptDir%
 #Include PlatformRead.ahk
 #Include ComInterface.ahk
