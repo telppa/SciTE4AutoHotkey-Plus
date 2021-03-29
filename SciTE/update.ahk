@@ -1,9 +1,45 @@
-﻿Text := "修正与快捷键“Alt+Numpad4”冲突的问题。`n使用可能可适应更多输入法的方法实现“发送原义字符”功能。`n修正“爬虫终结者”无法启动的错误。"
+﻿Text=
+(
+2021.03.28  
+    字体完美等宽。  
+    默认使用空格缩进。（不影响咱的缩进显示效果同时能让其它编辑器显示效果更好）  
+    更新帮助文件到1.1.33.06。  
+    优化帮助文件显示位置与查找速度，默认使用暗黑模式，并增加两个匹配中文的示例。  
+    增加工具“FindText”，找字识图取色，简单易用高效。（作者飞跃，博客地址：https://blog.csdn.net/xshlong1981?t=1）  
+    优化 Toolbar 运行模式，降低部分机器出错可能。  
+    “AHK 正则终结者”里再增加一个匹配中文的示例。  
+    修复窗口信息工具“AHK_Window_Info”复制 ClassNN 时的错误前缀。  
+    进一步降低配色对比度与饱和度。  
 
-Result := MsgBoxEx(Text, "v20210103版已更新", "蓝奏云下载|Github 下载", 0, "", "AlwaysOnTop")
+2021.03.17  
+    更新“AHK 爬虫终结者”到2.0。（使用了 tmplinshi 的 JSONEditor）  
+    关闭“Window Clone Tool”频繁刷新窗口。  
+
+2021.03.10  
+    “AHK 正则终结者”里增加一个匹配中文的示例。（帮助文件正则一章里的语法是错的！）  
+    修复了一个也许会导致 com 接口有问题的问题。  
+    “发送原义字符”增加花括号。  
+    进一步降低配色对比度与饱和度。  
+    自动完成将在匹配第2个字时才工作。  
+
+2021.02.24  
+    更新“AhkSpy”到4.76。  
+    删除部分无用文件。  
+
+2021.02.09  
+    增加一个遗漏的关键字“Unreachable ”。  
+
+2021.01.21  
+    增加一个遗漏的关键字“Parent”。  
+
+2021.01.11  
+    汉化了脚本片段功能。（来自群友“快乐就好”的支持）  
+)
+
+Result := MsgBoxEx(Text, "v20210328版已更新", "蓝奏云下载|Github 下载", 0, "", "AlwaysOnTop")
 
 If (Result == "蓝奏云下载") {
-	Run, https://ahk.lanzous.com/ilrMMjzqela
+	Run, https://ahk.lanzous.com/i7z6Qnfmj2b
 } Else If (Result == "Github 下载") {
 	Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
 } Else If (Result == "Cancel") {

@@ -35,10 +35,10 @@ if (StrLen(RegExReplace(OutDir, "[[:ascii:]]"))!=0)
 }
 
 ; 复制旧版的4个文件过来
-FileCopy, %OutDir%\SciTE\user\_config.properties,          SciTE\user\_config.properties
+FileCopy, %OutDir%\SciTE\user\_config.properties,          SciTE\user\备份_config.properties
 FileCopy, %OutDir%\SciTE\user\_platform.properties,        SciTE\user\_platform.properties
 FileCopy, %OutDir%\SciTE\user\SciTE.session,               SciTE\user\SciTE.session
-FileCopy, %OutDir%\SciTE\user\Styles\lpp.style.properties, SciTE\user\Styles\旧的lpp.style.properties
+FileCopy, %OutDir%\SciTE\user\Styles\lpp.style.properties, SciTE\user\Styles\备份lpp.style.properties
 
 ; 由于此次更新比较多，文件有删减，因此需要提前删除部分位置发生变化的文件，不然看起来很乱
 FileRecycle, %OutDir%\SciTE, 1
@@ -54,6 +54,7 @@ try
 	FileMoveDir, SciTE,                       %OutDir%\SciTE, 2
 	FileMoveDir, 额外的帮助文件,              %OutDir%\额外的帮助文件, 2
 	FileMove,    AutoHotkey_CN.chm,           %OutDir%\AutoHotkey_CN.chm, 1
+	FileMove,    chm_config.js,               %OutDir%\chm_config.js, 1
 	FileMove,    自定义ahk文件的右键菜单.ahk, %OutDir%\自定义ahk文件的右键菜单.ahk, 1
 }
 catch
