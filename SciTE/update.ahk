@@ -39,7 +39,7 @@
 Result := MsgBoxEx(Text, "v20210328版已更新", "蓝奏云下载|Github 下载", 0, "", "AlwaysOnTop")
 
 If (Result == "蓝奏云下载") {
-	Run, https://ahk.lanzous.com/iK5Zinfnk6h
+	Run, https://ahk.lanzous.com/iEQSqnfpmbg
 } Else If (Result == "Github 下载") {
 	Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
 } Else If (Result == "Cancel") {

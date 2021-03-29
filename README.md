@@ -4,7 +4,7 @@
 #### 由于原版早已不更新了，故多年来在原版基础上做了非常多的改进，目的只有一个，让大家用得更顺手。  
 ---
   
-#### 可在 [Github Releases](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases") 或 [蓝奏云](https://ahk.lanzous.com/iK5Zinfnk6h "蓝奏云") 下载最新打包版。  
+#### 可在 [Github Releases](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases") 或 [蓝奏云](https://ahk.lanzous.com/iEQSqnfpmbg "蓝奏云") 下载最新打包版。  
 ---
   
 ##### 1. 自动完成增强版  
@@ -73,8 +73,13 @@
 ##### 21. 调试爬虫 ctrl+9  
 ![调试爬虫](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/21.%20调试爬虫.png)    
   
-##### 22. 集成等宽字体  
-![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20集成等宽字体.png)  
+##### 22. 找字识图取色  
+![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20找字识图取色%20(1).png)  
+![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20找字识图取色%20(2).png)  
+![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20找字识图取色%20(3).png)  
+  
+##### 23. 集成等宽字体  
+![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/23.%20集成等宽字体.png)  
 ------------  
   
 - 技巧：  
@@ -86,6 +91,7 @@
 > * 工具栏上的“强力窗口信息工具”可取到QQ聊天框内容。（强大但使用复杂）  
 > * 工具栏上的“AHK 正则终结者”可清晰显示正则的各种匹配与子匹配。  
 > * 工具栏上的“AHK 爬虫终结者”可模拟伪造各种状态访问网址。（方便调试爬虫）  
+> * 工具栏上的“找字识图取色”可简单高效的进行文字、颜色等查找识别。
   
 > * 右键菜单，可“打开文件所在目录”。  
 > * 右键菜单，可“运行选区代码”。  
@@ -323,7 +329,7 @@
 > * 9.“代码格式化工具”不支持对类的格式化。  
 > * 10.“运行选区代码”时选中内容为空则ahk会卡住。  
   
-> * 已解决问题：  
+> 已解决问题：  
 > * 1.代码页的正确设置。（设为65001读ANSI文件不正常，设为936读UTF8和ANSI均正常）  
 > * 2.保存文件自动为UTF-8带BOM格式。  
 > * 3.自动补全括号引号百分号。（http://blog.csdn.net/liuyukuan/article/details/8435485）（已取消）  
