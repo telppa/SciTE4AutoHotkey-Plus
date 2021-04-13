@@ -17,8 +17,8 @@ return
 
 检查更新:
 	网址:="https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/%24VER"
-	最新版本号:=WinHttp.UrlDownloadToVar(网址, 设置, 请求头)
-	if (WinHttp.Status!=200)		;网络不好或者被GFW导致无法获取更新。
+	最新版本号:=WinHttp.Download(网址, 设置, 请求头)
+	if (WinHttp.StatusCode!=200)		;网络不好或者被GFW导致无法获取更新。
 		ExitApp
 	else
 	{
@@ -32,8 +32,8 @@ return
 执行更新:
 	网址:="https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/update.ahk"
 	路径:=A_ScriptDir "\..\update.ahk"
-	WinHttp.URLDownloadToFile(网址, 路径)
-	if (WinHttp.Status!=200)
+	WinHttp.Download(网址,,,,路径)
+	if (WinHttp.StatusCode!=200)
 	{
 		MsgBoxEx("自动更新失败，请尝试手动下载更新。", "错误", "前往主页", 4)
 		Run, https://github.com/telppa/SciTE4AutoHotkey-Plus

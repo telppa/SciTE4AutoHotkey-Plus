@@ -80,12 +80,13 @@ F1::
 
   if (重定位帮助文件显示位置)
   {
-    SysGet, MonitorWorkArea, MonitorWorkArea, 1        ; 获取工作区尺寸，即不含任务栏的屏幕尺寸。
+    SysGet, WorkArea, MonitorWorkArea, 1               ; 获取工作区尺寸，即不含任务栏的屏幕尺寸。
     DPIScale:=A_ScreenDPI/96
-    X:=A_ScreenWidth//2+(-1+8)*DPIScale
-    W:=A_ScreenWidth//2
-    H:=MonitorWorkAreaBottom+(-1+8)*DPIScale
-    WinMove, ahk_exe keyhh.exe,, X, 0, W, H            ; 显示在屏幕右侧并占屏幕一半尺寸。
+    W:=(WorkAreaRight-WorkAreaLeft)//2
+    X:=WorkAreaLeft+W+(-1+8)*DPIScale
+    Y:=WorkAreaTop
+    H:=WorkAreaBottom-Y+(-1+8)*DPIScale
+    WinMove, ahk_exe keyhh.exe,, X, Y, W, H            ; 显示在屏幕右侧并占屏幕一半尺寸。
     重定位帮助文件显示位置:=0
   }
 
