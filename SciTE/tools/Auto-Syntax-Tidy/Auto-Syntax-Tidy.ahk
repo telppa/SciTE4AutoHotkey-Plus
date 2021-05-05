@@ -116,6 +116,9 @@ loop
 
 2021.01.16
 屏蔽GUI下的 Keywords 选项，避免此选项在GUI下被使用，因为它可能纠正dllcall里面的单词，导致代码运行失败。
+
+2021.05.05
+纠正大小写时，单词将进行全字匹配，避免 DllCall("XCGUI\XRunXCGUI") 出错。bug #7
 */
 
 #SingleInstance ignore
@@ -1008,7 +1011,7 @@ DoSyntaxIndentation:
 
 	If FirstWord in %ListOfDirectives%         ;line is directive
 	{ Loop, Parse, CaseCorrectionSyntax, `,
-			StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+			Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7	; bug #7
 		String = %String%%Line%`n
 	}
 	; bug #4
@@ -1071,7 +1074,7 @@ DoSyntaxIndentation:
 			;do the case correction
 			StringReplace, Line, Line, else, else
 			Loop, Parse, CaseCorrectionSyntax, `,
-				StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+				Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7
 
 			Gosub, SetIndentOfLastCurledBracket
 			IndentIndex --
@@ -1130,7 +1133,7 @@ DoSyntaxIndentation:
 			;do the case correction
 			StringReplace, Line, Line, loop, loop
 			Loop, Parse, CaseCorrectionSyntax, `,
-				StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+				Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7
 
 			MemorizeIndent("Loop",iif(Style=1,0,1),+1)
 			If (LastChar = "{")                     ;it uses OTB
@@ -1141,14 +1144,14 @@ DoSyntaxIndentation:
 			;do the case correction
 			StringReplace, Line, Line, if, if, 1
 			Loop, Parse, CaseCorrectionSyntax, `,
-				StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+				Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7
 
 			MemorizeIndent("If",iif(Style=1,0,1),+1)
 		}Else If (FirstWord = "if"){                ;line is start of If-Statement after the {
 			;do the case correction
 			StringReplace, Line, Line, if, if, 1
 			Loop, Parse, CaseCorrectionSyntax, `,
-				StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+				Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7
 
 			MemorizeIndent("If",iif(Style=1,0,1),+1)
 			If (LastChar = "{")                     ;it uses OTB
@@ -1174,7 +1177,7 @@ DoSyntaxIndentation:
 		;do the case correction
 		StringReplace, Line, Line, loop, loop
 		Loop, Parse, CaseCorrectionSyntax, `,
-			StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+			Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7
 
 		PrevCommand := IndentCommand%IndentIndex%
 		If (PrevCommand = "If"){               ;line is First line of a one-line If-block
@@ -1199,7 +1202,7 @@ DoSyntaxIndentation:
 		;do the case correction
 		StringReplace, Line, Line, if, if
 		Loop, Parse, CaseCorrectionSyntax, `,
-			StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+			Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7
 
 		PrevCommand := IndentCommand%IndentIndex%
 
@@ -1246,7 +1249,7 @@ DoSyntaxIndentation:
 		;do the case correction
 		StringReplace, Line, Line, if, if
 		Loop, Parse, CaseCorrectionSyntax, `,
-			StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+			Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7
 
 		PrevCommand := IndentCommand%IndentIndex%
 		If (PrevCommand = "If"){              ;Line is First line of a one-line If-block
@@ -1270,7 +1273,7 @@ DoSyntaxIndentation:
 		;do the case correction
 		StringReplace, Line, Line, else, else
 		Loop, Parse, CaseCorrectionSyntax, `,
-			StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+			Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7
 
 		PrevCommand := IndentCommand%IndentIndex%
 		If PrevCommand in OneLineCommand,Else
@@ -1310,7 +1313,7 @@ DoSyntaxIndentation:
 	Else {                                        ;line is a Normal command or Return
 		;do the case correction
 		Loop, Parse, CaseCorrectionSyntax, `,
-			StringReplace, Line, Line, %A_LoopField%, %A_LoopField%, All
+			Line := RegExReplace(Line, "i)\b" A_LoopField "\b", A_LoopField)	; bug #7
 
 		PrevCommand := IndentCommand%IndentIndex%
 		If (PrevCommand = "If"){             ;Line is a one-line command of an If-block
