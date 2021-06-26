@@ -17,10 +17,10 @@
   gosub, 智能标点
 
   WinWaitClose, ahk_id %SciTE_Hwnd% ; 随 SciTE 退出。
-  WinClose, ahk_exe keyhh.exe       ; 退出时关闭帮助。
+  WinClose, ahk_pid %PID%           ; 退出时关闭帮助。
   ExitApp
 return
-
+/*
 中文帮助友好提示:
   中文帮助路径 := oSciTE.SciTEDir . "\..\AutoHotkey_CN.chm"
   keyhh路径    := oSciTE.SciTEDir . "\tools\keyhh.exe"
@@ -105,6 +105,8 @@ F1::
   SendInput, {Home}{Del}{End}{Enter}{Enter}                 ; 因为单词前被故意加了一个空格，因此完成输入后需要删除那个多余的空格。
 return
 #If
+*/
+#Include %A_LineFile%\..\智能F1.ahk
 
 ; 单词自动完成时使用 Tab 键，可自动补全命令、函数等，并设好参数。此时若继续按 Tab 则可以在参数间跳跃，高效连贯的完成输入。
 ; BUG：
