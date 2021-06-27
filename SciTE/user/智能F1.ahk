@@ -1,4 +1,12 @@
-﻿中文帮助友好提示:
+﻿; 按 F1 键可在中文帮助中查询光标下单词。
+; 2021.06.27 “智能F1” 升级 2.2。使用 ACC 实现全后台操作，提升稳定性。
+; 2020.07.24 “智能F1” 全面接管 F1 功能。
+; 故需要屏蔽 “SciTEUser.properties” “platforms.properties” 文件中的自带 F1 功能。
+智能F1:
+  gosub, 中文帮助友好提示
+return
+
+中文帮助友好提示:
   中文帮助路径 := oSciTE.SciTEDir . "\..\AutoHotkey_CN.chm"
   if (!FileExist(中文帮助路径))     ; 中文帮助不存在，按 F1 没反应的情况下，友好的提示使用者该怎么做。
   {
@@ -12,9 +20,6 @@
   }
 return
 
-; 2021.06.27 “智能F1” 升级 2.2。使用 ACC 实现全后台操作，提升稳定性。
-; 2020.07.24 “智能F1” 全面接管 F1 功能。
-; 故需要屏蔽 “SciTEUser.properties” “platforms.properties” 文件中的自带 F1 功能。
 #If WinActive("ahk_id " . SciTE_Hwnd)                  ; 限制 “智能F1” 的作用范围只在 scite 中。
 F1::
   Send, ^{Left}^+{Right}
