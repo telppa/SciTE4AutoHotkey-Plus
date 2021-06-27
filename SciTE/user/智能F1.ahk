@@ -12,7 +12,7 @@
   }
 return
 
-; 2021.06.19 “智能F1” 升级 2.0。使用 ACC 实现全后台操作，提升稳定性。
+; 2021.06.27 “智能F1” 升级 2.2。使用 ACC 实现全后台操作，提升稳定性。
 ; 2020.07.24 “智能F1” 全面接管 F1 功能。
 ; 故需要屏蔽 “SciTEUser.properties” “platforms.properties” 文件中的自带 F1 功能。
 #If WinActive("ahk_id " . SciTE_Hwnd)                  ; 限制 “智能F1” 的作用范围只在 scite 中。
@@ -22,8 +22,13 @@ F1::
   光标下单词:=Trim(oSciTE.Selection(), " `t`r`n`v`f")  ; 把两侧的空白符去掉，不然 “else” 无法被正确激活。
 
   WinGetPos, X, Y, W, H, ahk_pid %PID%
-  if (PID="" or X+Y+W+H=0)                             ; 首次打开或窗口被最小化。
+  if (PID="" or !(X+Y+W+H))                            ; 首次打开或窗口被最小化（为0）或窗口被关闭（为空）。
   {
+    ; 某些时候最小化帮助后，获取到的坐标与大小全为0。
+    ; 某些时候最小化帮助后，获取到的坐标为负大小为正。
+    ; 前者无法被 WinActivate 或 WinRestore 还原。
+    ; 后者则可以。
+    ; 对于前者，只能杀进程后重开。
     if (X+Y+W+H=0)
       Process, Close, %PID%                            ; 帮助窗口最小化后无法激活，所以只能杀掉重开。
 
@@ -44,6 +49,13 @@ F1::
 
   WinActivate, ahk_pid %PID%                           ; 激活。
 
+  ; 有2种方法可以直接让 chm 定位到某个页面中
+  ; 1. hh.exe mk:@MSITStore:R:\AutoHotkey.chm::/docs/Variables.htm#IsCompiled
+  ; 2. KeyHH.exe -MyID R:\AutoHotkey.chm::/docs/Variables.htm#IsCompiled
+  ; 在浏览器中使用 search.htm?q=Call&m=1 可以跳到通过索引搜索单词 Call 的结果页面
+  ; 但 hh.exe 和 KeyHH.exe 都不支持带参数的 htm 所以下面这个例子是失败的
+  ; 3. KeyHH.exe -MyID R:\AutoHotkey.chm::/docs/search.htm?q=Call&m=1
+  ; 所以只能用模拟的方式实现了
   oWB.getElementsByTagName("BUTTON")[2].click()        ; 索引按钮。
   oWB.querySelector("INPUT").value := 光标下单词       ; 输入关键词。
   ControlSend, , {Enter}{Enter}, ahk_pid %PID%         ; 按两下回车进行搜索。
