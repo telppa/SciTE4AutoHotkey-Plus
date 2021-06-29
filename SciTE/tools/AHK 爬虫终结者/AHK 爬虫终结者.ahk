@@ -119,12 +119,10 @@ GuiClose:
 return
 
 智能库引用:
-  本地库:=A_ScriptDir "\Lib\"
   用户库:=A_MyDocuments "\AutoHotkey\Lib\"
   标准库:=A_AhkPath "\..\Lib\"
   ; 在任意一个库文件目录中找到3个库文件，则简单引用就好。
-  if  ((FileExist(本地库 "WinHttp.ahk") and FileExist(本地库 "NonNull.ahk") and FileExist(本地库 "正则全局模式.ahk"))
-    or (FileExist(用户库 "WinHttp.ahk") and FileExist(用户库 "NonNull.ahk") and FileExist(用户库 "正则全局模式.ahk"))
+  if  ((FileExist(用户库 "WinHttp.ahk") and FileExist(用户库 "NonNull.ahk") and FileExist(用户库 "正则全局模式.ahk"))
     or (FileExist(标准库 "WinHttp.ahk") and FileExist(标准库 "NonNull.ahk") and FileExist(标准库 "正则全局模式.ahk")))
     {
       库引用:="#Include <WinHttp>"
