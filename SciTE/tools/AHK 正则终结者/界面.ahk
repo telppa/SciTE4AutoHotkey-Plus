@@ -86,7 +86,7 @@ sci2
   Gui, Add, Button, v存储正则 +Disabled, 存储正则
   Gui, Add, Button, v复制代码 +Disabled, 复制代码
   Gui, Add, Button, v高级按钮 g高级按钮 +Disabled, 高级>>
-  Gui, Show, CEnter w370 h520, AHK 正则终结者 ver. 0.3
+  Gui, Show, CEnter w370 h520, AHK 正则终结者 ver. 0.4
 return
 
 Button关闭:
