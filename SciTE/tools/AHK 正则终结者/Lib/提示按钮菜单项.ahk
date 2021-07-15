@@ -1,6 +1,5 @@
 ﻿创建正则提示菜单:
-  Menu, 正则提示菜单, Add, `t不要在表达式前后添加引号 "", InsertRegEx
-  Menu, 正则提示菜单, Add, `t选项, InsertRegEx
+  Menu, 正则提示菜单, Add, `t正则表达式快速参考, InsertRegEx
   Menu, 正则提示菜单, Add,
   Menu, 正则提示菜单, Add, ^`t行首, InsertRegEx
   Menu, 正则提示菜单, Add, $`t行末, InsertRegEx
@@ -36,8 +35,23 @@
   Menu, 正则提示菜单, Add, [\x{4e00}-\x{9fa5}]`t匹配汉字, InsertRegEx
   ; 也可以直接用中文，等价于 [\x{4e00}-\x{9f9f}] ，比 9fa5 仅少6个生僻字。
   Menu, 正则提示菜单, Add, [一-龟]`t匹配汉字, InsertRegEx
-  Menu, 正则提示菜单, Add, `t正则表达式快速参考, InsertRegEx
 return
 
 InsertRegEx:
+  if (InStr(A_ThisMenuItem, "正则表达式快速参考"))
+  {
+    中文帮助路径=%A_AhkPath%\..\AutoHotkey_CN.chm
+    英文帮助路径=%A_AhkPath%\..\AutoHotkey.chm
+    if (FileExist(中文帮助路径))
+      Run, hh.exe mk:@MSITStore:%中文帮助路径%::/docs/misc/RegEx-QuickRef.htm
+    else if (FileExist(英文帮助路径))
+      Run, hh.exe mk:@MSITStore:%英文帮助路径%::/docs/misc/RegEx-QuickRef.htm
+    else
+      MsgBox, 在 %A_AhkPath% 处没有找到中文或英文帮助文件。
+  }
+  else
+  {
+    菜单内容:=StrSplit(A_ThisMenuItem, "`t", " `t`r`n`v`f", 2)[1]
+    sci1.INSERTTEXT(-1, 菜单内容)
+  }
 return
