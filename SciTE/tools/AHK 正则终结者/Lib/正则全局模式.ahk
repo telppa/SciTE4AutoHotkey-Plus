@@ -79,6 +79,11 @@ RegExMatchLikeGlobal(Haystack, NeedleRegEx, StartingPos:=1)
     StringCaseSense, On
     switch, v
     {
+      ; ^(\Q(*UCP)\E|\Q(*ANYCRLF)\E|\Q(*BSR_ANYCRLF)\E)+
+      case "(*UCP)":
+        if (InStr(正则本体, "(*UCP)", 1)!=1)
+          正则本体:="(*UCP)" 正则本体
+
       case "(*ANYCRLF)":
         if (InStr(正则本体, "(*ANYCRLF)", 1)!=1)
           正则本体:="(*ANYCRLF)" 正则本体

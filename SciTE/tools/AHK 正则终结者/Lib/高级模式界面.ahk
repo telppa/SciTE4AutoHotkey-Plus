@@ -1,4 +1,4 @@
-﻿高级按钮:
+﻿Button高级>>:
   GuiControlGet,高级按钮文本,,高级按钮
   If (高级按钮文本="高级>>")
     {
@@ -12,13 +12,13 @@
       Gui, 高级:Add, Checkbox, x13 y60 w60 h20, 非贪婪
       Gui, 高级:Add, Checkbox, x80 y60 w80 h20 Checked, 研究模式
       Gui, 高级:Add, Checkbox, x180 y60 w130 h20, 使用 Unicode 属性
-      Gui, 高级:Add, ListView, x5 y126 w325 h338, 捕获|子模式
+      Gui, 高级:Add, ListView, x5 y126 w325 h386, 捕获|子模式
       WinGetPos,Px,Py,Pw,,ahk_id %主界面%
       Px:=Px+Pw
       If (Px+335<=A_ScreenWidth)		;高级界面能完全显示在主界面右边,则显示.否则显示在屏幕正中
-          Gui, 高级:Show, x%Px% y%Py% w335 h500, 高级模式
+          Gui, 高级:Show, x%Px% y%Py% w335 h520, 高级模式
       Else
-          Gui, 高级:Show,w335 h500, 高级模式
+          Gui, 高级:Show,w335 h520, 高级模式
     }
   Else
       gosub,高级GuiClose

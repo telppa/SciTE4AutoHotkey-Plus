@@ -24,7 +24,7 @@ sci2
 v关闭
 v主页
 v存储正则
-v复制代码
+v生成代码
 v高级
 
 sci1
@@ -84,9 +84,9 @@ v兼容模式
   Gui, Add, Button, v关闭, 关闭
   Gui, Add, Button, v主页, 主页
   Gui, Add, Button, v存储正则 +Disabled, 存储正则
-  Gui, Add, Button, v复制代码, 复制代码
-  Gui, Add, Button, v高级按钮 g高级按钮 +Disabled, 高级>>
-  Gui, Show, CEnter w370 h520, AHK 正则终结者 ver. 1.0
+  Gui, Add, Button, v生成代码, 生成代码
+  Gui, Add, Button, v高级按钮 +Disabled, 高级>>
+  Gui, Show, CEnter w370 h520, AHK 正则终结者 ver. 1.1
 
   ; 窗口创建后再设置文本内容可以避免内容初始被选中
   sci1.SetText(不再使用的参数, 初始正则框内容)                ; 添加文本. 第一个参数是一个不再使用了的参数
@@ -106,7 +106,7 @@ GuiSize:
   GuiControl, Move, 关闭, % "x5 y" . A_GuiHeight - 30
   GuiControl, Move, 主页, % "x50 y" . A_GuiHeight - 30
   GuiControl, Move, 存储正则, % "x95 y" . A_GuiHeight - 30
-  GuiControl, Move, 复制代码, % "x165 y" . A_GuiHeight - 30
+  GuiControl, Move, 生成代码, % "x165 y" . A_GuiHeight - 30
   GuiControl, Move, 高级按钮, % "x" . A_GuiWidth - 55 "y" . A_GuiHeight - 30
   GuiControl, Move, GB文本, % "w" . A_GuiWidth - 10 "h" . A_GuiHeight - 155
   GuiControl, Move, GB正则表达式, % "w" . A_GuiWidth - 10
@@ -125,7 +125,7 @@ return
 Button存储正则:
 return
 
-Button复制代码:
+Button生成代码:
   gosub, 智能库引用
   Gui, Submit, NoHide                     ; 获取 Gui 控件状态
   正则:="", 文本:=""
@@ -161,10 +161,10 @@ Button复制代码:
 
   Clipboard:=代码模板
   ToolTip, 代码已复制到剪贴板, , , 2
-  SetTimer, 关闭代码复制提示, -3000
+  SetTimer, 关闭代码已复制提示, -3000
 return
 
-关闭代码复制提示:
+关闭代码已复制提示:
   ToolTip, , , , 2
 return
 
@@ -202,8 +202,6 @@ WM_MOUSEMOVE()
     (LTrim
       通过为正则表达式添加 “m)(*ANYCRLF)” 选项
       解决因文本中换行符不统一而导致的匹配失败
-
-      复制代码建议使用 “复制代码” 按钮    
     )
     ToolTip, % 兼容模式说明
   }
