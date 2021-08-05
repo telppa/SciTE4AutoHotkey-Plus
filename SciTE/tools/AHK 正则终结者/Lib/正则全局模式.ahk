@@ -74,23 +74,34 @@ RegExMatchLikeGlobal(Haystack, NeedleRegEx, StartingPos:=1)
     正则本体:=正则
   }
 
+  ; 将特殊选项 (*UCP)(*ANYCRLF)(*BSR_ANYCRLF) 去重
+  RegExMatch(正则本体, "^(\Q(*UCP)\E|\Q(*ANYCRLF)\E|\Q(*BSR_ANYCRLF)\E)+", 正则特殊选项)
+  if (正则特殊选项)
+  {
+    if (InStr(正则特殊选项, "(*UCP)"), 1) ; 标记存在哪个特殊选项
+      flag1:=1
+    if (InStr(正则特殊选项, "(*ANYCRLF)"), 1)
+      flag2:=1
+    if (InStr(正则特殊选项, "(*BSR_ANYCRLF)"), 1)
+      flag3:=1
+
+    ; 删除特殊选项，便于之后单独添加
+    正则本体:=RegExReplace(正则本体, "^(\Q(*UCP)\E|\Q(*ANYCRLF)\E|\Q(*BSR_ANYCRLF)\E)+", "", "", 1)
+  }
+
   for k, v in 待添加的选项
   {
     StringCaseSense, On
     switch, v
     {
-      ; ^(\Q(*UCP)\E|\Q(*ANYCRLF)\E|\Q(*BSR_ANYCRLF)\E)+
       case "(*UCP)":
-        if (InStr(正则本体, "(*UCP)", 1)!=1)
-          正则本体:="(*UCP)" 正则本体
+        flag1:=1
 
       case "(*ANYCRLF)":
-        if (InStr(正则本体, "(*ANYCRLF)", 1)!=1)
-          正则本体:="(*ANYCRLF)" 正则本体
+        flag2:=1
 
       case "(*BSR_ANYCRLF)":
-        if (InStr(正则本体, "(*BSR_ANYCRLF)", 1)!=1)
-          正则本体:="(*BSR_ANYCRLF)" 正则本体
+        flag3:=1
 
       case "i","m","s","x","A","D","J","U","X","P","S","C","O","``n","``r","``a":
         if (!InStr(正则选项, v, 1))       ; 大小写敏感的检查目前选项中是否存在待添加选项，确保其唯一
@@ -98,6 +109,14 @@ RegExMatchLikeGlobal(Haystack, NeedleRegEx, StartingPos:=1)
     }
     StringCaseSense, Off
   }
+
+  ; 根据标记单独进行特殊选项添加，确保特殊选项唯一
+  if (flag3)
+    正则本体:="(*BSR_ANYCRLF)" 正则本体
+  if (flag2)
+    正则本体:="(*ANYCRLF)" 正则本体
+  if (flag1)
+    正则本体:="(*UCP)" 正则本体
 
   return, 正则选项 正则本体
 }
