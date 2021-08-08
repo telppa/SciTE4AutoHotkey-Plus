@@ -1,0 +1,33 @@
+提取自 Adventure IDE 3.0.1
+https://www.autohotkey.com/boards/viewtopic.php?f=64&t=89901
+作者：Alguimist
+
+提取时，需要根据关键词“..\”修改以下文件中的所有相对路径。
+  Auto-GUI.ahk
+  Include\Globals.ahk
+  Include\Properties.ahk
+  Tools\Constantine\Constantine.ahk
+
+复制 Adventure IDE 的以下目录及文件。
+  目录：
+  Settings
+  Icons
+  Tools\Constantine
+
+  文件：
+  SciLexer32.dll
+  SciLexer64.dll
+
+  Lib\AutoXYWH.ahk
+  Lib\AuxLib.ahk
+  Lib\CommonDialogs.ahk
+  Lib\ControlColor.ahk
+  Lib\CreateDIB.ahk
+  Lib\GuiButtonIcon.ahk
+  Lib\LV_GroupView.ahk
+  Lib\Scintilla.ahk
+  Lib\Toolbar.ahk
+
+  Include\Windows.xml
+  
+Icons 与 Settings 目录下存在垃圾文件，并没有清理。

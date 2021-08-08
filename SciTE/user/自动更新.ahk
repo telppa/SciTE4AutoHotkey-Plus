@@ -47,4 +47,4 @@ return
 
 #Include %A_ScriptDir%\..\tools\AHK 爬虫终结者\WinHttp.ahk
 #Include %A_ScriptDir%\..\tools\AHK 爬虫终结者\正则全局模式.ahk
-#Include %A_ScriptDir%\..\tools\AutoGUI\Tools\MagicBox\Functions\MsgBoxEx.ahk
+#Include %A_ScriptDir%\..\tools\MagicBox\Functions\MsgBoxEx.ahk

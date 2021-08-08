@@ -1,0 +1,5 @@
+提取自 Adventure IDE 3.0.1
+https://www.autohotkey.com/boards/viewtopic.php?f=64&t=89901
+作者：Alguimist
+
+Icons 与 Settings 目录下存在垃圾文件，并没有清理。

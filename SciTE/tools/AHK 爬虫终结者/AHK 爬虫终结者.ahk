@@ -1,5 +1,8 @@
 ﻿/*
 更新日志：
+  2021.06.29
+    修复智能库引用错误使用本地库作为判断依据。
+    版本号3.4
   2021.04.13
     更智能的库引用，生成的代码无需手动引用。
     版本号3.3
@@ -104,7 +107,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like
 
   Gui, Add, StatusBar, v状态栏, %A_Space%%A_Space%%A_Space%%A_Space%主页
 
-  Gui, Show, w1250 h750, AHK 爬虫终结者 ver. 3.3
+  Gui, Show, w1250 h750, AHK 爬虫终结者 ver. 3.4
 
   gosub, 智能库引用
 

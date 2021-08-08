@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ftypes>
+    <extensions>
+        <ext id="ahk" type="AHK" desc="AutoHotkey Script" />
+        <ext id="ahk2" type="AHK" desc="AutoHotkey v2 Script" />
+        <ext id="ahkh" type="AHK" desc="AutoHotkey_H Script" />
+        <ext id="asm" type="ASM" desc="Assembly Code" />
+        <ext id="asmx" type="HTML" desc="ASP.NET Web Service" />
+        <ext id="asp" type="HTML" desc="Active Server Page" />
+        <ext id="aspx" type="HTML" desc="Active Server Page Extended" />
+        <ext id="au3" type="AU3" desc="AutoIt Script" />
+        <ext id="bas" type="FB" desc="FreeBASIC Code" />
+        <ext id="bat" type="BAT" desc="Batch File" />
+        <ext id="bi" type="FB" desc="FreeBASIC Header File" />
+        <ext id="c" type="C" desc="C Code" />
+        <ext id="cbl" type="COB" desc="COBOL Code" />
+        <ext id="cc" type="CPP" desc="C++ Code" />
+        <ext id="cfg" type="CONF" desc="Configuration File" />
+        <ext id="cgi" type="PL" desc="Common Gateway Interface Script" />
+        <ext id="cmd" type="BAT" desc="Command Script" />
+        <ext id="cob" type="COB" desc="COBOL Code" />
+        <ext id="conf" type="CONF" desc="Configuration File" />
+        <ext id="cpp" type="CPP" desc="C++ Code" />
+        <ext id="cs" type="CS" desc="C# Code" />
+        <ext id="css" type="CSS" desc="Cascading Style Sheet" />
+        <ext id="cu" type="CPP" desc="CUDA Code" />
+        <ext id="cxx" type="CPP" desc="C++ Code" />
+        <ext id="d" type="D" desc="D Code" />
+        <ext id="diff" type="DIFF" desc="Patch File" />
+        <ext id="dpr" type="PAS" desc="Delphi Project" />
+        <ext id="dtd" type="XML" desc="Document Type Definition" />
+        <ext id="fcgi" type="PL" desc="FastCGI Code" />
+        <ext id="go" type="GO" desc="Go Code" />
+        <ext id="gui" type="G4C" desc="Gui4Cli Script" />
+        <ext id="h" type="C" desc="C/C++ Header File" />
+        <ext id="hh" type="CPP" desc="C++ Header File" />
+        <ext id="hhp" type="INI" desc="HTML Help Workshop Project" />
+        <ext id="hpp" type="CPP" desc="C++ Header File" />
+        <ext id="hta" type="HTML" desc="HTML Application" />
+        <ext id="htm" type="HTML" desc="HTML Document" />
+        <ext id="html" type="HTML" desc="HTML Document" />
+        <ext id="hxx" type="CPP" desc="C++ Header File" />
+        <ext id="idl" type="CPP" desc="Interface Definition Language" />
+        <ext id="inc" type="PAS" desc="Include File" />
+        <ext id="inf" type="INI" desc="Setup Information" />
+        <ext id="ini" type="INI" desc="Configuration Settings" />
+        <ext id="ino" type="CPP" desc="Arduino Sketch File" />
+        <ext id="java" type="JAVA" desc="Java Code" />
+        <ext id="js" type="JS" desc="JavaScript/JScript Code" />
+        <ext id="json" type="JSON" desc="JavaScript Object Notation" />
+        <ext id="jsonld" type="JSON" desc="JSON for Linked Data" />
+        <ext id="jsp" type="HTML" desc="Java Server Page" />
+        <ext id="kix" type="KIX" desc="KiXtart Script" />
+        <ext id="lisp" type="LISP" desc="Lisp Code" />
+        <ext id="log" type="TXT" desc="Log File" />
+        <ext id="lua" type="LUA" desc="Lua Script" />
+        <ext id="m" type="C" desc="Objective-C Code" />
+        <ext id="manifest" type="XML" desc="Windows Application Manifest" />
+        <ext id="mak" type="MAKE" desc="Makefile" />
+        <ext id="md" type="MD" desc="Markdown Documentation File" />
+        <ext id="mht" type="HTML" desc="MHTML Web Archive" />
+        <ext id="mhtml" type="HTML" desc="MIME HTML File" />
+        <ext id="mk" type="MAKE" desc="Makefile" />
+        <ext id="mm" type="CPP" desc="Objective-C++ Code" />
+        <ext id="msc" type="XML" desc="MMC Snap-in File" />
+        <ext id="nsh" type="NSIS" desc="NSIS Header File" />
+        <ext id="nsi" type="NSIS" desc="Nullsoft Scriptable Install System" />
+        <ext id="pas" type="PAS" desc="Pascal Code" />
+        <ext id="ph" type="PL" desc="Perl Header File" />
+        <ext id="php" type="PHP" desc="PHP Script" />
+        <ext id="php3" type="PHP" desc="PHP Script" />
+        <ext id="pl" type="PL" desc="Perl Script" />
+        <ext id="pm" type="PL" desc="Perl Module" />
+        <ext id="pod" type="PL" desc="Plain Old Documentation" />
+        <ext id="pp" type="PAS" desc="Pascal Code" />
+        <ext id="properties" type="CONF" desc="Properties File" />
+        <ext id="ps1" type="PS1" desc="PowerShell Script" />
+        <ext id="psm1" type="PS1" desc="PowerShell Module" />
+        <ext id="py" type="PY" desc="Python Script" />
+        <ext id="pyw" type="PY" desc="Python GUI Script" />
+        <ext id="qrc" type="XML" desc="Qt Resource File" />
+        <ext id="qss" type="CSS" desc="Qt Style Sheet" />
+        <ext id="r" type="R" desc="R Script File" />
+        <ext id="rb" type="RB" desc="Ruby Script" />
+        <ext id="rbw" type="RB" desc="Ruby GUI Script" />
+        <ext id="rc" type="RC" desc="Resource File" />
+        <ext id="reg" type="INI" desc="Registration Entries" />
+        <ext id="rhtml" type="HTML" desc="Ruby HTML Web Page" />
+        <ext id="rs" type="RS" desc="Rust Code" />
+        <ext id="sh" type="BASH" desc="Bash Shell Script" />
+        <ext id="sql" type="SQL" desc="Structured Query Language" />
+        <ext id="svg" type="XML" desc="Scalable Vector Graphics" />
+        <ext id="ts" type="JS" desc="TypeScript Code" />
+        <ext id="txt" type="TXT" desc="Text File" />
+        <ext id="url" type="INI" desc="Internet Shortcut" />
+        <ext id="ui" type="XML" desc="Qt User Interface" />
+        <ext id="vb" type="VB" desc="Visual Basic Code" />
+        <ext id="vbs" type="VBS" desc="VBScript Code" />
+        <ext id="vcproj" type="XML" desc="Visual Studio Project File" />
+        <ext id="vcxproj" type="XML" desc="Visual Studio Project File" />
+        <ext id="vhdl" type="VHDL" desc="VHDL Code" />
+        <ext id="wsc" type="XML" desc="Windows Script Component" />
+        <ext id="wsdl" type="XML" desc="Web Services Description Language" />
+        <ext id="xaml" type="XAML" desc="WPF Markup File" />
+        <ext id="xhtml" type="HTML" desc="Extensible HTML File" />
+        <ext id="xml" type="XML" desc="XML File" />
+        <ext id="xsd" type="XML" desc="XML Schema Definition" />
+        <ext id="xsl" type="XML" desc="XML Style Sheet" />
+        <ext id="xslt" type="XML" desc="XSL Transformation File" />
+        <ext id="xul" type="XML" desc="Mozilla XUL File" />
+        <ext id="yaml" type="YAML" desc="YAML Document" />
+        <ext id="yml" type="YAML" desc="YAML Document" />
+    </extensions>
+
+    <types>
+        <type id="AHK" name="AutoHotkey" dn="AutoHotkey" lexer="200" ext="ahk" />
+        <type id="ASM" name="Assembly" dn="Assembly" lexer="34" ext="asm" />
+        <type id="AU3" name="AutoIt" dn="AutoIt" lexer="60" ext="au3" />
+        <type id="BASH" name="Bash" dn="Bash Shell" lexer="62" ext="sh" />
+        <type id="BAT" name="Batch" dn="Batch File" lexer="12" ext="bat" />
+        <type id="C" name="C++" dn="C" lexer="3" ext="c" />
+        <type id="COB" name="COBOL" dn="COBOL" lexer="92" ext="cob" />
+        <type id="CONF" name="Configuration" dn="Configuration File" lexer="17" ext="conf" />
+        <type id="CPP" name="C++" dn="C++" lexer="3" ext="cpp" />
+        <type id="CS" name="C#" dn="C#" lexer="3" ext="cs" />
+        <type id="CSS" name="CSS" dn="CSS" lexer="38" ext="css" />
+        <type id="DIFF" name="Difference" dn="Difference" lexer="16" ext="diff" />
+        <type id="FB" name="FreeBASIC" dn="FreeBASIC" lexer="75" ext="bas" />
+        <type id="G4C" name="Gui4Cli" dn="Gui4Cli" lexer="58" ext="gui" />
+        <type id="GO" name="Go" dn="Go" lexer="200" ext="go" />
+        <type id="HTML" name="HTML" dn="HTML" lexer="4" ext="html" />
+        <type id="INI" name="IniFile" dn="Ini File" lexer="9" ext="ini" />
+        <type id="JAVA" name="Java" dn="Java" lexer="3" ext="java" />
+        <type id="JS" name="JavaScript" dn="JavaScript" lexer="3" ext="js" />
+        <type id="JSON" name="JSON" dn="JSON" lexer="120" ext="json" />
+        <type id="KIX" name="KiXtart" dn="KiXtart" lexer="57" ext="kix" />
+        <type id="LISP" name="Lisp" dn="Lisp" lexer="21" ext="lisp" />
+        <type id="LUA" name="Lua" dn="Lua" lexer="15" ext="lua" />
+        <type id="MAKE" name="Makefile" dn="Makefile" lexer="11" ext="" />
+        <type id="MD" name="Markdown" dn="Markdown" lexer="98" ext="md" />
+        <type id="NSIS" name="NSIS" dn="NSIS" lexer="43" ext="nsi" />
+        <type id="PAS" name="Pascal" dn="Pascal" lexer="18" ext="pas" />
+        <type id="PHP" name="HTML" dn="PHP" lexer="4" ext="php" />
+        <type id="PL" name="Perl" dn="Perl" lexer="6" ext="pl" />
+        <type id="PS1" name="PowerShell" dn="PowerShell" lexer="88" ext="ps1" />
+        <type id="PY" name="Python" dn="Python" lexer="2" ext="py" />
+        <type id="R" name="R" dn="R" lexer="86" ext="r" />
+        <type id="RB" name="Ruby" dn="Ruby" lexer="22" ext="rb" />
+        <type id="RS" name="Rust" dn="Rust" lexer="111" ext="rs" />
+        <type id="RC" name="C++" dn="Resource File" lexer="3" ext="rc" />
+        <type id="SQL" name="SQL" dn="SQL" lexer="7" ext="sql" />
+        <type id="TXT" name="TXT" dn="Text File" lexer="1" ext="txt" />
+        <type id="VB" name="VB" dn="Visual Basic" lexer="8" ext="vb" />
+        <type id="VBS" name="VB" dn="VBScript" lexer="28" ext="vbs" />
+        <type id="VHDL" name="VHDL" dn="VHDL" lexer="64" ext="vhdl" />
+        <type id="XML" name="XML" dn="XML" lexer="5" ext="xml" />
+        <type id="YAML" name="YAML" dn="YAML" lexer="48" ext="yaml" />
+    </types>
+
+    <filters>
+        <filter id="ALL" value="All Files (*.*)" />
+        <filter id="AHK" value="AutoHotkey Scripts (*.ahk; *.ahk2)" />
+        <filter id="AU3" value="AutoIt Scripts (*.au3; *.aut; *.kxf)" />
+        <filter id="CFG" value="Configuration Files (*.ini; *.conf; *.xml; *.cfg; *.properties; *.reg; *.inf; *.htaccess)" />
+        <filter id="BAT" value="Batch Files (*.bat; *.cmd)" />
+        <filter id="C" value="C Files (*.c; *.h; *.rc)" />
+        <filter id="CPP" value="C++ Files (*.cpp; *.cxx; *.hpp; *.cc)" />
+        <filter id="CS" value="C# Files (*.cs; *.csx; *.csproj)" />
+        <filter id="COB" value="COBOL Files (*.cob; *.cbl; *.cpy)" />
+        <filter id="FB" value="FreeBASIC Files (*.bas; *.bi)" />
+        <filter id="INI" value="INI Files (*.ini; *.inf; *.url)" />
+        <filter id="JAVA" value="Java Files (*.java; *.jsp; *.jspx; *.jws; *.jnlp)" />
+        <filter id="MARK" value="Markup Files (*.md; *.markdown; *.textile; *.creole; *.rst; *.rest)" />
+        <filter id="NSIS" value="NSIS Scripts (*.nsi; *.nsh)" />
+        <filter id="PAS" value="Pascal Files (*.pas; *.pp; *.inc; *.dfm; *dpr; *.lfm; *.lpi; *.lpk; *.lpr; *.fpc; *.p)" />
+        <filter id="PHP" value="PHP Scripts (*.php; *.phtml; *.phtm; *.php3; *.php4; *.php5; *.phps)" />
+        <filter id="PL" value="Perl Scripts (*.pl; *.pm; *.ph; *.cgi; *.fcgi; *.pod)" />
+        <filter id="PS1" value="PowerShell Files (*.ps1; *.psm1)" />
+        <filter id="PY" value="Python Scripts (*.py; *.pyw)" />
+        <filter id="RB" value="Ruby Scripts (*.rb; *.rbw)" />
+        <filter id="VB" value="Visual Basic Files (*.vb; *.bas; *.cls; *.vbp; *.frm; *.pdm; *.dob; *.ctl; *.vbproj)" />
+        <filter id="VBS" value="WSH Files (*.vbs; *.wsc; *.wsf; *.wsh; *.js; *.sct)" />
+        <filter id="WEB" value="Web Files (*.html; *.htm; *.xhtml; *.xhtm; *.xml; *.css; *.js; *.php; *.asp; *.aspx; *.jsp)" />
+        <filter id="XML" value="XML Files (*.xml; *.xsl; *.xslt; *.xsd; *.dtd; *.manifest)" />
+        <filter id="YAML" value="YAML Files (*.yaml; *.yml)" />
+    </filters>
+</ftypes>
