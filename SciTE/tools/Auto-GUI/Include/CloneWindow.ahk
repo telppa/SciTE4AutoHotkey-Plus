@@ -31,7 +31,7 @@ ShowCloneDialog:
     Gui Show, w584 h392, %WCT_Title%
 
     GoSub UpdateList
-    SetTimer UpdateList, 1500
+    ; SetTimer UpdateList, 1500
 Return
 
 CloneWindow:

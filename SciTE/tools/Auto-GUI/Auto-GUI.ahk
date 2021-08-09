@@ -210,13 +210,13 @@ hCursorCross := DllCall("LoadCursor", "Ptr", 0, "Ptr", 32515, "Ptr")
 SetAhkPath()
 
 Menu AutoMenuBar, Color, %g_MenuColor%
-
+/*
 If (A_ScreenDPI != 96) {
     Gui Auto: +OwnDialogs
     MsgBox 0x30, Warning, %g_AppName% has not been adapted to High-DPI display scaling.`n`nThe program will exit.
     ExitApp
 }
-
+*/
 If (!A_IsUnicode) {
     Gui Auto: +OwnDialogs
     MsgBox 0x10, Error, %g_AppName% is incompatible with the ANSI build of AutoHotkey.
