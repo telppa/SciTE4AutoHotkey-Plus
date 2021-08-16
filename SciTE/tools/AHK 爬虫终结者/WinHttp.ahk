@@ -1,5 +1,10 @@
 ﻿/*
 更新日志：
+  2021.08.16
+  修复请求头行首包含空白符会被错误解析的问题。
+  增加 Cookie 的快速获取。
+  版本号3.5
+
   2021.04.11
   集成 CreateFormData 函数。
   集成 BinArr 系列函数。
@@ -78,35 +83,21 @@
 */
 
 /*
-MsgBox, % WinHttp.Download("https://www.example.com/")  ; 网页内容
-MsgBox, % WinHttp.ResponseHeaders["Content-type"]       ; 响应头 Content-type 段
-MsgBox, % WinHttp.StatusCode                            ; 状态码
+  MsgBox, % WinHttp.Download("https://www.example.com/")  ; 网页内容
+  MsgBox, % WinHttp.ResponseHeaders["Content-type"]       ; 响应头 Content-type 段
+  MsgBox, % WinHttp.StatusCode                            ; 状态码
+  MsgBox, % WinHttp.Cookie                                ; Cookie
 
-objParam := {"file": ["截图.png"]}                      ; CreateFormData 示例
-WinHttp.CreateFormData(out_postData, out_ContentType, objParam,,,"image/jpg")
-MsgBox, % WinHttp.Download("http://snap.ie.sogou.com/recognition",,"Content-Type: " out_ContentType, out_postData)
+  objParam := {"file": ["截图.png"]}                      ; CreateFormData 示例
+  WinHttp.CreateFormData(out_postData, out_ContentType, objParam,,,"image/jpg")
+  RequestHeaders := "Content-Type: " out_ContentType
+  MsgBox, % WinHttp.Download("http://snap.ie.sogou.com/recognition",, RequestHeaders, out_postData)
 */
 class WinHttp
 {
-  static ResponseHeaders:={}, StatusCode:="", StatusText:="", extra:={}
+  static ResponseHeaders:={}, StatusCode:="", StatusText:="", Cookie:="", extra:={}
 
   /*
-  *****************说明*****************
-  此函数与内置命令 UrlDownloadToFile 的区别有以下几点：
-  1.直接下载到变量，没有临时文件。
-  2.下载速度更快，大概100%。
-  3.内置命令执行时，整个AHK程序都是卡顿状态。此函数不会。
-  4.内置命令下载一些诡异网站（例如“牛杂网”）时，会概率性让进程或线程彻底死掉。此函数不会。
-  5.支持设置网页字符集、URL的编码。乱码问题轻松解决。
-  6.支持设置所有“Request Header”。常见的有：Cookie、Referer、User-Agent。网站检测问题轻松解决。
-  7.支持设置超时，不必死等。
-  8.支持设置代理及白名单。
-  9.支持设置是否自动重定向网址。
-  10.“RequestHeaders”参数格式与chrome的开发者工具中的“Request Header”相同，因此可直接复制过来就用，方便调试。
-  11.支持9种打开方法， GET,HEAD,POST,PUT,PATCH,DELETE,CONNECT,OPTIONS,TRACE 。
-  12.支持存取“Cookie”，可用于模拟登录状态。
-  13.支持判断网页返回时的状态码，例如200，404等。
-
   *****************参数*****************
   URL                  网址，必须包含类似 “http://”的开头。“www.” 最好也带上，有些网站需要。
   Options              每行一个参数，行首至第一个冒号为参数名，之后至行尾为参数值。多个参数换行。具体可参照 “解析信息为对象()” 注释中的例子。
@@ -183,15 +174,15 @@ class WinHttp
       wr.SetTimeouts(0, 60000, 30000, Options.Timeout*1000)   ; 自定义超时。
 
     ; HTTP/1.1 支持以下9种请求方法。
-    Methods:={GET:1, HEAD:1, POST:1, PUT:1, PATCH:1, DELETE:1, CONNECT:1, OPTIONS:1, TRACE:1}
+    Methods := {GET:1, HEAD:1, POST:1, PUT:1, PATCH:1, DELETE:1, CONNECT:1, OPTIONS:1, TRACE:1}
     if (!Methods.Haskey(Options.Method))
       Options.Method := Data="" ? "GET" : "POST"              ; 请求方法为空或错误，则根据 Data 是否有值自动判断方法。
-    Options.Method:=Format("{:U}", Options.Method)            ; 转换为大写，小写在很多网站会出错。
+    Options.Method := Format("{:U}", Options.Method)          ; 转换为大写，小写在很多网站会出错。
     wr.Open(Options.Method, URL, true)                        ; true 为异步获取。默认是 false ，龟速的根源！！！卡顿的根源！！！
 
     ; 如果自己不设置 User-Agent 那么实际上会被自动设置为 Mozilla/4.0 (compatible; Win32; WinHttp.WinHttpRequest.5) 。影响数据抓取。
     if (RequestHeaders["User-Agent"] = "")
-      RequestHeaders["User-Agent"] :="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+      RequestHeaders["User-Agent"] := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
     if (InStr(RequestHeaders["Accept-Encoding"], "gzip"))     ; 这里必须用 RequestHeaders["Accept-Encoding"] 而不是 RequestHeaders.Accept-Encoding 。
       RequestHeaders.Delete("Accept-Encoding")                ; 删掉含 “gzip” 的 “Accept-Encoding” ，避免服务器返回 gzip 压缩后的数据。
     if (InStr(RequestHeaders["Connection"], "Keep-Alive"))
@@ -221,13 +212,15 @@ class WinHttp
       }
     }
 
-    this.ResponseHeaders:=this.解析信息为对象(wr.GetAllResponseHeaders())  ; 存响应头
+    this.ResponseHeaders := this.解析信息为对象(wr.GetAllResponseHeaders())          ; 存响应头
+    this.Cookie          := this.解析SetCookie为Cookie(this.ResponseHeaders).Cookie  ; 存 Cookie
+
     if (FilePath != "")
-      return, this.BinArr_ToFile(wr.ResponseBody(), FilePath)              ; 存为文件
+      return, this.BinArr_ToFile(wr.ResponseBody(), FilePath)                        ; 存为文件
     else if (Options.Charset != "")
-      return, this.BinArr_ToString(wr.ResponseBody(), Options.Charset)     ; 存为变量，自定义字符集
+      return, this.BinArr_ToString(wr.ResponseBody(), Options.Charset)               ; 存为变量，自定义字符集
     else
-      return, wr.ResponseText()                                            ; 存为变量
+      return, wr.ResponseText()                                                      ; 存为变量
   }
 
   /*
@@ -259,7 +252,7 @@ class WinHttp
     StringReplace, infos, infos, `n, `r`n, All
 
     ; 使用正则而不是 StrSplit() 进行处理的原因是，后者会错误处理这样的情况 “程序会根据 “Proxy:” 的值自动设置” 。
-    infos_temp:=GlobalRegExMatch(infos, "m)(^[\w\-]*?):(.*$)", 1)
+    infos_temp := GlobalRegExMatch(infos, "m)^\s*([\w\-]*?):(.*$)", 1)
     ; 将正则匹配到的信息存入新的对象中，像这样 {"Connection":"keep-alive", "Cache-Control":"max-age=0"} 。
     obj:={}
     Loop, % infos_temp.MaxIndex()
@@ -271,11 +264,11 @@ class WinHttp
       if (name="Set-Cookie")
       {
         if (!obj.HasKey(name))
-          obj[name]:=[]
+          obj[name] := []
         obj[name].Push(value)
       }
       else
-        obj[name]:=value
+        obj[name] := value
     }
 
     return, obj
@@ -301,10 +294,10 @@ class WinHttp
       if (k="Set-Cookie")
       {
         loop, % v.MaxIndex()
-          infos.=k ":" v[A_Index] "`r`n"
+          infos .= k ":" v[A_Index] "`r`n"
       }
       else
-        infos.=k ":" v "`r`n"
+        infos .= k ":" v "`r`n"
     }
     return, infos
   }
@@ -352,9 +345,10 @@ class WinHttp
     }
     obj.Delete("Set-Cookie")        ; “Set-Cookie” 转换完成后就删除。
 
-    obj["Cookie"]:=""               ; 同时存在 “Cookie” 和 “Set-Cookie” 时，后者处理完成的值将覆盖前者。
+    obj["Cookie"] := ""             ; 同时存在 “Cookie” 和 “Set-Cookie” 时，后者处理完成的值将覆盖前者。
     for k, v in Cookies
-      obj["Cookie"].=k "=" v "; "
+      obj["Cookie"] .= k "=" v "; "
+    obj["Cookie"] := RTrim(obj["Cookie"], " ")
 
     return, obj
   }
