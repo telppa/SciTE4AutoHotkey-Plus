@@ -70,7 +70,7 @@ The margins are numbered 0 to 4. Using a margin number outside the valid range h
   Gui, Add, Button, v主页, 主页
   Gui, Add, Button, v存储正则 +Disabled, 存储正则
   Gui, Add, Button, v生成代码, 生成代码
-  Gui, Show, CEnter w370 h545, AHK 正则终结者 ver. 1.2
+  Gui, Show, CEnter w370 h545, AHK 正则终结者 ver. 1.3
 
   ; 窗口创建后再设置文本内容可以避免内容初始被选中
   sci1.SetText(不再使用的参数, 初始正则框内容)                ; 添加文本. 第一个参数是一个不再使用了的参数

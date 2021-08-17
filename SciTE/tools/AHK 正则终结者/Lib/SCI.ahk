@@ -1,6 +1,8 @@
-﻿; Title: Scintilla Wrapper for AHK
-; 增加 6 个全局变量,用于正则染色,分别是 SCE_AHKL_LPPDEFINED1-6,注意其值的最大范围是 0-30
-; 修改以 "UTF-8" 存储和读取 SCITE 的文字
+﻿; Scintilla Wrapper v1.4.4
+; https://github.com/RaptorX/scintilla-wrapper
+; 增加6个全局变量，用于正则染色，分别是 SCE_AHKL_LPPDEFINED1-6，注意其值的最大范围是 0-30。
+; 修改以 "UTF-8" 存储和读取 SCITE 的文字。
+; 修改第256 282 283行 null 为 nullvar ，以便兼容H版。
 
 class scintilla {
     hwnd            := 0        ; Component Handle
@@ -45,7 +47,7 @@ class scintilla {
             return this
     }
 
-    __call(msg, ByRef wParam=0, ByRef lParam=0, params*){
+    __call(msg, ByRef wParam:=0, ByRef lParam:=0, params*){
 
         if (msg = "Add")
             __SCI(this.hwnd := __Add(wParam, lParam, params*), this)
@@ -92,7 +94,7 @@ class scintilla {
 
 class sciCharRange {
 
-    __new(_cMin=0, _cMax=0){
+    __new(_cMin:=0, _cMax:=0){
 
         this.cMin := _cMin
         this.cMax := _cMax
@@ -100,7 +102,7 @@ class sciCharRange {
 }
 class sciTextRange {
 
-    __new(_chrg=0, _pStr=0){
+    __new(_chrg:=0, _pStr:=0){
 
         if (!isObject(_chrg)){
             Msgbox % 0x0
@@ -115,7 +117,7 @@ class sciTextRange {
 }
 class sciTextToFind {
 
-    __new(_chrg=0, _text="", _found=0){
+    __new(_chrg:=0, _text:="", _found:=0){
 
         if (!isObject(_chrg) || !isObject(_found)) {
             Msgbox % 0x0
@@ -131,7 +133,7 @@ class sciTextToFind {
 }
 class sciRectangle {
 
-    __new(_left=0, _top=0, _right=0, _bottom=0){
+    __new(_left:=0, _top:=0, _right:=0, _bottom:=0){
 
         this.left    := _left
         this.top     := _top
@@ -141,7 +143,7 @@ class sciRectangle {
 }
 class sciRangeToFormat {
 
-    __new(_hdc=0, _hdcTarget=0, _rc=0, _rcPage=0, _chrg=0){
+    __new(_hdc:=0, _hdcTarget:=0, _rc:=0, _rcPage:=0, _chrg:=0){
         this.hdc         := _hdc                                        ; The Surface ID we print to
         this.hdcTarget   := _hdcTarget                                  ; The Surface ID we use for measuring (may be same as hdc)
         this.rc          := _rc ? _rc : new sciRectangle                ; Rectangle in which to print
@@ -244,14 +246,14 @@ class sciRangeToFormat {
         exitapp
     (end)
 */
-__Add(hParent=0, x=5, y=5, w=590, h=390, DllPath="", Styles=""){
+__Add(hParent:=0, x:=5, y:=5, w:=590, h:=390, DllPath:="", Styles:=""){
     static WS_OVERLAPPED:=0x00000000,WS_POPUP:=0x80000000,WS_CHILD:=0x40000000,WS_MINIMIZE:=0x20000000
     ,WS_VISIBLE:=0x10000000,WS_DISABLED:=0x08000000,WS_CLIPSIBLINGS:=0x04000000,WS_CLIPCHILDREN:=0x02000000
     ,WS_MAXIMIZE:=0x01000000,WS_CAPTION:=0x00C00000,WS_BORDER:=0x00800000,WS_DLGFRAME:=0x00400000
     ,WS_VSCROLL:=0x00200000,WS_HSCROLL:=0x00100000,WS_SYSMENU:=0x00080000,WS_THICKFRAME:=0x00040000
     ,WS_GROUP:=0x00020000,WS_TABSTOP:=0x00010000,WS_MINIMIZEBOX:=0x00020000,WS_MAXIMIZEBOX:=0x00010000
     ,WS_TILED:=0x00000000,WS_ICONIC:=0x20000000,WS_SIZEBOX:=0x00040000,WS_EX_CLIENTEDGE:=0x00000200
-    ,GuiID:=311210,init:=false, null:=0
+    ,GuiID:=311210,init:=false, nullvar:=0
 
     DllPath := !DllPath ? "SciLexer.dll" : inStr(DllPath, ".dll") ? DllPath : DllPath "\SciLexer.dll"
     if !init        ;  WM_NOTIFY = 0x4E
@@ -277,8 +279,8 @@ __Add(hParent=0, x=5, y=5, w=590, h=390, DllPath="", Styles=""){
                  ,Int  ,h ? h : 390                     ; Height
                  ,UInt ,hParent ? hParent : WinExist()  ; Parent HWND
                  ,UInt ,GuiID                           ; (HMENU)GuiID
-                 ,UInt ,null                            ; hInstance
-                 ,UInt ,null, "UInt")                   ; lpParam
+                 ,UInt ,nullvar                            ; hInstance
+                 ,UInt ,nullvar, "UInt")                   ; lpParam
 
                  ,__sendEditor(hSci)                    ; initialize sendEditor function
 
@@ -315,25 +317,25 @@ __Add(hParent=0, x=5, y=5, w=590, h=390, DllPath="", Styles=""){
     __sendEditor(hSci2, "SCI_SETMARGINWIDTHN",0,50)  ; Set the margin 0 to 50px on the second component.
     (End)
 */
-__sendEditor(hwnd, msg=0, wParam=0, lParam=0){
+__sendEditor(hwnd, msg:=0, wParam:=0, lParam:=0){
     static
 
     hwnd := !hwnd ? oldhwnd : hwnd, oldhwnd := hwnd, msg := !(msg+0) ? "SCI_" msg : msg
 
-    if !%hwnd%_df
+    if !df_%hwnd%
 	{
         SendMessage, SCI_GETDIRECTFUNCTION,0,0,,ahk_id %hwnd%
-        %hwnd%_df := ErrorLevel
+        df_%hwnd% := ErrorLevel
         SendMessage, SCI_GETDIRECTPOINTER,0,0,,ahk_id %hwnd%
-        %hwnd%_dp := ErrorLevel
+        dp_%hwnd% := ErrorLevel
 	}
 
     if !msg && !wParam && !lParam   ; called only with the hwnd param from SCI_Add
         return                      ; Exit because we did what we needed to do already.
 
     ; The fast way to control Scintilla
-    return DllCall(%hwnd%_df            ; DIRECT FUNCTION
-                  ,"UInt" ,%hwnd%_dp    ; DIRECT POINTER
+    return DllCall(df_%hwnd%            ; DIRECT FUNCTION
+                  ,"UInt" ,dp_%hwnd%    ; DIRECT POINTER
                   ,"UInt" ,!(msg+0) ? %msg% : msg
                   ,"Int"  ,inStr(wParam, "-") ? wParam : (%wParam%+0 ? %wParam% : wParam) ; handles negative ints
                   ,"Int"  ,%lParam%+0 ? %lParam% : lParam)
@@ -404,7 +406,7 @@ __isHexColor(hex, msg){
         return false
 }
 
-__SCI(var, val=""){
+__SCI(var, val:=""){
     static
 
     if (RegExMatch(var,"i)[ `n-\.%,(\\\/=&^]")) ; Check if it is a valid variable name
@@ -563,7 +565,7 @@ global SCLEX_CONTAINER:=0,SCLEX_NULL:=1,SCLEX_PYTHON:=2,SCLEX_CPP:=3,SCLEX_HTML:
 ,SCE_AHKL_OBJECT:=18,SCE_AHKL_USERFUNCTION:=19,SCE_AHKL_DIRECTIVE:=20,SCE_AHKL_COMMAND:=21,SCE_AHKL_PARAM:=22,SCE_AHKL_CONTROLFLOW:=23
 ,SCE_AHKL_BUILTINFUNCTION:=24,SCE_AHKL_BUILTINVAR:=25,SCE_AHKL_KEY:=26,SCE_AHKL_USERDEFINED1:=27,SCE_AHKL_USERDEFINED2:=28,SCE_AHKL_ESCAPESEQ:=30
 ,SCE_AHKL_ERROR:=31,AHKL_LIST_DIRECTIVES:=0,AHKL_LIST_COMMANDS:=1,AHKL_LIST_PARAMETERS:=2,AHKL_LIST_CONTROLFLOW:=3,AHKL_LIST_FUNCTIONS:=4
-,AHKL_LIST_VARIABLES:=5,AHKL_LIST_KEYS:=6,AHKL_LIST_USERDEFINED1:=7,AHKL_LIST_USERDEFINED2:=8,SCLEX_AUTOMATIC=1000
+,AHKL_LIST_VARIABLES:=5,AHKL_LIST_KEYS:=6,AHKL_LIST_USERDEFINED1:=7,AHKL_LIST_USERDEFINED2:=8,SCLEX_AUTOMATIC:=1000
 ,SCE_AHKL_LPPDEFINED1:=25,SCE_AHKL_LPPDEFINED2:=26,SCE_AHKL_LPPDEFINED3:=27,SCE_AHKL_LPPDEFINED4:=28,SCE_AHKL_LPPDEFINED5:=29,SCE_AHKL_LPPDEFINED6:=30
 }
 
