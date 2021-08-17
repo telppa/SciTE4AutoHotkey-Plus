@@ -43,5 +43,5 @@ FileAppend, %txt%, AHK-Rare中文.txt, utf-8
 
 ExitApp
 
-#Include <正则全局模式>
+#Include <GlobalRegExMatch>
 #Include <谷歌翻译>

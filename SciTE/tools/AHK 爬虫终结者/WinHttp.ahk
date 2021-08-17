@@ -510,4 +510,4 @@ class WinHttp
 }
 
 #Include %A_LineFile%\..\NonNull.ahk
-#Include %A_LineFile%\..\正则全局模式.ahk
+#Include %A_LineFile%\..\GlobalRegExMatch.ahk

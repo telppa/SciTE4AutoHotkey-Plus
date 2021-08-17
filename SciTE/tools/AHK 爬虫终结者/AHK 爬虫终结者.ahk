@@ -128,8 +128,8 @@ return
   用户库:=A_MyDocuments "\AutoHotkey\Lib\"
   标准库:=A_AhkPath "\..\Lib\"
   ; 在任意一个库文件目录中找到3个库文件，则简单引用就好。
-  if  ((FileExist(用户库 "WinHttp.ahk") and FileExist(用户库 "NonNull.ahk") and FileExist(用户库 "正则全局模式.ahk"))
-    or (FileExist(标准库 "WinHttp.ahk") and FileExist(标准库 "NonNull.ahk") and FileExist(标准库 "正则全局模式.ahk")))
+  if  ((FileExist(用户库 "WinHttp.ahk") and FileExist(用户库 "NonNull.ahk") and FileExist(用户库 "GlobalRegExMatch.ahk"))
+    or (FileExist(标准库 "WinHttp.ahk") and FileExist(标准库 "NonNull.ahk") and FileExist(标准库 "GlobalRegExMatch.ahk")))
     {
       库引用:="#Include <WinHttp>"
     }
@@ -138,9 +138,9 @@ return
       ; 库文件目录里找不到3个库文件，则加载3个库文件内容到变量里。
       FileRead, 库引用1, %A_ScriptDir%\WinHttp.ahk
       FileRead, 库引用2, %A_ScriptDir%\NonNull.ahk
-      FileRead, 库引用3, %A_ScriptDir%\正则全局模式.ahk
+      FileRead, 库引用3, %A_ScriptDir%\GlobalRegExMatch.ahk
       库引用1:=StrReplace(库引用1, "#Include %A_LineFile%\..\NonNull.ahk")
-      库引用1:=StrReplace(库引用1, "#Include %A_LineFile%\..\正则全局模式.ahk")
+      库引用1:=StrReplace(库引用1, "#Include %A_LineFile%\..\GlobalRegExMatch.ahk")
       库引用:="; ------------------以下是库文件------------------`r`n" 库引用1 "`r`n" 库引用2 "`r`n" 库引用3
     }
 return

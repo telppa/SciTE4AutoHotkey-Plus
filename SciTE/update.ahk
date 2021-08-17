@@ -10,7 +10,7 @@
     更新“Auto-GUI”到3.0.1。（提取自 Adventure IDE）
     更新“MagicBox”到1.0.4。（提取自 Adventure IDE）
     更新“中文帮助文件”到1.1.33.09。
-    更新使用“正则全局模式”库的代码。
+    更新使用“GlobalRegExMatch”库的代码。
     增加一个遗漏的关键字“MoveDraw”。
     删除目录“额外的帮助文件”。
 
