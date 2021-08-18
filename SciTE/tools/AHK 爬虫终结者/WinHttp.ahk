@@ -1,5 +1,9 @@
 ﻿/*
 更新日志：
+  2021.08.18
+  修复响应头的 Set-Cookie 总是被改变为 Cookie 的问题。
+  版本号3.6
+
   2021.08.16
   修复请求头行首包含空白符会被错误解析的问题。
   增加 Cookie 的快速获取。
@@ -213,7 +217,8 @@ class WinHttp
     }
 
     this.ResponseHeaders := this.解析信息为对象(wr.GetAllResponseHeaders())          ; 存响应头
-    this.Cookie          := this.解析SetCookie为Cookie(this.ResponseHeaders).Cookie  ; 存 Cookie
+    temp_ResponseHeaders := this.解析信息为对象(wr.GetAllResponseHeaders())          ; 解析SetCookie为Cookie() 会改变传入的值，所以这里创建一个备份用于解析
+    this.Cookie          := this.解析SetCookie为Cookie(temp_ResponseHeaders).Cookie  ; 存 Cookie
 
     if (FilePath != "")
       return, this.BinArr_ToFile(wr.ResponseBody(), FilePath)                        ; 存为文件
