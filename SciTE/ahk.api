@@ -48,6 +48,7 @@
 #NoEnv
 #NoTrayIcon
 #Persistent
+#Requires Requirement
 #SingleInstance [Force|Ignore|Off]
 #UseHook [On|Off]
 #Warn [, UseUnsetLocal|UseUnsetGlobal|UseEnv|LocalSameAsGlobal|ClassOverwrite|Unreachable|All, MsgBox|StdOut|OutputDebug|Off]
