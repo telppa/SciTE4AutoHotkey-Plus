@@ -682,3 +682,13 @@ SetListView(GuiID, LvID) {
     Gui %GuiID%: Default
     Gui ListView, %LvID%
 }
+
+SetFont(FontName, FontOptions) {
+    Gui Font
+    Gui Font, %FontOptions%, %FontName%
+}
+
+ResetFont() {
+    Gui Font
+    Gui Font, s9, Segoe UI
+}

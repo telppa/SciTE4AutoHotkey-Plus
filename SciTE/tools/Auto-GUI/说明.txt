@@ -1,6 +1,8 @@
-提取自 Adventure IDE 3.0.1
+提取自 Adventure IDE 3.0.3
 https://www.autohotkey.com/boards/viewtopic.php?f=64&t=89901
 作者：Alguimist
+
+更新时，先在 Adventure 中构建出与 Auto-GUI 相同的目录结构，会比较快。
 
 提取时，需要根据关键词“..\”修改以下文件中的所有相对路径。
   Auto-GUI.ahk

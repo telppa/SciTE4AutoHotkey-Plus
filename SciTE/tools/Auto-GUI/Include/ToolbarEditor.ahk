@@ -332,7 +332,7 @@ ToolbarEditorOK:
     If (Toolbar.Buttons.Length()) {
         Gui %Child%: Default
         TBIL := InStr(Toolbar.Options, "textonly") ? "" : ImageList2
-        hChildToolbar := ToolbarCreate("", Trim(ToolbarButtons, "`n"), TBIL, Toolbar.Options)
+        hChildToolbar := Toolbar_Create("", Trim(ToolbarButtons, "`n"), TBIL, Toolbar.Options)
         ApplyGUIFont(hChildToolbar)
     }
 

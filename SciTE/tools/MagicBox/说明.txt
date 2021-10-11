@@ -1,5 +1,7 @@
-提取自 Adventure IDE 3.0.1
+提取自 Adventure IDE 3.0.3
 https://www.autohotkey.com/boards/viewtopic.php?f=64&t=89901
 作者：Alguimist
+
+更新时，先在 Adventure 中构建出与 MagicBox 相同的目录结构，会比较快。
 
 Icons 与 Settings 目录下存在垃圾文件，并没有清理。

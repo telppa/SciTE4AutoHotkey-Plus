@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ftypes>
     <extensions>
+        <ext id="ac" type="XML" desc="AutoComplete File" />
         <ext id="ahk" type="AHK" desc="AutoHotkey Script" />
         <ext id="ahk2" type="AHK" desc="AutoHotkey v2 Script" />
         <ext id="ahkh" type="AHK" desc="AutoHotkey_H Script" />
@@ -73,6 +74,7 @@
         <ext id="pm" type="PL" desc="Perl Module" />
         <ext id="pod" type="PL" desc="Plain Old Documentation" />
         <ext id="pp" type="PAS" desc="Pascal Code" />
+        <ext id="prg" type="XB" desc="Harbour Code" />
         <ext id="properties" type="CONF" desc="Properties File" />
         <ext id="ps1" type="PS1" desc="PowerShell Script" />
         <ext id="psm1" type="PS1" desc="PowerShell Module" />
@@ -92,6 +94,7 @@
         <ext id="svg" type="XML" desc="Scalable Vector Graphics" />
         <ext id="ts" type="JS" desc="TypeScript Code" />
         <ext id="txt" type="TXT" desc="Text File" />
+        <ext id="ud" type="XML" desc="User Dictionary" />
         <ext id="url" type="INI" desc="Internet Shortcut" />
         <ext id="ui" type="XML" desc="Qt User Interface" />
         <ext id="vb" type="VB" desc="Visual Basic Code" />
@@ -153,6 +156,7 @@
         <type id="VB" name="VB" dn="Visual Basic" lexer="8" ext="vb" />
         <type id="VBS" name="VB" dn="VBScript" lexer="28" ext="vbs" />
         <type id="VHDL" name="VHDL" dn="VHDL" lexer="64" ext="vhdl" />
+        <type id="XB" name="Harbour" dn="Harbour" lexer="73" ext="prg" />
         <type id="XML" name="XML" dn="XML" lexer="5" ext="xml" />
         <type id="YAML" name="YAML" dn="YAML" lexer="48" ext="yaml" />
     </types>

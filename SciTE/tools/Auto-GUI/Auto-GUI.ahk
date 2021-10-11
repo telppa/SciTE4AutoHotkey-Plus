@@ -296,7 +296,7 @@ CreateToolbar() {
             Help
         )
 
-    hToolbar := ToolbarCreate("OnToolbar", TbButtons, TbIL, "FLAT LIST TOOLTIPS", "+E0x200")
+    hToolbar := Toolbar_Create("OnToolbar", TbButtons, TbIL, "FLAT LIST TOOLTIPS", "+E0x200")
     SendMessage 0x41F, 0, 0x00180018,, ahk_id %hToolbar% ; TB_SETBUTTONSIZE
 }
 
@@ -1193,8 +1193,7 @@ ShowAbout() {
     Gui About: New, LabelAbout -SysMenu +OwnerAuto
     Gui Color, White
 
-    hGrad := CreateDIB("1F609F|1F609F|20AEDD|20AEDD", 2, 2, DPIScale(470), DPIScale(180), 1)
-    Gui Add, Pic, x0 y0 w470 h180, HBITMAP: %hGrad%
+    Gui Add, Pic, x0 y0 w470 h180, % "HBITMAP:" . Gradient(470, 180)
 
     Gui Add, Picture, x10 y10 w31 h32 +BackgroundTrans, %IconLib%
     Gui Add, Picture, x18 y18 w31 h32 +BackgroundTrans, %IconLib%
@@ -1772,6 +1771,10 @@ OnWM_SYSCOMMAND(wParam, lParam, msg, hWnd) {
     }
 }
 
+Gradient(Width, Height) {
+    Return CreateGradient(DPIScale(Width), DPIScale(Height), 1, g_aGradColors)
+}
+
 ApplyTheme() {
     Static SCE_AHKL_IDENTIFIER := 1, SCE_AHKL_COMMENTDOC := 2, SCE_AHKL_COMMENTLINE := 3
     , SCE_AHKL_COMMENTBLOCK := 4, SCE_AHKL_COMMENTKEYWORD := 5, SCE_AHKL_STRING := 6
@@ -1855,4 +1858,4 @@ ApplyTheme() {
 #Include %A_ScriptDir%\Lib\AutoXYWH.ahk
 #Include %A_ScriptDir%\Lib\CommonDialogs.ahk
 #Include %A_ScriptDir%\Lib\GuiButtonIcon.ahk
-#Include %A_ScriptDir%\Lib\CreateDIB.ahk
+#Include %A_ScriptDir%\Lib\CreateGradient.ahk

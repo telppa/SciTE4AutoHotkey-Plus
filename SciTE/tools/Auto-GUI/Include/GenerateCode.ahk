@@ -375,7 +375,7 @@
         }
 
         Code .= Indent . "Buttons = " . CRLF . Indent . "(LTrim" . CRLF . ToolbarButtons . Indent . ")" . CRLF . CRLF
-        Code .= Indent . "Return ToolbarCreate(""OnToolbar"", Buttons," . TBIL . ", """ . Toolbar.Options . """)" . CRLF
+        Code .= Indent . "Return Toolbar_Create(""OnToolbar"", Buttons," . TBIL . ", """ . Toolbar.Options . """)" . CRLF
         Code .= "}" . CRLF . CRLF . "OnToolbar(hWnd, Event, Text, Pos, Id) {" . CRLF
         Code .= Indent . "If (Event != ""Click"") {" . CRLF . Indent . Indent . "Return" . CRLF . Indent . "}" . CRLF . CRLF
 

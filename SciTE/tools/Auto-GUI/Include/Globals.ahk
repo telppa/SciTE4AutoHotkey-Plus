@@ -100,3 +100,4 @@
 , g_ShowToolbox := True
 , g_ShowToolbar := True
 , g_ShowStatusBar := True
+, g_aGradColors := [0x3FBBE3, 0x0080C0]

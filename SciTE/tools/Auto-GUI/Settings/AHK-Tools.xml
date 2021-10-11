@@ -4,7 +4,7 @@
 	<tool title="MagicBox" file="{:PROGDIR:}\Tools\MagicBox\MagicBox.ahk" params="" workingdir="" icon="{:ICONSDIR:}\MagicBox.ico" iconindex="1" desc="Message box generator"/>
 	<tool title="Expressive" file="{:PROGDIR:}\Tools\Expressive\Expressive.ahk" params="" workingdir="" icon="{:ICONSDIR:}\Expressive.icl" iconindex="1" desc="Regular expression tool"/>
 	<tool title="Sort Panel" file="{:PROGDIR:}\Tools\Sort Panel\Sort Panel.ahk" params="" workingdir="" icon="{:ICONSDIR:}\Sort Panel.ico" iconindex="1" desc="Text sorting tool"/>
-	<tool title="Scripts Manager" file="{:PROGDIR:}\Tools\Scripts Manager\Scripts Manager.ahk" params="" workingdir="" icon="{:ICONSDIR:}\Scripts Manager.icl" iconindex="1" desc="AutoHotkey scripts manager"/>
+	<tool title="AutoTaskMan" file="{:PROGDIR:}\Tools\AutoTaskMan\AutoTaskMan.ahk" params="" workingdir="" icon="{:ICONSDIR:}\AutoTaskMan.icl" iconindex="1" desc="AutoHotkey scripts manager"/>
 	<tool title="Constantine" file="{:PROGDIR:}\Tools\Constantine\Constantine.ahk" params="/find {:SELTEXT:}" workingdir="" icon="{:ICONSDIR:}\Constantine.icl" iconindex="1" desc="Windows API constants reference"/>
 	<tool title="A_Variables" file="{:PROGDIR:}\Tools\A_Variables\A_Variables.ahk" params="" workingdir="" icon="{:ICONSDIR:}\A_Variables.ico" iconindex="1" desc="AutoHotkey built-in variables"/>
 	<tool title="Script Directives" file="{:PROGDIR:}\Tools\AhkDirectives\AhkDirectives.ahk" params="/A" workingdir="" icon="{:ICONSDIR:}\AhkDirectives.ico" iconindex="1" desc="AutoHotkey directives generator"/>

@@ -1537,7 +1537,7 @@ Return
 
 CreateStylesToolbar() {
     Buttons := "Add`n-`nRemove`n-`nOverwrite`n-`nDefault`n-`nReset"
-    Return ToolbarCreate("OnStylesToolbar", Buttons,, "Flat List TextOnly Tooltips", "", "x14 y351 w295 h24")
+    Return Toolbar_Create("OnStylesToolbar", Buttons,, "Flat List TextOnly Tooltips", "", "x14 y351 w295 h24")
 }
 
 OnStylesToolbar(hWnd, Event, Text, Pos, Id) {

@@ -6507,6 +6507,10 @@
             </dir>
 
             <dir name="Others">
+                <item const="INVALID_HANDLE_VALUE" value="-1" />
+                <item const="INVALID_FILE_SIZE" value="0xFFFFFFFF" />
+                <item const="INVALID_SET_FILE_POINTER" value="-1" />
+                <item const="INVALID_FILE_ATTRIBUTES" value="-1" />
                 <item const="MAX_PATH" value="260" />
             </dir>
         </dir>
@@ -6857,699 +6861,661 @@
             </dir>
         </dir>
 
-    <dir name="Network">
-        <dir name="WinNetWk">
-        </dir>
+        <dir name="Network">
+            <dir name="WinNetWk">
+            </dir>
 
-        <dir name="WinInet">
-        </dir>
+            <dir name="WinInet">
+            </dir>
 
-        <dir name="Winsock">
-        </dir>
+            <dir name="Winsock">
+            </dir>
 
-        <dir name="IP Helper">
-        </dir>
+            <dir name="IP Helper">
+            </dir>
 
-        <dir name="WinHTTP">
-        </dir>
+            <dir name="WinHTTP">
+            </dir>
 
-        <dir name="WinDNS.h">
-        </dir>
-    </dir>
-
-    <dir name="Process">
-        <dir name="Access Rights" desc="Process Security and Access Rights">
-            <item const="PROCESS_TERMINATE" value="0x00000001" />
-            <item const="PROCESS_CREATE_THREAD" value="0x00000002" />
-            <item const="PROCESS_SET_SESSIONID" value="0x00000004" />
-            <item const="PROCESS_VM_OPERATION" value="0x00000008" />
-            <item const="PROCESS_VM_READ" value="0x00000010" />
-            <item const="PROCESS_VM_WRITE" value="0x00000020" />
-            <item const="PROCESS_DUP_HANDLE" value="0x00000040" />
-            <item const="PROCESS_CREATE_PROCESS" value="0x00000080" />
-            <item const="PROCESS_SET_QUOTA" value="0x00000100" />
-            <item const="PROCESS_SET_INFORMATION" value="0x00000200" />
-            <item const="PROCESS_QUERY_INFORMATION" value="0x00000400" />
-            <item const="PROCESS_QUERY_LIMITED_INFORMATION" value="0x1000" />
-            <item const="PROCESS_SUSPEND_RESUME" value="0x00000800" />
-            <item const="PROCESS_ALL_ACCESS" value="0x001F0FFF" />
-        </dir>
-        <dir name="Creation" desc="Parameters for CreateProcess()">
-            <item const="CREATE_BREAKAWAY_FROM_JOB" value="0x01000000" />
-            <item const="CREATE_DEFAULT_ERROR_MODE" value="0x04000000" />
-            <item const="CREATE_NEW_CONSOLE" value="0x00000010" />
-            <item const="CREATE_NEW_PROCESS_GROUP" value="0x00000200" />
-            <item const="CREATE_NO_WINDOW" value="0x08000000" />
-            <item const="CREATE_PROTECTED_PROCESS" value="0x00040000" />
-            <item const="CREATE_PRESERVE_CODE_AUTHZ_LEVEL" value="0x02000000" />
-            <item const="CREATE_SEPARATE_WOW_VDM" value="0x00000800" />
-            <item const="CREATE_SHARED_WOW_VDM" value="0x00001000" />
-            <item const="CREATE_SUSPENDED" value="0x00000004" />
-            <item const="CREATE_UNICODE_ENVIRONMENT" value="0x00000400" />
-        </dir>
-        <dir name="Startup Info" desc="Parameters for STARTUPINFO structure">
-            <item const="STARTF_FORCEOFFFEEDBACK" value="0x80" />
-            <item const="STARTF_FORCEONFEEDBACK" value="0x40" />
-            <item const="STARTF_PREVENTPINNING" value="0x00002000" />
-            <item const="STARTF_RUNFULLSCREEN" value="0x20" />
-            <item const="STARTF_TITLEISAPPID" value="0x00001000" />
-            <item const="STARTF_TITLEISLINKNAME" value="0x00000800" />
-            <item const="STARTF_USECOUNTCHARS" value="0x8" />
-            <item const="STARTF_USEFILLATTRIBUTE" value="0x10" />
-            <item const="STARTF_USEHOTKEY" value="0x200" />
-            <item const="STARTF_USEPOSITION" value="0x4" />
-            <item const="STARTF_USESHOWWINDOW" value="0x1" />
-            <item const="STARTF_USESIZE" value="0x2" />
-            <item const="STARTF_USESTDHANDLES" value="0x100" />
-        </dir>
-
-        <dir name="ShellExecute" desc="ShellExecute(), ShellExecuteEx()">
-            <dir name="Mask" desc="ShellExecuteEx fMask">
-                <item const="SEE_MASK_DEFAULT" value="0x00000000" />
-                <item const="SEE_MASK_CLASSNAME" value="0x00000001" />
-                <item const="SEE_MASK_CLASSKEY" value="0x00000003" />
-                <item const="SEE_MASK_IDLIST" value="0x00000004" />
-                <item const="SEE_MASK_INVOKEIDLIST" value="0x0000000C" />
-                <item const="SEE_MASK_ICON" value="0x00000010" />
-                <item const="SEE_MASK_HOTKEY" value="0x00000020" />
-                <item const="SEE_MASK_NOCLOSEPROCESS" value="0x00000040" />
-                <item const="SEE_MASK_CONNECTNETDRV" value="0x00000080" />
-                <item const="SEE_MASK_NOASYNC" value="0x00000100" />
-                <item const="SEE_MASK_FLAG_DDEWAIT" value="0x00000100" />
-                <item const="SEE_MASK_DOENVSUBST" value="0x00000200" />
-                <item const="SEE_MASK_FLAG_NO_UI" value="0x00000400" />
-                <item const="SEE_MASK_UNICODE" value="0x00004000" />
-                <item const="SEE_MASK_NO_CONSOLE" value="0x00008000" />
-                <item const="SEE_MASK_ASYNCOK" value="0x00100000" />
-                <item const="SEE_MASK_NOQUERYCLASSSTORE" value="0x01000000" />
-                <item const="SEE_MASK_HMONITOR" value="0x00200000" />
-                <item const="SEE_MASK_NOZONECHECKS" value="0x00800000" />
-                <item const="SEE_MASK_WAITFORINPUTIDLE" value="0x02000000" />
-                <item const="SEE_MASK_FLAG_LOG_USAGE" value="0x04000000" />
-            </dir>    
-            <dir name="Return" desc="ShellExecute Return Values">
-                <item const="SE_ERR_ACCESSDENIED" value="5" />
-                <item const="SE_ERR_ASSOCINCOMPLETE" value="27" />
-                <item const="SE_ERR_DDEBUSY" value="30" />
-                <item const="SE_ERR_DDEFAIL" value="29" />
-                <item const="SE_ERR_DDETIMEOUT" value="28" />
-                <item const="SE_ERR_DLLNOTFOUND" value="32" />
-                <item const="SE_ERR_FNF" value="2" />
-                <item const="SE_ERR_NOASSOC" value="31" />
-                <item const="SE_ERR_OOM" value="8" />
-                <item const="SE_ERR_PNF" value="3" />
-                <item const="SE_ERR_SHARE" value="26" />
+            <dir name="WinDNS.h">
             </dir>
         </dir>
 
-        <dir name="Tool Help" desc="CreateToolhelp32Snapshot dwFlags">
-            <dir name="CreateToolhelp32Snapshot" attrib="h">
-                <item const="TH32CS_SNAPHEAPLIST" value="0x00000001" />
-                <item const="TH32CS_SNAPPROCESS" value="0x00000002" />
-                <item const="TH32CS_SNAPTHREAD" value="0x00000004" />
-                <item const="TH32CS_SNAPMODULE" value="0x00000008" />
-                <item const="TH32CS_SNAPALL" value="0x0000000F" />
-                <item const="TH32CS_SNAPMODULE32" value="0x00000010" />
-                <item const="TH32CS_INHERIT" value="0x80000000" />
+        <dir name="Process">
+            <dir name="Access Rights" desc="Process Security and Access Rights">
+                <item const="PROCESS_TERMINATE" value="0x00000001" />
+                <item const="PROCESS_CREATE_THREAD" value="0x00000002" />
+                <item const="PROCESS_SET_SESSIONID" value="0x00000004" />
+                <item const="PROCESS_VM_OPERATION" value="0x00000008" />
+                <item const="PROCESS_VM_READ" value="0x00000010" />
+                <item const="PROCESS_VM_WRITE" value="0x00000020" />
+                <item const="PROCESS_DUP_HANDLE" value="0x00000040" />
+                <item const="PROCESS_CREATE_PROCESS" value="0x00000080" />
+                <item const="PROCESS_SET_QUOTA" value="0x00000100" />
+                <item const="PROCESS_SET_INFORMATION" value="0x00000200" />
+                <item const="PROCESS_QUERY_INFORMATION" value="0x00000400" />
+                <item const="PROCESS_QUERY_LIMITED_INFORMATION" value="0x1000" />
+                <item const="PROCESS_SUSPEND_RESUME" value="0x00000800" />
+                <item const="PROCESS_ALL_ACCESS" value="0x001F0FFF" />
             </dir>
-            <dir name="Flags" attrib="h">
-                <dir name="HEAPLIST32" attrib="h" desc="HEAPLIST32 dwFlags">
-                    <item const="HF32_DEFAULT" value="1" />
-                    <item const="HF32_SHARED" value="2" />
+            <dir name="Creation" desc="Parameters for CreateProcess()">
+                <item const="CREATE_BREAKAWAY_FROM_JOB" value="0x01000000" />
+                <item const="CREATE_DEFAULT_ERROR_MODE" value="0x04000000" />
+                <item const="CREATE_NEW_CONSOLE" value="0x00000010" />
+                <item const="CREATE_NEW_PROCESS_GROUP" value="0x00000200" />
+                <item const="CREATE_NO_WINDOW" value="0x08000000" />
+                <item const="CREATE_PROTECTED_PROCESS" value="0x00040000" />
+                <item const="CREATE_PRESERVE_CODE_AUTHZ_LEVEL" value="0x02000000" />
+                <item const="CREATE_SEPARATE_WOW_VDM" value="0x00000800" />
+                <item const="CREATE_SHARED_WOW_VDM" value="0x00001000" />
+                <item const="CREATE_SUSPENDED" value="0x00000004" />
+                <item const="CREATE_UNICODE_ENVIRONMENT" value="0x00000400" />
+            </dir>
+            <dir name="Startup Info" desc="Parameters for STARTUPINFO structure">
+                <item const="STARTF_FORCEOFFFEEDBACK" value="0x80" />
+                <item const="STARTF_FORCEONFEEDBACK" value="0x40" />
+                <item const="STARTF_PREVENTPINNING" value="0x00002000" />
+                <item const="STARTF_RUNFULLSCREEN" value="0x20" />
+                <item const="STARTF_TITLEISAPPID" value="0x00001000" />
+                <item const="STARTF_TITLEISLINKNAME" value="0x00000800" />
+                <item const="STARTF_USECOUNTCHARS" value="0x8" />
+                <item const="STARTF_USEFILLATTRIBUTE" value="0x10" />
+                <item const="STARTF_USEHOTKEY" value="0x200" />
+                <item const="STARTF_USEPOSITION" value="0x4" />
+                <item const="STARTF_USESHOWWINDOW" value="0x1" />
+                <item const="STARTF_USESIZE" value="0x2" />
+                <item const="STARTF_USESTDHANDLES" value="0x100" />
+            </dir>
+
+            <dir name="ShellExecute" desc="ShellExecute(), ShellExecuteEx()">
+                <dir name="Mask" desc="ShellExecuteEx fMask">
+                    <item const="SEE_MASK_DEFAULT" value="0x00000000" />
+                    <item const="SEE_MASK_CLASSNAME" value="0x00000001" />
+                    <item const="SEE_MASK_CLASSKEY" value="0x00000003" />
+                    <item const="SEE_MASK_IDLIST" value="0x00000004" />
+                    <item const="SEE_MASK_INVOKEIDLIST" value="0x0000000C" />
+                    <item const="SEE_MASK_ICON" value="0x00000010" />
+                    <item const="SEE_MASK_HOTKEY" value="0x00000020" />
+                    <item const="SEE_MASK_NOCLOSEPROCESS" value="0x00000040" />
+                    <item const="SEE_MASK_CONNECTNETDRV" value="0x00000080" />
+                    <item const="SEE_MASK_NOASYNC" value="0x00000100" />
+                    <item const="SEE_MASK_FLAG_DDEWAIT" value="0x00000100" />
+                    <item const="SEE_MASK_DOENVSUBST" value="0x00000200" />
+                    <item const="SEE_MASK_FLAG_NO_UI" value="0x00000400" />
+                    <item const="SEE_MASK_UNICODE" value="0x00004000" />
+                    <item const="SEE_MASK_NO_CONSOLE" value="0x00008000" />
+                    <item const="SEE_MASK_ASYNCOK" value="0x00100000" />
+                    <item const="SEE_MASK_NOQUERYCLASSSTORE" value="0x01000000" />
+                    <item const="SEE_MASK_HMONITOR" value="0x00200000" />
+                    <item const="SEE_MASK_NOZONECHECKS" value="0x00800000" />
+                    <item const="SEE_MASK_WAITFORINPUTIDLE" value="0x02000000" />
+                    <item const="SEE_MASK_FLAG_LOG_USAGE" value="0x04000000" />
                 </dir>    
-                <dir name="HEAPENTRY32" desc="HEAPENTRY32 dwFlags">
-                    <item const="LF32_FIXED" value="0x00000001" />
-                    <item const="LF32_FREE" value="0x00000002" />
-                    <item const="LF32_MOVEABLE" value="0x00000004" />
+                <dir name="Return" desc="ShellExecute Return Values">
+                    <item const="SE_ERR_ACCESSDENIED" value="5" />
+                    <item const="SE_ERR_ASSOCINCOMPLETE" value="27" />
+                    <item const="SE_ERR_DDEBUSY" value="30" />
+                    <item const="SE_ERR_DDEFAIL" value="29" />
+                    <item const="SE_ERR_DDETIMEOUT" value="28" />
+                    <item const="SE_ERR_DLLNOTFOUND" value="32" />
+                    <item const="SE_ERR_FNF" value="2" />
+                    <item const="SE_ERR_NOASSOC" value="31" />
+                    <item const="SE_ERR_OOM" value="8" />
+                    <item const="SE_ERR_PNF" value="3" />
+                    <item const="SE_ERR_SHARE" value="26" />
+                </dir>
+            </dir>
+
+            <dir name="Tool Help" desc="CreateToolhelp32Snapshot dwFlags">
+                <dir name="CreateToolhelp32Snapshot" attrib="h">
+                    <item const="TH32CS_SNAPHEAPLIST" value="0x00000001" />
+                    <item const="TH32CS_SNAPPROCESS" value="0x00000002" />
+                    <item const="TH32CS_SNAPTHREAD" value="0x00000004" />
+                    <item const="TH32CS_SNAPMODULE" value="0x00000008" />
+                    <item const="TH32CS_SNAPALL" value="0x0000000F" />
+                    <item const="TH32CS_SNAPMODULE32" value="0x00000010" />
+                    <item const="TH32CS_INHERIT" value="0x80000000" />
+                </dir>
+                <dir name="Flags" attrib="h">
+                    <dir name="HEAPLIST32" attrib="h" desc="HEAPLIST32 dwFlags">
+                        <item const="HF32_DEFAULT" value="1" />
+                        <item const="HF32_SHARED" value="2" />
+                    </dir>    
+                    <dir name="HEAPENTRY32" desc="HEAPENTRY32 dwFlags">
+                        <item const="LF32_FIXED" value="0x00000001" />
+                        <item const="LF32_FREE" value="0x00000002" />
+                        <item const="LF32_MOVEABLE" value="0x00000004" />
+                    </dir>
                 </dir>
             </dir>
         </dir>
 
-    </dir>
-
-    <dir name="Hook">
-        <dir name="Shell Hook" desc="RegisterShellHookWindow()">
-            <item const="HSHELL_WINDOWCREATED" value="1" />
-            <item const="HSHELL_WINDOWDESTROYED" value="2" />
-            <item const="HSHELL_ACTIVATESHELLWINDOW" value="3" />
-            <item const="HSHELL_WINDOWACTIVATED" value="4" />
-            <item const="HSHELL_GETMINRECT" value="5" />
-            <item const="HSHELL_REDRAW" value="6" />
-            <item const="HSHELL_TASKMAN" value="7" />
-            <item const="HSHELL_LANGUAGE" value="8" />
-            <item const="HSHELL_SYSMENU" value="9" />
-            <item const="HSHELL_ENDTASK" value="10" />
-            <item const="HSHELL_ACCESSIBILITYSTATE" value="11" />
-            <item const="HSHELL_APPCOMMAND" value="12" />
-            <item const="HSHELL_WINDOWREPLACED" value="13" />
-            <item const="HSHELL_WINDOWREPLACING" value="14" />
-            <item const="HSHELL_MONITORCHANGED" value="16" />
-            <item const="HSHELL_HIGHBIT" value="0x8000" />
-            <item const="HSHELL_RUDEAPPACTIVATED" value="0x8004" />
-            <item const="HSHELL_FLASH" value="0x8006" />
-        </dir>
-
-        <dir name="Event Hook">
-            <dir name="Events" desc="Event Constants (NotifyWinEvent and SetWinEventHook)">
-                <item const="EVENT_MIN" value="0x00000001" />
-                <item const="EVENT_SYSTEM_SOUND" value="0x00000001" />
-                <item const="EVENT_SYSTEM_ALERT" value="0x00000002" />
-                <item const="EVENT_SYSTEM_FOREGROUND" value="0x00000003" />
-                <item const="EVENT_SYSTEM_MENUSTART" value="0x00000004" />
-                <item const="EVENT_SYSTEM_MENUEND" value="0x00000005" />
-                <item const="EVENT_SYSTEM_MENUPOPUPSTART" value="0x00000006" />
-                <item const="EVENT_SYSTEM_MENUPOPUPEND" value="0x00000007" />
-                <item const="EVENT_SYSTEM_CAPTURESTART" value="0x00000008" />
-                <item const="EVENT_SYSTEM_CAPTUREEND" value="0x00000009" />
-                <item const="EVENT_SYSTEM_MOVESIZESTART" value="0x0000000A" />
-                <item const="EVENT_SYSTEM_MOVESIZEEND" value="0x0000000B" />
-                <item const="EVENT_SYSTEM_CONTEXTHELPSTART" value="0x0000000C" />
-                <item const="EVENT_SYSTEM_CONTEXTHELPEND" value="0x0000000D" />
-                <item const="EVENT_SYSTEM_DRAGDROPSTART" value="0x0000000E" />
-                <item const="EVENT_SYSTEM_DRAGDROPEND" value="0x0000000F" />
-                <item const="EVENT_SYSTEM_DIALOGSTART" value="0x00000010" />
-                <item const="EVENT_SYSTEM_DIALOGEND" value="0x00000011" />
-                <item const="EVENT_SYSTEM_SCROLLINGSTART" value="0x00000012" />
-                <item const="EVENT_SYSTEM_SCROLLINGEND" value="0x00000013" />
-                <item const="EVENT_SYSTEM_SWITCHSTART" value="0x00000014" />
-                <item const="EVENT_SYSTEM_SWITCHEND" value="0x00000015" />
-                <item const="EVENT_SYSTEM_MINIMIZESTART" value="0x00000016" />
-                <item const="EVENT_SYSTEM_MINIMIZEEND" value="0x00000017" />
-                <item const="EVENT_SYSTEM_DESKTOPSWITCH" value="0x00000020" />
-                <item const="EVENT_OBJECT_CREATE" value="0x00008000" />
-                <item const="EVENT_OBJECT_DESTROY" value="0x00008001" />
-                <item const="EVENT_OBJECT_SHOW" value="0x00008002" />
-                <item const="EVENT_OBJECT_HIDE" value="0x00008003" />
-                <item const="EVENT_OBJECT_REORDER" value="0x00008004" />
-                <item const="EVENT_OBJECT_FOCUS" value="0x00008005" />
-                <item const="EVENT_OBJECT_SELECTION" value="0x00008006" />
-                <item const="EVENT_OBJECT_SELECTIONADD" value="0x00008007" />
-                <item const="EVENT_OBJECT_SELECTIONREMOVE" value="0x00008008" />
-                <item const="EVENT_OBJECT_SELECTIONWITHIN" value="0x00008009" />
-                <item const="EVENT_OBJECT_STATECHANGE" value="0x0000800A" />
-                <item const="EVENT_OBJECT_LOCATIONCHANGE" value="0x0000800B" />
-                <item const="EVENT_OBJECT_NAMECHANGE" value="0x0000800C" />
-                <item const="EVENT_OBJECT_DESCRIPTIONCHANGE" value="0x0000800D" />
-                <item const="EVENT_OBJECT_VALUECHANGE" value="0x0000800E" />
-                <item const="EVENT_OBJECT_PARENTCHANGE" value="0x0000800F" />
-                <item const="EVENT_OBJECT_HELPCHANGE" value="0x00008010" />
-                <item const="EVENT_OBJECT_DEFACTIONCHANGE" value="0x00008011" />
-                <item const="EVENT_OBJECT_ACCELERATORCHANGE" value="0x00008012" />
-                <item const="EVENT_OBJECT_INVOKED" value="0x00008013" />
-                <item const="EVENT_OBJECT_TEXTSELECTIONCHANGED" value="0x00008014" />
-                <item const="EVENT_OBJECT_CONTENTSCROLLED" value="0x00008015" />
-                <item const="EVENT_MAX" value="0x7FFFFFFF" />
+        <dir name="Hook">
+            <dir name="Shell Hook" desc="RegisterShellHookWindow()">
+                <item const="HSHELL_WINDOWCREATED" value="1" />
+                <item const="HSHELL_WINDOWDESTROYED" value="2" />
+                <item const="HSHELL_ACTIVATESHELLWINDOW" value="3" />
+                <item const="HSHELL_WINDOWACTIVATED" value="4" />
+                <item const="HSHELL_GETMINRECT" value="5" />
+                <item const="HSHELL_REDRAW" value="6" />
+                <item const="HSHELL_TASKMAN" value="7" />
+                <item const="HSHELL_LANGUAGE" value="8" />
+                <item const="HSHELL_SYSMENU" value="9" />
+                <item const="HSHELL_ENDTASK" value="10" />
+                <item const="HSHELL_ACCESSIBILITYSTATE" value="11" />
+                <item const="HSHELL_APPCOMMAND" value="12" />
+                <item const="HSHELL_WINDOWREPLACED" value="13" />
+                <item const="HSHELL_WINDOWREPLACING" value="14" />
+                <item const="HSHELL_MONITORCHANGED" value="16" />
+                <item const="HSHELL_HIGHBIT" value="0x8000" />
+                <item const="HSHELL_RUDEAPPACTIVATED" value="0x8004" />
+                <item const="HSHELL_FLASH" value="0x8006" />
             </dir>
-            <dir name="Flags" desc="SetWinEventHook dwFlags">
-                <item const="WINEVENT_INCONTEXT" value="0x04" />
-                <item const="WINEVENT_OUTOFCONTEXT" value="0x00" />
-                <item const="WINEVENT_SKIPOWNPROCESS" value="0x02" />
-                <item const="WINEVENT_SKIPOWNTHREAD" value="0x01" />
-            </dir>
-        </dir>
-        <dir name="Windows Hook" desc="SetWindowsHookEx idHook">
-            <item const="WH_MIN" value="-1" />
-            <item const="WH_MSGFILTER" value="-1" />
-            <item const="WH_JOURNALRECORD" value="0" />
-            <item const="WH_JOURNALPLAYBACK" value="1" />
-            <item const="WH_KEYBOARD" value="2" />
-            <item const="WH_GETMESSAGE" value="3" />
-            <item const="WH_CALLWNDPROC" value="4" />
-            <item const="WH_CBT" value="5" />
-            <item const="WH_SYSMSGFILTER" value="6" />
-            <item const="WH_MOUSE" value="7" />
-            <item const="WH_HARDWARE" value="8" />
-            <item const="WH_DEBUG" value="9" />
-            <item const="WH_SHELL" value="10" />
-            <item const="WH_FOREGROUNDIDLE" value="11" />
-            <item const="WH_CALLWNDPROCRET" value="12" />
-            <item const="WH_KEYBOARD_LL" value="13" />
-            <item const="WH_MOUSE_LL" value="14" />
-            <item const="WH_MAX" value="14" />
-            <item const="WH_MINHOOK" value="-1" />
-            <item const="WH_MAXHOOK" value="14" />
-            <dir attrib="h" desc="WH_MSGFILTER Filter Proc Codes">
-                <item const="MSGF_DIALOGBOX" value="0" />
-                <item const="MSGF_MESSAGEBOX" value="1" />
-                <item const="MSGF_MENU" value="2" />
-                <item const="MSGF_SCROLLBAR" value="5" />
-                <item const="MSGF_NEXTWINDOW" value="6" />
-                <item const="MSGF_MAX" value="8" />
-                <item const="MSGF_USER" value="4096" />
-            </dir>
-        </dir>
 
-        <dir name="Uncategorized">
-            <dir name="Hook Codes">
-                <item const="HC_ACTION" value="0" />
-                <item const="HC_GETNEXT" value="1" />
-                <item const="HC_SKIP" value="2" />
-                <item const="HC_NOREMOVE" value="3" />
-                <item const="HC_NOREM" value="3" />
-                <item const="HC_SYSMODALON" value="4" />
-                <item const="HC_SYSMODALOFF" value="5" />
-            </dir>
-        </dir>
-    </dir>
-
-    <dir name="Security">
-        <dir name="Access Tokens" desc="Access Rights for Access-Token Objects">
-            <item const="TOKEN_ASSIGN_PRIMARY" value="0x0001" />
-            <item const="TOKEN_DUPLICATE" value="0x0002" />
-            <item const="TOKEN_IMPERSONATE" value="0x0004" />
-            <item const="TOKEN_QUERY" value="0x0008" />
-            <item const="TOKEN_QUERY_SOURCE" value="0x0010" />
-            <item const="TOKEN_ADJUST_PRIVILEGES" value="0x0020" />
-            <item const="TOKEN_ADJUST_GROUPS" value="0x0040" />
-            <item const="TOKEN_ADJUST_DEFAULT" value="0x0080" />
-            <item const="TOKEN_ADJUST_SESSIONID" value="0x0100" />
-            <item const="TOKEN_READ" value="0x20008" />
-            <item const="TOKEN_WRITE" value="0x200E0" />
-            <item const="TOKEN_EXECUTE" value="0x20000" />
-            <item const="TOKEN_ALL_ACCESS_P" value="0xF00FF" />
-            <item const="TOKEN_ALL_ACCESS" value="0xF01FF" />
-        </dir>
-
-        <dir name="Authentication">
-            <dir name="CredUI Prompt">
-                <dir attrib="h" name="Old Version" desc="CredUIPromptForCredentials dwFlags">
-                    <item const="CREDUI_FLAGS_INCORRECT_PASSWORD" value="0x00001" />
-                    <item const="CREDUI_FLAGS_DO_NOT_PERSIST" value="0x00002" />
-                    <item const="CREDUI_FLAGS_REQUEST_ADMINISTRATOR" value="0x00004" />
-                    <item const="CREDUI_FLAGS_EXCLUDE_CERTIFICATES" value="0x00008" />
-                    <item const="CREDUI_FLAGS_REQUIRE_CERTIFICATE" value="0x00010" />
-                    <item const="CREDUI_FLAGS_SHOW_SAVE_CHECK_BOX" value="0x00040" />
-                    <item const="CREDUI_FLAGS_ALWAYS_SHOW_UI" value="0x00080" />
-                    <item const="CREDUI_FLAGS_REQUIRE_SMARTCARD" value="0x00100" />
-                    <item const="CREDUI_FLAGS_PASSWORD_ONLY_OK" value="0x00200" />
-                    <item const="CREDUI_FLAGS_VALIDATE_USERNAME" value="0x00400" />
-                    <item const="CREDUI_FLAGS_COMPLETE_USERNAME" value="0x00800" />
-                    <item const="CREDUI_FLAGS_PERSIST" value="0x01000" />
-                    <item const="CREDUI_FLAGS_SERVER_CREDENTIAL" value="0x04000" />
-                    <item const="CREDUI_FLAGS_EXPECT_CONFIRMATION" value="0x20000" />
-                    <item const="CREDUI_FLAGS_GENERIC_CREDENTIALS" value="0x40000" />
-                    <item const="CREDUI_FLAGS_USERNAME_TARGET_CREDENTIALS" value="0x80000" />
-                    <item const="CREDUI_FLAGS_KEEP_USERNAME" value="0x100000" />
-                    <item const="CREDUI_FLAGS_PROMPT_VALID" value="0x1E5FDF" />
+            <dir name="Event Hook">
+                <dir name="Events" desc="Event Constants (NotifyWinEvent and SetWinEventHook)">
+                    <item const="EVENT_MIN" value="0x00000001" />
+                    <item const="EVENT_SYSTEM_SOUND" value="0x00000001" />
+                    <item const="EVENT_SYSTEM_ALERT" value="0x00000002" />
+                    <item const="EVENT_SYSTEM_FOREGROUND" value="0x00000003" />
+                    <item const="EVENT_SYSTEM_MENUSTART" value="0x00000004" />
+                    <item const="EVENT_SYSTEM_MENUEND" value="0x00000005" />
+                    <item const="EVENT_SYSTEM_MENUPOPUPSTART" value="0x00000006" />
+                    <item const="EVENT_SYSTEM_MENUPOPUPEND" value="0x00000007" />
+                    <item const="EVENT_SYSTEM_CAPTURESTART" value="0x00000008" />
+                    <item const="EVENT_SYSTEM_CAPTUREEND" value="0x00000009" />
+                    <item const="EVENT_SYSTEM_MOVESIZESTART" value="0x0000000A" />
+                    <item const="EVENT_SYSTEM_MOVESIZEEND" value="0x0000000B" />
+                    <item const="EVENT_SYSTEM_CONTEXTHELPSTART" value="0x0000000C" />
+                    <item const="EVENT_SYSTEM_CONTEXTHELPEND" value="0x0000000D" />
+                    <item const="EVENT_SYSTEM_DRAGDROPSTART" value="0x0000000E" />
+                    <item const="EVENT_SYSTEM_DRAGDROPEND" value="0x0000000F" />
+                    <item const="EVENT_SYSTEM_DIALOGSTART" value="0x00000010" />
+                    <item const="EVENT_SYSTEM_DIALOGEND" value="0x00000011" />
+                    <item const="EVENT_SYSTEM_SCROLLINGSTART" value="0x00000012" />
+                    <item const="EVENT_SYSTEM_SCROLLINGEND" value="0x00000013" />
+                    <item const="EVENT_SYSTEM_SWITCHSTART" value="0x00000014" />
+                    <item const="EVENT_SYSTEM_SWITCHEND" value="0x00000015" />
+                    <item const="EVENT_SYSTEM_MINIMIZESTART" value="0x00000016" />
+                    <item const="EVENT_SYSTEM_MINIMIZEEND" value="0x00000017" />
+                    <item const="EVENT_SYSTEM_DESKTOPSWITCH" value="0x00000020" />
+                    <item const="EVENT_OBJECT_CREATE" value="0x00008000" />
+                    <item const="EVENT_OBJECT_DESTROY" value="0x00008001" />
+                    <item const="EVENT_OBJECT_SHOW" value="0x00008002" />
+                    <item const="EVENT_OBJECT_HIDE" value="0x00008003" />
+                    <item const="EVENT_OBJECT_REORDER" value="0x00008004" />
+                    <item const="EVENT_OBJECT_FOCUS" value="0x00008005" />
+                    <item const="EVENT_OBJECT_SELECTION" value="0x00008006" />
+                    <item const="EVENT_OBJECT_SELECTIONADD" value="0x00008007" />
+                    <item const="EVENT_OBJECT_SELECTIONREMOVE" value="0x00008008" />
+                    <item const="EVENT_OBJECT_SELECTIONWITHIN" value="0x00008009" />
+                    <item const="EVENT_OBJECT_STATECHANGE" value="0x0000800A" />
+                    <item const="EVENT_OBJECT_LOCATIONCHANGE" value="0x0000800B" />
+                    <item const="EVENT_OBJECT_NAMECHANGE" value="0x0000800C" />
+                    <item const="EVENT_OBJECT_DESCRIPTIONCHANGE" value="0x0000800D" />
+                    <item const="EVENT_OBJECT_VALUECHANGE" value="0x0000800E" />
+                    <item const="EVENT_OBJECT_PARENTCHANGE" value="0x0000800F" />
+                    <item const="EVENT_OBJECT_HELPCHANGE" value="0x00008010" />
+                    <item const="EVENT_OBJECT_DEFACTIONCHANGE" value="0x00008011" />
+                    <item const="EVENT_OBJECT_ACCELERATORCHANGE" value="0x00008012" />
+                    <item const="EVENT_OBJECT_INVOKED" value="0x00008013" />
+                    <item const="EVENT_OBJECT_TEXTSELECTIONCHANGED" value="0x00008014" />
+                    <item const="EVENT_OBJECT_CONTENTSCROLLED" value="0x00008015" />
+                    <item const="EVENT_MAX" value="0x7FFFFFFF" />
                 </dir>
-                <dir attrib="h" name="New Version" desc="CredUIPromptForWindowsCredentials dwFlags">
-                    <item const="CREDUIWIN_GENERIC" value="0x00000001" />
-                    <item const="CREDUIWIN_CHECKBOX" value="0x00000002" />
-                    <item const="CREDUIWIN_AUTHPACKAGE_ONLY" value="0x00000010" />
-                    <item const="CREDUIWIN_IN_CRED_ONLY" value="0x00000020" />
-                    <item const="CREDUIWIN_ENUMERATE_ADMINS" value="0x00000100" />
-                    <item const="CREDUIWIN_ENUMERATE_CURRENT_USER" value="0x00000200" />
-                    <item const="CREDUIWIN_SECURE_PROMPT" value="0x00001000" />
-                    <item const="CREDUIWIN_PACK_32_WOW" value="0x10000000" />
-                    <item const="CREDUIWIN_VALID_FLAGS" value="0x10001333" />
+                <dir name="Flags" desc="SetWinEventHook dwFlags">
+                    <item const="WINEVENT_INCONTEXT" value="0x04" />
+                    <item const="WINEVENT_OUTOFCONTEXT" value="0x00" />
+                    <item const="WINEVENT_SKIPOWNPROCESS" value="0x02" />
+                    <item const="WINEVENT_SKIPOWNTHREAD" value="0x01" />
+                </dir>
+            </dir>
+            <dir name="Windows Hook" desc="SetWindowsHookEx idHook">
+                <item const="WH_MIN" value="-1" />
+                <item const="WH_MSGFILTER" value="-1" />
+                <item const="WH_JOURNALRECORD" value="0" />
+                <item const="WH_JOURNALPLAYBACK" value="1" />
+                <item const="WH_KEYBOARD" value="2" />
+                <item const="WH_GETMESSAGE" value="3" />
+                <item const="WH_CALLWNDPROC" value="4" />
+                <item const="WH_CBT" value="5" />
+                <item const="WH_SYSMSGFILTER" value="6" />
+                <item const="WH_MOUSE" value="7" />
+                <item const="WH_HARDWARE" value="8" />
+                <item const="WH_DEBUG" value="9" />
+                <item const="WH_SHELL" value="10" />
+                <item const="WH_FOREGROUNDIDLE" value="11" />
+                <item const="WH_CALLWNDPROCRET" value="12" />
+                <item const="WH_KEYBOARD_LL" value="13" />
+                <item const="WH_MOUSE_LL" value="14" />
+                <item const="WH_MAX" value="14" />
+                <item const="WH_MINHOOK" value="-1" />
+                <item const="WH_MAXHOOK" value="14" />
+                <dir attrib="h" desc="WH_MSGFILTER Filter Proc Codes">
+                    <item const="MSGF_DIALOGBOX" value="0" />
+                    <item const="MSGF_MESSAGEBOX" value="1" />
+                    <item const="MSGF_MENU" value="2" />
+                    <item const="MSGF_SCROLLBAR" value="5" />
+                    <item const="MSGF_NEXTWINDOW" value="6" />
+                    <item const="MSGF_MAX" value="8" />
+                    <item const="MSGF_USER" value="4096" />
+                </dir>
+            </dir>
+
+            <dir name="Uncategorized">
+                <dir name="Hook Codes">
+                    <item const="HC_ACTION" value="0" />
+                    <item const="HC_GETNEXT" value="1" />
+                    <item const="HC_SKIP" value="2" />
+                    <item const="HC_NOREMOVE" value="3" />
+                    <item const="HC_NOREM" value="3" />
+                    <item const="HC_SYSMODALON" value="4" />
+                    <item const="HC_SYSMODALOFF" value="5" />
                 </dir>
             </dir>
         </dir>
 
-        <dir name="Privileges" attrib="h">
-        </dir>
-
-        <dir name="Restrictions" desc="Parameters for SHRestricted()">
-            <item const="REST_NORUN" value="1" />
-            <item const="REST_NOCLOSE" value="2" />
-            <item const="REST_NOSAVESET" value="3" />
-            <item const="REST_NOFILEMENU" value="4" />
-            <item const="REST_NOSETFOLDERS" value="5" />
-            <item const="REST_NOSETTASKBAR" value="6" />
-            <item const="REST_NODESKTOP" value="7" />
-            <item const="REST_NOFIND" value="8" />
-            <item const="REST_NODRIVES" value="9" />
-            <item const="REST_NODRIVEAUTORUN" value="10" />
-            <item const="REST_NODRIVETYPEAUTORUN" value="11" />
-            <item const="REST_NONETHOOD" value="12" />
-            <item const="REST_STARTBANNER" value="13" />
-            <item const="REST_RESTRICTRUN" value="14" />
-            <item const="REST_NOPRINTERTABS" value="15" />
-            <item const="REST_NOPRINTERDELETE" value="16" />
-            <item const="REST_NOPRINTERADD" value="17" />
-            <item const="REST_NOSTARTMENUSUBFOLDERS" value="18" />
-            <item const="REST_MYDOCSONNET" value="19" />
-            <item const="REST_NOEXITTODOS" value="20" />
-            <item const="REST_ENFORCESHELLEXTSECURITY" value="21" />
-            <item const="REST_LINKRESOLVEIGNORELINKINFO" value="22" />
-            <item const="REST_NOCOMMONGROUPS" value="23" />
-            <item const="REST_SEPARATEDESKTOPPROCESS" value="24" />
-            <item const="REST_NOWEB" value="25" />
-            <item const="REST_NOTRAYCONTEXTMENU" value="26" />
-            <item const="REST_NOVIEWCONTEXTMENU" value="27" />
-            <item const="REST_NONETCONNECTDISCONNECT" value="28" />
-            <item const="REST_STARTMENULOGOFF" value="29" />
-            <item const="REST_NOSETTINGSASSIST" value="30" />
-            <item const="REST_NOINTERNETICON" value="31" />
-            <item const="REST_NORECENTDOCSHISTORY" value="32" />
-            <item const="REST_NORECENTDOCSMENU" value="33" />
-            <item const="REST_NOACTIVEDESKTOP" value="34" />
-            <item const="REST_NOACTIVEDESKTOPCHANGES" value="35" />
-            <item const="REST_NOFAVORITESMENU" value="36" />
-            <item const="REST_CLEARRECENTDOCSONEXIT" value="37" />
-            <item const="REST_CLASSICSHELL" value="38" />
-            <item const="REST_NOCUSTOMIZEWEBVIEW" value="39" />
-            <item const="REST_NOHTMLWALLPAPER" value="40" />
-            <item const="REST_NOCHANGINGWALLPAPER" value="41" />
-            <item const="REST_NODESKCOMP" value="42" />
-            <item const="REST_NOADDDESKCOMP" value="43" />
-            <item const="REST_NODELDESKCOMP" value="44" />
-            <item const="REST_NOCLOSEDESKCOMP" value="45" />
-            <item const="REST_NOCLOSE_DRAGDROPBAND" value="46" />
-            <item const="REST_NOMOVINGBAND" value="47" />
-            <item const="REST_NOEDITDESKCOMP" value="48" />
-            <item const="REST_NORESOLVESEARCH" value="49" />
-            <item const="REST_NORESOLVETRACK" value="50" />
-            <item const="REST_FORCECOPYACLWITHFILE" value="51" />
-            <item const="REST_NOLOGO3CHANNELNOTIFY" value="52" />
-            <item const="REST_NOFORGETSOFTWAREUPDATE" value="53" />
-            <item const="REST_NOSETACTIVEDESKTOP" value="54" />
-            <item const="REST_NOUPDATEWINDOWS" value="55" />
-            <item const="REST_NOCHANGESTARMENU" value="56" />
-            <item const="REST_NOFOLDEROPTIONS" value="57" />
-            <item const="REST_HASFINDCOMPUTERS" value="58" />
-            <item const="REST_INTELLIMENUS" value="59" />
-            <item const="REST_RUNDLGMEMCHECKBOX" value="60" />
-            <item const="REST_ARP_ShowPostSetup" value="61" />
-            <item const="REST_NOCSC" value="62" />
-            <item const="REST_NOCONTROLPANEL" value="63" />
-            <item const="REST_ENUMWORKGROUP" value="64" />
-            <item const="REST_ARP_NOARP" value="65" />
-            <item const="REST_ARP_NOREMOVEPAGE" value="66" />
-            <item const="REST_ARP_NOADDPAGE" value="67" />
-            <item const="REST_ARP_NOWINSETUPPAGE" value="68" />
-            <item const="REST_GREYMSIADS" value="69" />
-            <item const="REST_NOCHANGEMAPPEDDRIVELABEL" value="70" />
-            <item const="REST_NOCHANGEMAPPEDDRIVECOMMENT" value="71" />
-            <item const="REST_MAXRECENTDOCS" value="72" />
-            <item const="REST_NONETWORKCONNECTIONS" value="73" />
-            <item const="REST_FORCESTARTMENULOGOFF" value="74" />
-            <item const="REST_NOWEBVIEW" value="75" />
-            <item const="REST_NOCUSTOMIZETHISFOLDER" value="76" />
-            <item const="REST_NOENCRYPTION" value="77" />
-            <item const="REST_DONTSHOWSUPERHIDDEN" value="78" />
-            <item const="REST_NOSHELLSEARCHBUTTON" value="79" />
-            <item const="REST_NOHARDWARETAB" value="80" />
-            <item const="REST_NORUNASINSTALLPROMPT" value="81" />
-            <item const="REST_PROMPTRUNASINSTALLNETPATH" value="82" />
-            <item const="REST_NOMANAGEMYCOMPUTERVERB" value="83" />
-            <item const="REST_NORECENTDOCSNETHOOD" value="84" />
-            <item const="REST_DISALLOWRUN" value="85" />
-            <item const="REST_NOWELCOMESCREEN" value="86" />
-            <item const="REST_RESTRICTCPL" value="87" />
-            <item const="REST_DISALLOWCPL" value="88" />
-            <item const="REST_NOSMBALLOONTIP" value="89" />
-            <item const="REST_NOSMHELP" value="90" />
-            <item const="REST_NOWINKEYS" value="91" />
-            <item const="REST_NOENCRYPTONMOVE" value="92" />
-            <item const="REST_NOLOCALMACHINERUN" value="93" />
-            <item const="REST_NOCURRENTUSERRUN" value="94" />
-            <item const="REST_NOLOCALMACHINERUNONCE" value="95" />
-            <item const="REST_NOCURRENTUSERRUNONCE" value="96" />
-            <item const="REST_FORCEACTIVEDESKTOPON" value="97" />
-            <item const="REST_NOCOMPUTERSNEARME" value="98" />
-            <item const="REST_NOVIEWONDRIVE" value="99" />
-            <item const="REST_NONETCRAWL" value="100" />
-            <item const="REST_NOSHAREDDOCUMENTS" value="101" />
-            <item const="REST_NOSMMYDOCS" value="102" />
-            <item const="REST_NOSMMYPICS" value="103" />
-            <item const="REST_ALLOWBITBUCKDRIVES" value="104" />
-            <item const="REST_NONLEGACYSHELLMODE" value="105" />
-            <item const="REST_NOCONTROLPANELBARRICADE" value="106" />
-            <item const="REST_NOSTARTPAGE" value="107" />
-            <item const="REST_NOAUTOTRAYNOTIFY" value="108" />
-            <item const="REST_NOTASKGROUPING" value="109" />
-            <item const="REST_NOCDBURNING" value="110" />
-            <item const="REST_MYCOMPNOPROP" value="111" />
-            <item const="REST_MYDOCSNOPROP" value="112" />
-            <item const="REST_NOSTARTPANEL" value="113" />
-            <item const="REST_NODISPLAYAPPEARANCEPAGE" value="114" />
-            <item const="REST_NOTHEMESTAB" value="115" />
-            <item const="REST_NOVISUALSTYLECHOICE" value="116" />
-            <item const="REST_NOSIZECHOICE" value="117" />
-            <item const="REST_NOCOLORCHOICE" value="118" />
-            <item const="REST_SETVISUALSTYLE" value="119" />
-            <item const="REST_STARTRUNNOHOMEPATH" value="120" />
-            <item const="REST_NOUSERNAMEINSTARTPANEL" value="121" />
-            <item const="REST_NOMYCOMPUTERICON" value="122" />
-            <item const="REST_NOSMNETWORKPLACES" value="123" />
-            <item const="REST_NOSMPINNEDLIST" value="124" />
-            <item const="REST_NOSMMYMUSIC" value="125" />
-            <item const="REST_NOSMEJECTPC" value="126" />
-            <item const="REST_NOSMMOREPROGRAMS" value="127" />
-            <item const="REST_NOSMMFUPROGRAMS" value="128" />
-            <item const="REST_NOTRAYITEMSDISPLAY" value="129" />
-            <item const="REST_NOTOOLBARSONTASKBAR" value="130" />
-            <item const="REST_NOSMCONFIGUREPROGRAMS" value="131" />
-            <item const="REST_HIDECLOCK" value="132" />
-            <item const="REST_NOLOWDISKSPACECHECKS" value="133" />
-            <item const="REST_NOENTIRENETWORK" value="134" />
-            <item const="REST_NODESKTOPCLEANUP" value="135" />
-            <item const="REST_BITBUCKNUKEONDELETE" value="136" />
-            <item const="REST_BITBUCKCONFIRMDELETE" value="137" />
-            <item const="REST_BITBUCKNOPROP" value="138" />
-            <item const="REST_NODISPBACKGROUND" value="139" />
-            <item const="REST_NODISPSCREENSAVEPG" value="140" />
-            <item const="REST_NODISPSETTINGSPG" value="141" />
-            <item const="REST_NODISPSCREENSAVEPREVIEW" value="142" />
-            <item const="REST_NODISPLAYCPL" value="143" />
-            <item const="REST_HIDERUNASVERB" value="144" />
-            <item const="REST_NOTHUMBNAILCACHE" value="145" />
-            <item const="REST_NOSTRCMPLOGICAL" value="146" />
-            <item const="REST_NOPUBLISHWIZARD" value="147" />
-            <item const="REST_NOONLINEPRINTSWIZARD" value="148" />
-            <item const="REST_NOWEBSERVICES" value="149" />
-            <item const="REST_ALLOWUNHASHEDWEBVIEW" value="150" />
-            <item const="REST_ALLOWLEGACYWEBVIEW" value="151" />
-            <item const="REST_REVERTWEBVIEWSECURITY" value="152" />
-            <item const="REST_INHERITCONSOLEHANDLES" value="153" />
-            <item const="REST_SORTMAXITEMCOUNT" value="154" />
-            <item const="REST_NOREMOTERECURSIVEEVENTS" value="155" />
-            <item const="REST_NOREMOTECHANGENOTIFY" value="156" />
-            <item const="REST_NOSIMPLENETIDLIST" value="157" />
-            <item const="REST_NOENUMENTIRENETWORK" value="158" />
-            <item const="REST_NODETAILSTHUMBNAILONNETWORK" value="159" />
-            <item const="REST_NOINTERNETOPENWITH" value="160" />
-            <item const="REST_ALLOWLEGACYLMZBEHAVIOR" value="161" />
-            <item const="REST_DONTRETRYBADNETNAME" value="162" />
-            <item const="REST_ALLOWFILECLSIDJUNCTIONS" value="163" />
-            <item const="REST_NOUPNPINSTALL" value="164" />
-            <item const="REST_ARP_DONTGROUPPATCHES" value="165" />
-            <item const="REST_ARP_NOCHOOSEPROGRAMSPAGE" value="166" />
-            <item const="REST_NODISCONNECT" value="167" />
-            <item const="REST_NOSECURITY" value="168" />
-            <item const="REST_NOFILEASSOCIATE" value="169" />
-            <item const="REST_ALLOWCOMMENTTOGGLE" value="170" />
-            <item const="REST_USEDESKTOPINICACHE" value="171" />
-        </dir>
-    </dir>
-
-
-    <dir name="Service">
-        <dir name="Service Type">
-            <item const="SERVICE_KERNEL_DRIVER" value="0x00000001" />
-            <item const="SERVICE_FILE_SYSTEM_DRIVER" value="0x00000002" />
-            <item const="SERVICE_ADAPTER" value="0x00000004" />
-            <item const="SERVICE_RECOGNIZER_DRIVER" value="0x00000008" />
-            <item const="SERVICE_DRIVER" value="0x0000000B" />
-            <item const="SERVICE_WIN32_OWN_PROCESS" value="0x00000010" />
-            <item const="SERVICE_WIN32" value="0x00000030" />
-            <item const="SERVICE_TYPE_ALL" value="0x0000013F" />
-            <item const="SERVICE_WIN32_SHARE_PROCESS" value="0x00000020" />
-            <item const="SERVICE_INTERACTIVE_PROCESS" value="0x00000100" />
-        </dir>
-        
-        <dir name="Start Type" desc="Service Start Type">
-            <item const="SERVICE_BOOT_START" value="0x00000000" />
-            <item const="SERVICE_SYSTEM_START" value="0x00000001" />
-            <item const="SERVICE_AUTO_START" value="0x00000002" />
-            <item const="SERVICE_DEMAND_START" value="0x00000003" />
-            <item const="SERVICE_DISABLED" value="0x00000004" />
-        </dir>
-
-        <dir name="State" desc="Service State">
-            <item const="SERVICE_STOPPED" value="0x00000001" />
-            <item const="SERVICE_START_PENDING" value="0x00000002" />
-            <item const="SERVICE_STOP_PENDING" value="0x00000003" />
-            <item const="SERVICE_RUNNING" value="0x00000004" />
-            <item const="SERVICE_CONTINUE_PENDING" value="0x00000005" />
-            <item const="SERVICE_PAUSE_PENDING" value="0x00000006" />
-            <item const="SERVICE_PAUSED" value="0x00000007" />
-        </dir>
-
-        <dir name="Control Codes" desc="Service Control Codes">
-            <item const="SERVICE_CONTROL_STOP" value="0x00000001" />
-            <item const="SERVICE_CONTROL_PAUSE" value="0x00000002" />
-            <item const="SERVICE_CONTROL_CONTINUE" value="0x00000003" />
-            <item const="SERVICE_CONTROL_INTERROGATE" value="0x00000004" />
-            <item const="SERVICE_CONTROL_SHUTDOWN" value="0x00000005" />
-            <item const="SERVICE_CONTROL_PARAMCHANGE" value="0x00000006" />
-            <item const="SERVICE_CONTROL_NETBINDADD" value="0x00000007" />
-            <item const="SERVICE_CONTROL_NETBINDREMOVE" value="0x00000008" />
-            <item const="SERVICE_CONTROL_NETBINDENABLE" value="0x00000009" />
-            <item const="SERVICE_CONTROL_NETBINDDISABLE" value="0x0000000A" />
-            <item const="SERVICE_CONTROL_DEVICEEVENT" value="0x0000000B" />
-            <item const="SERVICE_CONTROL_HARDWAREPROFILECHANGE" value="0x0000000C" />
-            <item const="SERVICE_CONTROL_POWEREVENT" value="0x0000000D" />
-            <item const="SERVICE_CONTROL_SESSIONCHANGE" value="0x0000000E" />
-            <item const="SERVICE_CONTROL_PRESHUTDOWN" value="0x0000000F" />
-            <item const="SERVICE_CONTROL_TIMECHANGE" value="0x00000010" />
-            <item const="SERVICE_CONTROL_TRIGGEREVENT" value="0x00000020" />
-        </dir>
-
-        <dir name="Controls Accepted" desc="Service Control Codes Accepted">
-            <item const="SERVICE_ACCEPT_STOP" value="0x00000001" />
-            <item const="SERVICE_ACCEPT_PAUSE_CONTINUE" value="0x00000002" />
-            <item const="SERVICE_ACCEPT_SHUTDOWN" value="0x00000004" />
-            <item const="SERVICE_ACCEPT_PARAMCHANGE" value="0x00000008" />
-            <item const="SERVICE_ACCEPT_NETBINDCHANGE" value="0x00000010" />
-            <item const="SERVICE_ACCEPT_HARDWAREPROFILECHANGE" value="0x00000020" />
-            <item const="SERVICE_ACCEPT_POWEREVENT" value="0x00000040" />
-            <item const="SERVICE_ACCEPT_SESSIONCHANGE" value="0x00000080" />
-            <item const="SERVICE_ACCEPT_PRESHUTDOWN" value="0x00000100" />
-            <item const="SERVICE_ACCEPT_TIMECHANGE" value="0x00000200" />
-            <item const="SERVICE_ACCEPT_TRIGGEREVENT" value="0x00000400" />
-        </dir>
-
-        <dir name="Access Rights">
-            <dir name="Service" desc="Service Access Rights">
-                <item const="SERVICE_QUERY_CONFIG" value="0x0001" />
-                <item const="SERVICE_CHANGE_CONFIG" value="0x0002" />
-                <item const="SERVICE_QUERY_STATUS" value="0x0004" />
-                <item const="SERVICE_ENUMERATE_DEPENDENTS" value="0x0008" />
-                <item const="SERVICE_START" value="0x0010" />
-                <item const="SERVICE_STOP" value="0x0020" />
-                <item const="SERVICE_PAUSE_CONTINUE" value="0x0040" />
-                <item const="SERVICE_INTERROGATE" value="0x0080" />
-                <item const="SERVICE_USER_DEFINED_CONTROL" value="0x0100" />
-                <item const="SERVICE_ALL_ACCESS" value="0xF01FF" />
+        <dir name="Security">
+            <dir name="Access Tokens" desc="Access Rights for Access-Token Objects">
+                <item const="TOKEN_ASSIGN_PRIMARY" value="0x0001" />
+                <item const="TOKEN_DUPLICATE" value="0x0002" />
+                <item const="TOKEN_IMPERSONATE" value="0x0004" />
+                <item const="TOKEN_QUERY" value="0x0008" />
+                <item const="TOKEN_QUERY_SOURCE" value="0x0010" />
+                <item const="TOKEN_ADJUST_PRIVILEGES" value="0x0020" />
+                <item const="TOKEN_ADJUST_GROUPS" value="0x0040" />
+                <item const="TOKEN_ADJUST_DEFAULT" value="0x0080" />
+                <item const="TOKEN_ADJUST_SESSIONID" value="0x0100" />
+                <item const="TOKEN_READ" value="0x20008" />
+                <item const="TOKEN_WRITE" value="0x200E0" />
+                <item const="TOKEN_EXECUTE" value="0x20000" />
+                <item const="TOKEN_ALL_ACCESS_P" value="0xF00FF" />
+                <item const="TOKEN_ALL_ACCESS" value="0xF01FF" />
             </dir>
-            <dir name="SCM" desc="Access Rights for the Service Control Manager">
-                <item const="SC_MANAGER_CONNECT" value="0x0001" />
-                <item const="SC_MANAGER_CREATE_SERVICE" value="0x0002" />
-                <item const="SC_MANAGER_ENUMERATE_SERVICE" value="0x0004" />
-                <item const="SC_MANAGER_LOCK" value="0x0008" />
-                <item const="SC_MANAGER_QUERY_LOCK_STATUS" value="0x0010" />
-                <item const="SC_MANAGER_MODIFY_BOOT_CONFIG" value="0x0020" />
-                <item const="SC_MANAGER_ALL_ACCESS" value="0xF003F" />
+
+            <dir name="Authentication">
+                <dir name="CredUI Prompt">
+                    <dir attrib="h" name="Old Version" desc="CredUIPromptForCredentials dwFlags">
+                        <item const="CREDUI_FLAGS_INCORRECT_PASSWORD" value="0x00001" />
+                        <item const="CREDUI_FLAGS_DO_NOT_PERSIST" value="0x00002" />
+                        <item const="CREDUI_FLAGS_REQUEST_ADMINISTRATOR" value="0x00004" />
+                        <item const="CREDUI_FLAGS_EXCLUDE_CERTIFICATES" value="0x00008" />
+                        <item const="CREDUI_FLAGS_REQUIRE_CERTIFICATE" value="0x00010" />
+                        <item const="CREDUI_FLAGS_SHOW_SAVE_CHECK_BOX" value="0x00040" />
+                        <item const="CREDUI_FLAGS_ALWAYS_SHOW_UI" value="0x00080" />
+                        <item const="CREDUI_FLAGS_REQUIRE_SMARTCARD" value="0x00100" />
+                        <item const="CREDUI_FLAGS_PASSWORD_ONLY_OK" value="0x00200" />
+                        <item const="CREDUI_FLAGS_VALIDATE_USERNAME" value="0x00400" />
+                        <item const="CREDUI_FLAGS_COMPLETE_USERNAME" value="0x00800" />
+                        <item const="CREDUI_FLAGS_PERSIST" value="0x01000" />
+                        <item const="CREDUI_FLAGS_SERVER_CREDENTIAL" value="0x04000" />
+                        <item const="CREDUI_FLAGS_EXPECT_CONFIRMATION" value="0x20000" />
+                        <item const="CREDUI_FLAGS_GENERIC_CREDENTIALS" value="0x40000" />
+                        <item const="CREDUI_FLAGS_USERNAME_TARGET_CREDENTIALS" value="0x80000" />
+                        <item const="CREDUI_FLAGS_KEEP_USERNAME" value="0x100000" />
+                        <item const="CREDUI_FLAGS_PROMPT_VALID" value="0x1E5FDF" />
+                    </dir>
+                    <dir attrib="h" name="New Version" desc="CredUIPromptForWindowsCredentials dwFlags">
+                        <item const="CREDUIWIN_GENERIC" value="0x00000001" />
+                        <item const="CREDUIWIN_CHECKBOX" value="0x00000002" />
+                        <item const="CREDUIWIN_AUTHPACKAGE_ONLY" value="0x00000010" />
+                        <item const="CREDUIWIN_IN_CRED_ONLY" value="0x00000020" />
+                        <item const="CREDUIWIN_ENUMERATE_ADMINS" value="0x00000100" />
+                        <item const="CREDUIWIN_ENUMERATE_CURRENT_USER" value="0x00000200" />
+                        <item const="CREDUIWIN_SECURE_PROMPT" value="0x00001000" />
+                        <item const="CREDUIWIN_PACK_32_WOW" value="0x10000000" />
+                        <item const="CREDUIWIN_VALID_FLAGS" value="0x10001333" />
+                    </dir>
+                </dir>
+            </dir>
+
+            <dir name="Privileges" attrib="h">
+            </dir>
+
+            <dir name="Restrictions" desc="Parameters for SHRestricted()">
+                <item const="REST_NORUN" value="1" />
+                <item const="REST_NOCLOSE" value="2" />
+                <item const="REST_NOSAVESET" value="3" />
+                <item const="REST_NOFILEMENU" value="4" />
+                <item const="REST_NOSETFOLDERS" value="5" />
+                <item const="REST_NOSETTASKBAR" value="6" />
+                <item const="REST_NODESKTOP" value="7" />
+                <item const="REST_NOFIND" value="8" />
+                <item const="REST_NODRIVES" value="9" />
+                <item const="REST_NODRIVEAUTORUN" value="10" />
+                <item const="REST_NODRIVETYPEAUTORUN" value="11" />
+                <item const="REST_NONETHOOD" value="12" />
+                <item const="REST_STARTBANNER" value="13" />
+                <item const="REST_RESTRICTRUN" value="14" />
+                <item const="REST_NOPRINTERTABS" value="15" />
+                <item const="REST_NOPRINTERDELETE" value="16" />
+                <item const="REST_NOPRINTERADD" value="17" />
+                <item const="REST_NOSTARTMENUSUBFOLDERS" value="18" />
+                <item const="REST_MYDOCSONNET" value="19" />
+                <item const="REST_NOEXITTODOS" value="20" />
+                <item const="REST_ENFORCESHELLEXTSECURITY" value="21" />
+                <item const="REST_LINKRESOLVEIGNORELINKINFO" value="22" />
+                <item const="REST_NOCOMMONGROUPS" value="23" />
+                <item const="REST_SEPARATEDESKTOPPROCESS" value="24" />
+                <item const="REST_NOWEB" value="25" />
+                <item const="REST_NOTRAYCONTEXTMENU" value="26" />
+                <item const="REST_NOVIEWCONTEXTMENU" value="27" />
+                <item const="REST_NONETCONNECTDISCONNECT" value="28" />
+                <item const="REST_STARTMENULOGOFF" value="29" />
+                <item const="REST_NOSETTINGSASSIST" value="30" />
+                <item const="REST_NOINTERNETICON" value="31" />
+                <item const="REST_NORECENTDOCSHISTORY" value="32" />
+                <item const="REST_NORECENTDOCSMENU" value="33" />
+                <item const="REST_NOACTIVEDESKTOP" value="34" />
+                <item const="REST_NOACTIVEDESKTOPCHANGES" value="35" />
+                <item const="REST_NOFAVORITESMENU" value="36" />
+                <item const="REST_CLEARRECENTDOCSONEXIT" value="37" />
+                <item const="REST_CLASSICSHELL" value="38" />
+                <item const="REST_NOCUSTOMIZEWEBVIEW" value="39" />
+                <item const="REST_NOHTMLWALLPAPER" value="40" />
+                <item const="REST_NOCHANGINGWALLPAPER" value="41" />
+                <item const="REST_NODESKCOMP" value="42" />
+                <item const="REST_NOADDDESKCOMP" value="43" />
+                <item const="REST_NODELDESKCOMP" value="44" />
+                <item const="REST_NOCLOSEDESKCOMP" value="45" />
+                <item const="REST_NOCLOSE_DRAGDROPBAND" value="46" />
+                <item const="REST_NOMOVINGBAND" value="47" />
+                <item const="REST_NOEDITDESKCOMP" value="48" />
+                <item const="REST_NORESOLVESEARCH" value="49" />
+                <item const="REST_NORESOLVETRACK" value="50" />
+                <item const="REST_FORCECOPYACLWITHFILE" value="51" />
+                <item const="REST_NOLOGO3CHANNELNOTIFY" value="52" />
+                <item const="REST_NOFORGETSOFTWAREUPDATE" value="53" />
+                <item const="REST_NOSETACTIVEDESKTOP" value="54" />
+                <item const="REST_NOUPDATEWINDOWS" value="55" />
+                <item const="REST_NOCHANGESTARMENU" value="56" />
+                <item const="REST_NOFOLDEROPTIONS" value="57" />
+                <item const="REST_HASFINDCOMPUTERS" value="58" />
+                <item const="REST_INTELLIMENUS" value="59" />
+                <item const="REST_RUNDLGMEMCHECKBOX" value="60" />
+                <item const="REST_ARP_ShowPostSetup" value="61" />
+                <item const="REST_NOCSC" value="62" />
+                <item const="REST_NOCONTROLPANEL" value="63" />
+                <item const="REST_ENUMWORKGROUP" value="64" />
+                <item const="REST_ARP_NOARP" value="65" />
+                <item const="REST_ARP_NOREMOVEPAGE" value="66" />
+                <item const="REST_ARP_NOADDPAGE" value="67" />
+                <item const="REST_ARP_NOWINSETUPPAGE" value="68" />
+                <item const="REST_GREYMSIADS" value="69" />
+                <item const="REST_NOCHANGEMAPPEDDRIVELABEL" value="70" />
+                <item const="REST_NOCHANGEMAPPEDDRIVECOMMENT" value="71" />
+                <item const="REST_MAXRECENTDOCS" value="72" />
+                <item const="REST_NONETWORKCONNECTIONS" value="73" />
+                <item const="REST_FORCESTARTMENULOGOFF" value="74" />
+                <item const="REST_NOWEBVIEW" value="75" />
+                <item const="REST_NOCUSTOMIZETHISFOLDER" value="76" />
+                <item const="REST_NOENCRYPTION" value="77" />
+                <item const="REST_DONTSHOWSUPERHIDDEN" value="78" />
+                <item const="REST_NOSHELLSEARCHBUTTON" value="79" />
+                <item const="REST_NOHARDWARETAB" value="80" />
+                <item const="REST_NORUNASINSTALLPROMPT" value="81" />
+                <item const="REST_PROMPTRUNASINSTALLNETPATH" value="82" />
+                <item const="REST_NOMANAGEMYCOMPUTERVERB" value="83" />
+                <item const="REST_NORECENTDOCSNETHOOD" value="84" />
+                <item const="REST_DISALLOWRUN" value="85" />
+                <item const="REST_NOWELCOMESCREEN" value="86" />
+                <item const="REST_RESTRICTCPL" value="87" />
+                <item const="REST_DISALLOWCPL" value="88" />
+                <item const="REST_NOSMBALLOONTIP" value="89" />
+                <item const="REST_NOSMHELP" value="90" />
+                <item const="REST_NOWINKEYS" value="91" />
+                <item const="REST_NOENCRYPTONMOVE" value="92" />
+                <item const="REST_NOLOCALMACHINERUN" value="93" />
+                <item const="REST_NOCURRENTUSERRUN" value="94" />
+                <item const="REST_NOLOCALMACHINERUNONCE" value="95" />
+                <item const="REST_NOCURRENTUSERRUNONCE" value="96" />
+                <item const="REST_FORCEACTIVEDESKTOPON" value="97" />
+                <item const="REST_NOCOMPUTERSNEARME" value="98" />
+                <item const="REST_NOVIEWONDRIVE" value="99" />
+                <item const="REST_NONETCRAWL" value="100" />
+                <item const="REST_NOSHAREDDOCUMENTS" value="101" />
+                <item const="REST_NOSMMYDOCS" value="102" />
+                <item const="REST_NOSMMYPICS" value="103" />
+                <item const="REST_ALLOWBITBUCKDRIVES" value="104" />
+                <item const="REST_NONLEGACYSHELLMODE" value="105" />
+                <item const="REST_NOCONTROLPANELBARRICADE" value="106" />
+                <item const="REST_NOSTARTPAGE" value="107" />
+                <item const="REST_NOAUTOTRAYNOTIFY" value="108" />
+                <item const="REST_NOTASKGROUPING" value="109" />
+                <item const="REST_NOCDBURNING" value="110" />
+                <item const="REST_MYCOMPNOPROP" value="111" />
+                <item const="REST_MYDOCSNOPROP" value="112" />
+                <item const="REST_NOSTARTPANEL" value="113" />
+                <item const="REST_NODISPLAYAPPEARANCEPAGE" value="114" />
+                <item const="REST_NOTHEMESTAB" value="115" />
+                <item const="REST_NOVISUALSTYLECHOICE" value="116" />
+                <item const="REST_NOSIZECHOICE" value="117" />
+                <item const="REST_NOCOLORCHOICE" value="118" />
+                <item const="REST_SETVISUALSTYLE" value="119" />
+                <item const="REST_STARTRUNNOHOMEPATH" value="120" />
+                <item const="REST_NOUSERNAMEINSTARTPANEL" value="121" />
+                <item const="REST_NOMYCOMPUTERICON" value="122" />
+                <item const="REST_NOSMNETWORKPLACES" value="123" />
+                <item const="REST_NOSMPINNEDLIST" value="124" />
+                <item const="REST_NOSMMYMUSIC" value="125" />
+                <item const="REST_NOSMEJECTPC" value="126" />
+                <item const="REST_NOSMMOREPROGRAMS" value="127" />
+                <item const="REST_NOSMMFUPROGRAMS" value="128" />
+                <item const="REST_NOTRAYITEMSDISPLAY" value="129" />
+                <item const="REST_NOTOOLBARSONTASKBAR" value="130" />
+                <item const="REST_NOSMCONFIGUREPROGRAMS" value="131" />
+                <item const="REST_HIDECLOCK" value="132" />
+                <item const="REST_NOLOWDISKSPACECHECKS" value="133" />
+                <item const="REST_NOENTIRENETWORK" value="134" />
+                <item const="REST_NODESKTOPCLEANUP" value="135" />
+                <item const="REST_BITBUCKNUKEONDELETE" value="136" />
+                <item const="REST_BITBUCKCONFIRMDELETE" value="137" />
+                <item const="REST_BITBUCKNOPROP" value="138" />
+                <item const="REST_NODISPBACKGROUND" value="139" />
+                <item const="REST_NODISPSCREENSAVEPG" value="140" />
+                <item const="REST_NODISPSETTINGSPG" value="141" />
+                <item const="REST_NODISPSCREENSAVEPREVIEW" value="142" />
+                <item const="REST_NODISPLAYCPL" value="143" />
+                <item const="REST_HIDERUNASVERB" value="144" />
+                <item const="REST_NOTHUMBNAILCACHE" value="145" />
+                <item const="REST_NOSTRCMPLOGICAL" value="146" />
+                <item const="REST_NOPUBLISHWIZARD" value="147" />
+                <item const="REST_NOONLINEPRINTSWIZARD" value="148" />
+                <item const="REST_NOWEBSERVICES" value="149" />
+                <item const="REST_ALLOWUNHASHEDWEBVIEW" value="150" />
+                <item const="REST_ALLOWLEGACYWEBVIEW" value="151" />
+                <item const="REST_REVERTWEBVIEWSECURITY" value="152" />
+                <item const="REST_INHERITCONSOLEHANDLES" value="153" />
+                <item const="REST_SORTMAXITEMCOUNT" value="154" />
+                <item const="REST_NOREMOTERECURSIVEEVENTS" value="155" />
+                <item const="REST_NOREMOTECHANGENOTIFY" value="156" />
+                <item const="REST_NOSIMPLENETIDLIST" value="157" />
+                <item const="REST_NOENUMENTIRENETWORK" value="158" />
+                <item const="REST_NODETAILSTHUMBNAILONNETWORK" value="159" />
+                <item const="REST_NOINTERNETOPENWITH" value="160" />
+                <item const="REST_ALLOWLEGACYLMZBEHAVIOR" value="161" />
+                <item const="REST_DONTRETRYBADNETNAME" value="162" />
+                <item const="REST_ALLOWFILECLSIDJUNCTIONS" value="163" />
+                <item const="REST_NOUPNPINSTALL" value="164" />
+                <item const="REST_ARP_DONTGROUPPATCHES" value="165" />
+                <item const="REST_ARP_NOCHOOSEPROGRAMSPAGE" value="166" />
+                <item const="REST_NODISCONNECT" value="167" />
+                <item const="REST_NOSECURITY" value="168" />
+                <item const="REST_NOFILEASSOCIATE" value="169" />
+                <item const="REST_ALLOWCOMMENTTOGGLE" value="170" />
+                <item const="REST_USEDESKTOPINICACHE" value="171" />
             </dir>
         </dir>
 
-        <dir name="Configuration" desc="Info levels for ChangeServiceConfig2 and QueryServiceConfig2">
-            <item const="SERVICE_CONFIG_DESCRIPTION" value="1" />
-            <item const="SERVICE_CONFIG_FAILURE_ACTIONS" value="2" />
-            <item const="SERVICE_CONFIG_DELAYED_AUTO_START_INFO" value="3" />
-            <item const="SERVICE_CONFIG_FAILURE_ACTIONS_FLAG" value="4" />
-            <item const="SERVICE_CONFIG_SERVICE_SID_INFO" value="5" />
-            <item const="SERVICE_CONFIG_REQUIRED_PRIVILEGES_INFO" value="6" />
-            <item const="SERVICE_CONFIG_PRESHUTDOWN_INFO" value="7" />
-            <item const="SERVICE_CONFIG_TRIGGER_INFO" value="8" />
-            <item const="SERVICE_CONFIG_PREFERRED_NODE" value="9" />
-            <item const="SERVICE_CONFIG_LAUNCH_PROTECTED" value="12" />
+
+        <dir name="Service">
+            <dir name="Service Type">
+                <item const="SERVICE_KERNEL_DRIVER" value="0x00000001" />
+                <item const="SERVICE_FILE_SYSTEM_DRIVER" value="0x00000002" />
+                <item const="SERVICE_ADAPTER" value="0x00000004" />
+                <item const="SERVICE_RECOGNIZER_DRIVER" value="0x00000008" />
+                <item const="SERVICE_DRIVER" value="0x0000000B" />
+                <item const="SERVICE_WIN32_OWN_PROCESS" value="0x00000010" />
+                <item const="SERVICE_WIN32" value="0x00000030" />
+                <item const="SERVICE_TYPE_ALL" value="0x0000013F" />
+                <item const="SERVICE_WIN32_SHARE_PROCESS" value="0x00000020" />
+                <item const="SERVICE_INTERACTIVE_PROCESS" value="0x00000100" />
+            </dir>
+            
+            <dir name="Start Type" desc="Service Start Type">
+                <item const="SERVICE_BOOT_START" value="0x00000000" />
+                <item const="SERVICE_SYSTEM_START" value="0x00000001" />
+                <item const="SERVICE_AUTO_START" value="0x00000002" />
+                <item const="SERVICE_DEMAND_START" value="0x00000003" />
+                <item const="SERVICE_DISABLED" value="0x00000004" />
+            </dir>
+
+            <dir name="State" desc="Service State">
+                <item const="SERVICE_STOPPED" value="0x00000001" />
+                <item const="SERVICE_START_PENDING" value="0x00000002" />
+                <item const="SERVICE_STOP_PENDING" value="0x00000003" />
+                <item const="SERVICE_RUNNING" value="0x00000004" />
+                <item const="SERVICE_CONTINUE_PENDING" value="0x00000005" />
+                <item const="SERVICE_PAUSE_PENDING" value="0x00000006" />
+                <item const="SERVICE_PAUSED" value="0x00000007" />
+            </dir>
+
+            <dir name="Control Codes" desc="Service Control Codes">
+                <item const="SERVICE_CONTROL_STOP" value="0x00000001" />
+                <item const="SERVICE_CONTROL_PAUSE" value="0x00000002" />
+                <item const="SERVICE_CONTROL_CONTINUE" value="0x00000003" />
+                <item const="SERVICE_CONTROL_INTERROGATE" value="0x00000004" />
+                <item const="SERVICE_CONTROL_SHUTDOWN" value="0x00000005" />
+                <item const="SERVICE_CONTROL_PARAMCHANGE" value="0x00000006" />
+                <item const="SERVICE_CONTROL_NETBINDADD" value="0x00000007" />
+                <item const="SERVICE_CONTROL_NETBINDREMOVE" value="0x00000008" />
+                <item const="SERVICE_CONTROL_NETBINDENABLE" value="0x00000009" />
+                <item const="SERVICE_CONTROL_NETBINDDISABLE" value="0x0000000A" />
+                <item const="SERVICE_CONTROL_DEVICEEVENT" value="0x0000000B" />
+                <item const="SERVICE_CONTROL_HARDWAREPROFILECHANGE" value="0x0000000C" />
+                <item const="SERVICE_CONTROL_POWEREVENT" value="0x0000000D" />
+                <item const="SERVICE_CONTROL_SESSIONCHANGE" value="0x0000000E" />
+                <item const="SERVICE_CONTROL_PRESHUTDOWN" value="0x0000000F" />
+                <item const="SERVICE_CONTROL_TIMECHANGE" value="0x00000010" />
+                <item const="SERVICE_CONTROL_TRIGGEREVENT" value="0x00000020" />
+            </dir>
+
+            <dir name="Controls Accepted" desc="Service Control Codes Accepted">
+                <item const="SERVICE_ACCEPT_STOP" value="0x00000001" />
+                <item const="SERVICE_ACCEPT_PAUSE_CONTINUE" value="0x00000002" />
+                <item const="SERVICE_ACCEPT_SHUTDOWN" value="0x00000004" />
+                <item const="SERVICE_ACCEPT_PARAMCHANGE" value="0x00000008" />
+                <item const="SERVICE_ACCEPT_NETBINDCHANGE" value="0x00000010" />
+                <item const="SERVICE_ACCEPT_HARDWAREPROFILECHANGE" value="0x00000020" />
+                <item const="SERVICE_ACCEPT_POWEREVENT" value="0x00000040" />
+                <item const="SERVICE_ACCEPT_SESSIONCHANGE" value="0x00000080" />
+                <item const="SERVICE_ACCEPT_PRESHUTDOWN" value="0x00000100" />
+                <item const="SERVICE_ACCEPT_TIMECHANGE" value="0x00000200" />
+                <item const="SERVICE_ACCEPT_TRIGGEREVENT" value="0x00000400" />
+            </dir>
+
+            <dir name="Access Rights">
+                <dir name="Service" desc="Service Access Rights">
+                    <item const="SERVICE_QUERY_CONFIG" value="0x0001" />
+                    <item const="SERVICE_CHANGE_CONFIG" value="0x0002" />
+                    <item const="SERVICE_QUERY_STATUS" value="0x0004" />
+                    <item const="SERVICE_ENUMERATE_DEPENDENTS" value="0x0008" />
+                    <item const="SERVICE_START" value="0x0010" />
+                    <item const="SERVICE_STOP" value="0x0020" />
+                    <item const="SERVICE_PAUSE_CONTINUE" value="0x0040" />
+                    <item const="SERVICE_INTERROGATE" value="0x0080" />
+                    <item const="SERVICE_USER_DEFINED_CONTROL" value="0x0100" />
+                    <item const="SERVICE_ALL_ACCESS" value="0xF01FF" />
+                </dir>
+                <dir name="SCM" desc="Access Rights for the Service Control Manager">
+                    <item const="SC_MANAGER_CONNECT" value="0x0001" />
+                    <item const="SC_MANAGER_CREATE_SERVICE" value="0x0002" />
+                    <item const="SC_MANAGER_ENUMERATE_SERVICE" value="0x0004" />
+                    <item const="SC_MANAGER_LOCK" value="0x0008" />
+                    <item const="SC_MANAGER_QUERY_LOCK_STATUS" value="0x0010" />
+                    <item const="SC_MANAGER_MODIFY_BOOT_CONFIG" value="0x0020" />
+                    <item const="SC_MANAGER_ALL_ACCESS" value="0xF003F" />
+                </dir>
+            </dir>
+
+            <dir name="Configuration" desc="Info levels for ChangeServiceConfig2 and QueryServiceConfig2">
+                <item const="SERVICE_CONFIG_DESCRIPTION" value="1" />
+                <item const="SERVICE_CONFIG_FAILURE_ACTIONS" value="2" />
+                <item const="SERVICE_CONFIG_DELAYED_AUTO_START_INFO" value="3" />
+                <item const="SERVICE_CONFIG_FAILURE_ACTIONS_FLAG" value="4" />
+                <item const="SERVICE_CONFIG_SERVICE_SID_INFO" value="5" />
+                <item const="SERVICE_CONFIG_REQUIRED_PRIVILEGES_INFO" value="6" />
+                <item const="SERVICE_CONFIG_PRESHUTDOWN_INFO" value="7" />
+                <item const="SERVICE_CONFIG_TRIGGER_INFO" value="8" />
+                <item const="SERVICE_CONFIG_PREFERRED_NODE" value="9" />
+                <item const="SERVICE_CONFIG_LAUNCH_PROTECTED" value="12" />
+            </dir>
+
+            <dir name="Notification" desc="Service Notification Masks for NotifyServiceStatusChange">
+                <item const="SERVICE_NOTIFY_STATUS_CHANGE" value="2" />
+                <item const="SERVICE_NOTIFY_STOPPED" value="0x00000001" />
+                <item const="SERVICE_NOTIFY_START_PENDING" value="0x00000002" />
+                <item const="SERVICE_NOTIFY_STOP_PENDING" value="0x00000004" />
+                <item const="SERVICE_NOTIFY_RUNNING" value="0x00000008" />
+                <item const="SERVICE_NOTIFY_CONTINUE_PENDING" value="0x00000010" />
+                <item const="SERVICE_NOTIFY_PAUSE_PENDING" value="0x00000020" />
+                <item const="SERVICE_NOTIFY_PAUSED" value="0x00000040" />
+                <item const="SERVICE_NOTIFY_CREATED" value="0x00000080" />
+                <item const="SERVICE_NOTIFY_DELETED" value="0x00000100" />
+                <item const="SERVICE_NOTIFY_DELETE_PENDING" value="0x00000200" />
+            </dir>
+
+            <dir name="Trigger">
+                <dir name="Type" desc="SERVICE_TRIGGER dwTriggerType">
+                    <item const="SERVICE_TRIGGER_TYPE_DEVICE_INTERFACE_ARRIVAL" value="1" />
+                    <item const="SERVICE_TRIGGER_TYPE_IP_ADDRESS_AVAILABILITY" value="2" />
+                    <item const="SERVICE_TRIGGER_TYPE_DOMAIN_JOIN" value="3" />
+                    <item const="SERVICE_TRIGGER_TYPE_FIREWALL_PORT_EVENT" value="4" />
+                    <item const="SERVICE_TRIGGER_TYPE_GROUP_POLICY" value="5" />
+                    <item const="SERVICE_TRIGGER_TYPE_NETWORK_ENDPOINT" value="6" />
+                    <item const="SERVICE_TRIGGER_TYPE_CUSTOM" value="20" />
+                </dir>
+            
+                <dir name="Action" desc="SERVICE_TRIGGER dwAction">
+                    <item const="SERVICE_TRIGGER_ACTION_SERVICE_START" value="1" />
+                    <item const="SERVICE_TRIGGER_ACTION_SERVICE_STOP" value="2" />
+                </dir>
+            
+                <dir name="Data Types" desc="SERVICE_TRIGGER_SPECIFIC_DATA_ITEM dwDataType">
+                    <item const="SERVICE_TRIGGER_DATA_TYPE_BINARY" value="1" />
+                    <item const="SERVICE_TRIGGER_DATA_TYPE_STRING" value="2" />
+                    <item const="SERVICE_TRIGGER_DATA_TYPE_LEVEL" value="3" />
+                    <item const="SERVICE_TRIGGER_DATA_TYPE_KEYWORD_ANY" value="4" />
+                    <item const="SERVICE_TRIGGER_DATA_TYPE_KEYWORD_ALL" value="5" />
+                </dir>
+            
+                <dir name="Argument" desc="argv[1] passed into ServiceMain of trigger started services" MSDN="dd405513">
+                    <item const="SERVICE_TRIGGER_STARTED_ARGUMENT" value="L&quot;TriggerStarted&quot;" />
+                </dir>
+            </dir>
+
+            <dir name="Error Control" desc="Service Error Control">
+                <item const="SERVICE_ERROR_IGNORE" value="0x00000000" />
+                <item const="SERVICE_ERROR_NORMAL" value="0x00000001" />
+                <item const="SERVICE_ERROR_SEVERE" value="0x00000002" />
+                <item const="SERVICE_ERROR_CRITICAL" value="0x00000003" />
+            </dir>
+
+            <dir name="Others">
+                <dir name="QueryExFlag" desc="SERVICE_STATUS_PROCESS dwServiceFlags">
+                    <item const="SERVICE_RUNS_IN_SYSTEM_PROCESS" value="0x00000001" />
+                </dir>
+
+                <dir name="Promotion Flags" desc="Service Node Promotion Flags">
+                    <item const="CM_SERVICE_NETWORK_BOOT_LOAD" value="0x00000001" />
+                    <item const="CM_SERVICE_VIRTUAL_DISK_BOOT_LOAD" value="0x00000002" />
+                    <item const="CM_SERVICE_USB_DISK_BOOT_LOAD" value="0x00000004" />
+                    <item const="CM_SERVICE_VALID_PROMOTION_MASK" value="0x00000007" />
+                </dir>
+            </dir>
         </dir>
 
-        <dir name="Notification" desc="Service Notification Masks for NotifyServiceStatusChange">
-            <item const="SERVICE_NOTIFY_STATUS_CHANGE" value="2" />
-            <item const="SERVICE_NOTIFY_STOPPED" value="0x00000001" />
-            <item const="SERVICE_NOTIFY_START_PENDING" value="0x00000002" />
-            <item const="SERVICE_NOTIFY_STOP_PENDING" value="0x00000004" />
-            <item const="SERVICE_NOTIFY_RUNNING" value="0x00000008" />
-            <item const="SERVICE_NOTIFY_CONTINUE_PENDING" value="0x00000010" />
-            <item const="SERVICE_NOTIFY_PAUSE_PENDING" value="0x00000020" />
-            <item const="SERVICE_NOTIFY_PAUSED" value="0x00000040" />
-            <item const="SERVICE_NOTIFY_CREATED" value="0x00000080" />
-            <item const="SERVICE_NOTIFY_DELETED" value="0x00000100" />
-            <item const="SERVICE_NOTIFY_DELETE_PENDING" value="0x00000200" />
-        </dir>
-
-        <dir name="Trigger">
-            <dir name="Type" desc="SERVICE_TRIGGER dwTriggerType">
-                <item const="SERVICE_TRIGGER_TYPE_DEVICE_INTERFACE_ARRIVAL" value="1" />
-                <item const="SERVICE_TRIGGER_TYPE_IP_ADDRESS_AVAILABILITY" value="2" />
-                <item const="SERVICE_TRIGGER_TYPE_DOMAIN_JOIN" value="3" />
-                <item const="SERVICE_TRIGGER_TYPE_FIREWALL_PORT_EVENT" value="4" />
-                <item const="SERVICE_TRIGGER_TYPE_GROUP_POLICY" value="5" />
-                <item const="SERVICE_TRIGGER_TYPE_NETWORK_ENDPOINT" value="6" />
-                <item const="SERVICE_TRIGGER_TYPE_CUSTOM" value="20" />
-            </dir>
-        
-            <dir name="Action" desc="SERVICE_TRIGGER dwAction">
-                <item const="SERVICE_TRIGGER_ACTION_SERVICE_START" value="1" />
-                <item const="SERVICE_TRIGGER_ACTION_SERVICE_STOP" value="2" />
-            </dir>
-        
-            <dir name="Data Types" desc="SERVICE_TRIGGER_SPECIFIC_DATA_ITEM dwDataType">
-                <item const="SERVICE_TRIGGER_DATA_TYPE_BINARY" value="1" />
-                <item const="SERVICE_TRIGGER_DATA_TYPE_STRING" value="2" />
-                <item const="SERVICE_TRIGGER_DATA_TYPE_LEVEL" value="3" />
-                <item const="SERVICE_TRIGGER_DATA_TYPE_KEYWORD_ANY" value="4" />
-                <item const="SERVICE_TRIGGER_DATA_TYPE_KEYWORD_ALL" value="5" />
-            </dir>
-        
-            <dir name="Argument" desc="argv[1] passed into ServiceMain of trigger started services" MSDN="dd405513">
-                <item const="SERVICE_TRIGGER_STARTED_ARGUMENT" value="L&quot;TriggerStarted&quot;" />
-            </dir>
-        </dir>
-
-        <dir name="Error Control" desc="Service Error Control">
-            <item const="SERVICE_ERROR_IGNORE" value="0x00000000" />
-            <item const="SERVICE_ERROR_NORMAL" value="0x00000001" />
-            <item const="SERVICE_ERROR_SEVERE" value="0x00000002" />
-            <item const="SERVICE_ERROR_CRITICAL" value="0x00000003" />
-        </dir>
-
-        <dir name="Others">
-            <dir name="QueryExFlag" desc="SERVICE_STATUS_PROCESS dwServiceFlags">
-                <item const="SERVICE_RUNS_IN_SYSTEM_PROCESS" value="0x00000001" />
-            </dir>
-
-            <dir name="Promotion Flags" desc="Service Node Promotion Flags">
-                <item const="CM_SERVICE_NETWORK_BOOT_LOAD" value="0x00000001" />
-                <item const="CM_SERVICE_VIRTUAL_DISK_BOOT_LOAD" value="0x00000002" />
-                <item const="CM_SERVICE_USB_DISK_BOOT_LOAD" value="0x00000004" />
-                <item const="CM_SERVICE_VALID_PROMOTION_MASK" value="0x00000007" />
-            </dir>
-        </dir>
-    </dir>
-
-        <dir name="Miscellaneous">
-            <dir name="ExitWindowsEx" desc="ExitWindowsEx Flags">
-                <item const="EWX_LOGOFF" value="0" />
-                <item const="EWX_SHUTDOWN" value="0x00000001" />
-                <item const="EWX_REBOOT" value="0x00000002" />
-                <item const="EWX_FORCE" value="0x00000004" />
-                <item const="EWX_POWEROFF" value="0x00000008" />
-                <item const="EWX_FORCEIFHUNG" value="0x00000010" />
-                <item const="EWX_QUICKRESOLVE" value="0x00000020" />
-                <item const="EWX_RESTARTAPPS" value="0x00000040" />
-                <item const="EWX_HYBRID_SHUTDOWN" value="0x00400000" />
-            </dir>
-
-            <dir name="LoadLibraryEx" desc="LoadLibraryEx Constants">
-                <item const="DONT_RESOLVE_DLL_REFERENCES" value="0x00000001" />
-                <item const="LOAD_LIBRARY_AS_DATAFILE" value="0x00000002" />
-                <item const="LOAD_WITH_ALTERED_SEARCH_PATH" value="0x00000008" />
-                <item const="LOAD_IGNORE_CODE_AUTHZ_LEVEL" value="0x00000010" />
-                <item const="LOAD_LIBRARY_AS_IMAGE_RESOURCE" value="0x00000020" />
-                <item const="LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE" value="0x00000040" />
-                <item const="LOAD_LIBRARY_REQUIRE_SIGNED_TARGET" value="0x00000080" />
-                <item const="LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR" value="0x00000100" />
-                <item const="LOAD_LIBRARY_SEARCH_APPLICATION_DIR" value="0x00000200" />
-                <item const="LOAD_LIBRARY_SEARCH_USER_DIRS" value="0x00000400" />
-                <item const="LOAD_LIBRARY_SEARCH_SYSTEM32" value="0x00000800" />
-                <item const="LOAD_LIBRARY_SEARCH_DEFAULT_DIRS" value="0x00001000" /> 
-            </dir>
-
-            <dir name="FormatMessage" desc="FormatMessage dwFlags">
-                <item const="FORMAT_MESSAGE_ALLOCATE_BUFFER" value="0x00000100" />
-                <item const="FORMAT_MESSAGE_IGNORE_INSERTS" value="0x00000200" />
-                <item const="FORMAT_MESSAGE_FROM_STRING" value="0x00000400" />
-                <item const="FORMAT_MESSAGE_FROM_HMODULE" value="0x00000800" />
-                <item const="FORMAT_MESSAGE_FROM_SYSTEM" value="0x00001000" />
-                <item const="FORMAT_MESSAGE_ARGUMENT_ARRAY" value="0x00002000" />
-                <item const="FORMAT_MESSAGE_MAX_WIDTH_MASK" value="0x000000FF" />
-            </dir>
-
+        <dir name="Shell">
             <dir name="SHChangeNotify">
                 <dir name="Register" desc="SHChangeNotifyRegister fSources">
                     <item const="SHCNRF_INTERRUPTLEVEL" value="0x0001" />
@@ -7595,11 +7561,62 @@
                 </dir>
             </dir>
 
+            <dir name="SHAddToRecentDocs" desc="SHAddToRecentDocs Enumeration">
+                <item const="SHARD_PIDL" value="0x00000001" />
+                <item const="SHARD_PATHA" value="0x00000002" />
+                <item const="SHARD_PATHW" value="0x00000003" />
+                <item const="SHARD_APPIDINFO" value="0x00000004" />
+                <item const="SHARD_APPIDINFOIDLIST" value="0x00000005" />
+                <item const="SHARD_LINK" value="0x00000006" />
+                <item const="SHARD_APPIDINFOLINK" value="0x00000007" />
+                <item const="SHARD_SHELLITEM" value="0x00000008" />
+            </dir>
+        </dir>
+
+        <dir name="Miscellaneous">
+            <dir name="LoadLibraryEx" desc="LoadLibraryEx Constants">
+                <item const="DONT_RESOLVE_DLL_REFERENCES" value="0x00000001" />
+                <item const="LOAD_LIBRARY_AS_DATAFILE" value="0x00000002" />
+                <item const="LOAD_WITH_ALTERED_SEARCH_PATH" value="0x00000008" />
+                <item const="LOAD_IGNORE_CODE_AUTHZ_LEVEL" value="0x00000010" />
+                <item const="LOAD_LIBRARY_AS_IMAGE_RESOURCE" value="0x00000020" />
+                <item const="LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE" value="0x00000040" />
+                <item const="LOAD_LIBRARY_REQUIRE_SIGNED_TARGET" value="0x00000080" />
+                <item const="LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR" value="0x00000100" />
+                <item const="LOAD_LIBRARY_SEARCH_APPLICATION_DIR" value="0x00000200" />
+                <item const="LOAD_LIBRARY_SEARCH_USER_DIRS" value="0x00000400" />
+                <item const="LOAD_LIBRARY_SEARCH_SYSTEM32" value="0x00000800" />
+                <item const="LOAD_LIBRARY_SEARCH_DEFAULT_DIRS" value="0x00001000" /> 
+            </dir>
+
+            <dir name="FormatMessage" desc="FormatMessage dwFlags">
+                <item const="FORMAT_MESSAGE_ALLOCATE_BUFFER" value="0x00000100" />
+                <item const="FORMAT_MESSAGE_IGNORE_INSERTS" value="0x00000200" />
+                <item const="FORMAT_MESSAGE_FROM_STRING" value="0x00000400" />
+                <item const="FORMAT_MESSAGE_FROM_HMODULE" value="0x00000800" />
+                <item const="FORMAT_MESSAGE_FROM_SYSTEM" value="0x00001000" />
+                <item const="FORMAT_MESSAGE_ARGUMENT_ARRAY" value="0x00002000" />
+                <item const="FORMAT_MESSAGE_MAX_WIDTH_MASK" value="0x000000FF" />
+            </dir>
+
             <dir name="Recycle Bin" desc="SHEmptyRecycleBin Flags">
                 <item const="SHERB_NOCONFIRMATION" value="0x01" />
                 <item const="SHERB_NOPROGRESSUI" value="0x02" />
                 <item const="SHERB_NOSOUND" value="0x04" />
             </dir>
+
+            <dir name="ExitWindowsEx" desc="ExitWindowsEx Flags">
+                <item const="EWX_LOGOFF" value="0" />
+                <item const="EWX_SHUTDOWN" value="0x00000001" />
+                <item const="EWX_REBOOT" value="0x00000002" />
+                <item const="EWX_FORCE" value="0x00000004" />
+                <item const="EWX_POWEROFF" value="0x00000008" />
+                <item const="EWX_FORCEIFHUNG" value="0x00000010" />
+                <item const="EWX_QUICKRESOLVE" value="0x00000020" />
+                <item const="EWX_RESTARTAPPS" value="0x00000040" />
+                <item const="EWX_HYBRID_SHUTDOWN" value="0x00400000" />
+            </dir>
         </dir>
+
     </dir>
 </dir>

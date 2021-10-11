@@ -1,8 +1,13 @@
-﻿ToolbarCreate(Handler, Buttons, ImageList := "", Options := "Flat List ToolTips", Extra := "", Pos := "", Padding := "") {
-    Static TOOLTIPS := 0x100, WRAPABLE := 0x200, FLAT := 0x800, LIST := 0x1000, TABSTOP := 0x10000, BORDER := 0x800000, TEXTONLY := 0
-    Static BOTTOM := 0x3, ADJUSTABLE := 0x20, NODIVIDER := 0x40, VERTICAL := 0x80
-    Static CHECKED := 1, HIDDEN := 8, WRAP := 32, DISABLED := 0 ; States
-    Static CHECK := 2, CHECKGROUP := 6, DROPDOWN := 8, AUTOSIZE := 16, NOPREFIX := 32, SHOWTEXT := 64, WHOLEDROPDOWN := 128 ; Styles
+﻿Toolbar_Create(Handler, Buttons, ImageList := "", Options := "Flat List ToolTips", Extra := "", Pos := "", Padding := "", ExStyle := 0x9) {
+    Local fShowText, fTextOnly, Styles, hWnd, TBB_Size, cButtons, TBBUTTONS
+    , Index, Button, iBitmap, idCommand, fsState, fsStyle, iString, Offset, SIZE, 
+
+    Static TOOLTIPS := 0x100, WRAPABLE := 0x200, FLAT := 0x800, LIST := 0x1000
+    , TABSTOP := 0x10000, BORDER := 0x800000, TEXTONLY := 0, BOTTOM := 0x3
+    , ADJUSTABLE := 0x20, NODIVIDER := 0x40, VERTICAL := 0x80
+    , CHECKED := 1, HIDDEN := 8, WRAP := 32, DISABLED := 0 ; States
+    , CHECK := 2, CHECKGROUP := 6, DROPDOWN := 8, AUTOSIZE := 16
+    , NOPREFIX := 32, SHOWTEXT := 64, WHOLEDROPDOWN := 128 ; Styles
 
     StrReplace(Options, "SHOWTEXT", "", fShowText, 1)
     fTextOnly := InStr(Options, "TEXTONLY")
@@ -16,13 +21,13 @@
         Styles |= 0x4C ; CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NODIVIDER
     }
 
-    Gui Add, Custom, ClassToolbarWindow32 hWndhWnd g_ToolbarHandler -Tabstop %Pos% %Styles% %Extra%
-    _ToolbarStorage(hWnd, Handler)
+    Gui Add, Custom, ClassToolbarWindow32 hWndhWnd gToolbar_Handler -Tabstop %Pos% %Styles% %Extra%
+    Toolbar_Store(hWnd, Handler)
 
-    TBBUTTON_Size := A_PtrSize == 8 ? 32 : 20
+    TBB_Size := A_PtrSize == 8 ? 32 : 20
     Buttons := StrSplit(Buttons, "`n")
     cButtons := Buttons.Length()
-    VarSetCapacity(TBBUTTONS, TBBUTTON_Size * cButtons , 0)
+    VarSetCapacity(TBBUTTONS, TBB_Size * cButtons , 0)
 
     Index := 0
     Loop %cButtons% {
@@ -52,7 +57,7 @@
             iString := &(ButtonText%Index% := Button[1])
         }
 
-        Offset := (A_Index - 1) * TBBUTTON_Size
+        Offset := (A_Index - 1) * TBB_Size
         NumPut(iBitmap, TBBUTTONS, Offset, "Int")
         NumPut(idCommand, TBBUTTONS, Offset + 4, "Int")
         NumPut(fsState, TBBUTTONS, Offset + 8, "UChar")
@@ -60,11 +65,14 @@
         NumPut(iString, TBBUTTONS, Offset + (A_PtrSize == 8 ? 24 : 16), "Ptr")
     }
 
-    If (Padding != "") {
+    If (Padding) {
         SendMessage 0x457, 0, %Padding%,, ahk_id %hWnd% ; TB_SETPADDING
     }
 
-    SendMessage 0x454, 0, 0x9,, ahk_id %hWnd% ; TB_SETEXTENDEDSTYLE (mixed buttons, draw dropdown arrows)
+    If (ExStyle) { ; 0x9 = TBSTYLE_EX_DRAWDDARROWS | TBSTYLE_EX_MIXEDBUTTONS
+        SendMessage 0x454, 0, %ExStyle%,, ahk_id %hWnd% ; TB_SETEXTENDEDSTYLE
+    }
+
     SendMessage 0x430, 0, %ImageList%,, ahk_id %hWnd% ; TB_SETIMAGELIST
     SendMessage % A_IsUnicode ? 0x444 : 0x414, %cButtons%, % &TBBUTTONS,, ahk_id %hWnd% ; TB_ADDBUTTONS
 
@@ -78,16 +86,16 @@
     Return hWnd
 }
 
-_ToolbarStorage(hWnd, Callback := "") {
+Toolbar_Store(hWnd, Callback := "") {
     Static o := {}
     Return (o[hWnd] != "") ? o[hWnd] : o[hWnd] := Callback
 }
 
-_ToolbarHandler(hWnd) {
+Toolbar_Handler(hWnd) {
     Static n := {-2: "Click", -5: "RightClick", -20: "LDown", -713: "Hot", -710: "DropDown"}
     Local Handler, Code, ButtonId, Pos, Text, Event, RECT, Left, Bottom
 
-    Handler := _ToolbarStorage(hWnd)
+    Handler := Toolbar_Store(hWnd)
 
     Code := NumGet(A_EventInfo + 0, A_PtrSize * 2, "Int")
 

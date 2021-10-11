@@ -7,8 +7,7 @@ ShowCloneDialog:
     SetWindowIcon(hCloneDlg, IconLib, -83)
     Gui Color, White
 
-    hGrad := CreateDIB("3FBBE3|3FBBE3|0080C0|0080C0", 2, 2, DPIScale(586), DPIScale(51), 1)
-    Gui Add, Pic, x0 y0 w586 h51, HBITMAP: %hGrad%
+    Gui Add, Pic, x0 y0 w586 h51, % "HBITMAP:" . Gradient(586, 51)
     Gui Add, Picture, x542 y10 w32 h32 +BackgroundTrans +Icon-83, %IconLib%
     Gui Font, s12 cWhite, Segoe UI
     Gui Add, Text, x10 y13 w478 h23 +0x200 +BackgroundTrans, Activate the target window and click the "Clone" button

@@ -4,6 +4,12 @@
 SetBatchLines -1
 SetWorkingDir %A_ScriptDir%
 
+; Script compiler directives
+;@Ahk2Exe-SetMainIcon %A_ScriptDir%\..\Icons\Constantine.ico
+;@Ahk2Exe-SetCompanyName AmberSoft
+;@Ahk2Exe-SetDescription Windows API Constants Explorer
+;@Ahk2Exe-SetVersion 1.1.1
+
 Global Title := "Constantine - Windows API Constants Explorer"
 , Version   := "1.1.1"
 , g_AppData := A_AppData . "\AmberSoft\Adventure"
