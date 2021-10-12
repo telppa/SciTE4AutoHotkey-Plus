@@ -13,9 +13,6 @@ SciTE/user/lexers
 SciTE/user/_platform.properties
 SciTE/user/SciTE.session
 SciTE/user/SciTEDebug.ini
-SciTE/tools/AutoGUI/AutoGUI.ini
-SciTE/tools/AutoGUI/Tools/Tools.ini
-SciTE/tools/AutoGUI/Sessions/Session Saved on Exit.session
 SciTE/tools/AHK_Window_Info/AHK_Window_Info_v1.7.ini
 license.txt
 AutoHotkey Website.url
