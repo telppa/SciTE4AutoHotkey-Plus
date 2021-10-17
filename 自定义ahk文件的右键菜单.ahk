@@ -1,18 +1,19 @@
-/*
-AutoHotkey °æ±¾: 1.x
-²Ù×÷ÏµÍ³:    WinXP
-×÷Õß:        ¼×¿Ç³æ<jdchenjian@gmail.com>
-²©¿Í:        http://hi.baidu.com/jdchenjian
-½Å±¾ËµÃ÷£º   ´Ë¹¤¾ßÓÃÀ´ĞŞ¸Ä AutoHotkey ½Å±¾µÄÓÒ¼ü²Ëµ¥¹ØÁª£¬ÊÊÓÃÓÚ AutoHotkey °²×°°æ¡¢ÂÌÉ«°æ¡£
-½Å±¾°æ±¾£º   2009-01-21
+ï»¿/*
+AutoHotkey ç‰ˆæœ¬: 1.x
+æ“ä½œç³»ç»Ÿ:    WinXP
+ä½œè€…:        ç”²å£³è™«<jdchenjian@gmail.com>
+åšå®¢:        http://hi.baidu.com/jdchenjian
+è„šæœ¬è¯´æ˜ï¼š   æ­¤å·¥å…·ç”¨æ¥ä¿®æ”¹ AutoHotkey è„šæœ¬çš„å³é”®èœå•å…³è”ï¼Œé€‚ç”¨äº AutoHotkey å®‰è£…ç‰ˆã€ç»¿è‰²ç‰ˆã€‚
+è„šæœ¬ç‰ˆæœ¬ï¼š   2009-01-21
 
-ĞŞ¸Ä×÷Õß£º	ÍÃ×Ó
-¸üĞÂËµÃ÷£º
-2010.01.09	Ö®Ç°Ä³¸öÊ±¼ä£¬ĞŞ¸ÄAHKÂ·¾¶¡¢±à¼­Æ÷Â·¾¶¡¢±àÒëÆ÷Â·¾¶£¬Ä¬ÈÏÈ«²¿ÔÚµ±Ç°Ä¿Â¼ÏÂÑ°ÕÒ
-2010.01.09	È¥µôÄ¬ÈÏÔÚĞÂ½¨²Ëµ¥µÄ¹´
-2010.06.21	Èç¹ûSCITEÎªÄ¬ÈÏ±à¼­Æ÷£¬Ôò¸´ÖÆ¸öÈËÅäÖÃÎÄ¼ş¡°SciTEUser.properties¡±µ½%USERPROFILE%
-2010.06.25	ĞŞÕıÒò#NoEnvÊ¹%USERPROFILE%±äÁ¿Ö±½ÓÒıÓÃÎŞĞ§
-2016.04.18	É¾³ı¡°2010.06.21¡±µÄ¸Ä¶¯
+ä¿®æ”¹ä½œè€…ï¼š	å…”å­
+æ›´æ–°è¯´æ˜ï¼š
+2010.01.09	ä¹‹å‰æŸä¸ªæ—¶é—´ï¼Œä¿®æ”¹AHKè·¯å¾„ã€ç¼–è¾‘å™¨è·¯å¾„ã€ç¼–è¯‘å™¨è·¯å¾„ï¼Œé»˜è®¤å…¨éƒ¨åœ¨å½“å‰ç›®å½•ä¸‹å¯»æ‰¾
+2010.01.09	å»æ‰é»˜è®¤åœ¨æ–°å»ºèœå•çš„å‹¾
+2010.06.21	å¦‚æœSCITEä¸ºé»˜è®¤ç¼–è¾‘å™¨ï¼Œåˆ™å¤åˆ¶ä¸ªäººé…ç½®æ–‡ä»¶â€œSciTEUser.propertiesâ€åˆ°%USERPROFILE%
+2010.06.25	ä¿®æ­£å› #NoEnvä½¿%USERPROFILE%å˜é‡ç›´æ¥å¼•ç”¨æ— æ•ˆ
+2016.04.18	åˆ é™¤â€œ2010.06.21â€çš„æ”¹åŠ¨
+2021.10.17	æ–°å¢â€œç¼–è¯‘è„šæœ¬ (GUI)â€çš„æ±‰åŒ–
 */
 
 #NoEnv
@@ -20,12 +21,12 @@ AutoHotkey °æ±¾: 1.x
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 
-; °æ±¾(½öÓÃÓÚÏÔÊ¾£©
+; ç‰ˆæœ¬(ä»…ç”¨äºæ˜¾ç¤ºï¼‰
 Script_Version=v1.0.3.2
 
-; AutoHotkey Ô­°æµÄÏà¹ØĞÅÏ¢Ğ´ÔÚ×¢²á±íHKCRÖ÷¼üÖĞ£¬
-; ³¢ÊÔÊÇµ±Ç°ÓÃ»§·ñÓĞÈ¨²Ù×÷¸Ã¼ü£¬Èç¹ûÎŞÈ¨²Ù×÷HKCR¼ü£¨ÊÜÏŞÓÃ»§£©£¬
-; ¿ÉÍ¨¹ı²Ù×÷×¢²á±íHKCU¼üÀ´ÊµÏÖ½öµ±Ç°ÓÃ»§¹ØÁªAHK½Å±¾¡£
+; AutoHotkey åŸç‰ˆçš„ç›¸å…³ä¿¡æ¯å†™åœ¨æ³¨å†Œè¡¨HKCRä¸»é”®ä¸­ï¼Œ
+; å°è¯•æ˜¯å½“å‰ç”¨æˆ·å¦æœ‰æƒæ“ä½œè¯¥é”®ï¼Œå¦‚æœæ— æƒæ“ä½œHKCRé”®ï¼ˆå—é™ç”¨æˆ·ï¼‰ï¼Œ
+; å¯é€šè¿‡æ“ä½œæ³¨å†Œè¡¨HKCUé”®æ¥å®ç°ä»…å½“å‰ç”¨æˆ·å…³è”AHKè„šæœ¬ã€‚
 IsLimitedUser:=0
 RegWrite, REG_SZ, HKCR, .test
 if ErrorLevel
@@ -34,28 +35,28 @@ RegDelete, HKCR, .test
 if ErrorLevel
 	IsLimitedUser:=1
 
-if IsLimitedUser=0 ; ·ÇÊÜÏŞÓÃ»§²Ù×÷HKCR¼ü
+if IsLimitedUser=0 ; éå—é™ç”¨æˆ·æ“ä½œHKCRé”®
 {
 	RootKey=HKCR
 	Subkey=
 }
-else ; ÊÜÏŞÓÃ»§²Ù×÷HKCU¼ü
+else ; å—é™ç”¨æˆ·æ“ä½œHKCUé”®
 {
 	RootKey=HKCU
-	Subkey=Software\Classes\ ; <-- Îª¼ò»¯ºóÃæµÄ½Å±¾£¬´Ë×Ó¼üĞëÒÔ¡°\¡±½áÎ²
+	Subkey=Software\Classes\ ; <-- ä¸ºç®€åŒ–åé¢çš„è„šæœ¬ï¼Œæ­¤å­é”®é¡»ä»¥â€œ\â€ç»“å°¾
 }
 
-; ¼ì²éÊÇ·ñ´æÔÚAHK×¢²á±íÏî
+; æ£€æŸ¥æ˜¯å¦å­˜åœ¨AHKæ³¨å†Œè¡¨é¡¹
 RegRead, FileType, %RootKey%, %Subkey%.ahk
 if FileType<>
 {
-	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Open\Command ;AHKÂ·¾¶
+	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Open\Command ;AHKè·¯å¾„
 	AHK_Path:=PathGetPath(value)
-	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Edit\Command ;±à¼­Æ÷Â·¾¶
+	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Edit\Command ;ç¼–è¾‘å™¨è·¯å¾„
 	Editor_Path:=PathGetPath(value)
-	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Compile\Command ;±àÒëÆ÷Â·¾¶
+	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Compile\Command ;ç¼–è¯‘å™¨è·¯å¾„
 	Compiler_Path:=PathGetPath(value)
-	RegRead, Template_Name, %RootKey%, %Subkey%.ahk\ShellNew, FileName ;Ä£°åÎÄ¼şÃû
+	RegRead, Template_Name, %RootKey%, %Subkey%.ahk\ShellNew, FileName ;æ¨¡æ¿æ–‡ä»¶å
 }
 else
 	FileType=AutoHotkeyScript
@@ -81,53 +82,53 @@ if Compiler_Path=
 if Template_Name=
 	Template_Name=Template.ahk
 
-Gui, Add, Tab, x10 y10 w480 h250 Choose1, ÉèÖÃ|ËµÃ÷
+Gui, Add, Tab, x10 y10 w480 h250 Choose1, è®¾ç½®|è¯´æ˜
 	Gui, Tab, 1
-		Gui, Add, GroupBox, x20 y40 w460 h50 , ¡°ÔËĞĞ½Å±¾¡±¹ØÁªµÄ AutoHotkey
+		Gui, Add, GroupBox, x20 y40 w460 h50 , â€œè¿è¡Œè„šæœ¬â€å…³è”çš„ AutoHotkey
 		Gui, Add, Edit, x35 y60 w340 h20 vAHK_Path, %AHK_path%
-		Gui, Add, Button, x385 y60 w40 h20 gFind_AHK, ä¯ÀÀ
+		Gui, Add, Button, x385 y60 w40 h20 gFind_AHK, æµè§ˆ
 
-		Gui, Add, GroupBox, x20 y100 w460 h50 , ¡°±à¼­½Å±¾¡±¹ØÁªµÄ±à¼­Æ÷
+		Gui, Add, GroupBox, x20 y100 w460 h50 , â€œç¼–è¾‘è„šæœ¬â€å…³è”çš„ç¼–è¾‘å™¨
 		Gui, Add, Edit, x35 y120 w340 h20 vEditor_Path, %Editor_Path%
-		Gui, Add, Button, x385 y120 w40 h20 gChoose_Editor, ä¯ÀÀ
-		Gui, Add, Button, x430 y120 w40 h20 gDefault_Editor, Ä¬ÈÏ
+		Gui, Add, Button, x385 y120 w40 h20 gChoose_Editor, æµè§ˆ
+		Gui, Add, Button, x430 y120 w40 h20 gDefault_Editor, é»˜è®¤
 
-		Gui, Add, GroupBox, x20 y160 w460 h50 , ¡°±àÒë½Å±¾¡±¹ØÁªµÄ±àÒëÆ÷
+		Gui, Add, GroupBox, x20 y160 w460 h50 , â€œç¼–è¯‘è„šæœ¬â€å…³è”çš„ç¼–è¯‘å™¨
 		Gui, Add, Edit, x35 y180 w340 h20 vCompiler_Path, %Compiler_Path%
-		Gui, Add, Button, x385 y180 w40 h20 gChoose_Compiler, ä¯ÀÀ
-		Gui, Add, Button, x430 y180 w40 h20 gDefault_Compiler, Ä¬ÈÏ
+		Gui, Add, Button, x385 y180 w40 h20 gChoose_Compiler, æµè§ˆ
+		Gui, Add, Button, x430 y180 w40 h20 gDefault_Compiler, é»˜è®¤
 
-		Gui, Add, Checkbox, x35 y230 w270 h20 gNew_Script vNew_Script, ÓÒ¼ü¡°ĞÂ½¨¡±²Ëµ¥ÖĞÔö¼Ó¡°AutoHotkey ½Å±¾¡±
-		Gui, Add, Button, x310 y230 w80 h20 vEdit_Template gEdit_Template, ±à¼­½Å±¾Ä£°å
-		Gui, Add, Button, x400 y230 w80 h20 vDelete_Template gDelete_Template, É¾³ı½Å±¾Ä£°å
+		Gui, Add, Checkbox, x35 y230 w270 h20 gNew_Script vNew_Script, å³é”®â€œæ–°å»ºâ€èœå•ä¸­å¢åŠ â€œAutoHotkey è„šæœ¬â€
+		Gui, Add, Button, x310 y230 w80 h20 vEdit_Template gEdit_Template, ç¼–è¾‘è„šæœ¬æ¨¡æ¿
+		Gui, Add, Button, x400 y230 w80 h20 vDelete_Template gDelete_Template, åˆ é™¤è„šæœ¬æ¨¡æ¿
 
 	Gui, Tab, 2
 		Gui, Font, bold
-		Gui, Add, Text,, AutoHotkey ½Å±¾¹ØÁª¹¤¾ß  ScriptSetting %Script_Version%
+		Gui, Add, Text,, AutoHotkey è„šæœ¬å…³è”å·¥å…·  ScriptSetting %Script_Version%
 		Gui, Font
 		Gui, Font, CBlue underline
-		Gui, Add, Text, gWebsite, ×÷Õß£º¼×¿Ç³æ <jdchenjian@gmail.com>`n`n²©¿Í£ºhttp://hi.baidu.com/jdchenjian
+		Gui, Add, Text, gWebsite, ä½œè€…ï¼šç”²å£³è™« <jdchenjian@gmail.com>`n`nåšå®¢ï¼šhttp://hi.baidu.com/jdchenjian
 		Gui, Font
-		Gui, Add, Text, w450, ´Ë¹¤¾ßÓÃÀ´ĞŞ¸Ä AutoHotkey ½Å±¾µÄÓÒ¼ü²Ëµ¥¹ØÁª£¬ÊÊÓÃÓÚ AutoHotkey °²×°°æ¡¢ÂÌÉ«°æ¡£
-		Gui, Add, Text, w450, Äú¿ÉÒÔÓÃËüÀ´ĞŞ¸ÄÄ¬ÈÏ½Å±¾±à¼­Æ÷¡¢±àÒëÆ÷£¬ĞŞ¸ÄÄ¬ÈÏµÄĞÂ½¨½Å±¾Ä£°å¡£ÉèÖÃºó£¬ÔÚÓÒ¼ü²Ëµ¥ÖĞÌí¼Ó¡°ÔËĞĞ½Å±¾¡±¡¢¡°±à¼­½Å±¾¡±¡¢¡°±àÒë½Å±¾¡±ºÍ¡°ĞÂ½¨ AutoHotkey ½Å±¾¡±µÈÑ¡Ïî¡£
-		Gui, Add, Text, w450, ÒªÈ¡Ïû½Å±¾µÄÏµÍ³¹ØÁª£¬Çë°´¡°Ğ¶ÔØ¡±¡£×¢Òâ£ºĞ¶ÔØºóÄú½«ÎŞ·¨Í¨¹ıË«»÷À´ÔËĞĞ½Å±¾£¬Ò²²»ÄÜÍ¨¹ıÓÒ¼ü²Ëµ¥À´Æô¶¯½Å±¾±à¼­Æ÷...
+		Gui, Add, Text, w450, æ­¤å·¥å…·ç”¨æ¥ä¿®æ”¹ AutoHotkey è„šæœ¬çš„å³é”®èœå•å…³è”ï¼Œé€‚ç”¨äº AutoHotkey å®‰è£…ç‰ˆã€ç»¿è‰²ç‰ˆã€‚
+		Gui, Add, Text, w450, æ‚¨å¯ä»¥ç”¨å®ƒæ¥ä¿®æ”¹é»˜è®¤è„šæœ¬ç¼–è¾‘å™¨ã€ç¼–è¯‘å™¨ï¼Œä¿®æ”¹é»˜è®¤çš„æ–°å»ºè„šæœ¬æ¨¡æ¿ã€‚è®¾ç½®åï¼Œåœ¨å³é”®èœå•ä¸­æ·»åŠ â€œè¿è¡Œè„šæœ¬â€ã€â€œç¼–è¾‘è„šæœ¬â€ã€â€œç¼–è¯‘è„šæœ¬â€å’Œâ€œæ–°å»º AutoHotkey è„šæœ¬â€ç­‰é€‰é¡¹ã€‚
+		Gui, Add, Text, w450, è¦å–æ¶ˆè„šæœ¬çš„ç³»ç»Ÿå…³è”ï¼Œè¯·æŒ‰â€œå¸è½½â€ã€‚æ³¨æ„ï¼šå¸è½½åæ‚¨å°†æ— æ³•é€šè¿‡åŒå‡»æ¥è¿è¡Œè„šæœ¬ï¼Œä¹Ÿä¸èƒ½é€šè¿‡å³é”®èœå•æ¥å¯åŠ¨è„šæœ¬ç¼–è¾‘å™¨...
 
 Gui, Tab
-Gui, Add, Button, x100 y270 w60 h20 Default gInstall, ÉèÖÃ
-Gui, Add, Button, x200 y270 w60 h20 gUninstall, Ğ¶ÔØ
-Gui, Add, Button, x300 y270 w60 h20 gCancel, È¡Ïû
+Gui, Add, Button, x100 y270 w60 h20 Default gInstall, è®¾ç½®
+Gui, Add, Button, x200 y270 w60 h20 gUninstall, å¸è½½
+Gui, Add, Button, x300 y270 w60 h20 gCancel, å–æ¶ˆ
 
 Gui, Show, x250 y200 h300 w500 Center, ScriptSetting %Script_Version%
-GuiControl, Disable, Edit_Template ; Ê¹¡°±à¼­½Å±¾Ä£°å¡±°´Å¥ÎŞĞ§
+GuiControl, Disable, Edit_Template ; ä½¿â€œç¼–è¾‘è„šæœ¬æ¨¡æ¿â€æŒ‰é’®æ— æ•ˆ
 IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
-	GuiControl, Disable, Delete_Template ; Ê¹¡°É¾³ı½Å±¾Ä£°å¡±°´Å¥ÎŞĞ§
+	GuiControl, Disable, Delete_Template ; ä½¿â€œåˆ é™¤è„šæœ¬æ¨¡æ¿â€æŒ‰é’®æ— æ•ˆ
 
-; µ±Êó±êÖ¸ÏòÁ´½ÓÊ±£¬Ö¸Õë±ä³ÉÊÖĞÎ
+; å½“é¼ æ ‡æŒ‡å‘é“¾æ¥æ—¶ï¼ŒæŒ‡é’ˆå˜æˆæ‰‹å½¢
 hCurs:=DllCall("LoadCursor","UInt",NULL,"Int",32649,"UInt") ;IDC_HAND
 OnMessage(0x200,"WM_MOUSEMOVE")
 return
 
-; ¸Ä±äÊó±êÖ¸ÕëÎªÊÖĞÎ
+; æ”¹å˜é¼ æ ‡æŒ‡é’ˆä¸ºæ‰‹å½¢
 WM_MOUSEMOVE(wParam,lParam)
 {
 	global hCurs
@@ -143,24 +144,24 @@ GuiEscape:
 Cancel:
 	ExitApp
 
-	; ²éÕÒ AutoHotkey Ö÷³ÌĞò
+	; æŸ¥æ‰¾ AutoHotkey ä¸»ç¨‹åº
 Find_AHK:
 	Gui +OwnDialogs
-	FileSelectFile, AHK_Path, 3, , ²éÕÒ AutoHotkey.exe, AutoHotkey.exe
+	FileSelectFile, AHK_Path, 3, , æŸ¥æ‰¾ AutoHotkey.exe, AutoHotkey.exe
 	if AHK_Path<>
 		GuiControl,,AHK_Path, %AHK_Path%
 	gosub Default_Compiler
 return
 
-; Ñ¡Ôñ½Å±¾±à¼­Æ÷
+; é€‰æ‹©è„šæœ¬ç¼–è¾‘å™¨
 Choose_Editor:
 	Gui +OwnDialogs
-	FileSelectFile, Editor_Path, 3, , Ñ¡Ôñ½Å±¾±à¼­Æ÷, ³ÌĞò(*.exe)
+	FileSelectFile, Editor_Path, 3, , é€‰æ‹©è„šæœ¬ç¼–è¾‘å™¨, ç¨‹åº(*.exe)
 	if Editor_Path<>
 		GuiControl,,Editor_Path, %Editor_Path%
 return
 
-; Ä¬ÈÏ½Å±¾±à¼­Æ÷
+; é»˜è®¤è„šæœ¬ç¼–è¾‘å™¨
 Default_Editor:
 	IfExist, %A_ScriptDir%\SciTE\SciTE.exe
 		Editor_Path=%A_ScriptDir%\SciTE\SciTE.exe
@@ -169,15 +170,15 @@ Default_Editor:
 	GuiControl,, Editor_Path, %Editor_Path%
 return
 
-; Ñ¡Ôñ½Å±¾±àÒëÆ÷
+; é€‰æ‹©è„šæœ¬ç¼–è¯‘å™¨
 Choose_Compiler:
 	Gui +OwnDialogs
-	FileSelectFile, Compiler_Path, 3, , Ñ¡Ôñ½Å±¾±àÒëÆ÷, ³ÌĞò(*.exe)
+	FileSelectFile, Compiler_Path, 3, , é€‰æ‹©è„šæœ¬ç¼–è¯‘å™¨, ç¨‹åº(*.exe)
 	if Compiler_Path<>
 		GuiControl,,Compiler_Path, %Compiler_Path%
 return
 
-; Ä¬ÈÏ½Å±¾±àÒëÆ÷
+; é»˜è®¤è„šæœ¬ç¼–è¯‘å™¨
 Default_Compiler:
 	GuiControlGet, AHK_Path
 	SplitPath, AHK_Path, ,AHK_Dir
@@ -188,28 +189,28 @@ Default_Compiler:
 	}
 return
 
-; ÉèÖÃ
+; è®¾ç½®
 Install:
 	Gui, Submit
 	IfNotExist, %AHK_Path%
 	{
-		MsgBox, 16, ScriptSetting %Script_Version%, AutoHotkey Â·¾¶´íÎó £¡
+		MsgBox, 16, ScriptSetting %Script_Version%, AutoHotkey è·¯å¾„é”™è¯¯ ï¼
 		return
 	}
 
 	IfNotExist, %Editor_Path%
 	{
-		MsgBox, 16, ScriptSetting %Script_Version%, ±à¼­Æ÷Â·¾¶´íÎó £¡
+		MsgBox, 16, ScriptSetting %Script_Version%, ç¼–è¾‘å™¨è·¯å¾„é”™è¯¯ ï¼
 		return
 	}
 
 	IfNotExist, %Compiler_Path%
 	{
-		MsgBox, 16, ScriptSetting %Script_Version%, ±àÒëÆ÷Â·¾¶´íÎó £¡
+		MsgBox, 16, ScriptSetting %Script_Version%, ç¼–è¯‘å™¨è·¯å¾„é”™è¯¯ ï¼
 		return
 	}
 
-	; Ğ´Èë×¢²á±í
+	; å†™å…¥æ³¨å†Œè¡¨
 	RegWrite, REG_SZ, %RootKey%, %Subkey%.ahk,, %FileType%
 	if New_Script=1
 	{
@@ -224,20 +225,27 @@ Install:
 			gosub Delete_Template
 	}
 
-	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%,, AutoHotkey ½Å±¾
+	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%,, AutoHotkey è„šæœ¬
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\DefaultIcon,, %AHK_Path%`,1
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell,, Open
-	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Open,, ÔËĞĞ½Å±¾
+	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Open,, è¿è¡Œè„šæœ¬
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Open\Command,, "%AHK_Path%" "`%1" `%*
-	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Edit,, ±à¼­½Å±¾
+	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Edit,, ç¼–è¾‘è„šæœ¬
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Edit\Command,, "%Editor_Path%" "`%1"
-	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile,, ±àÒë½Å±¾
+	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile,, ç¼–è¯‘è„šæœ¬
+	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile-Gui,, ç¼–è¯‘è„šæœ¬ (GUI)
 	IfInString, Compiler_Path, Ahk2Exe.exe
+	{
 		RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile\Command,, "%Compiler_Path%" /in "`%1"
+		RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile-Gui\Command,, "%Compiler_Path%" /gui /in "`%1"
+	}
 	else
+	{
 		RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile\Command,, "%Compiler_Path%" "`%1"
+		RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile-Gui\Command,, "%Compiler_Path%" /gui "`%1"
+	}
 
-	/*		ĞÂ°æµÄscite²»ĞèÒª½«¡°SciTEUser.properties¡±·ÅÔÚ¡°USERPROFILE¡±Ä¿Â¼ÏÂÁË
+	/*	æ–°ç‰ˆçš„sciteä¸éœ€è¦å°†â€œSciTEUser.propertiesâ€æ”¾åœ¨â€œUSERPROFILEâ€ç›®å½•ä¸‹äº†
 	if Editor_Path=%A_ScriptDir%\SciTE\SciTE.exe
 	{
 		EnvGet,USERPROFILE,USERPROFILE
@@ -245,13 +253,13 @@ Install:
 	}
 	*/
 
-	MsgBox, 64, ScriptSetting %Script_Version%, ÉèÖÃÍê±Ï £¡
+	MsgBox, 64, ScriptSetting %Script_Version%, è®¾ç½®å®Œæ¯• ï¼
 	ExitApp
 
-	; Ğ¶ÔØ
+	; å¸è½½
 Uninstall:
 	MsgBox, 36, ScriptSetting %Script_Version%
-		, ×¢Òâ£ºĞ¶ÔØºóÄú½«ÎŞ·¨Í¨¹ıË«»÷À´ÔËĞĞ½Å±¾£¬Ò²²»ÄÜÍ¨¹ıÓÒ¼ü²Ëµ¥À´Æô¶¯½Å±¾±à¼­Æ÷...`n`nÈ·¶¨ÒªÈ¡Ïû AHK ½Å±¾µÄÏµÍ³¹ØÁªÂğ £¿
+		, æ³¨æ„ï¼šå¸è½½åæ‚¨å°†æ— æ³•é€šè¿‡åŒå‡»æ¥è¿è¡Œè„šæœ¬ï¼Œä¹Ÿä¸èƒ½é€šè¿‡å³é”®èœå•æ¥å¯åŠ¨è„šæœ¬ç¼–è¾‘å™¨...`n`nç¡®å®šè¦å–æ¶ˆ AHK è„šæœ¬çš„ç³»ç»Ÿå…³è”å— ï¼Ÿ
 	IfMsgBox, Yes
 	{
 		RegDelete, %RootKey%, %Subkey%.ahk
@@ -261,12 +269,12 @@ Uninstall:
 	}
 return
 
-; ±à¼­½Å±¾Ä£°å
+; ç¼–è¾‘è„šæœ¬æ¨¡æ¿
 Edit_Template:
 	GuiControlGet, Editor_Path
 	IfNotExist, %Editor_Path%
 	{
-		MsgBox, 64, ScriptSetting %Script_Version%, ½Å±¾±à¼­Æ÷Â·¾¶´íÎó £¡
+		MsgBox, 64, ScriptSetting %Script_Version%, è„šæœ¬ç¼–è¾‘å™¨è·¯å¾„é”™è¯¯ ï¼
 		return
 	}
 	IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
@@ -274,7 +282,7 @@ Edit_Template:
 	Run, %Editor_Path% %A_WinDir%\ShellNew\%Template_Name%
 return
 
-; Ê¹±à¼­½Å±¾Ä£°å°´Å¥ÓĞĞ§/ÎŞĞ§
+; ä½¿ç¼–è¾‘è„šæœ¬æ¨¡æ¿æŒ‰é’®æœ‰æ•ˆ/æ— æ•ˆ
 New_Script:
 	GuiControlGet, New_Script
 	if New_Script=0
@@ -283,7 +291,7 @@ New_Script:
 		GuiControl, Enable, Edit_Template
 return
 
-; ĞÂ½¨½Å±¾Ä£°å
+; æ–°å»ºè„šæœ¬æ¨¡æ¿
 Create_Template:
 	GuiControlGet, AHK_Path
 	FileGetVersion, AHK_Ver, %AHK_Path%
@@ -291,12 +299,12 @@ Create_Template:
 	FileAppend,
 	(
 /*
-AutoHotkey °æ±¾: %AHK_Ver%
-²Ù×÷ÏµÍ³:    %A_OSVersion%
-×÷Õß:        %A_UserName%
-ÍøÕ¾:        http://www.AutoHotkey.com
-½Å±¾ËµÃ÷£º
-½Å±¾°æ±¾£º   v1.0
+AutoHotkey ç‰ˆæœ¬: %AHK_Ver%
+æ“ä½œç³»ç»Ÿ:    %A_OSVersion%
+ä½œè€…:        %A_UserName%
+ç½‘ç«™:        http://www.AutoHotkey.com
+è„šæœ¬è¯´æ˜ï¼š
+è„šæœ¬ç‰ˆæœ¬ï¼š   v1.0
 */
 
 #NoEnv
@@ -305,24 +313,24 @@ SetWorkingDir `%A_ScriptDir`%
 
 	), %A_WinDir%\ShellNew\%Template_Name%
 
-	GuiControl, Enable, Delete_Template ; Ê¹¡°É¾³ı½Å±¾Ä£°å¡±°´Å¥ÓĞĞ§
+	GuiControl, Enable, Delete_Template ; ä½¿â€œåˆ é™¤è„šæœ¬æ¨¡æ¿â€æŒ‰é’®æœ‰æ•ˆ
 return
 
-; É¾³ı½Å±¾Ä£°å
+; åˆ é™¤è„šæœ¬æ¨¡æ¿
 Delete_Template:
 	MsgBox, 36, ScriptSetting %Script_Version%
-		, ÒªÉ¾³ıµ±Ç°µÄ AHK ½Å±¾Ä£°åÂğ £¿`n`n½Å±¾Ä£°å±»É¾³ıºó£¬ÈÔ¿ÉÍ¨¹ı±¾¹¤¾ßÖØ½¨Ä£°å¡£
+		, è¦åˆ é™¤å½“å‰çš„ AHK è„šæœ¬æ¨¡æ¿å— ï¼Ÿ`n`nè„šæœ¬æ¨¡æ¿è¢«åˆ é™¤åï¼Œä»å¯é€šè¿‡æœ¬å·¥å…·é‡å»ºæ¨¡æ¿ã€‚
 	IfMsgBox, Yes
 		FileDelete, %A_WinDir%\ShellNew\%Template_Name%
-	GuiControl, Disable, Delete_Template ; Ê¹¡°É¾³ı½Å±¾Ä£°å¡±°´Å¥ÎŞĞ§
+	GuiControl, Disable, Delete_Template ; ä½¿â€œåˆ é™¤è„šæœ¬æ¨¡æ¿â€æŒ‰é’®æ— æ•ˆ
 return
 
-; ´ò¿ªÍøÕ¾
+; æ‰“å¼€ç½‘ç«™
 Website:
 	Run, http://hi.baidu.com/jdchenjian
 return
 
-; ´Ó×¢²á±íÖµ×Ö·û´®ÖĞÌáÈ¡Â·¾¶
+; ä»æ³¨å†Œè¡¨å€¼å­—ç¬¦ä¸²ä¸­æå–è·¯å¾„
 PathGetPath(pSourceCmd)
 {
 	local Path, ArgsStartPos = 0
