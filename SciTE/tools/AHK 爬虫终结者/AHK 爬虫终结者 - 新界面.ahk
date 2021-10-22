@@ -1,5 +1,17 @@
 ﻿/*
 更新日志：
+  2021.10.22
+    更新 WinHttp 库为 3.7。
+    版本号3.7。
+  2021.08.18
+    更新 WinHttp 库为 3.6。
+    版本号3.6。
+  2021.08.16
+    更新 WinHttp 库为 3.5。
+    版本号3.5。
+  2021.06.29
+    修复智能库引用错误使用本地库作为判断依据。
+    版本号3.4
   2021.04.13
     更智能的库引用，生成的代码无需手动引用。
     版本号3.3
@@ -115,7 +127,7 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like
 
   Gui, Add, StatusBar, v状态栏, %A_Space%%A_Space%%A_Space%%A_Space%主页
 
-  Gui, Show, w1250 h750, AHK 爬虫终结者 ver. 3.3
+  Gui, Show, w1250 h750, AHK 爬虫终结者 ver. 3.7
 
   gosub, 智能库引用
 
@@ -130,25 +142,23 @@ GuiClose:
 return
 
 智能库引用:
-  本地库:=A_ScriptDir "\Lib\"
   用户库:=A_MyDocuments "\AutoHotkey\Lib\"
   标准库:=A_AhkPath "\..\Lib\"
   ; 在任意一个库文件目录中找到3个库文件，则简单引用就好。
-  if  ((FileExist(本地库 "WinHttp.ahk") and FileExist(本地库 "NonNull.ahk") and FileExist(本地库 "GlobalRegExMatch.ahk"))
-    or (FileExist(用户库 "WinHttp.ahk") and FileExist(用户库 "NonNull.ahk") and FileExist(用户库 "GlobalRegExMatch.ahk"))
-    or (FileExist(标准库 "WinHttp.ahk") and FileExist(标准库 "NonNull.ahk") and FileExist(标准库 "GlobalRegExMatch.ahk")))
+  if  ((FileExist(用户库 "WinHttp.ahk") and FileExist(用户库 "NonNull.ahk") and FileExist(用户库 "RegEx.ahk"))
+    or (FileExist(标准库 "WinHttp.ahk") and FileExist(标准库 "NonNull.ahk") and FileExist(标准库 "RegEx.ahk")))
     {
       库引用:="#Include <WinHttp>"
     }
     else
     {
       ; 库文件目录里找不到3个库文件，则加载3个库文件内容到变量里。
-      FileRead, 库引用1, %A_ScriptDir%\WinHttp.ahk
-      FileRead, 库引用2, %A_ScriptDir%\NonNull.ahk
-      FileRead, 库引用3, %A_ScriptDir%\GlobalRegExMatch.ahk
-      库引用1:=StrReplace(库引用1, "#Include %A_LineFile%\..\NonNull.ahk")
-      库引用1:=StrReplace(库引用1, "#Include %A_LineFile%\..\GlobalRegExMatch.ahk")
-      库引用:="; ------------------以下是库文件------------------`r`n" 库引用1 "`r`n" 库引用2 "`r`n" 库引用3
+      FileRead, 库引用1, %A_ScriptDir%\Lib\WinHttp.ahk
+      FileRead, 库引用2, %A_ScriptDir%\Lib\RegEx.ahk
+      FileRead, 库引用3, %A_ScriptDir%\Lib\NonNull.ahk
+      库引用1:=StrReplace(库引用1, "#IncludeAgain %A_LineFile%\..\RegEx.ahk", "`r`n" 库引用2)
+      库引用1:=StrReplace(库引用1, "#IncludeAgain %A_LineFile%\..\NonNull.ahk", "`r`n" 库引用3)
+      库引用:="; ------------------以下是库文件------------------`r`n`r`n" 库引用1
     }
 return
 
@@ -193,7 +203,8 @@ return
     %提交数据%
     `)
 
-    返回值:=WinHttp.Download(网址, 设置, 请求头, 提交数据)
+    ; WinHttp.Download(网址, 设置, 请求头, 提交数据, "x:\1.html")  ; 下载并存为文件
+    返回值:=WinHttp.Download(网址, 设置, 请求头, 提交数据)  ; 下载并存到变量
     响应头:=WinHttp.解析对象为信息(WinHttp.ResponseHeaders)
     return
 
@@ -234,4 +245,4 @@ gui_KeyDown(wParam, lParam, nMsg, hWnd) { ; http://www.autohotkey.com/board/topi
   }
 }
 
-#Include %A_ScriptDir%\WinHttp.ahk
+#Include <WinHttp>

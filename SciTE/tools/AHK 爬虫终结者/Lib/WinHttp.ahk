@@ -1,5 +1,9 @@
 ﻿/*
 更新日志：
+  2021.10.22
+  改变 Include 方式，降低库冲突的可能性。
+  版本号3.7
+
   2021.08.18
   修复响应头的 Set-Cookie 总是被改变为 Cookie 的问题。
   版本号3.6
@@ -257,7 +261,7 @@ class WinHttp
     StringReplace, infos, infos, `n, `r`n, All
 
     ; 使用正则而不是 StrSplit() 进行处理的原因是，后者会错误处理这样的情况 “程序会根据 “Proxy:” 的值自动设置” 。
-    infos_temp := GlobalRegExMatch(infos, "m)^\s*([\w\-]*?):(.*$)", 1)
+    infos_temp := this.RegEx.GlobalMatch(infos, "m)^\s*([\w\-]*?):(.*$)", 1)
     ; 将正则匹配到的信息存入新的对象中，像这样 {"Connection":"keep-alive", "Cache-Control":"max-age=0"} 。
     obj:={}
     Loop, % infos_temp.MaxIndex()
@@ -384,8 +388,8 @@ class WinHttp
   */
   CreateFormData(ByRef retData, ByRef retHeader, objParam, BoundaryString:="", RandomBoundaryLength:="", MimeType:="") {
 
-    NonNull(BoundaryString, "----WebKitFormBoundary")
-    , NonNull(RandomBoundaryLength, 16, 1)
+    this.NonNull(BoundaryString, "----WebKitFormBoundary")
+    , this.NonNull(RandomBoundaryLength, 16, 1)
 
     CRLF := "`r`n"
 
@@ -402,7 +406,7 @@ class WinHttp
         {
           str := BoundaryLine . CRLF
                . "Content-Disposition: form-data; name=""" . k . """; filename=""" . FileName . """" . CRLF
-               . "Content-Type: " . NonNull_ret(MimeType, this.GetMimeType(FileName)) . CRLF . CRLF
+               . "Content-Type: " . this.NonNull_ret(MimeType, this.GetMimeType(FileName)) . CRLF . CRLF
           fileArrs.Push( this.BinArr_FromString(str) )
           fileArrs.Push( this.BinArr_FromFile(FileName) )
           fileArrs.Push( this.BinArr_FromString(CRLF) )
@@ -512,7 +516,7 @@ class WinHttp
     oADO.SaveToFile(FileName, 2)          ; 文件存在则覆盖
     oADO.Close()
   }
-}
 
-#Include %A_LineFile%\..\NonNull.ahk
-#Include %A_LineFile%\..\GlobalRegExMatch.ahk
+  #IncludeAgain %A_LineFile%\..\RegEx.ahk
+  #IncludeAgain %A_LineFile%\..\NonNull.ahk
+}
