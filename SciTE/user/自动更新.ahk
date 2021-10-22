@@ -45,6 +45,5 @@ return
 	}
 return
 
-#Include %A_ScriptDir%\..\tools\AHK 爬虫终结者\WinHttp.ahk
-#Include %A_ScriptDir%\..\tools\AHK 爬虫终结者\GlobalRegExMatch.ahk
+#Include %A_ScriptDir%\..\tools\AHK 爬虫终结者\Lib\WinHttp.ahk
 #Include %A_ScriptDir%\..\tools\MagicBox\Functions\MsgBoxEx.ahk
