@@ -1,5 +1,9 @@
 ﻿/*
 更新日志：
+  2021.10.22
+    改变 Include 方式，降低库冲突的可能性。
+    版本号1.4。
+
   2021.08.17
     修复H版不能运行的问题。
     版本号1.3。
@@ -106,18 +110,18 @@ return
   , sci2.SetStyling(sci2.getLength(), 1)
 
   if (兼容模式=1)
-    正则:=正则添加选项(正则, "m", "(*ANYCRLF)")
+    正则:=RegEx.AddOptions(正则, "m", "(*ANYCRLF)")
   if (不区分大小写=1)
-    正则:=正则添加选项(正则, "i")
+    正则:=RegEx.AddOptions(正则, "i")
   if (句点全匹配=1)
-    正则:=正则添加选项(正则, "s")
+    正则:=RegEx.AddOptions(正则, "s")
   if (非贪婪模式=1)
-    正则:=正则添加选项(正则, "U")
+    正则:=RegEx.AddOptions(正则, "U")
 
   if (全局模式=1)
-    原始匹配对象:=GlobalRegExMatch(文本, 正则, 起点)
+    原始匹配对象:=RegEx.GlobalMatch(文本, 正则, 起点)
   else
-    原始匹配对象:=RegExMatchLikeGlobal(文本, 正则, 起点)
+    原始匹配对象:=RegEx.Match(文本, 正则, 起点)
 
   if (RegExMatch(正则, "\R$"))
     btt("检测到当前 “正则表达式” 末尾存在空行`r`n若末尾的空行是误操作请自行删除`r`n因为空行可能会影响匹配结果",,, 3, "Style3")
@@ -146,7 +150,7 @@ return
 
 #Include <BTT>
 #Include <RunWith>
-#Include <GlobalRegExMatch> ; H 版中，如果本地库和用户库有相同中文名称库文件，则会报函数重复引用错误。L 版没这问题。因此改名。
+#Include <RegEx>  ; H 版中，如果本地库和用户库有相同中文名称库文件，则会报函数重复引用错误。L 版没这问题，因此改名。
 #Include <以指定代码页计算匹配对象位置及长度>
 
 #Include <主界面>

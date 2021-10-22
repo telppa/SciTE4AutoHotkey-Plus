@@ -4,9 +4,14 @@ https://github.com/telppa/BeautifulToolTip
 If you want to add your own style to the built-in style, you can add it directly in btt().
 
 version:
-2021.04.30
+2021.10.03
 
 changelog:
+2021.10.03
+  改变 Include 方式，降低库冲突的可能性。
+2021.09.29
+  支持设置 TabStops 。
+  除 GDIP 库外所有函数内置到 Class 中，降低库冲突的可能性。
 2021.04.30
   修复 Win7 下不能运行的 bug 。（2021.04.20 引起）
 2021.04.20
@@ -37,7 +42,6 @@ changelog:
   Options 增加 Transparent 参数，可直接设置整体透明度。
 
 todo:
-tabstop
 指定高宽
 文字可获取
 降低内存消耗
@@ -46,12 +50,12 @@ ANSI版本的支持
 文字太多导致没有显示完全的情况下给予明显提示（例如闪烁）
 
 优势:
-*高性能				  是内置 ToolTip 2-1000 倍性能（文本越大性能对比越大，多数普通应用场景2-5倍性能）
-*高兼容				  兼容内置 ToolTip 的一切，包括语法、WhichToolTip、A_CoordModeToolTip、自动换行等等
-*简单易用				一行代码即使用 无需手动创建释放资源
-*多套内置风格		可通过模板快速实现自定义风格
-*可自定义风格		细边框（颜色、大小） 圆角 边距 文字（颜色、字体、字号、渲染方式、样式） 背景色 所有颜色支持360°渐变与透明
-*可自定义参数		贴附目标句柄 坐标模式 整体透明度 文本框永不被遮挡 跟随鼠标距离 不绘制内容直接返回尺寸
+*高性能         是内置 ToolTip 2-1000 倍性能（文本越大性能对比越大，多数普通应用场景2-5倍性能）
+*高兼容         兼容内置 ToolTip 的一切，包括语法、WhichToolTip、A_CoordModeToolTip、自动换行等等
+*简单易用       一行代码即使用 无需手动创建释放资源
+*多套内置风格   可通过模板快速实现自定义风格
+*可自定义风格   细边框（颜色、大小） 圆角 边距 文字（颜色、字体、字号、渲染方式、样式） 背景色 所有颜色支持360°渐变与透明
+*可自定义参数   贴附目标句柄 坐标模式 整体透明度 文本框永不被遮挡 跟随鼠标距离 不绘制内容直接返回尺寸
 *不闪烁不乱跳
 *多显示器支持
 *缩放显示支持
@@ -69,6 +73,7 @@ btt(Text:="", X:="", Y:="", WhichToolTip:="", BulitInStyleOrStyles:="", BulitInO
        , Style99 :=  {Border:20                                      ; If omitted, 1 will be used. Range 0-20.
                     , Rounded:30                                     ; If omitted, 3 will be used. Range 0-30.
                     , Margin:30                                      ; If omitted, 5 will be used. Range 0-30.
+                    , TabStops:[50, 80, 100]                         ; If omitted, [50] will be used. This value must be an array.
                     , BorderColor:0xffaabbcc                         ; ARGB
                     , BorderColorLinearGradientStart:0xff16a085      ; ARGB
                     , BorderColorLinearGradientEnd:0xfff4d03f        ; ARGB
@@ -209,7 +214,7 @@ Class BeautifulToolTip
         }
         else
           DllCall("Shcore.dll\GetDpiForMonitor", "Ptr", hMonitor, "Int", Type, "UIntP", dpiX, "UIntP", dpiY, "UInt")
-        this.Monitors[hMonitor].DPIScale := NonNull_Ret(dpiX, A_ScreenDPI)/96
+        this.Monitors[hMonitor].DPIScale := this.NonNull_Ret(dpiX, A_ScreenDPI)/96
       }
 
       ; 获取整个桌面的分辨率，即使跨显示器
@@ -219,7 +224,7 @@ Class BeautifulToolTip
       this.DIBHeight := VirtualHeight
 
       ; 获取 ToolTip 的默认字体
-      this.ToolTipFontName := Fnt_GetTooltipFontName()
+      this.ToolTipFontName := this.Fnt_GetTooltipFontName()
 
       ; create 20 guis for gdi+
       ; 最多20个 ToolTip ，与原版对应。
@@ -235,7 +240,7 @@ Class BeautifulToolTip
         , this["obm" A_Index]  := SelectObject(this["hdc" A_Index], this["hbm" A_Index])
         , this["G" A_Index]    := Gdip_GraphicsFromHDC(this["hdc" A_Index])
         , Gdip_SetSmoothingMode(this["G" A_Index], 4)
-        , Gdip_SetPixelOffsetMode(this["G" A_Index], 2)		; 此参数是画出完美圆角矩形的关键
+        , Gdip_SetPixelOffsetMode(this["G" A_Index], 2)  ; 此参数是画出完美圆角矩形的关键
       }
       SetBatchLines, %SavedBatchLines%
     }
@@ -260,7 +265,7 @@ Class BeautifulToolTip
   ToolTip(Text:="", X:="", Y:="", WhichToolTip:="", Styles:="", Options:="")
   {
     ; 给出 WhichToolTip 的默认值1，并限制 WhichToolTip 的范围为 1-20
-    NonNull(WhichToolTip, 1, 1, 20)
+    this.NonNull(WhichToolTip, 1, 1, 20)
     ; 检查并解析 Styles 与 Options 。无论不传参、部分传参、完全传参，此函数均能正确返回所需参数。
     O:=this._CheckStylesAndOptions(Styles, Options)
 
@@ -286,7 +291,7 @@ Class BeautifulToolTip
 
       return
     }
-    else if (FirstCallOrNeedToUpdate)		; First Call or NeedToUpdate
+    else if (FirstCallOrNeedToUpdate)  ; First Call or NeedToUpdate
     {
       ; 加速
       SavedBatchLines:=A_BatchLines
@@ -397,16 +402,16 @@ Class BeautifulToolTip
         ; 因为 BTT 总会在使用一段时间后，被不明原因的置底，导致显示内容被其它窗口遮挡，以为没有正常显示，所以这里提升Z序到最上面！
         ; 已测试过，此方法效率极高，远超 WinSet, Top 命令。
         ; hWndInsertAfter
-        ; 	HWND_TOPMOST:=-1
+        ;   HWND_TOPMOST:=-1
         ; uFlags
-        ; 	SWP_NOSIZE:=0x0001
-        ; 	SWP_NOMOVE:=0x0002
-        ; 	SWP_NOREDRAW:=0x0008
-        ; 	SWP_NOACTIVATE:=0x0010
-        ; 	SWP_NOOWNERZORDER:=0x0200
-        ; 	SWP_NOSENDCHANGING:=0x0400
-        ; 	SWP_DEFERERASE:=0x2000
-        ; 	SWP_ASYNCWINDOWPOS:=0x4000
+        ;   SWP_NOSIZE:=0x0001
+        ;   SWP_NOMOVE:=0x0002
+        ;   SWP_NOREDRAW:=0x0008
+        ;   SWP_NOACTIVATE:=0x0010
+        ;   SWP_NOOWNERZORDER:=0x0200
+        ;   SWP_NOSENDCHANGING:=0x0400
+        ;   SWP_DEFERERASE:=0x2000
+        ;   SWP_ASYNCWINDOWPOS:=0x4000
         DllCall("SetWindowPos", "ptr", this["hBTT" WhichToolTip], "ptr", -1, "int", 0, "int", 0, "int", 0, "int", 0, "uint", 26139)
       }
 
@@ -458,7 +463,7 @@ Class BeautifulToolTip
     return, ret
   }
 
-  ; 为了统一参数的传输，以及特殊模式的设置，修改了gdip库的 Gdip_TextToGraphics() 函数。
+  ; 为了统一参数的传输，以及特殊模式的设置，修改了 gdip 库的 Gdip_TextToGraphics() 函数。
   _TextToGraphics(pGraphics, Text, Options, Measure:=0)
   {
     static Styles := "Regular|Bold|Italic|BoldItalic|Underline|Strikeout"
@@ -498,7 +503,7 @@ Class BeautifulToolTip
         and Options.Width and Options.Height)             ; 渐变画刷
     {
       pBrush := this._CreateLinearGrBrush(Options.TCLGA, Options.TCLGM, Options.TCLGS, Options.TCLGE
-                                        , NonNull_Ret(Options.X, 0), NonNull_Ret(Options.Y, 0)
+                                        , this.NonNull_Ret(Options.X, 0), this.NonNull_Ret(Options.Y, 0)
                                         , Options.Width, Options.Height)
     }
     else
@@ -521,11 +526,15 @@ Class BeautifulToolTip
       return E
     }
 
+    TabStops := []
+    for k, v in Options.TabStops
+      TabStops.Push(v * Options.DPIScale)
+    Gdip_SetStringFormatTabStops(hStringFormat, TabStops)                      ; 设置 TabStops
     Gdip_SetStringFormatAlign(hStringFormat, Align:=0)                         ; 设置左对齐
     Gdip_SetTextRenderingHint(pGraphics, Options.FontRender)                   ; 设置渲染模式
     CreateRectF(RC
-              , NonNull_Ret(Options.X, 0)                                      ; x,y 需要至少为0
-              , NonNull_Ret(Options.Y, 0)
+              , this.NonNull_Ret(Options.X, 0)                                 ; x,y 需要至少为0
+              , this.NonNull_Ret(Options.Y, 0)
               , Options.Width, Options.Height)                                 ; 宽高可以为空
     returnRC := Gdip_MeasureString(pGraphics, Text, hFont, hStringFormat, RC)  ; 计算大小
 
@@ -565,33 +574,34 @@ Class BeautifulToolTip
   _CheckStylesAndOptions(Styles, Options)
   {
       O := {}
-    , O.Border          := NonNull_Ret(Styles.Border         , 1                   , 0 , 20)  ; 细边框    默认1 0-20
-    , O.Rounded         := NonNull_Ret(Styles.Rounded        , 3                   , 0 , 30)  ; 圆角      默认3 0-30
-    , O.Margin          := NonNull_Ret(Styles.Margin         , 5                   , 0 , 30)  ; 边距      默认5 0-30
-    , O.TextColor       := NonNull_Ret(Styles.TextColor      , 0xff575757          , "", "")  ; 文本色    默认0xff575757
-    , O.BackgroundColor := NonNull_Ret(Styles.BackgroundColor, 0xffffffff          , "", "")  ; 背景色    默认0xffffffff
-    , O.Font            := NonNull_Ret(Styles.Font           , this.ToolTipFontName, "", "")  ; 字体      默认与 ToolTip 一致
-    , O.FontSize        := NonNull_Ret(Styles.FontSize       , 12                  , "", "")  ; 字号      默认12
-    , O.FontRender      := NonNull_Ret(Styles.FontRender     , 5                   , 0 , 5 )  ; 渲染模式  默认5 0-5
-    , O.FontStyle       := Styles.FontStyle                                                   ; 字体样式  默认无
+    , O.Border          := this.NonNull_Ret(Styles.Border         , 1                   , 0 , 20)  ; 细边框    默认1 0-20
+    , O.Rounded         := this.NonNull_Ret(Styles.Rounded        , 3                   , 0 , 30)  ; 圆角      默认3 0-30
+    , O.Margin          := this.NonNull_Ret(Styles.Margin         , 5                   , 0 , 30)  ; 边距      默认5 0-30
+    , O.TabStops        := this.NonNull_Ret(Styles.TabStops       , [50]                , "", "")  ; 制表符宽  默认[50]
+    , O.TextColor       := this.NonNull_Ret(Styles.TextColor      , 0xff575757          , "", "")  ; 文本色    默认0xff575757
+    , O.BackgroundColor := this.NonNull_Ret(Styles.BackgroundColor, 0xffffffff          , "", "")  ; 背景色    默认0xffffffff
+    , O.Font            := this.NonNull_Ret(Styles.Font           , this.ToolTipFontName, "", "")  ; 字体      默认与 ToolTip 一致
+    , O.FontSize        := this.NonNull_Ret(Styles.FontSize       , 12                  , "", "")  ; 字号      默认12
+    , O.FontRender      := this.NonNull_Ret(Styles.FontRender     , 5                   , 0 , 5 )  ; 渲染模式  默认5 0-5
+    , O.FontStyle       := Styles.FontStyle                                                        ; 字体样式  默认无
 
     ; 名字太长，建个缩写副本。
-    , O.BCLGS  := Styles.BorderColorLinearGradientStart                                       ; 细边框渐变色		  默认无
-    , O.BCLGE  := Styles.BorderColorLinearGradientEnd                                         ; 细边框渐变色		  默认无
-    , O.BCLGA  := Styles.BorderColorLinearGradientAngle                                       ; 细边框渐变角度	  默认无
-    , O.BCLGM  := NonNull_Ret(Styles.BorderColorLinearGradientMode, "", 1, 8)                 ; 细边框渐变模式	  默认无 1-8
+    , O.BCLGS  := Styles.BorderColorLinearGradientStart                                            ; 细边框渐变色    默认无
+    , O.BCLGE  := Styles.BorderColorLinearGradientEnd                                              ; 细边框渐变色    默认无
+    , O.BCLGA  := Styles.BorderColorLinearGradientAngle                                            ; 细边框渐变角度  默认无
+    , O.BCLGM  := this.NonNull_Ret(Styles.BorderColorLinearGradientMode, "", 1, 8)                 ; 细边框渐变模式  默认无 1-8
 
     ; 名字太长，建个缩写副本。
-    , O.TCLGS  := Styles.TextColorLinearGradientStart                                         ; 文本渐变色		    默认无
-    , O.TCLGE  := Styles.TextColorLinearGradientEnd                                           ; 文本渐变色		    默认无
-    , O.TCLGA  := Styles.TextColorLinearGradientAngle                                         ; 文本渐变角度	    默认无
-    , O.TCLGM  := NonNull_Ret(Styles.TextColorLinearGradientMode, "", 1, 8)                   ; 文本渐变模式	    默认无 1-8
+    , O.TCLGS  := Styles.TextColorLinearGradientStart                                              ; 文本渐变色      默认无
+    , O.TCLGE  := Styles.TextColorLinearGradientEnd                                                ; 文本渐变色      默认无
+    , O.TCLGA  := Styles.TextColorLinearGradientAngle                                              ; 文本渐变角度    默认无
+    , O.TCLGM  := this.NonNull_Ret(Styles.TextColorLinearGradientMode, "", 1, 8)                   ; 文本渐变模式    默认无 1-8
 
     ; 名字太长，建个缩写副本。
-    , O.BGCLGS := Styles.BackgroundColorLinearGradientStart                                   ; 背景渐变色		    默认无
-    , O.BGCLGE := Styles.BackgroundColorLinearGradientEnd                                     ; 背景渐变色		    默认无
-    , O.BGCLGA := Styles.BackgroundColorLinearGradientAngle                                   ; 背景渐变角度	    默认无
-    , O.BGCLGM := NonNull_Ret(Styles.BackgroundColorLinearGradientMode, "", 1, 8)             ; 背景渐变模式	    默认无 1-8
+    , O.BGCLGS := Styles.BackgroundColorLinearGradientStart                                        ; 背景渐变色      默认无
+    , O.BGCLGE := Styles.BackgroundColorLinearGradientEnd                                          ; 背景渐变色      默认无
+    , O.BGCLGA := Styles.BackgroundColorLinearGradientAngle                                        ; 背景渐变角度    默认无
+    , O.BGCLGM := this.NonNull_Ret(Styles.BackgroundColorLinearGradientMode, "", 1, 8)             ; 背景渐变模式    默认无 1-8
 
     ; a:=0xaabbccdd 下面是运算规则
     ; a>>16    = 0xaabb
@@ -600,22 +610,24 @@ Class BeautifulToolTip
     ; a&0xff   = 0xdd
     ; 0x88<<16 = 0x880000
     ; 0x880000+0xbbcc = 0x88bbcc
-    , BlendedColor2 := (O.TCLGS and O.TCLGE and O.TCLGD) ? O.TCLGS : O.TextColor              ; 使用文本渐变色替换文本色用于混合
-    , BlendedColor  := ((O.BackgroundColor>>24)<<24) + (BlendedColor2&0xffffff)               ; 混合色    背景色的透明度与文本色混合
-    , O.BorderColor := NonNull_Ret(Styles.BorderColor , BlendedColor      , "", "")           ; 细边框色  默认混合色
+    , BlendedColor2 := (O.TCLGS and O.TCLGE and O.TCLGD) ? O.TCLGS : O.TextColor                   ; 使用文本渐变色替换文本色用于混合
+    , BlendedColor  := ((O.BackgroundColor>>24)<<24) + (BlendedColor2&0xffffff)                    ; 混合色    背景色的透明度与文本色混合
+    , O.BorderColor := this.NonNull_Ret(Styles.BorderColor , BlendedColor      , "", "")           ; 细边框色  默认混合色
 
-    , O.TargetHWND  := NonNull_Ret(Options.TargetHWND , WinExist("A")     , "", "")           ; 目标句柄		      默认活动窗口
-    , O.CoordMode   := NonNull_Ret(Options.CoordMode  , A_CoordModeToolTip, "", "")           ; 坐标模式		      默认与 ToolTip 一致
-    , O.Transparent := NonNull_Ret(Options.Transparent, 255               , 0 , 255)          ; 整体透明度	      默认255
-    , O.MouseNeverCoverToolTip          := NonNull_Ret(Options.MouseNeverCoverToolTip         , 1 , 0 , 1 )   ; 鼠标永不遮挡文本框
-    , O.DistanceBetweenMouseXAndToolTip := NonNull_Ret(Options.DistanceBetweenMouseXAndToolTip, 16, "", "")   ; 鼠标与文本框的X距离
-    , O.DistanceBetweenMouseYAndToolTip := NonNull_Ret(Options.DistanceBetweenMouseYAndToolTip, 16, "", "")   ; 鼠标与文本框的Y距离
-    , O.JustCalculateSize               := Options.JustCalculateSize                                          ; 仅计算显示尺寸并返回
+    , O.TargetHWND  := this.NonNull_Ret(Options.TargetHWND , WinExist("A")     , "", "")           ; 目标句柄    默认活动窗口
+    , O.CoordMode   := this.NonNull_Ret(Options.CoordMode  , A_CoordModeToolTip, "", "")           ; 坐标模式    默认与 ToolTip 一致
+    , O.Transparent := this.NonNull_Ret(Options.Transparent, 255               , 0 , 255)          ; 整体透明度  默认255
+    , O.MouseNeverCoverToolTip          := this.NonNull_Ret(Options.MouseNeverCoverToolTip         , 1 , 0 , 1 )   ; 鼠标永不遮挡文本框
+    , O.DistanceBetweenMouseXAndToolTip := this.NonNull_Ret(Options.DistanceBetweenMouseXAndToolTip, 16, "", "")   ; 鼠标与文本框的X距离
+    , O.DistanceBetweenMouseYAndToolTip := this.NonNull_Ret(Options.DistanceBetweenMouseYAndToolTip, 16, "", "")   ; 鼠标与文本框的Y距离
+    , O.JustCalculateSize               := Options.JustCalculateSize                                               ; 仅计算显示尺寸并返回
 
     ; 难以比对两个对象是否一致，所以造一个变量比对。
     ; 这里的校验因素，必须是那些改变后会使画面内容也产生变化的因素。
     ; 所以没有 TargetHWND 和 CoordMode 和 Transparent ，因为这三个因素只影响位置。
-    O.Checksum := O.Border          "|" O.Rounded  "|" O.Margin     "|"
+    for k, v in O.TabStops
+      TabStops .= v ","
+    O.Checksum := O.Border          "|" O.Rounded  "|" O.Margin     "|" TabStops    "|"
                 . O.BorderColor     "|" O.BCLGS    "|" O.BCLGE      "|" O.BCLGA     "|" O.BCLGM  "|"
                 . O.TextColor       "|" O.TCLGS    "|" O.TCLGE      "|" O.TCLGA     "|" O.TCLGM  "|"
                 . O.BackgroundColor "|" O.BGCLGS   "|" O.BGCLGE     "|" O.BGCLGA    "|" O.BGCLGM "|"
@@ -642,7 +654,7 @@ Class BeautifulToolTip
     ; 不要尝试合并分支 (X="" and Y="") 与 (A_CoordModeToolTip = "Screen")。
     ; 因为存在把坐标模式设为 Window 或 Client 但又同时不给出 x,y 的情况！！！！！！
     if (X="" and Y="")
-    {	; 没有给出 x,y 则使用鼠标坐标
+    { ; 没有给出 x,y 则使用鼠标坐标
         DisplayX     := MouseX
       , DisplayY     := MouseY
       ; 根据坐标判断在第几个屏幕里，并获得对应屏幕边界。
@@ -661,7 +673,7 @@ Class BeautifulToolTip
     }
       ; 已给出 x和y 或x 或y，都会走到下面3个分支去。
     else if (Options.CoordMode  = "Window" or Options.CoordMode  = "Relative")
-    {	; 已给出 x或y 且使用窗口坐标
+    { ; 已给出 x或y 且使用窗口坐标
         WinGetPos, WinX, WinY, WinW, WinH, % "ahk_id " Options.TargetHWND
 
         XInScreen    := WinX+X
@@ -678,7 +690,7 @@ Class BeautifulToolTip
       , Options.DPIScale := this.Monitors[hMonitor].DPIScale
     }
     else if (Options.CoordMode  = "Client")
-    {	; 已给出 x或y 且使用客户区坐标
+    { ; 已给出 x或y 且使用客户区坐标
         VarSetCapacity(ClientArea, 16, 0)
       , DllCall("GetClientRect", "Ptr", Options.TargetHWND, "Ptr", &ClientArea)
       , DllCall("ClientToScreen", "Ptr", Options.TargetHWND, "Ptr", &ClientArea)
@@ -701,7 +713,7 @@ Class BeautifulToolTip
       , Options.DPIScale := this.Monitors[hMonitor].DPIScale
     }
     else ; 这里必然 A_CoordModeToolTip = "Screen"
-    {	; 已给出 x或y 且使用屏幕坐标
+    { ; 已给出 x或y 且使用屏幕坐标
         DisplayX     := (X="") ? MouseX : X
       , DisplayY     := (Y="") ? MouseY : Y
       , hMonitor     := MDMF_FromPoint(DisplayX, DisplayY, MONITOR_DEFAULTTONEAREST:=2)
@@ -765,42 +777,43 @@ Class BeautifulToolTip
     ; 使用 ByRef 变量特性返回计算得到的 X和Y
     X := DisplayX , Y := DisplayY
   }
+  
+  ; https://autohotkey.com/boards/viewtopic.php?f=6&t=4379
+  ; jballi's Fnt Library
+  Fnt_GetTooltipFontName()
+  {
+    static LF_FACESIZE:=32  ;-- In TCHARS
+    return StrGet(this.Fnt_GetNonClientMetrics()+(A_IsUnicode ? 316:220)+28,LF_FACESIZE)
+  }
+
+  Fnt_GetNonClientMetrics()
+  {
+    static Dummy15105062
+      ,SPI_GETNONCLIENTMETRICS:=0x29
+      ,NONCLIENTMETRICS
+
+    ;-- Set the size of NONCLIENTMETRICS structure
+    cbSize:=A_IsUnicode ? 500:340
+    if (((GV:=DllCall("GetVersion"))&0xFF . "." . GV>>8&0xFF)>=6.0)  ;-- Vista+
+      cbSize+=4
+
+    ;-- Create and initialize NONCLIENTMETRICS structure
+    VarSetCapacity(NONCLIENTMETRICS,cbSize,0)
+    NumPut(cbSize,NONCLIENTMETRICS,0,"UInt")
+
+    ;-- Get nonclient metrics parameter
+    if !DllCall("SystemParametersInfo"
+      ,"UInt",SPI_GETNONCLIENTMETRICS
+      ,"UInt",cbSize
+      ,"Ptr",&NONCLIENTMETRICS
+      ,"UInt",0)
+      return false
+
+    ;-- Return to sender
+    return &NONCLIENTMETRICS
+  }
+  
+  #IncludeAgain %A_LineFile%\..\NonNull.ahk
 }
 
-; https://autohotkey.com/boards/viewtopic.php?f=6&t=4379
-; jballi's Fnt Library
-Fnt_GetTooltipFontName()
-{
-	static LF_FACESIZE:=32  ;-- In TCHARS
-	return StrGet(Fnt_GetNonClientMetrics()+(A_IsUnicode ? 316:220)+28,LF_FACESIZE)
-}
-
-Fnt_GetNonClientMetrics()
-{
-	static Dummy15105062
-		,SPI_GETNONCLIENTMETRICS:=0x29
-		,NONCLIENTMETRICS
-
-	;-- Set the size of NONCLIENTMETRICS structure
-	cbSize:=A_IsUnicode ? 500:340
-	if (((GV:=DllCall("GetVersion"))&0xFF . "." . GV>>8&0xFF)>=6.0)  ;-- Vista+
-		cbSize+=4
-
-	;-- Create and initialize NONCLIENTMETRICS structure
-	VarSetCapacity(NONCLIENTMETRICS,cbSize,0)
-	NumPut(cbSize,NONCLIENTMETRICS,0,"UInt")
-
-	;-- Get nonclient metrics parameter
-	if !DllCall("SystemParametersInfo"
-		,"UInt",SPI_GETNONCLIENTMETRICS
-		,"UInt",cbSize
-		,"Ptr",&NONCLIENTMETRICS
-		,"UInt",0)
-		return false
-
-	;-- Return to sender
-	return &NONCLIENTMETRICS
-}
-
-#Include NonNull.ahk
-#Include Gdip.ahk
+#Include %A_LineFile%\..\Gdip_All.ahk
