@@ -12,7 +12,7 @@ Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
 FileRead, txt, AHK-Rare.txt
 
 ;根据标记“;<01.01.000001>……;</01.01.000001>”提取段落。
-ret:=GlobalRegExMatch(txt,"m)(*ANYCRLF);<[\d\.]+>[\s\S]*?;</[\d\.]+>",1)
+ret:=RegEx.GlobalMatch(txt,"m)(*ANYCRLF);<[\d\.]+>[\s\S]*?;</[\d\.]+>",1)
 
 obj_储存翻译后的文本:=[]		;正则对象只读不可写，因此需要单独建立一个可写的对象。
 for k, v in ret
@@ -43,5 +43,5 @@ FileAppend, %txt%, AHK-Rare中文.txt, utf-8
 
 ExitApp
 
-#Include <GlobalRegExMatch>
+#Include <RegEx>
 #Include <谷歌翻译>
