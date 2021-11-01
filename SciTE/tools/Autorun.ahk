@@ -26,6 +26,8 @@ SetWorkingDir, %A_ScriptDir%
 	
 	Run, 安装字体\安装字体.ahk
 	
+	Run, 自动更新\自动更新.ahk
+	
   gosub, 智能F1
   gosub, 智能Tab
   gosub, 智能标点

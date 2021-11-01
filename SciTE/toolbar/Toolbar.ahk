@@ -32,8 +32,6 @@ ATM_DRUNTOGGLE := ATM_OFFSET+4
 if !A_IsAdmin
 	runasverb := "*RunAs "
 
-Run, %runasverb%user\自动更新.ahk
-
 if 0 < 2
 {
 	MsgBox, 16, SciTE4AutoHotkey Toolbar, This script cannot be run independently.
