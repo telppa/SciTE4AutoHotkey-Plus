@@ -1,29 +1,38 @@
-;
+ï»¿;
 ; SciTE4AutoHotkey Autorun Script
 ;
 
 #NoEnv
 #NoTrayIcon
+#SingleInstance Force
 SetWorkingDir, %A_ScriptDir%
 
-oSciTE := GetSciTEInstance()
-if !oSciTE
-{
-	MsgBox, 16, SciTE4AutoHotkey, Cannot find SciTE!
-	ExitApp
-}
+å…¬ç”¨:
+  oSciTE := ComObjActive("SciTE4AHK.Application")
+  SciTE_Hwnd := oSciTE.SciTEHandle
+	
+	; ç”±äºåŸç‰ˆç½‘ç«™å·²ç»æŒ‚äº†ï¼Œä¼°è®¡ä¹Ÿä¸ä¼šå†æ›´æ–°äº†ï¼Œæ‰€ä»¥å±è”½å‡çº§æ£€æµ‹ï¼Œé¿å…å¸¦æ¥é¢å¤–é—®é¢˜
+	; bUpdatesEnabled := oSciTE.ResolveProp("automatic.updates") + 0
+	; if bUpdatesEnabled
+		; Run, "%A_AhkPath%" SciTEUpdate.ahk /silent
+	
+	bTillaGotoEnabled := oSciTE.ResolveProp("tillagoto.enable") + 0
+	if bTillaGotoEnabled
+		Run, "%A_AhkPath%" TillaGoto.ahk
+	
+	UserAutorun := oSciTE.UserDir "\Autorun.ahk"
+	IfExist, %UserAutorun%
+		Run, "%A_AhkPath%" "%UserAutorun%"
+	
+  gosub, æ™ºèƒ½F1
+  gosub, æ™ºèƒ½Tab
+  gosub, æ™ºèƒ½æ ‡ç‚¹
+	
+  WinWaitClose, ahk_id %SciTE_Hwnd% ; éš SciTE é€€å‡ºã€‚
+  WinClose, ahk_pid %PID%           ; é€€å‡ºæ—¶å…³é—­å¸®åŠ©ã€‚
+  ExitApp
+return
 
-UserAutorun := oSciTE.UserDir "\Autorun.ahk"
-
-bUpdatesEnabled := oSciTE.ResolveProp("automatic.updates") + 0
-bTillaGotoEnabled := oSciTE.ResolveProp("tillagoto.enable") + 0
-
-;ÓÉÓÚÔ­°æÍøÕ¾ÒÑ¾­¹ÒÁË£¬¹À¼ÆÒ²²»»áÔÙ¸üĞÂÁË£¬ËùÒÔÆÁ±ÎÉı¼¶¼ì²â£¬±ÜÃâ´øÀ´¶îÍâÎÊÌâ
-;~ if bUpdatesEnabled
-	;~ Run, "%A_AhkPath%" SciTEUpdate.ahk /silent
-
-if bTillaGotoEnabled
-	Run, "%A_AhkPath%" TillaGoto.ahk
-
-IfExist, %UserAutorun%
-	Run, "%A_AhkPath%" "%UserAutorun%"
+#Include %A_LineFile%\..\æ™ºèƒ½æ“ä½œ\æ™ºèƒ½F1.ahk
+#Include %A_LineFile%\..\æ™ºèƒ½æ“ä½œ\æ™ºèƒ½Tab.ahk
+#Include %A_LineFile%\..\æ™ºèƒ½æ“ä½œ\æ™ºèƒ½æ ‡ç‚¹.ahk
