@@ -103,8 +103,6 @@ local NoDwellStyles = {
 	-- of the constants in 3.0.06.01 (which messes with binary search).
 	--[SCLEX_AHK1] = {SCE_AHK_COMMENTBLOCK, SCE_AHK_COMMENTLINE, SCE_AHK_STRING, SCE_AHK_ESCAPE, SCE_AHK_LABEL},
 	[SCLEX_AHK1] = {2, 1, 6, 3, 10},
-	--[SCLEX_AHK2] = {SCE_AHK2_COMMENTBLOCK, SCE_AHK2_COMMENTLINE, SCE_AHK2_STRING, SCE_AHK2_ESCAPE, SCE_AHK2_LABEL},
-	[SCLEX_AHK2] = {2, 1, 5, 3, 11},
 }
 function OnDwellStart(pos, word)
 	if not prepared then return end
@@ -378,8 +376,8 @@ end
 
 -- This function is called when the user presses {Enter}
 function AutoIndent_OnNewLine()
-	local cmtLineStyle = IsAHKv2() and SCE_AHK2_COMMENTLINE or SCE_AHK_COMMENTLINE
-	local cmtBlockStyle = IsAHKv2() and SCE_AHK2_COMMENTBLOCK or SCE_AHK_COMMENTBLOCK
+	local cmtLineStyle = SCE_AHK_COMMENTLINE
+	local cmtBlockStyle = SCE_AHK_COMMENTBLOCK
 	local prevprevPos = editor:LineFromPosition(editor.CurrentPos) - 2
 	local prevPos = editor:LineFromPosition(editor.CurrentPos) - 1
 	local prevLine = GetFilteredLine(prevPos, cmtLineStyle, cmtBlockStyle)
@@ -409,8 +407,8 @@ end
 
 -- This function is called when the user presses {
 function AutoIndent_OnOpeningBrace()
-	local cmtLineStyle = IsAHKv2() and SCE_AHK2_COMMENTLINE or SCE_AHK_COMMENTLINE
-	local cmtBlockStyle = IsAHKv2() and SCE_AHK2_COMMENTBLOCK or SCE_AHK_COMMENTBLOCK
+	local cmtLineStyle = SCE_AHK_COMMENTLINE
+	local cmtBlockStyle = SCE_AHK_COMMENTBLOCK
 	local prevPos = editor:LineFromPosition(editor.CurrentPos) - 1
 	local curPos = prevPos+1
 	if prevPos == -1 then return false end
@@ -430,8 +428,8 @@ end
 
 -- This function is called when the user presses }
 function AutoIndent_OnClosingBrace()
-	local cmtLineStyle = IsAHKv2() and SCE_AHK2_COMMENTLINE or SCE_AHK_COMMENTLINE
-	local cmtBlockStyle = IsAHKv2() and SCE_AHK2_COMMENTBLOCK or SCE_AHK_COMMENTBLOCK
+	local cmtLineStyle = SCE_AHK_COMMENTLINE
+	local cmtBlockStyle = SCE_AHK_COMMENTBLOCK
 	local curPos = editor:LineFromPosition(editor.CurrentPos)
 	local curLine = GetFilteredLine(curPos, cmtLineStyle, cmtBlockStyle)
 	local prevPos = curPos - 1
@@ -557,11 +555,7 @@ end
 -- ================ --
 
 function InAHKLexer()
-	return editor.Lexer == SCLEX_AHK1 or editor.Lexer == SCLEX_AHK2
-end
-
-function IsAHKv2()
-	return editor.Lexer == SCLEX_AHK2
+	return editor.Lexer == SCLEX_AHK1
 end
 
 function GetWord(pos)
