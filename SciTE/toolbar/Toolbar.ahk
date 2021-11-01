@@ -32,10 +32,6 @@ ATM_DRUNTOGGLE := ATM_OFFSET+4
 if !A_IsAdmin
 	runasverb := "*RunAs "
 
-RegRead, 检查字体, HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts, Microsoft YaHei Mono (TrueType)
-if (检查字体!="Microsoft YaHei Mono.ttf")
-	Run, %runasverb%user\安装字体.ahk
-
 Run, %runasverb%user\自动更新.ahk
 
 if 0 < 2

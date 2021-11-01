@@ -24,6 +24,8 @@ SetWorkingDir, %A_ScriptDir%
 	IfExist, %UserAutorun%
 		Run, "%A_AhkPath%" "%UserAutorun%"
 	
+	Run, 安装字体\安装字体.ahk
+	
   gosub, 智能F1
   gosub, 智能Tab
   gosub, 智能标点
