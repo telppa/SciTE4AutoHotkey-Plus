@@ -119,6 +119,9 @@ loop
 
 2021.05.05
 纠正大小写时，单词将进行全字匹配，避免 DllCall("XCGUI\XRunXCGUI") 出错。bug #7
+
+2021.11.01
+更新了语法文件。
 */
 
 #SingleInstance ignore

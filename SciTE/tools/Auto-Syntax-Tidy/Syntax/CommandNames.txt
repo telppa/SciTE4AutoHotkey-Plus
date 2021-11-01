@@ -30,6 +30,7 @@
 #NoEnv
 #NoTrayIcon
 #Persistent
+#Requires
 #SingleInstance
 #UseHook
 #Warn
