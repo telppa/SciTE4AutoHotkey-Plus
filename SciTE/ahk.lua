@@ -671,3 +671,9 @@ end
 if FileExists(extlua) then
 	dofile(extlua)
 end
+
+-- SciTE4AutoHotkey-Plus 的增强
+-- dofile(props['SciteDefaultHome'].."/tools/运行选区代码.lua")
+dofile(props['SciteDefaultHome'].."/tools/自动完成增强版.lua")
+dofile(props['SciteDefaultHome'].."/tools/新建文件时默认UTF-8带BOM.lua")
+-- dofile(props['SciteUserHome']..'/lexers/lpeg_s4a.lua')

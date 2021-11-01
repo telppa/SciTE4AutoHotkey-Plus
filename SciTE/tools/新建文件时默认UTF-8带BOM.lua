@@ -14,5 +14,5 @@ function OnClear()
 --  新建时默认采用UTF-8无BOM编码方式
 --  scite.MenuCommand(IDM_ENCODING_UCOOKIE)
   end
-  return false;
+  return false
 end
