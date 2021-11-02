@@ -11,11 +11,6 @@ SetWorkingDir, %A_ScriptDir%
   oSciTE := ComObjActive("SciTE4AHK.Application")
   SciTE_Hwnd := oSciTE.SciTEHandle
 	
-	; 由于原版网站已经挂了，估计也不会再更新了，所以屏蔽升级检测，避免带来额外问题
-	; bUpdatesEnabled := oSciTE.ResolveProp("automatic.updates") + 0
-	; if bUpdatesEnabled
-		; Run, "%A_AhkPath%" SciTEUpdate.ahk /silent
-	
 	bTillaGotoEnabled := oSciTE.ResolveProp("tillagoto.enable") + 0
 	if bTillaGotoEnabled
 		Run, "%A_AhkPath%" TillaGoto.ahk

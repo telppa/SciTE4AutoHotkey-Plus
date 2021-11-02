@@ -378,7 +378,6 @@ Menu, ToolMenu, Show
 return
 
 check4updates:
-Run, "%A_AhkPath%" "%SciTEDir%\tools\SciTEUpdate.ahk"
 return
 
 exitroutine:
