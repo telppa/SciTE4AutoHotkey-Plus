@@ -14,6 +14,7 @@ AutoHotkey 版本: 1.x
 2010.06.25	修正因#NoEnv使%USERPROFILE%变量直接引用无效
 2016.04.18	删除“2010.06.21”的改动
 2021.10.17	新增“编译脚本 (GUI)”的汉化
+2021.11.02	自动根据 AutoHotkey.exe 的位置定位基准目录。
 */
 
 #NoEnv
@@ -22,10 +23,10 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 
 ; 版本(仅用于显示）
-Script_Version=v1.0.3.2
+Script_Version=v1.0.4
 
 ; AutoHotkey 原版的相关信息写在注册表HKCR主键中，
-; 尝试是当前用户否有权操作该键，如果无权操作HKCR键（受限用户），
+; 尝试当前用户否有权操作该键，如果无权操作HKCR键（受限用户），
 ; 可通过操作注册表HKCU键来实现仅当前用户关联AHK脚本。
 IsLimitedUser:=0
 RegWrite, REG_SZ, HKCR, .test
@@ -48,7 +49,7 @@ else ; 受限用户操作HKCU键
 
 ; 检查是否存在AHK注册表项
 RegRead, FileType, %RootKey%, %Subkey%.ahk
-if FileType<>
+if (FileType!="")
 {
 	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Open\Command ;AHK路径
 	AHK_Path:=PathGetPath(value)
@@ -61,22 +62,25 @@ if FileType<>
 else
 	FileType=AutoHotkeyScript
 
+; 通过 AutoHotkey.exe 的位置来定位基准目录
+SplitPath, A_AhkPath, , AhkDir
+
 if AHK_Path=
 {
-	IfExist, %A_ScriptDir%\AutoHotkey.exe
-		AHK_path=%A_ScriptDir%\AutoHotkey.exe
+	IfExist, %AhkDir%\AutoHotkey.exe
+		AHK_path=%AhkDir%\AutoHotkey.exe
 }
 
 if Editor_Path=
 {
-	IfExist, %A_ScriptDir%\SciTE\SciTE.exe
-		Editor_Path=%A_ScriptDir%\SciTE\SciTE.exe
+	IfExist, %AhkDir%\SciTE\SciTE.exe
+		Editor_Path=%AhkDir%\SciTE\SciTE.exe
 }
 
 if Compiler_Path=
 {
-	IfExist, %A_ScriptDir%\Compiler\Ahk2Exe.exe
-		Compiler_Path=%A_ScriptDir%\Compiler\Ahk2Exe.exe
+	IfExist, %AhkDir%\Compiler\Ahk2Exe.exe
+		Compiler_Path=%AhkDir%\Compiler\Ahk2Exe.exe
 }
 
 if Template_Name=
@@ -143,12 +147,13 @@ GuiClose:
 GuiEscape:
 Cancel:
 	ExitApp
+return
 
 	; 查找 AutoHotkey 主程序
 Find_AHK:
 	Gui +OwnDialogs
 	FileSelectFile, AHK_Path, 3, , 查找 AutoHotkey.exe, AutoHotkey.exe
-	if AHK_Path<>
+	if (AHK_Path!="")
 		GuiControl,,AHK_Path, %AHK_Path%
 	gosub Default_Compiler
 return
@@ -157,14 +162,14 @@ return
 Choose_Editor:
 	Gui +OwnDialogs
 	FileSelectFile, Editor_Path, 3, , 选择脚本编辑器, 程序(*.exe)
-	if Editor_Path<>
+	if (Editor_Path!="")
 		GuiControl,,Editor_Path, %Editor_Path%
 return
 
 ; 默认脚本编辑器
 Default_Editor:
-	IfExist, %A_ScriptDir%\SciTE\SciTE.exe
-		Editor_Path=%A_ScriptDir%\SciTE\SciTE.exe
+	IfExist, %AhkDir%\SciTE\SciTE.exe
+		Editor_Path=%AhkDir%\SciTE\SciTE.exe
 	else ifExist, %A_WinDir%\system32\notepad.exe
 			Editor_Path=%A_WinDir%\system32\notepad.exe
 	GuiControl,, Editor_Path, %Editor_Path%
@@ -174,7 +179,7 @@ return
 Choose_Compiler:
 	Gui +OwnDialogs
 	FileSelectFile, Compiler_Path, 3, , 选择脚本编译器, 程序(*.exe)
-	if Compiler_Path<>
+	if (Compiler_Path!="")
 		GuiControl,,Compiler_Path, %Compiler_Path%
 return
 
@@ -246,10 +251,10 @@ Install:
 	}
 
 	/*	新版的scite不需要将“SciTEUser.properties”放在“USERPROFILE”目录下了
-	if Editor_Path=%A_ScriptDir%\SciTE\SciTE.exe
+	if Editor_Path=%AhkDir%\SciTE\SciTE.exe
 	{
 		EnvGet,USERPROFILE,USERPROFILE
-		FileCopy,%A_ScriptDir%\SciTE\SciTEUser.properties,%USERPROFILE%\SciTEUser.properties,1
+		FileCopy,%AhkDir%\SciTE\SciTEUser.properties,%USERPROFILE%\SciTEUser.properties,1
 	}
 	*/
 
@@ -294,15 +299,14 @@ return
 ; 新建脚本模板
 Create_Template:
 	GuiControlGet, AHK_Path
-	FileGetVersion, AHK_Ver, %AHK_Path%
 
 	FileAppend,
 	(
 /*
-AutoHotkey 版本: %AHK_Ver%
+AutoHotkey 版本: %A_AhkVersion%
 操作系统:    %A_OSVersion%
 作者:        %A_UserName%
-网站:        http://www.AutoHotkey.com
+网站:        http://www.autohotkey.com
 脚本说明：
 脚本版本：   v1.0
 */
