@@ -1,20 +1,21 @@
 ﻿; 按 F1 键可在中文帮助中查询光标下单词。
+; 2021.11.05 修复在帮助中打开查找框时切换帮助失败的问题。帮助的位置固定在 “SciTE\中文帮助\” 。
 ; 2021.06.27 “智能F1” 升级 2.2。使用 ACC 实现全后台操作，提升稳定性。
 ; 2020.07.24 “智能F1” 全面接管 F1 功能。
-; 故需要屏蔽 “SciTEUser.properties” “platforms.properties” 文件中的自带 F1 功能。
+; 故需要屏蔽 “SciTEGlobal.properties” “platforms.properties” 文件中的自带 F1 功能。
 智能F1:
   gosub, 中文帮助友好提示
 return
 
 中文帮助友好提示:
-  中文帮助路径 := oSciTE.SciTEDir . "\..\AutoHotkey_CN.chm"
+  中文帮助路径 := oSciTE.SciTEDir . "\中文帮助\AutoHotkey_CN.chm"
   if (!FileExist(中文帮助路径))     ; 中文帮助不存在，按 F1 没反应的情况下，友好的提示使用者该怎么做。
   {
     错误提示=
     (LTrim
     请自行于 GitHub 或 QQ 群下载帮助文件
     命名为 “AutoHotkey_CN.chm”
-    存放于 “AutoHotkey.exe” 所在位置。
+    存放于 “SciTE\中文帮助\AutoHotkey_CN.chm” 。
     )
     MsgBox, 262160, 没有找到中文帮助文件, %错误提示%
   }
@@ -53,6 +54,8 @@ F1::
   }
 
   WinActivate, ahk_pid %PID%                           ; 激活。
+
+  WinClose, 查找 ahk_pid %PID%                         ; 关掉查找窗口，它存在会无法切换结果。
 
   ; 有2种方法可以直接让 chm 定位到某个页面中
   ; 1. hh.exe mk:@MSITStore:R:\AutoHotkey.chm::/docs/Variables.htm#IsCompiled
