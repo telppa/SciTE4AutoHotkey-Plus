@@ -14,15 +14,17 @@ if (检查字体!="Microsoft YaHei Mono.ttf")
   {
     FileCopy, Microsoft YaHei Mono.ttf, %A_WinDir%\Fonts
     RegWrite, REG_SZ, HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts, Microsoft YaHei Mono (TrueType), Microsoft YaHei Mono.ttf
-    MsgBox 0x40040, 成功, 安装字体成功。`n重启SciTE，代码就会以 “雅黑Mono” 字体显示。
+    btt("安装字体成功。`n重启 SciTE ，代码就会以 “雅黑 Mono” 字体显示。")
   }
   catch
   {
-    Run, Microsoft YaHei Mono.ttf
-    MsgBox 0x40030, 失败, 安装字体失败。`n请尝试手动安装字体 “SciTE\user\Microsoft YaHei Mono.ttf”`n不然代码显示会非常丑！
+    btt("安装字体失败。`n请尝试手动安装字体 “SciTE\tools\安装字体\Microsoft YaHei Mono.ttf”`n不然代码显示会非常丑！")
   }
+  
+  Sleep, 3000
 }
 
 ExitApp
 
 #Include %A_ScriptDir%\..\AHK 正则终结者\Lib\RunWith.ahk
+#Include %A_ScriptDir%\..\AHK 正则终结者\Lib\BTT.ahk
