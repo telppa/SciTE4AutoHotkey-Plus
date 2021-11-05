@@ -1,10 +1,8 @@
 ﻿/*
-AutoHotkey 版本: 1.x
-操作系统:    WinXP
-作者:        甲壳虫<jdchenjian@gmail.com>
-博客:        http://hi.baidu.com/jdchenjian
-脚本说明：   此工具用来修改 AutoHotkey 脚本的右键菜单关联，适用于 AutoHotkey 安装版、绿色版。
-脚本版本：   2009-01-21
+作者：      甲壳虫<jdchenjian@gmail.com>
+博客：      http://hi.baidu.com/jdchenjian
+脚本说明：  此工具用来修改 AutoHotkey 脚本的右键菜单关联，适用于 AutoHotkey 安装版、绿色版。
+脚本版本：  2009-01-21
 
 修改作者：	兔子
 更新说明：
@@ -15,6 +13,7 @@ AutoHotkey 版本: 1.x
 2016.04.18	删除“2010.06.21”的改动
 2021.10.17	新增“编译脚本 (GUI)”的汉化
 2021.11.02	自动根据 AutoHotkey.exe 的位置定位基准目录。
+2021.11.05	重构代码，精简界面，修复新建模板时的编码问题，修复编辑模板时的权限问题。
 */
 
 #NoEnv
@@ -23,12 +22,11 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 
 ; 版本(仅用于显示）
-Script_Version=v1.0.4
+Script_Version=ver. 1.1
 
 ; AutoHotkey 原版的相关信息写在注册表HKCR主键中，
 ; 尝试当前用户否有权操作该键，如果无权操作HKCR键（受限用户），
 ; 可通过操作注册表HKCU键来实现仅当前用户关联AHK脚本。
-IsLimitedUser:=0
 RegWrite, REG_SZ, HKCR, .test
 if ErrorLevel
 	IsLimitedUser:=1
@@ -36,28 +34,28 @@ RegDelete, HKCR, .test
 if ErrorLevel
 	IsLimitedUser:=1
 
-if IsLimitedUser=0 ; 非受限用户操作HKCR键
+if IsLimitedUser
 {
-	RootKey=HKCR
-	Subkey=
+	RootKey=HKCU              ; 受限用户操作HKCU键
+	Subkey=Software\Classes\  ; 为简化后面的脚本，此子键须以“\”结尾
 }
-else ; 受限用户操作HKCU键
+else
 {
-	RootKey=HKCU
-	Subkey=Software\Classes\ ; <-- 为简化后面的脚本，此子键须以“\”结尾
+	RootKey=HKCR              ; 非受限用户操作HKCR键
+	Subkey=
 }
 
 ; 检查是否存在AHK注册表项
 RegRead, FileType, %RootKey%, %Subkey%.ahk
 if (FileType!="")
 {
-	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Open\Command ;AHK路径
+	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Open\Command     ; AHK路径
 	AHK_Path:=PathGetPath(value)
-	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Edit\Command ;编辑器路径
-	Editor_Path:=PathGetPath(value)
-	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Compile\Command ;编译器路径
+	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Compile\Command  ; 编译器路径
 	Compiler_Path:=PathGetPath(value)
-	RegRead, Template_Name, %RootKey%, %Subkey%.ahk\ShellNew, FileName ;模板文件名
+	RegRead, value, %RootKey%, %Subkey%%FileType%\Shell\Edit\Command     ; 编辑器路径
+	Editor_Path:=PathGetPath(value)
+	RegRead, Template_Name, %RootKey%, %Subkey%.ahk\ShellNew, FileName   ; 模板文件名
 }
 else
 	FileType=AutoHotkeyScript
@@ -71,76 +69,50 @@ if AHK_Path=
 		AHK_path=%AhkDir%\AutoHotkey.exe
 }
 
-if Editor_Path=
-{
-	IfExist, %AhkDir%\SciTE\SciTE.exe
-		Editor_Path=%AhkDir%\SciTE\SciTE.exe
-}
-
 if Compiler_Path=
 {
 	IfExist, %AhkDir%\Compiler\Ahk2Exe.exe
 		Compiler_Path=%AhkDir%\Compiler\Ahk2Exe.exe
 }
 
+if Editor_Path=
+{
+	IfExist, %AhkDir%\SciTE\SciTE.exe
+		Editor_Path=%AhkDir%\SciTE\SciTE.exe
+}
+
 if Template_Name=
 	Template_Name=Template.ahk
 
-Gui, Add, Tab, x10 y10 w480 h250 Choose1, 设置|说明
-	Gui, Tab, 1
-		Gui, Add, GroupBox, x20 y40 w460 h50 , “运行脚本”关联的 AutoHotkey
-		Gui, Add, Edit, x35 y60 w340 h20 vAHK_Path, %AHK_path%
-		Gui, Add, Button, x385 y60 w40 h20 gFind_AHK, 浏览
+Gui, Font, bold s15
+Gui, Add, Text, x10 y10 w480 h290, %A_Space%设置并汉化 .ahk 文件的右键菜单
 
-		Gui, Add, GroupBox, x20 y100 w460 h50 , “编辑脚本”关联的编辑器
-		Gui, Add, Edit, x35 y120 w340 h20 vEditor_Path, %Editor_Path%
-		Gui, Add, Button, x385 y120 w40 h20 gChoose_Editor, 浏览
-		Gui, Add, Button, x430 y120 w40 h20 gDefault_Editor, 默认
+Gui, Font
+Gui, Add, GroupBox, x20 y50 w460 h50 , “运行脚本”
+Gui, Add, Edit, x35 y70 w340 h20 vAHK_Path, %AHK_path%
+Gui, Add, Button, x385 y70 w40 h20 gFind_AHK, 浏览
 
-		Gui, Add, GroupBox, x20 y160 w460 h50 , “编译脚本”关联的编译器
-		Gui, Add, Edit, x35 y180 w340 h20 vCompiler_Path, %Compiler_Path%
-		Gui, Add, Button, x385 y180 w40 h20 gChoose_Compiler, 浏览
-		Gui, Add, Button, x430 y180 w40 h20 gDefault_Compiler, 默认
+Gui, Add, GroupBox, x20 y110 w460 h50 , “编译脚本”
+Gui, Add, Edit, x35 y130 w340 h20 vCompiler_Path, %Compiler_Path%
+Gui, Add, Button, x385 y130 w40 h20 gChoose_Compiler, 浏览
+Gui, Add, Button, x430 y130 w40 h20 gDefault_Compiler, 默认
 
-		Gui, Add, Checkbox, x35 y230 w270 h20 gNew_Script vNew_Script, 右键“新建”菜单中增加“AutoHotkey 脚本”
-		Gui, Add, Button, x310 y230 w80 h20 vEdit_Template gEdit_Template, 编辑脚本模板
-		Gui, Add, Button, x400 y230 w80 h20 vDelete_Template gDelete_Template, 删除脚本模板
+Gui, Add, GroupBox, x20 y170 w460 h50 , “编辑脚本”
+Gui, Add, Edit, x35 y190 w340 h20 vEditor_Path, %Editor_Path%
+Gui, Add, Button, x385 y190 w40 h20 gChoose_Editor, 浏览
+Gui, Add, Button, x430 y190 w40 h20 gDefault_Editor, 默认
 
-	Gui, Tab, 2
-		Gui, Font, bold
-		Gui, Add, Text,, AutoHotkey 脚本关联工具  ScriptSetting %Script_Version%
-		Gui, Font
-		Gui, Font, CBlue underline
-		Gui, Add, Text, gWebsite, 作者：甲壳虫 <jdchenjian@gmail.com>`n`n博客：http://hi.baidu.com/jdchenjian
-		Gui, Font
-		Gui, Add, Text, w450, 此工具用来修改 AutoHotkey 脚本的右键菜单关联，适用于 AutoHotkey 安装版、绿色版。
-		Gui, Add, Text, w450, 您可以用它来修改默认脚本编辑器、编译器，修改默认的新建脚本模板。设置后，在右键菜单中添加“运行脚本”、“编辑脚本”、“编译脚本”和“新建 AutoHotkey 脚本”等选项。
-		Gui, Add, Text, w450, 要取消脚本的系统关联，请按“卸载”。注意：卸载后您将无法通过双击来运行脚本，也不能通过右键菜单来启动脚本编辑器...
+Gui, Add, GroupBox, x20 y230 w460 h50 , “新建脚本”
+Gui, Add, Button, x35 y250 w340 h20 gEdit_Template, 自定义新建脚本的模板
 
-Gui, Tab
-Gui, Add, Button, x100 y270 w60 h20 Default gInstall, 设置
-Gui, Add, Button, x200 y270 w60 h20 gUninstall, 卸载
-Gui, Add, Button, x300 y270 w60 h20 gCancel, 取消
+Gui, Font, bold s15
+Gui, Add, Button, x20 y300 w200 h40 Default gInstall, 设置
+Gui, Add, Button, x280 y300 w200 h40 gCancel, 取消
 
-Gui, Show, x250 y200 h300 w500 Center, ScriptSetting %Script_Version%
-GuiControl, Disable, Edit_Template ; 使“编辑脚本模板”按钮无效
-IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
-	GuiControl, Disable, Delete_Template ; 使“删除脚本模板”按钮无效
-
-; 当鼠标指向链接时，指针变成手形
-hCurs:=DllCall("LoadCursor","UInt",NULL,"Int",32649,"UInt") ;IDC_HAND
-OnMessage(0x200,"WM_MOUSEMOVE")
-return
-
-; 改变鼠标指针为手形
-WM_MOUSEMOVE(wParam,lParam)
-{
-	global hCurs
-	MouseGetPos,,,,ctrl
-	if ctrl in static2
-		DllCall("SetCursor","UInt",hCurs)
-	return
-}
+if (A_Args.1="/set")
+	gosub, Install
+else
+	Gui, Show, x250 y200 h350 w500 Center, AHK 脚本关联工具 %Script_Version%
 return
 
 GuiClose:
@@ -149,30 +121,13 @@ Cancel:
 	ExitApp
 return
 
-	; 查找 AutoHotkey 主程序
+; 查找 AutoHotkey 主程序
 Find_AHK:
 	Gui +OwnDialogs
 	FileSelectFile, AHK_Path, 3, , 查找 AutoHotkey.exe, AutoHotkey.exe
 	if (AHK_Path!="")
 		GuiControl,,AHK_Path, %AHK_Path%
 	gosub Default_Compiler
-return
-
-; 选择脚本编辑器
-Choose_Editor:
-	Gui +OwnDialogs
-	FileSelectFile, Editor_Path, 3, , 选择脚本编辑器, 程序(*.exe)
-	if (Editor_Path!="")
-		GuiControl,,Editor_Path, %Editor_Path%
-return
-
-; 默认脚本编辑器
-Default_Editor:
-	IfExist, %AhkDir%\SciTE\SciTE.exe
-		Editor_Path=%AhkDir%\SciTE\SciTE.exe
-	else ifExist, %A_WinDir%\system32\notepad.exe
-			Editor_Path=%A_WinDir%\system32\notepad.exe
-	GuiControl,, Editor_Path, %Editor_Path%
 return
 
 ; 选择脚本编译器
@@ -194,49 +149,58 @@ Default_Compiler:
 	}
 return
 
+; 选择脚本编辑器
+Choose_Editor:
+	Gui +OwnDialogs
+	FileSelectFile, Editor_Path, 3, , 选择脚本编辑器, 程序(*.exe)
+	if (Editor_Path!="")
+		GuiControl,,Editor_Path, %Editor_Path%
+return
+
+; 默认脚本编辑器
+Default_Editor:
+	IfExist, %AhkDir%\SciTE\SciTE.exe
+		Editor_Path=%AhkDir%\SciTE\SciTE.exe
+	else ifExist, %A_WinDir%\system32\notepad.exe
+			Editor_Path=%A_WinDir%\system32\notepad.exe
+	GuiControl,, Editor_Path, %Editor_Path%
+return
+
 ; 设置
 Install:
 	Gui, Submit
+
 	IfNotExist, %AHK_Path%
 	{
-		MsgBox, 16, ScriptSetting %Script_Version%, AutoHotkey 路径错误 ！
-		return
-	}
-
-	IfNotExist, %Editor_Path%
-	{
-		MsgBox, 16, ScriptSetting %Script_Version%, 编辑器路径错误 ！
+		MsgBox, 16, , AutoHotkey 路径错误 ！
 		return
 	}
 
 	IfNotExist, %Compiler_Path%
 	{
-		MsgBox, 16, ScriptSetting %Script_Version%, 编译器路径错误 ！
+		MsgBox, 16, , 编译器路径错误 ！
+		return
+	}
+
+	IfNotExist, %Editor_Path%
+	{
+		MsgBox, 16, , 编辑器路径错误 ！
 		return
 	}
 
 	; 写入注册表
 	RegWrite, REG_SZ, %RootKey%, %Subkey%.ahk,, %FileType%
-	if New_Script=1
-	{
-		RegWrite, REG_SZ, %RootKey%, %Subkey%.ahk\ShellNew, FileName, %Template_Name%
-		IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
-			gosub Create_Template
-	}
-	else
-	{
-		RegDelete, %RootKey%, %Subkey%.ahk\ShellNew
-		IfExist, %A_WinDir%\ShellNew\%Template_Name%
-			gosub Delete_Template
-	}
+	RegWrite, REG_SZ, %RootKey%, %Subkey%.ahk\ShellNew, FileName, %Template_Name%
+	IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
+		gosub Create_Template
 
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%,, AutoHotkey 脚本
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\DefaultIcon,, %AHK_Path%`,1
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell,, Open
+
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Open,, 运行脚本
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Open\Command,, "%AHK_Path%" "`%1" `%*
-	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Edit,, 编辑脚本
-	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Edit\Command,, "%Editor_Path%" "`%1"
+
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile,, 编译脚本
 	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile-Gui,, 编译脚本 (GUI)
 	IfInString, Compiler_Path, Ahk2Exe.exe
@@ -250,28 +214,11 @@ Install:
 		RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Compile-Gui\Command,, "%Compiler_Path%" /gui "`%1"
 	}
 
-	/*	新版的scite不需要将“SciTEUser.properties”放在“USERPROFILE”目录下了
-	if Editor_Path=%AhkDir%\SciTE\SciTE.exe
-	{
-		EnvGet,USERPROFILE,USERPROFILE
-		FileCopy,%AhkDir%\SciTE\SciTEUser.properties,%USERPROFILE%\SciTEUser.properties,1
-	}
-	*/
+	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Edit,, 编辑脚本
+	RegWrite, REG_SZ, %RootKey%, %Subkey%%FileType%\Shell\Edit\Command,, "%Editor_Path%" "`%1"
 
-	MsgBox, 64, ScriptSetting %Script_Version%, 设置完毕 ！
+	MsgBox, 64, , 设置完毕 ！
 	ExitApp
-
-	; 卸载
-Uninstall:
-	MsgBox, 36, ScriptSetting %Script_Version%
-		, 注意：卸载后您将无法通过双击来运行脚本，也不能通过右键菜单来启动脚本编辑器...`n`n确定要取消 AHK 脚本的系统关联吗 ？
-	IfMsgBox, Yes
-	{
-		RegDelete, %RootKey%, %Subkey%.ahk
-		RegDelete, %RootKey%, %Subkey%%FileType%
-		gosub Delete_Template
-		ExitApp
-	}
 return
 
 ; 编辑脚本模板
@@ -279,59 +226,30 @@ Edit_Template:
 	GuiControlGet, Editor_Path
 	IfNotExist, %Editor_Path%
 	{
-		MsgBox, 64, ScriptSetting %Script_Version%, 脚本编辑器路径错误 ！
+		MsgBox, 64, , 脚本编辑器路径错误 ！
 		return
 	}
 	IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
 		gosub Create_Template
-	Run, %Editor_Path% %A_WinDir%\ShellNew\%Template_Name%
-return
 
-; 使编辑脚本模板按钮有效/无效
-New_Script:
-	GuiControlGet, New_Script
-	if New_Script=0
-		GuiControl, Disable, Edit_Template
+	ifExist, %A_WinDir%\system32\notepad.exe
+		Run, *RunAs notepad.exe %A_WinDir%\ShellNew\%Template_Name%
 	else
-		GuiControl, Enable, Edit_Template
+		Run, *RunAs %Editor_Path% %A_WinDir%\ShellNew\%Template_Name%
 return
 
 ; 新建脚本模板
 Create_Template:
-	GuiControlGet, AHK_Path
-
 	FileAppend,
 	(
-/*
-AutoHotkey 版本: %A_AhkVersion%
-操作系统:    %A_OSVersion%
-作者:        %A_UserName%
-网站:        http://www.autohotkey.com
-脚本说明：
-脚本版本：   v1.0
-*/
-
 #NoEnv
 SendMode Input
 SetWorkingDir `%A_ScriptDir`%
 
-	), %A_WinDir%\ShellNew\%Template_Name%
+	), %A_WinDir%\ShellNew\%Template_Name%, UTF-8
 
-	GuiControl, Enable, Delete_Template ; 使“删除脚本模板”按钮有效
-return
-
-; 删除脚本模板
-Delete_Template:
-	MsgBox, 36, ScriptSetting %Script_Version%
-		, 要删除当前的 AHK 脚本模板吗 ？`n`n脚本模板被删除后，仍可通过本工具重建模板。
-	IfMsgBox, Yes
-		FileDelete, %A_WinDir%\ShellNew\%Template_Name%
-	GuiControl, Disable, Delete_Template ; 使“删除脚本模板”按钮无效
-return
-
-; 打开网站
-Website:
-	Run, http://hi.baidu.com/jdchenjian
+	IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
+		MsgBox, 64, , 无法创建脚本模板 ！`n`n请尝试使用管理员权限运行本工具。
 return
 
 ; 从注册表值字符串中提取路径
