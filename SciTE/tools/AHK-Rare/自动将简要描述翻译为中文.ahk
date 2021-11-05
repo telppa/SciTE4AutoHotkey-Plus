@@ -27,7 +27,7 @@ for k, v in obj_储存翻译后的文本
 	RegExMatch(v, "m)(*ANYCRLF)(?<=;--).*", OutputVar)
 	loop
 	{
-		翻译好的文本:=GoogleTranslate(OutputVar)
+		翻译好的文本:=DeepLTranslator.translate(OutputVar)
 		;检查翻译是否成功，不成功就重复5遍，直到成功为止。
 		if (翻译好的文本!="")
 			break
@@ -44,4 +44,4 @@ FileAppend, %txt%, AHK-Rare中文.txt, utf-8
 ExitApp
 
 #Include <RegEx>
-#Include <谷歌翻译>
+#Include <DeepLTranslator>
