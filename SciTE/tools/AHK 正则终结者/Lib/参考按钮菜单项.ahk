@@ -40,7 +40,7 @@ return
 InsertRegEx:
   if (InStr(A_ThisMenuItem, "正则表达式快速参考"))
   {
-    中文帮助路径=%A_AhkPath%\..\AutoHotkey_CN.chm
+    中文帮助路径=%A_AhkPath%\..\SciTE\中文帮助\AutoHotkey_CN.chm
     英文帮助路径=%A_AhkPath%\..\AutoHotkey.chm
     if (FileExist(中文帮助路径))
       Run, hh.exe mk:@MSITStore:%中文帮助路径%::/docs/misc/RegEx-QuickRef.htm
