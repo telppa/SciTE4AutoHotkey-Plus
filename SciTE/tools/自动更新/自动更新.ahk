@@ -1,6 +1,6 @@
 ﻿#NoEnv
 #NoTrayIcon
-#SingleInstance Force
+#SingleInstance Ignore
 SetWorkingDir, %A_ScriptDir%
 
 ; 管理员权限运行
@@ -18,16 +18,15 @@ SciteDefaultHome = %A_ScriptDir%\..\..
 		FileSetTime, %A_Now%, %SciteDefaultHome%\$VER, M
 		gosub, 检查更新
 	}
-	else
-		ExitApp
+	ExitApp
 return
 
 检查更新:
 	网址:="https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/%24VER"
-	最新版本号:=WinHttp.Download(网址, 设置, 请求头)
+	最新版本号:=WinHttp.Download(网址, "Timeout:30")
 	; 网络不好或者被GFW导致无法获取更新。
 	if (WinHttp.StatusCode!=200)
-		ExitApp
+		return
 	else
 	{
 		FileRead, 当前版本号, %SciteDefaultHome%\$VER
@@ -41,7 +40,7 @@ return
 执行更新:
 	网址:="https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/tools/自动更新/update.ahk"
 	路径:=A_ScriptDir "\update.ahk"
-	WinHttp.Download(网址,,,,路径)
+	WinHttp.Download(网址, "Timeout:60",,,路径)
 	if (WinHttp.StatusCode!=200)
 	{
 		MsgBoxEx("自动更新失败，请尝试手动下载更新。", "错误", "前往主页", 4)
