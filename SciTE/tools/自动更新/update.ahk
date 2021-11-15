@@ -1,41 +1,35 @@
 ﻿Text=
 (
-2021.08.08
-    修复数个关键词高亮错误。
-    修复“Auto-Syntax-Tidy”错误纠正大小写导致代码无法运行的问题。
-    更新“智能F1”到2.2。（使用 ACC 实现全后台稳定操作）
-    更新“AHK 正则终结者”到1.2。
-    更新“AHK 爬虫终结者”到3.4。
-    更新“FindText”到8.5。
-    更新“Auto-GUI”到3.0.1。（提取自 Adventure IDE）
-    更新“MagicBox”到1.0.4。（提取自 Adventure IDE）
-    更新“中文帮助文件”到1.1.33.09。
-    更新使用“GlobalRegExMatch”库的代码。
-    增加一个遗漏的关键字“MoveDraw”。
-    删除目录“额外的帮助文件”。
-
-2021.04.13
-    更新“AHK 爬虫终结者”到3.3。
-    更新WinHttp库。
-    更新使用WinHttp库的代码。
-    删除2本旧的H版帮助文件。
-
-2021.03.28  
-    字体完美等宽。  
-    默认使用空格缩进。（不影响咱的缩进显示效果同时能让其它编辑器显示效果更好）  
-    更新“中文帮助文件”到1.1.33.06。  
-    优化帮助文件显示位置与查找速度，默认使用暗黑模式，并增加两个匹配中文的示例。  
-    增加工具“FindText”，找字识图取色，简单易用高效。（作者飞跃，博客地址：https://blog.csdn.net/xshlong1981?t=1）  
-    优化 Toolbar 运行模式，降低部分机器出错可能。  
-    “AHK 正则终结者”里再增加一个匹配中文的示例。  
-    修复窗口信息工具“AHK_Window_Info”复制 ClassNN 时的错误前缀。  
-    进一步降低配色对比度与饱和度。  
+2021.11.15  
+    优化目录结构，将“user”目录完全还给用户，以后升级将不影响用户的自定义设置。  
+    优化目录结构，将“SciTE”目录外的文件全部放置于目录中，方便手动安装。  
+    优化目录结构，将所有“增强功能”放置在独立清晰的文件夹中。  
+    优化目录结构，删除部分过时无用的文件。  
+    移除过时的“ahkv2”代码与设置。  
+    移除过时的“自动更新”代码。  
+    字体安装改为非强制。  
+    更新“AHK 正则终结者”到1.42。  
+    更新“AHK 爬虫终结者”到3.9。  
+    更新“AHK 脚本关联工具”到1.1。  
+    更新“FindText”到8.6。  
+    更新“Auto-GUI”到3.0.1。（提取自 Adventure IDE 3.0.3）  
+    解除“Auto-GUI”对高分屏的限制。  
+    禁止“Window Clone Tool”频繁刷新窗口。  
+    更新“MagicBox”到1.0.4。（提取自 Adventure IDE 3.0.3）  
+    更新“AHK-Rare”的自动翻译部分。  
+    更新“Auto-Syntax-Tidy”的语法文件。  
+    更新“SciTE交互示例”。  
+    更新“智能F1”。  
+    更新技巧说明。  
+    更新遗漏的关键词。  
+    更新高亮配色文件。  
+    更新“中文帮助文件”到1.1.33.10。  
 )
 
-Result := MsgBoxEx(Text, "v20210808版已更新", "蓝奏云下载|Github 下载", 0, "", "AlwaysOnTop")
+Result := MsgBoxEx(Text, "v20211115版已更新", "蓝奏云下载|Github 下载", 0, "", "AlwaysOnTop")
 
 If (Result == "蓝奏云下载") {
-	Run, https://ahk.lanzoui.com/iEVhuse1wyj
+	Run, https://ahk.lanzoui.com/i9oFkwjcm8d
 } Else If (Result == "Github 下载") {
 	Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
 } Else If (Result == "Cancel") {
