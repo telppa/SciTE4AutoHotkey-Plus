@@ -10,12 +10,14 @@ if (OutDir="")
 {
 	Text=
 	(LTrim
-	没找到"AutoHotkey.exe"在哪，手动安装吧！
+	没找到 AutoHotkey.exe 在哪，手动安装吧！
 
-	如果你AHK的安装目录为 “C:\Program Files\Autohotkey”
-	那么正确的SciTE目录就为 “C:\Program Files\Autohotkey\SciTE”
+	把 SciTE 文件夹剪切到正确位置即可，路径中不要包含中文！
 
-	反正就是把本文件所在位置的全部文件与文件夹都扔过去！
+	例如你的 AHK 安装目录为 “C:\Program Files\Autohotkey”
+	那么正确的 SciTE 目录就为 “C:\Program Files\Autohotkey\SciTE”
+	
+	“SciTE\user” 目录中如果存在自定义设置（例如自定义配色），请手动备份。
 	)
 	MsgBox 0x40010, 安装失败, % Text
 	ExitApp
@@ -28,54 +30,73 @@ if (StrLen(RegExReplace(OutDir, "[[:ascii:]]"))!=0)
 	(LTrim
 	%OutDir%
 
-	AHK的安装目录路径中似乎含有非英文字符（例如中文）。
-	这将导致部分功能失效，例如CallTip（单词完成）。
+	AHK 的安装路径中似乎含有非英文字符（例如中文）。
+	这将导致部分功能失效，例如 CallTip （单词完成）。
 	)
 	MsgBox 0x40030, 警告, % Text
 }
 
-; 复制旧版的4个文件过来
-FileCopy, %OutDir%\SciTE\user\_config.properties,          SciTE\user\备份_config.properties
-FileCopy, %OutDir%\SciTE\user\_platform.properties,        SciTE\user\_platform.properties
-FileCopy, %OutDir%\SciTE\user\SciTE.session,               SciTE\user\SciTE.session
-FileCopy, %OutDir%\SciTE\user\Styles\lpp.style.properties, SciTE\user\Styles\备份lpp.style.properties
+; 获取旧版本号
+FileRead, 旧版本号, %OutDir%\SciTE\$VER
+if (旧版本号)
+	; 兼容老版的版本号，需要去掉“.”，否则“+0”操作会出现空值。
+	; 20211115 之后的版本，可以直接复制整个 user 文件夹。
+	if (StrReplace(旧版本号, ".")+0>=20211115)
+	{
+		FileCopy, SciTE\user\Styles\SciTE4AutoHotkey-Plus.style.properties, %OutDir%\SciTE\user\SciTE4AutoHotkey-Plus.style.properties, 1
+		FileCopyDir, %OutDir%\SciTE\user, SciTE\user, 1
+	}
+	else
+	{
+		; 复制旧版的4个文件过来
+		FileCopy, %OutDir%\SciTE\user\_config.properties,          SciTE\user\备份_config.properties
+		FileCopy, %OutDir%\SciTE\user\_platform.properties,        SciTE\user\_platform.properties
+		FileCopy, %OutDir%\SciTE\user\SciTE.session,               SciTE\user\SciTE.session
+		FileCopy, %OutDir%\SciTE\user\Styles\lpp.style.properties, SciTE\user\Styles\备份SciTE4AutoHotkey-Plus.style.properties
 
-; 由于此次更新比较多，文件有删减，因此需要提前删除部分位置发生变化的文件，不然看起来很乱
-FileRecycle, %OutDir%\SciTE, 1
-FileDelete,  %OutDir%\1HourSoftware.chm
-FileDelete,  %OutDir%\AhkDll.chm
-FileDelete,  %OutDir%\AutoHotkey趣味代码之Rosetta Code.chm
-FileDelete,  %OutDir%\不要删除、移动、改名这4本帮助文件.txt
-FileDelete,  %OutDir%\一定要解压到ahk安装目录下.txt
+		; 从 _config.properties 中找到用户自定义 style 文件并复制过来
+		FileRead, conf, %OutDir%\SciTE\user\_config.properties
+		RegExMatch(conf, "im)^import (Styles\\.+\.style)$", userstyle)
+		FileCopy, %OutDir%\SciTE\user\%userstyle1%.properties, SciTE\user\%userstyle1%.properties
+
+		; 由于此次更新比较多，文件有删减，因此需要提前删除部分位置发生变化的文件，不然看起来很乱
+		FileRecycle, %OutDir%\SciTE, 1
+		FileDelete,  %OutDir%\安装SciTE.ahk
+		FileDelete,  %OutDir%\自定义ahk文件的右键菜单.ahk
+		FileDelete,  %OutDir%\AutoHotkey_CN.chm
+		FileDelete,  %OutDir%\chm_config.js
+		FileDelete,  %OutDir%\1HourSoftware.chm
+		FileDelete,  %OutDir%\AhkDll.chm
+		FileDelete,  %OutDir%\AutoHotkey趣味代码之Rosetta Code.chm
+		FileDelete,  %OutDir%\不要删除、移动、改名这4本帮助文件.txt
+		FileDelete,  %OutDir%\一定要解压到ahk安装目录下.txt
+	}
 
 ; 移动文件与目录过去
 try
 {
-	FileMoveDir, SciTE,                       %OutDir%\SciTE, 2
-	FileMoveDir, 额外的帮助文件,              %OutDir%\额外的帮助文件, 2
-	FileMove,    AutoHotkey_CN.chm,           %OutDir%\AutoHotkey_CN.chm, 1
-	FileMove,    chm_config.js,               %OutDir%\chm_config.js, 1
-	FileMove,    自定义ahk文件的右键菜单.ahk, %OutDir%\自定义ahk文件的右键菜单.ahk, 1
+	FileMoveDir, SciTE, %OutDir%\SciTE, 2
 }
 catch
 {
 	Text=
 	(LTrim
-		移动文件与文件夹失败，手动安装吧！
+	移动文件与文件夹失败，手动安装吧！
 
+	把 SciTE 文件夹剪切到正确位置即可，路径中不要包含中文！
 
-		如果你AHK的安装目录为 “C:\Program Files\Autohotkey”
-		那么正确的SciTE目录就为 “C:\Program Files\Autohotkey\SciTE”
-
-
-		反正就是把本文件所在位置的全部文件与文件夹都扔过去！
+	例如你的 AHK 安装目录为 “C:\Program Files\Autohotkey”
+	那么正确的 SciTE 目录就为 “C:\Program Files\Autohotkey\SciTE”
 	)
 	MsgBox 0x40010, 安装失败, % Text
 	ExitApp
 }
 
 ; 创建桌面快捷方式
-FileCreateShortcut, %OutDir%\SciTE\SciTE.exe, %A_Desktop%\SciTE4AutoHotkey-Plus.lnk, %OutDir%\SciTE\, , SciTE4AutoHotkey增强版
+FileCreateShortcut, %OutDir%\SciTE\SciTE.exe, %A_Desktop%\SciTE4AutoHotkey-Plus.lnk, %OutDir%\SciTE\, , SciTE4AutoHotkey-Plus
+
+; 静默运行脚本关联工具并设置关联
+Run, "%OutDir%\SciTE\tools\AHK 脚本关联工具\AHK 脚本关联工具.ahk" /set
 
 ; 技巧的动画演示
 Text=
@@ -83,11 +104,13 @@ Text=
 安装成功并已在桌面创建了一个快捷方式。
 如要卸载直接删目录就行了。
 
-最后，是否观看动图演示的SciTE特性与技巧？（强烈建议观看）
+最后，是否观看动图演示的 SciTE 特性与技巧？（强烈建议观看）
 )
 MsgBox 0x40044, 信息, % Text
 IfMsgBox, Yes
 	Run, %OutDir%\SciTE\技巧\技巧说明.html
+
+ExitApp
 
 ; 强制自身进程以 管理员权限 或 普通权限 或 ANSI 或 U32 或 U64 版本运行。
 ; 例1: runwith("admin","u32") 强制自身以 u32 + 管理员权限 运行。
