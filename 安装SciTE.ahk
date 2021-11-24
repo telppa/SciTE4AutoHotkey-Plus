@@ -61,6 +61,7 @@ if (旧版本号)
 
 		; 由于此次更新比较多，文件有删减，因此需要提前删除部分位置发生变化的文件，不然看起来很乱
 		FileRecycle, %OutDir%\SciTE, 1
+		FileRecycle, %OutDir%\额外的帮助文件, 1
 		FileDelete,  %OutDir%\安装SciTE.ahk
 		FileDelete,  %OutDir%\自定义ahk文件的右键菜单.ahk
 		FileDelete,  %OutDir%\AutoHotkey_CN.chm
