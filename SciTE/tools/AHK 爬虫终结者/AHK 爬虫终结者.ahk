@@ -1,5 +1,8 @@
 ﻿/*
 更新日志：
+  2021.11.24
+    修复 DPI 缩放下的界面显示问题。
+    版本号3.9.1。
   2021.11.15
     使用新界面。
     更新 WinHttp 库为 3.9。
@@ -43,6 +46,9 @@
   Menu, Tray, Icon, %A_ScriptDir%\爬虫.ico
   
   Gui, -DPIScale
+  guiFontSize:=Round(GuiDefaultFont().Size/(A_ScreenDPI/96))
+  Gui, Font, s%guiFontSize%, 微软雅黑
+  
   Gui, Add, GroupBox, x24 y16 w520 h700, 输入
   Gui, Add, Text, x224 y40 w120 h24 +0x200 Center, 网址
   Gui, Add, Edit, x48 y72 w472 h52 v网址,https://www.baidu.com/
@@ -102,7 +108,7 @@
   Gui, Add, StatusBar, v状态栏, %A_Space%%A_Space%%A_Space%%A_Space%主页
   SB_SetParts(80)
   
-  Gui, Show, w1240 h750, AHK 爬虫终结者 ver. 3.9
+  Gui, Show, w1240 h750, AHK 爬虫终结者 ver. 3.9.1
   
   gosub, 智能库引用
   
@@ -411,6 +417,14 @@ gui_KeyDown(wParam, lParam, nMsg, hWnd) { ; http://www.autohotkey.com/board/topi
     if r = 0  ; S_OK: the message was translated to an accelerator.
       return 0
   }
+}
+
+GuiDefaultFont() { ; by SKAN (modified by just me)
+   VarSetCapacity(LF, szLF := 28 + (A_IsUnicode ? 64 : 32), 0) ; LOGFONT structure
+   If DllCall("GetObject", "Ptr", DllCall("GetStockObject", "Int", 17, "Ptr"), "Int", szLF, "Ptr", &LF)
+      Return {Name: StrGet(&LF + 28, 32), Size: Round(Abs(NumGet(LF, 0, "Int")) * (72 / A_ScreenDPI), 1)
+            , Weight: NumGet(LF, 16, "Int"), Quality: NumGet(LF, 26, "UChar")}
+   Return False
 }
 
 #Include <WinHttp>
