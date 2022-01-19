@@ -37,6 +37,7 @@
         <ext id="hh" type="CPP" desc="C++ Header File" />
         <ext id="hhp" type="INI" desc="HTML Help Workshop Project" />
         <ext id="hpp" type="CPP" desc="C++ Header File" />
+        <ext id="hs" type="HSK" desc="Haskell Code" />
         <ext id="hta" type="HTML" desc="HTML Application" />
         <ext id="htm" type="HTML" desc="HTML Document" />
         <ext id="html" type="HTML" desc="HTML Document" />
@@ -131,6 +132,7 @@
         <type id="FB" name="FreeBASIC" dn="FreeBASIC" lexer="75" ext="bas" />
         <type id="G4C" name="Gui4Cli" dn="Gui4Cli" lexer="58" ext="gui" />
         <type id="GO" name="Go" dn="Go" lexer="200" ext="go" />
+        <type id="HSK" name="Haskell" dn="Haskell" lexer="68" ext="hs" />
         <type id="HTML" name="HTML" dn="HTML" lexer="4" ext="html" />
         <type id="INI" name="IniFile" dn="Ini File" lexer="9" ext="ini" />
         <type id="JAVA" name="Java" dn="Java" lexer="3" ext="java" />

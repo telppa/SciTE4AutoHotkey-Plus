@@ -50,6 +50,7 @@ Menu EditMenu, Add, Select &All`tCtrl+A, SelectAll
     Menu SortByMenu, Add
     Menu SortByMenu, Add, &Unsorted, SortBy, Radio
     Menu SortByMenu, Check, &Unsorted
+    Menu SortByMenu, Color, 0xFAFAFA
 Menu ViewMenu, Add, Sort By, :SortByMenu
 Menu ViewMenu, Add
 Menu ViewMenu, Add, Group &View, ToggleGroupView
@@ -70,6 +71,8 @@ Menu MenuBar, Add, &File, :FileMenu
 Menu MenuBar, Add, &Edit, :EditMenu
 Menu MenuBar, Add, &View, :ViewMenu
 Menu MenuBar, Add, &Help, :HelpMenu
+
+Menu MenuBar, Color, 0xFAFAFA
 
 ImgLst := IL_Create(8)
 IL_Add(ImgLst, IconLib, 2) ; Icon1: Windows logo (root)
@@ -367,6 +370,8 @@ GuiContextMenu:
     }
     Menu ContextMenu, Add
     Menu ContextMenu, Add, Google %Const%, GoogleSearch
+
+    Menu ContextMenu, Color, 0xFAFAFA
     Menu ContextMenu, Show, %A_GuiX%, %A_GuiY%
 Return
 
