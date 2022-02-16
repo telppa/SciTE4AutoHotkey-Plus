@@ -1,19 +1,21 @@
 
-SciteAHK445 by 道破红尘
-整理项目
 Compiler
+整理项目
+AutoHotkey Website.url
 AutoHotkey.chm
 AutoHotkey.exe
 AutoHotkeyA32.exe
 AutoHotkeyU32.exe
 AutoHotkeyU64.exe
 Installer.ahk
+license.txt
+scite 5.1.1 这里是使用 lua 为 scite 做语法解析的最小测试环境.zip
 WindowSpy.ahk
 SciTE/user/lexers
 SciTE/user/_platform.properties
 SciTE/user/SciTE.session
 SciTE/user/SciTEDebug.ini
 SciTE/tools/AHK_Window_Info/AHK_Window_Info_v1.7.ini
-license.txt
-AutoHotkey Website.url
-scite 5.1.1 这里是使用 lua 为 scite 做语法解析的最小测试环境.zip
+SciTE/tools/Structor/MSVC2022
+SciTE/tools/Structor/Structor.ini
+SciTE/tools/Structor/Verifier.ini
