@@ -145,8 +145,13 @@ typedef wchar_t WCHAR;
 typedef unsigned short WORD;
 typedef UINT_PTR WPARAM;
 -----------------------------------------------
+微软官网
+https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types
+-----------------------------------------------
 typedef unsigned __int64 UINT64;
 在微软官网写的是
 typedef usigned __int 64 UINT64;
-经过翻看 BaseTsd.h 文件内容
-确定这是微软官网的笔误，因此进行了修正。
+
+经过翻看 BaseTsd.h 文件内容，确定这是笔误，因此直接在上述列表中进行了修正。
+-----------------------------------------------
+截止 2022.03.14 ，所有存在于微软官网，但未出现在上述列表中的条目，都在函数 createAhkTypeFromJson() 中进行了单独添加处理。
