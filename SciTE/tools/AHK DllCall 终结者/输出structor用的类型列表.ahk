@@ -117,6 +117,10 @@ createAhkTypeFromJson(text)
   VOID
   */
   
+  ; 修正 PLCID
+  ; 因为 PLCID 的父级 PDWORD 本身就是一个指针，所以 PLCID 没有*，所以导致解析错误，所以这里直接修正。
+  ret.PLCID := "UInt*"
+  
   ; 添加 double
   ret.double := "Double"
   
