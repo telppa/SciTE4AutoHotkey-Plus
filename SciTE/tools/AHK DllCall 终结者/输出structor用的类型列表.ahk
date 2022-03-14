@@ -88,15 +88,71 @@ createAhkTypeFromJson(text)
   
   _forArray(JSON.Load(text), ret)
   
-  ; 以下是特殊类型
-  ret.HALF_PTR   := "(A_PtrSize=8) ? ""Int""  : ""Short"""
-  ret.PHALF_PTR  := "(A_PtrSize=8) ? ""Int""  : ""Short"""
-  ret.UHALF_PTR  := "(A_PtrSize=8) ? ""UInt"" : ""UShort"""
-  ret.PUHALF_PTR := "(A_PtrSize=8) ? ""UInt"" : ""UShort"""
-  ret.TBYTE      := "(A_IsUnicode) ? ""WStr"" : ""UChar"""
-  ret.PTBYTE     := "(A_IsUnicode) ? ""WStr"" : ""UChar"""
-  ret.TCHAR      := "(A_IsUnicode) ? ""WStr"" : ""Char"""
-  ret.PTCHAR     := "(A_IsUnicode) ? ""WStr"" : ""Char"""
+  /* 下面这些不是直接用 typedef 定义的，故无法处理。
+
+  APIENTRY
+  CALLBACK
+  CONST
+  UNICODE_STRING
+  WINAPI
+
+  POINTER_32
+  POINTER_64
+  POINTER_SIGNED
+  POINTER_UNSIGNED
+  */
+  /* 64位编译是 Int64 ，32位编译是 Int 。跟 Ptr 完全一样，故不用处理。
+
+  INT_PTR
+  UINT_PTR
+  LONG_PTR
+  ULONG_PTR
+  */
+  /* 32位 CPU 是 Double ，64位 CPU 是 Int64 。难以判断 CPU 版本，故直接算作 Int64 。
+  LONGLONG
+  ULONGLONG
+  */
+  /* 无类型，通常意味着 Ptr 。
+  
+  VOID
+  */
+  
+  ; 添加 double
+  ret.double := "Double"
+  
+  ; 添加 HMONITOR
+  ; 系统版本大于等于 win2000 才有效。难以判断系统版本，故直接添加。
+  ret.HMONITOR := "Ptr"
+  
+  ; Str 类型
+  ret.LPTSTR  := "Str"
+  ret.LPCTSTR := "Str"
+  ret.PTSTR   := "Str"
+  ret.PCTSTR  := "Str"
+  ; 从 Char 中分离出 AStr 类型
+  ret.LPSTR   := "AStr"
+  ret.LPCSTR  := "AStr"
+  ret.PSTR    := "AStr"
+  ret.PCSTR   := "AStr"
+  ; 从 UShort 中分离出 WStr 类型
+  ret.LPWSTR  := "WStr"
+  ret.LPCWSTR := "WStr"
+  ret.PWSTR   := "WStr"
+  ret.PCWSTR  := "WStr"
+  
+  ; 64位编译是 Int ，32位编译是 Short 。
+  ret.HALF_PTR   := "(A_PtrSize=8) ? ""Int""     : ""Short"""
+  ret.PHALF_PTR  := "(A_PtrSize=8) ? ""Int*""    : ""Short*"""
+  ret.UHALF_PTR  := "(A_PtrSize=8) ? ""UInt""    : ""UShort"""
+  ret.PUHALF_PTR := "(A_PtrSize=8) ? ""UInt*""   : ""UShort*"""
+  
+  ; Unicode 编译是 UShort ，Ansi 编译是 UChar 。
+  ret.TBYTE      := "(A_IsUnicode) ? ""UShort""  : ""UChar"""
+  ret.PTBYTE     := "(A_IsUnicode) ? ""UShort*"" : ""UChar*"""
+  
+  ; Unicode 编译是 UShort ，Ansi 编译是 Char 。
+  ret.TCHAR      := "(A_IsUnicode) ? ""UShort""  : ""Char"""
+  ret.PTCHAR     := "(A_IsUnicode) ? ""UShort*"" : ""Char*"""
   
   return, ret
 }
@@ -122,9 +178,8 @@ _forArray(obj, ByRef ret)
     ; 子节点迭代循环中
     if (rootValue and !isRoot)
     {
-      ; 不会出现 Str* WStr* AStr* Ptr* 这4种类型
-      typeBlackList := rootValue="Str" or rootValue="WStr" or rootValue="AStr" or rootValue="Ptr"
-      appendAnAsterisk := (!typeBlackList and SubStr(k, 1, 1)="*") ? "*" : ""
+      ; 有星号前缀的转换时将被添加星号后缀，例如 *LPLONG => Int*
+      appendAnAsterisk := SubStr(k, 1, 1)="*" ? "*" : ""
       
       key := LTrim(k, "*")
       ; key 中的 CHAR FLOAT INT LONG *PVOID LPVOID SHORT PDWORD 会出现重复。
@@ -141,5 +196,5 @@ _forArray(obj, ByRef ret)
     rootValue := ""
 }
 
-; 注意，这里不能用 cjson ，会出现大小写错误的情况。
+; 不能用 cjson dump 否则 char 会被转为大写的 CHAR 。
 #Include %A_ScriptDir%\Lib\JSON.ahk
