@@ -1,6 +1,7 @@
 ﻿; https://docs.microsoft.com/en-us/windows/win32/learnwin32/windows-coding-conventions
 ; https://docs.microsoft.com/en-us/windows/win32/stg/coding-style-conventions
 ; https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types
+; https://docs.microsoft.com/en-us/cpp/cpp/data-type-ranges
 
 #NoEnv
 #SingleInstance Force
@@ -26,7 +27,7 @@ Gui Add, Text, x11 y10 w606 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x11 y257 w606 h26, % "HBITMAP:" Gradient(606, 26)
 Gui Add, Text, x11 y257 w606 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Syntax
 
-Gui Show, w627 h480, AHK DllCall 终结者 ver. 1.0
+Gui Show, w627 h480, AHK DllCall 终结者 ver. 2.0
 return
 
 GuiEscape:
@@ -62,8 +63,8 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true)
     
     if (type)
     {
-      ; 类型为 Ptr
-      if (type="Ptr")
+      ; 类型为 Ptr 或 Ptr*
+      if (type="Ptr" or type="Ptr*")
       {
         ; 原始类型名中包含 VOID （不区分大小写）字样，则传地址
         ; 通常包括但不限于 LPCVOID, LPVOID, PVOID, CONST void, void
@@ -80,13 +81,13 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true)
         }
         else
         {
-          type := "Ptr"
+          type := type
           name := name
         }
       }
       
-      ; 类型为非 Ptr Str WStr AStr
-      if (type!="Ptr" and !InStr(type, "Str"))
+      ; 类型为非 Ptr Ptr* Str WStr AStr
+      if (!InStr(type, "Ptr") and !InStr(type, "Str"))
       {
         ; 前缀为 lp p ，则类型应添加*，例如 ULONG *pAlgCount 则对应 UInt*
         if (RegExMatch(prefix, "(lp|p)"))
@@ -220,15 +221,71 @@ createAhkTypeFromJson(text)
   
   _forArray(JSON.Load(text), ret)
   
-  ; 以下是特殊类型
-  ret.HALF_PTR   := "(A_PtrSize=8) ? ""Int""  : ""Short"""
-  ret.PHALF_PTR  := "(A_PtrSize=8) ? ""Int""  : ""Short"""
-  ret.UHALF_PTR  := "(A_PtrSize=8) ? ""UInt"" : ""UShort"""
-  ret.PUHALF_PTR := "(A_PtrSize=8) ? ""UInt"" : ""UShort"""
-  ret.TBYTE      := "(A_IsUnicode) ? ""WStr"" : ""UChar"""
-  ret.PTBYTE     := "(A_IsUnicode) ? ""WStr"" : ""UChar"""
-  ret.TCHAR      := "(A_IsUnicode) ? ""WStr"" : ""Char"""
-  ret.PTCHAR     := "(A_IsUnicode) ? ""WStr"" : ""Char"""
+  /* 下面这些不是直接用 typedef 定义的，故无法处理。
+
+  APIENTRY
+  CALLBACK
+  CONST
+  UNICODE_STRING
+  WINAPI
+
+  POINTER_32
+  POINTER_64
+  POINTER_SIGNED
+  POINTER_UNSIGNED
+  */
+  /* 64位编译是 Int64 ，32位编译是 Int 。跟 Ptr 完全一样，故不用处理。
+
+  INT_PTR
+  UINT_PTR
+  LONG_PTR
+  ULONG_PTR
+  */
+  /* 32位 CPU 是 Double ，64位 CPU 是 Int64 。难以判断 CPU 版本，故直接算作 Int64 。
+  LONGLONG
+  ULONGLONG
+  */
+  /* 无类型，通常意味着 Ptr 。
+  
+  VOID
+  */
+  
+  ; 添加 double
+  ret.double := "Double"
+  
+  ; 添加 HMONITOR
+  ; 系统版本大于等于 win2000 才有效。难以判断系统版本，故直接添加。
+  ret.HMONITOR := "Ptr"
+  
+  ; Str 类型
+  ret.LPTSTR  := "Str"
+  ret.LPCTSTR := "Str"
+  ret.PTSTR   := "Str"
+  ret.PCTSTR  := "Str"
+  ; 从 Char 中分离出 AStr 类型
+  ret.LPSTR   := "AStr"
+  ret.LPCSTR  := "AStr"
+  ret.PSTR    := "AStr"
+  ret.PCSTR   := "AStr"
+  ; 从 UShort 中分离出 WStr 类型
+  ret.LPWSTR  := "WStr"
+  ret.LPCWSTR := "WStr"
+  ret.PWSTR   := "WStr"
+  ret.PCWSTR  := "WStr"
+  
+  ; 64位编译是 Int ，32位编译是 Short 。
+  ret.HALF_PTR   := "(A_PtrSize=8) ? ""Int""     : ""Short"""
+  ret.PHALF_PTR  := "(A_PtrSize=8) ? ""Int*""    : ""Short*"""
+  ret.UHALF_PTR  := "(A_PtrSize=8) ? ""UInt""    : ""UShort"""
+  ret.PUHALF_PTR := "(A_PtrSize=8) ? ""UInt*""   : ""UShort*"""
+  
+  ; Unicode 编译是 UShort ，Ansi 编译是 UChar 。
+  ret.TBYTE      := "(A_IsUnicode) ? ""UShort""  : ""UChar"""
+  ret.PTBYTE     := "(A_IsUnicode) ? ""UShort*"" : ""UChar*"""
+  
+  ; Unicode 编译是 UShort ，Ansi 编译是 Char 。
+  ret.TCHAR      := "(A_IsUnicode) ? ""UShort""  : ""Char"""
+  ret.PTCHAR     := "(A_IsUnicode) ? ""UShort*"" : ""Char*"""
   
   return, ret
 }
@@ -254,9 +311,8 @@ _forArray(obj, ByRef ret)
     ; 子节点迭代循环中
     if (rootValue and !isRoot)
     {
-      ; 不会出现 Str* WStr* AStr* Ptr* 这4种类型
-      typeBlackList := rootValue="Str" or rootValue="WStr" or rootValue="AStr" or rootValue="Ptr"
-      appendAnAsterisk := (!typeBlackList and SubStr(k, 1, 1)="*") ? "*" : ""
+      ; 有星号前缀的转换时将被添加星号后缀，例如 *LPLONG => Int*
+      appendAnAsterisk := SubStr(k, 1, 1)="*" ? "*" : ""
       
       key := LTrim(k, "*")
       ; key 中的 CHAR FLOAT INT LONG *PVOID LPVOID SHORT PDWORD 会出现重复。
@@ -367,6 +423,6 @@ parseMsdnFunctionSyntax(text)
   return, ret
 }
 
-; 注意，这里不能用 cjson ，会出现大小写错误的情况。
+; 不能用 cjson dump 否则 char 会被转为大写的 CHAR 。
 #Include %A_ScriptDir%\Lib\JSON.ahk
 #Include <CreateGradient>

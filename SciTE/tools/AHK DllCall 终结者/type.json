@@ -1,5 +1,5 @@
 {
-  "AStr": {
+  "Char": {
     "char": {
       "__nullterminated CONST CHAR": {
         "*LPCSTR": 0
@@ -13,38 +13,17 @@
       "CONST CHAR": {
         "*PCSTR": 0
       }
-    }
-  },
-  "Char": {
+    },
     "signed char": {
       "INT8": {
         "*PINT8": 0
       }
     }
   },
-  "Double": {
-    "double": 0
-  },
   "Float": {
     "float": {
       "FLOAT": {
         "*PFLOAT": 0
-      }
-    }
-  },
-  "Int64": {
-    "__int64": {
-      "LONG64": {
-        "*PLONG64": 0
-      },
-      "LONGLONG": {
-        "*PLONGLONG": 0,
-        "USN": 0
-      }
-    },
-    "signed __int64": {
-      "INT64": {
-        "*PINT64": 0
       }
     }
   },
@@ -74,6 +53,22 @@
       },
       "LONG32": {
         "*PLONG32": 0
+      }
+    }
+  },
+  "Int64": {
+    "__int64": {
+      "LONG64": {
+        "*PLONG64": 0
+      },
+      "LONGLONG": {
+        "*PLONGLONG": 0,
+        "USN": 0
+      }
+    },
+    "signed __int64": {
+      "INT64": {
+        "*PINT64": 0
       }
     }
   },
@@ -125,7 +120,6 @@
         "HLOCAL": 0,
         "HMENU": 0,
         "HMETAFILE": 0,
-        "HMONITOR": 0,
         "HPALETTE": 0,
         "HPEN": 0,
         "HRGN": 0,
@@ -157,12 +151,6 @@
       }
     }
   },
-  "Str": {
-    "*LPTSTR": 0,
-    "*LPCTSTR": 0,
-    "*PTSTR": 0,
-    "*PCTSTR": 0
-  },
   "UChar": {
     "unsigned char": {
       "BYTE": {
@@ -179,26 +167,6 @@
       },
       "UINT8": {
         "*PUINT8": 0
-      }
-    }
-  },
-  "UInt64": {
-    "unsigned __int64": {
-      "DWORD64": {
-        "*PDWORD64": 0
-      },
-      "DWORDLONG": {
-        "*PDWORDLONG": 0
-      },
-      "QWORD": 0,
-      "UINT64": {
-        "*PUINT64": 0
-      },
-      "ULONG64": {
-        "*PULONG64": 0
-      },
-      "ULONGLONG": {
-        "*PULONGLONG": 0
       }
     }
   },
@@ -235,6 +203,26 @@
       }
     }
   },
+  "UInt64": {
+    "unsigned __int64": {
+      "DWORD64": {
+        "*PDWORD64": 0
+      },
+      "DWORDLONG": {
+        "*PDWORDLONG": 0
+      },
+      "QWORD": 0,
+      "UINT64": {
+        "*PUINT64": 0
+      },
+      "ULONG64": {
+        "*PULONG64": 0
+      },
+      "ULONGLONG": {
+        "*PULONGLONG": 0
+      }
+    }
+  },
   "UPtr": {
     "UINT_PTR": {
       "*PUINT_PTR": 0,
@@ -264,9 +252,7 @@
         "ATOM": 0,
         "LANGID": 0
       }
-    }
-  },
-  "WStr": {
+    },
     "wchar_t": {
       "CONST WCHAR": {
         "*LPCWSTR": 0,
