@@ -12,22 +12,22 @@ ahkType := createAhkTypeFromJson(ahkType)
 Gui +AlwaysOnTop
 
 Gui Font, , 微软雅黑
-Gui Add, Edit, x11 y39 w605 h176 vedit1
+Gui Add, Edit, x11 y39 w605 h176 gtranslateWithDelay vedit1
 Gui Add, Button, x10 y224 w96 h24 gtranslate, 转换
 Gui Add, Radio, x130 y225 w80 h23 gtranslate vradio1, 单行语法
 Gui Add, Radio, x220 y225 w80 h23 gtranslate vradio2 +Checked, 多行语法
 Gui Add, Edit, x11 y286 w605 h180 vedit2
 
 Gui Add, Text, x360 y225 w100 h23 +0x202, Dll 名:
-Gui Add, Edit, x470 y225 w146 h21 gtranslate vedit3
+Gui Add, Edit, x470 y225 w146 h21 gtranslateWithDelay vedit3
 
 Gui Font, s9 cWhite Bold, Segoe UI
 Gui Add, Picture, x11 y10 w606 h26, % "HBITMAP:" Gradient(606, 26)
 Gui Add, Text, x11 y10 w606 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%MSDN Syntax
 Gui Add, Picture, x11 y257 w606 h26, % "HBITMAP:" Gradient(606, 26)
-Gui Add, Text, x11 y257 w606 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Syntax
+Gui Add, Text, x11 y257 w606 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w627 h480, AHK DllCall 终结者 ver. 2.1
+Gui Show, w627 h480, AHK DllCall 终结者 ver. 2.2
 return
 
 GuiEscape:
@@ -35,23 +35,33 @@ GuiClose:
   ExitApp
 return
 
+translateWithDelay:
+  SetTimer, translate, -500
+return
+
 translate:
   Gui, Submit, NoHide
   GuiControl, , edit2, % createDllCallTemplate(edit1, edit3, ahkType, radio2 ? true : false)
 return
 
-createDllCallTemplate(text, dllName, ahkType, multiLine:=true)
+createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true)
 {
   obj := parseMsdnFunctionSyntax(text)
   
-  ; 解析 MSDN 内容时的提示信息放首行
-  info := obj.info
+  ; 解析 MSDN 内容时的提示信息放最前面
+  if (showError)
+    error := obj.error
+  if (showWarn)
+    warn  := obj.warn
+  
+  ; 返回值类型
+  retType := ahkType[obj.retType]
   
   ; 换行符
   CRLF := multiLine ? "`r`n" : ""
   
   ; 拼凑字符串 DllCall("xxx.dll\xxxx"
-  template := Format("DllCall(""{}{}""{}", dllName ? dllName "\" : "", obj.funcName, CRLF)
+  template := Format("ret := DllCall(""{}{}""{}", dllName ? dllName "\" : "", obj.funcName, CRLF)
   
   for k, v in obj.params
   {
@@ -60,6 +70,7 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true)
     name    := v.paramName
     oriName := v.paramName
     prefix  := v.hungarian
+    comment := ""
     
     if (type)
     {
@@ -130,38 +141,58 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true)
           name := "&" name
         }
         
-        info .= Format("; 参数 {} 的类型 {} 未知，但根据特征猜测应为 {} 。`r`n", oriName, oriType, type)
+        if (showInfo)
+          if (multiLine)
+            comment := Format("  `; 提示：类型未知，但根据特征猜测应为 {} 。", type)
+          else
+            info .= Format("; 提示：参数 {} 的类型 {} 未知，但根据特征猜测应为 {} 。`r`n", oriName, oriType, type)
       }
       else
       {
         type := "Unknow"
         name := name
         
-        info .= Format("; 参数 {} 的类型 {} 未知，需自行确定。`r`n", oriName, oriType)
+        if (showError)
+          if (multiLine)
+            comment := "  `; 错误：类型未知，需自行确定。"
+          else
+            error .= Format("; 错误：参数 {} 的类型 {} 未知，需自行确定。`r`n", oriName, oriType)
       }
     }
     
-    ; 拼凑字符串 , "Str", var
-    template .= Format(", ""{}"", {}{}", type, name, CRLF)
-  }
-  
-  if (!ahkType[obj.retType])
-  {
-    retType := "Unknow"
+    ; 拼凑字符串 VarSetCapacity(var, 128, 0) 或 var=""
+    if (InStr(name, "&"))
+      varList .= Format("VarSetCapacity({}, 128, 0)`r`n", oriName)
+    else
+      varList .= name " := """"`r`n"
     
-    info .= Format("; 返回值的类型 {} 未知，需自行确定。`r`n", obj.retType)
+    ; 拼凑字符串 , "Str", var
+    ; 返回值是 Int 型，则可以省略，此时将闭括号添加在注释前
+    if (A_Index=obj.params.MaxIndex() and retType="Int")
+      template .= Format(", ""{}"", {}{}", type, name, ")" comment)
+    else
+      template .= Format(", ""{}"", {}{}{}", type, name, comment, CRLF)
   }
-  else
-    retType := ahkType[obj.retType]
+  comment := ""
   
-  ; 返回值是 Int 型，则可以省略
-  if (retType="Int")
-    template := RTrim(template, "`r`n") ")"
-  else
+  if (retType!="Int")
+  {
+    if (retType="")
+    {
+      retType := "Unknow"
+      
+      if (showError)
+        if (multiLine)
+          comment := "  `; 错误：类型未知，需自行确定。"
+        else
+          error .= Format("; 错误：返回值的类型 {} 未知，需自行确定。`r`n", obj.retType)
+    }
+    
     ; 拼凑字符串 , "Ptr")
-    template .= Format(", ""{}"")", retType)
+    template .= Format(", ""{}""){}", retType, comment)
+  }
   
-  return, info template
+  return, error warn info varList template
 }
 
 /*
@@ -362,7 +393,7 @@ parseMsdnFunctionSyntax(text)
       v := RegExReplace(v, "CALLBACK")
       ; 解析 int MessageBox( 这样的内容
       if (!RegExMatch(v, "([\w\s]+?)(\w+\s?)\(", OutputVar))
-        MsgBox, 0x40030, , 第%A_Index%行内容解析失败。`n--------`n%v%`n--------
+        ret.error .= Format("/* 错误：第{}行内容解析失败。`r`n--------`r`n{}`r`n--------`r`n*/`r`n", A_Index, v)
       
       ret.retType  := Trim(OutputVar1, " `t`r`n`v`f")
       ret.funcName := Trim(OutputVar2, " `t`r`n`v`f")
@@ -392,12 +423,12 @@ parseMsdnFunctionSyntax(text)
         ; 如果本行是省略号 ... ，则跳过
         if (StrReplace(v, ".")="")
         {
-          ret.info .= "; 函数可能存在额外参数，需自行确定。`r`n"
+          ret.warn .= "; 警告：函数可能存在额外参数，需自行确定。`r`n"
           
           continue
         }
         else
-          MsgBox, 0x40030, , 第%A_Index%行内容解析失败。`n--------`n%v%`n--------
+          ret.error .= Format("/* 错误：第{}行内容解析失败。`r`n--------`r`n{}`r`n--------`r`n*/`r`n", A_Index, v)
       }
       
       ; 分解出变量名和类型名
