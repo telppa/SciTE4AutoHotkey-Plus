@@ -108,7 +108,7 @@
   Gui, Add, StatusBar, v状态栏, %A_Space%%A_Space%%A_Space%%A_Space%主页
   SB_SetParts(80)
   
-  Gui, Show, w1240 h750, AHK 爬虫终结者 ver. 3.9.1
+  Gui, Show, w1240 h750, AHK 爬虫终结者 v3.9.1
   
   gosub, 智能库引用
   
