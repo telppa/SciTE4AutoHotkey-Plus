@@ -33,7 +33,7 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, AHK DllCall 终结者 ver. 2.4
+Gui Show, w620 h505, AHK DllCall 终结者 ver. 2.5
 return
 
 GuiEscape:
@@ -72,6 +72,9 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
   ; 拼凑字符串 DllCall("xxx.dll\xxxx"
   dllName  := dllName ? dllName "\" : ""
   template := Format("ret := DllCall(""{}{}""{}", dllName, msdn.funcName, CRLF)
+  
+  ; 没有初值的话，会导致解析 LPSTRabcde GetCommandLineA(); 时，多行语法下错误信息的错位
+  i := 1
   
   for k, v in msdn.params
   {
@@ -433,7 +436,11 @@ parseMsdnFunctionSyntax(text)
       v := RegExReplace(v, "CALLBACK")
       ; 解析 LRESULT LowLevelMouseProc( 这样的内容
       if (!RegExMatch(v, "([\w\s]*?)(\w+\s?)\(", OutputVar))
+      {
         ret.error .= Format("/* 错误：第{}行内容解析失败。`r`n--------`r`n{}`r`n--------`r`n*/`r`n", A_Index, v)
+        ret.error .= "; 错误：获取函数名失败。`r`n"
+        ret.error .= "; 错误：获取返回值类型失败。`r`n"
+      }
       
       ret.retType  := Trim(OutputVar1, " `t`r`n`v`f")
       ret.funcName := Trim(OutputVar2, " `t`r`n`v`f")
@@ -446,6 +453,10 @@ parseMsdnFunctionSyntax(text)
       v := RegExReplace(v, "^\s*\[.+?\]")
       ; 删除前后空白
       v := Trim(v, " `t`r`n`v`f")
+      
+      ; 无内容
+      if (v="")
+        continue
       
       ; 函数结束的特征
       if (v=");")
