@@ -5,6 +5,7 @@
 
 #NoEnv
 #SingleInstance Force
+SetBatchLines, -1
 
 FileRead, ahkType, type.json
 ahkType := createAhkTypeFromJson(ahkType)
@@ -12,22 +13,27 @@ ahkType := createAhkTypeFromJson(ahkType)
 Gui +AlwaysOnTop
 
 Gui Font, , 微软雅黑
-Gui Add, Edit, x11 y39 w605 h176 gtranslateWithDelay vedit1
-Gui Add, Button, x10 y224 w96 h24 gtranslate, 转换
-Gui Add, Radio, x130 y225 w80 h23 gtranslate vradio1, 单行语法
-Gui Add, Radio, x220 y225 w80 h23 gtranslate vradio2 +Checked, 多行语法
-Gui Add, Edit, x11 y286 w605 h180 vedit2
+Gui Add, Edit, x10 y40 w600 h180 gtranslateWithDelay vedit1
 
-Gui Add, Text, x360 y225 w100 h23 +0x202, Dll 名:
-Gui Add, Edit, x470 y225 w146 h21 gtranslateWithDelay vedit3
+Gui Add, Button, x9 y229 w100 h24 gtranslate, 转换
+Gui Add, Radio, x130 y230 w80 h24 gtranslate vradio1, 单行语法
+Gui Add, Radio, x220 y230 w80 h24 gtranslate vmultiLine +Checked, 多行语法
+Gui Add, Text, x360 y230 w100 h24 +0x202, Dll 名:
+Gui Add, Edit, x470 y230 w140 h22 gtranslateWithDelay vedit3
+
+Gui Add, Edit, x10 y294 w600 h180 vedit2
+
+Gui Add, Checkbox, x10 y476 w80 h24 +Checked gtranslate vshowError, 输出错误
+Gui Add, Checkbox, x100 y476 w80 h24 +Checked gtranslate vshowWarn, 输出警告
+Gui Add, Checkbox, x190 y476 w80 h24 +Checked gtranslate vshowInfo, 输出提示
 
 Gui Font, s9 cWhite Bold, Segoe UI
-Gui Add, Picture, x11 y10 w606 h26, % "HBITMAP:" Gradient(606, 26)
-Gui Add, Text, x11 y10 w606 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%MSDN Syntax
-Gui Add, Picture, x11 y257 w606 h26, % "HBITMAP:" Gradient(606, 26)
-Gui Add, Text, x11 y257 w606 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
+Gui Add, Picture, x10 y10 w602 h26, % "HBITMAP:" Gradient(602, 26)
+Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%MSDN Syntax
+Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
+Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w627 h480, AHK DllCall 终结者 ver. 2.2
+Gui Show, w620 h505, AHK DllCall 终结者 ver. 2.4
 return
 
 GuiEscape:
@@ -41,36 +47,50 @@ return
 
 translate:
   Gui, Submit, NoHide
-  GuiControl, , edit2, % createDllCallTemplate(edit1, edit3, ahkType, radio2 ? true : false)
+  GuiControl, , edit2, % createDllCallTemplate(edit1, edit3, ahkType, multiLine, showError, showWarn, showInfo)
 return
 
 createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true)
 {
-  obj := parseMsdnFunctionSyntax(text)
+  ; 输入内容为空则直接返回
+  if (RegExReplace(text, "\s+")="")
+    return
   
-  ; 解析 MSDN 内容时的提示信息放最前面
+  msdn := parseMsdnFunctionSyntax(text)
+  
+  ; 放在文首和行末的提示信息
   if (showError)
-    error := obj.error
+    error := msdn.error, oError := {}
   if (showWarn)
-    warn  := obj.warn
-  
-  ; 返回值类型
-  retType := ahkType[obj.retType]
+    warn  := msdn.warn,  oWarn  := {}
+  if (showInfo)
+    info  := msdn.info,  oInfo  := {}
   
   ; 换行符
   CRLF := multiLine ? "`r`n" : ""
   
   ; 拼凑字符串 DllCall("xxx.dll\xxxx"
-  template := Format("ret := DllCall(""{}{}""{}", dllName ? dllName "\" : "", obj.funcName, CRLF)
+  dllName  := dllName ? dllName "\" : ""
+  template := Format("ret := DllCall(""{}{}""{}", dllName, msdn.funcName, CRLF)
   
-  for k, v in obj.params
+  for k, v in msdn.params
   {
     type    := ahkType[v.paramType]
     oriType := v.paramType
     name    := v.paramName
     oriName := v.paramName
     prefix  := v.hungarian
-    comment := ""
+    i       := A_Index+1
+    
+    ; 没有在数据库中找到对应类型时，删除一些无用的前后缀
+    ; 例如 CONST BYTE -> BYTE
+    if (!type)
+    {
+      s := oriType
+      s := StrReplace(s, "CONST ")
+      s := StrReplace(s, " far")
+      type := ahkType[s]
+    }
     
     if (type)
     {
@@ -101,6 +121,7 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
       if (!InStr(type, "Ptr") and !InStr(type, "Str"))
       {
         ; 前缀为 lp p ，则类型应添加*，例如 ULONG *pAlgCount 则对应 UInt*
+        ; 前缀为 h 时必然是 Ptr 类型，所以这里不用考虑 h
         if (RegExMatch(prefix, "(lp|p)"))
         {
           ; 先删掉*再添加*，避免出现 UInt**
@@ -129,7 +150,7 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
           type := "Ptr*"
           name := name
         }
-        ; 例如 BCRYPT_ALG_HANDLE  hAlgorithm
+        ; 例如 BCRYPT_ALG_HANDLE hAlgorithm
         else if (InStr(prefix, "h") and !InStr(prefix, "lp") and !InStr(prefix, "p"))
         {
           type := "Ptr"
@@ -143,9 +164,9 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
         
         if (showInfo)
           if (multiLine)
-            comment := Format("  `; 提示：类型未知，但根据特征猜测应为 {} 。", type)
+            oInfo[i] := Format("  `; 提示：类型未知，但根据特征猜测应为 {} 。", type)
           else
-            info .= Format("; 提示：参数 {} 的类型 {} 未知，但根据特征猜测应为 {} 。`r`n", oriName, oriType, type)
+            info     .= Format("; 提示：参数 {} 的类型 {} 未知，但根据特征猜测应为 {} 。`r`n", oriName, oriType, type)
       }
       else
       {
@@ -154,9 +175,9 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
         
         if (showError)
           if (multiLine)
-            comment := "  `; 错误：类型未知，需自行确定。"
+            oError[i] := "  `; 错误：类型未知，需自行确定。"
           else
-            error .= Format("; 错误：参数 {} 的类型 {} 未知，需自行确定。`r`n", oriName, oriType)
+            error     .= Format("; 错误：参数 {} 的类型 {} 未知，需自行确定。`r`n", oriName, oriType)
       }
     }
     
@@ -167,32 +188,51 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
       varList .= name " := """"`r`n"
     
     ; 拼凑字符串 , "Str", var
-    ; 返回值是 Int 型，则可以省略，此时将闭括号添加在注释前
-    if (A_Index=obj.params.MaxIndex() and retType="Int")
-      template .= Format(", ""{}"", {}{}", type, name, ")" comment)
-    else
-      template .= Format(", ""{}"", {}{}{}", type, name, comment, CRLF)
+    template .= Format(", ""{}"", {}{}", type, name, CRLF)
   }
-  comment := ""
   
-  if (retType!="Int")
+  retType := ahkType[msdn.retType]
+  ; 拼凑字符串 , "Ptr")
+  if (retType="Int")
+    template := RTrim(template, CRLF) ")"
+  else
   {
-    if (retType="")
+    if (!retType)
     {
       retType := "Unknow"
       
       if (showError)
         if (multiLine)
-          comment := "  `; 错误：类型未知，需自行确定。"
+          oError[i+1] := "  `; 错误：返回值类型未知，需自行确定。"
         else
-          error .= Format("; 错误：返回值的类型 {} 未知，需自行确定。`r`n", obj.retType)
+          error       .= Format("; 错误：返回值的类型 {} 未知，需自行确定。`r`n", msdn.retType)
     }
     
-    ; 拼凑字符串 , "Ptr")
-    template .= Format(", ""{}""){}", retType, comment)
+    template .= Format(", ""{}"")", retType)
   }
   
+  ; 写入行末的提示信息
+  for k, v in oError
+    template := _lineAppend(template, v, k)
+  for k, v in oWarn
+    template := _lineAppend(template, v, k)
+  for k, v in oInfo
+    template := _lineAppend(template, v, k)
+  
   return, error warn info varList template
+}
+
+/*
+这是专门给 createDllCallTemplate() 用的
+
+*/
+_lineAppend(str, sLine, nLine)
+{
+  oStr := StrSplit(str, "`n", "`r")
+  oStr[nLine] .= sLine
+  for k, v in oStr
+    ret .= v "`r`n"
+  return, RTrim(ret, "`r`n")
 }
 
 /*
@@ -346,7 +386,7 @@ _forArray(obj, ByRef ret)
     ; 子节点迭代循环中
     if (rootValue and !isRoot)
     {
-      ; 有星号前缀的转换时将被添加星号后缀，例如 *LPLONG => Int*
+      ; 有星号前缀的转换时将被添加星号后缀，例如 *LPLONG -> Int*
       appendAnAsterisk := SubStr(k, 1, 1)="*" ? "*" : ""
       
       key := LTrim(k, "*")
@@ -391,8 +431,8 @@ parseMsdnFunctionSyntax(text)
     {
       ; 删除 LRESULT CALLBACK LowLevelMouseProc( 中的 CALLBACK 字样
       v := RegExReplace(v, "CALLBACK")
-      ; 解析 int MessageBox( 这样的内容
-      if (!RegExMatch(v, "([\w\s]+?)(\w+\s?)\(", OutputVar))
+      ; 解析 LRESULT LowLevelMouseProc( 这样的内容
+      if (!RegExMatch(v, "([\w\s]*?)(\w+\s?)\(", OutputVar))
         ret.error .= Format("/* 错误：第{}行内容解析失败。`r`n--------`r`n{}`r`n--------`r`n*/`r`n", A_Index, v)
       
       ret.retType  := Trim(OutputVar1, " `t`r`n`v`f")
@@ -420,15 +460,13 @@ parseMsdnFunctionSyntax(text)
       ; 获取变量名
       if (!RegExMatch(v, "([\w\*]+)$", OutputVar))
       {
-        ; 如果本行是省略号 ... ，则跳过
-        if (StrReplace(v, ".")="")
-        {
+        ; 如果本行包含省略号 ... ，则跳过
+        if (RegExMatch(v, "\.{3,}"))
           ret.warn .= "; 警告：函数可能存在额外参数，需自行确定。`r`n"
-          
-          continue
-        }
         else
           ret.error .= Format("/* 错误：第{}行内容解析失败。`r`n--------`r`n{}`r`n--------`r`n*/`r`n", A_Index, v)
+        
+        continue
       }
       
       ; 分解出变量名和类型名
