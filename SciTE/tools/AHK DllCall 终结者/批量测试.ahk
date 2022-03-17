@@ -1,5 +1,9 @@
-﻿FileRead, ahkType, type.json
+﻿; 加载类型数据库
+FileRead, ahkType, type.json
 ahkType := createAhkTypeFromJson(ahkType)
+
+; 多语言支持
+gosub, multiLanguage
 
 a1=
 (

@@ -127,7 +127,7 @@ cbHashObject := ""
 pbSecret := ""
 cbSecret := ""
 dwFlags := ""
-ret := DllCall("BCryptCreateHash", "Ptr", hAlgorithm, "Ptr*", phHash, "UChar*", pbHashObject, "UInt", cbHashObject, "UChar*", pbSecret, "UInt", cbSecret, "UInt", dwFlags, "Unknow")
+ret := DllCall("BCryptCreateHash", "Ptr", hAlgorithm, "Ptr*", phHash, "UChar*", pbHashObject, "UInt", cbHashObject, "UChar*", pbSecret, "UInt", cbSecret, "UInt", dwFlags, "Unknown")
 
 ; 错误：返回值的类型 NTSTATUS 未知，需自行确定。
 ; 提示：参数 ppAlgList 的类型 BCRYPT_ALGORITHM_IDENTIFIER 未知，但根据特征猜测应为 Ptr* 。
@@ -135,7 +135,7 @@ dwAlgOperations := ""
 pAlgCount := ""
 ppAlgList := ""
 dwFlags := ""
-ret := DllCall("BCryptEnumAlgorithms", "UInt", dwAlgOperations, "UInt*", pAlgCount, "Ptr*", ppAlgList, "UInt", dwFlags, "Unknow")
+ret := DllCall("BCryptEnumAlgorithms", "UInt", dwAlgOperations, "UInt*", pAlgCount, "Ptr*", ppAlgList, "UInt", dwFlags, "Unknown")
 
 ; 错误：返回值的类型 NTSTATUS 未知，需自行确定。
 ; 提示：参数 phAlgorithm 的类型 BCRYPT_ALG_HANDLE 未知，但根据特征猜测应为 Ptr* 。
@@ -143,7 +143,7 @@ phAlgorithm := ""
 pszAlgId := ""
 pszImplementation := ""
 dwFlags := ""
-ret := DllCall("BCryptOpenAlgorithmProvider", "Ptr*", phAlgorithm, "WStr", pszAlgId, "WStr", pszImplementation, "UInt", dwFlags, "Unknow")
+ret := DllCall("BCryptOpenAlgorithmProvider", "Ptr*", phAlgorithm, "WStr", pszAlgId, "WStr", pszImplementation, "UInt", dwFlags, "Unknown")
 
 lpsz := ""
 ret := DllCall("CharLower", "Str", lpsz, "Str")
@@ -188,7 +188,7 @@ NewState := ""
 BufferLength := ""
 PreviousState := ""
 ReturnLength := ""
-ret := DllCall("AdjustTokenPrivileges", "Ptr", TokenHandle, "Int", DisableAllPrivileges, "Unknow", NewState, "UInt", BufferLength, "Unknow", PreviousState, "UInt*", ReturnLength)
+ret := DllCall("AdjustTokenPrivileges", "Ptr", TokenHandle, "Int", DisableAllPrivileges, "Unknown", NewState, "UInt", BufferLength, "Unknown", PreviousState, "UInt*", ReturnLength)
 
 lpidProcess := ""
 cb := ""
