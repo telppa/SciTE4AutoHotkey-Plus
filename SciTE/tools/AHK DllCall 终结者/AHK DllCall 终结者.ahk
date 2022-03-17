@@ -7,25 +7,30 @@
 #SingleInstance Force
 SetBatchLines, -1
 
+; 加载类型数据库
 FileRead, ahkType, type.json
 ahkType := createAhkTypeFromJson(ahkType)
 
+; 多语言支持
+gosub, multiLanguage
+
+; 界面
 Gui +AlwaysOnTop
 
 Gui Font, , 微软雅黑
 Gui Add, Edit, x10 y40 w600 h180 gtranslateWithDelay vedit1
 
-Gui Add, Button, x9 y229 w100 h24 gtranslate, 转换
-Gui Add, Radio, x130 y230 w80 h24 gtranslate vradio1, 单行语法
-Gui Add, Radio, x220 y230 w80 h24 gtranslate vmultiLine +Checked, 多行语法
-Gui Add, Text, x360 y230 w100 h24 +0x202, Dll 名:
+Gui Add, Button, x9 y229 w100 h24 gtranslate, %l_gui_1%
+Gui Add, Radio, x130 y230 w80 h24 gtranslate vradio1, %l_gui_2%
+Gui Add, Radio, x220 y230 w80 h24 gtranslate vmultiLine +Checked, %l_gui_3%
+Gui Add, Text, x360 y230 w100 h24 +0x202, %l_gui_4%
 Gui Add, Edit, x470 y230 w140 h22 gtranslateWithDelay vedit3
 
 Gui Add, Edit, x10 y294 w600 h180 vedit2
 
-Gui Add, Checkbox, x10 y476 w80 h24 +Checked gtranslate vshowError, 输出错误
-Gui Add, Checkbox, x100 y476 w80 h24 +Checked gtranslate vshowWarn, 输出警告
-Gui Add, Checkbox, x190 y476 w80 h24 +Checked gtranslate vshowInfo, 输出提示
+Gui Add, Checkbox, x10 y476 w100 h24 +Checked gtranslate vshowError, %l_gui_5%
+Gui Add, Checkbox, x110 y476 w100 h24 +Checked gtranslate vshowWarn, %l_gui_6%
+Gui Add, Checkbox, x210 y476 w100 h24 +Checked gtranslate vshowInfo, %l_gui_7%
 
 Gui Font, s9 cWhite Bold, Segoe UI
 Gui Add, Picture, x10 y10 w602 h26, % "HBITMAP:" Gradient(602, 26)
@@ -33,7 +38,7 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, AHK DllCall 终结者 ver. 2.5
+Gui Show, w620 h505, %l_gui_8% v2.6
 return
 
 GuiEscape:
@@ -52,6 +57,8 @@ return
 
 createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true)
 {
+  global l_tip_1, l_tip_2, l_tip_3, l_tip_4, l_tip_5, l_tip_6
+  
   ; 输入内容为空则直接返回
   if (RegExReplace(text, "\s+")="")
     return
@@ -167,20 +174,20 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
         
         if (showInfo)
           if (multiLine)
-            oInfo[i] := Format("  `; 提示：类型未知，但根据特征猜测应为 {} 。", type)
+            oInfo[i] := Format(l_tip_1, type)
           else
-            info     .= Format("; 提示：参数 {} 的类型 {} 未知，但根据特征猜测应为 {} 。`r`n", oriName, oriType, type)
+            info     .= Format(l_tip_2, oriName, oriType, type)
       }
       else
       {
-        type := "Unknow"
+        type := "Unknown"
         name := name
         
         if (showError)
           if (multiLine)
-            oError[i] := "  `; 错误：类型未知，需自行确定。"
+            oError[i] := l_tip_3
           else
-            error     .= Format("; 错误：参数 {} 的类型 {} 未知，需自行确定。`r`n", oriName, oriType)
+            error     .= Format(l_tip_4, oriName, oriType)
       }
     }
     
@@ -202,13 +209,13 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
   {
     if (!retType)
     {
-      retType := "Unknow"
+      retType := "Unknown"
       
       if (showError)
         if (multiLine)
-          oError[i+1] := "  `; 错误：返回值类型未知，需自行确定。"
+          oError[i+1] := l_tip_5
         else
-          error       .= Format("; 错误：返回值的类型 {} 未知，需自行确定。`r`n", msdn.retType)
+          error       .= Format(l_tip_6, msdn.retType)
     }
     
     template .= Format(", ""{}"")", retType)
@@ -421,6 +428,8 @@ BOOL CryptBinaryToStringA(
 */
 parseMsdnFunctionSyntax(text)
 {
+  global l_tip_7, l_tip_8, l_tip_9, l_tip_10, l_tip_11
+  
   ret := {}
   
   ; 删除开始的空白行
@@ -437,9 +446,9 @@ parseMsdnFunctionSyntax(text)
       ; 解析 LRESULT LowLevelMouseProc( 这样的内容
       if (!RegExMatch(v, "([\w\s]*?)(\w+\s?)\(", OutputVar))
       {
-        ret.error .= Format("/* 错误：第{}行内容解析失败。`r`n--------`r`n{}`r`n--------`r`n*/`r`n", A_Index, v)
-        ret.error .= "; 错误：获取函数名失败。`r`n"
-        ret.error .= "; 错误：获取返回值类型失败。`r`n"
+        ret.error .= Format(l_tip_7, A_Index, v)
+        ret.error .= l_tip_8
+        ret.error .= l_tip_9
       }
       
       ret.retType  := Trim(OutputVar1, " `t`r`n`v`f")
@@ -473,9 +482,9 @@ parseMsdnFunctionSyntax(text)
       {
         ; 如果本行包含省略号 ... ，则跳过
         if (RegExMatch(v, "\.{3,}"))
-          ret.warn .= "; 警告：函数可能存在额外参数，需自行确定。`r`n"
+          ret.warn .= l_tip_10
         else
-          ret.error .= Format("/* 错误：第{}行内容解析失败。`r`n--------`r`n{}`r`n--------`r`n*/`r`n", A_Index, v)
+          ret.error .= Format(l_tip_11, A_Index, v)
         
         continue
       }
@@ -510,3 +519,4 @@ parseMsdnFunctionSyntax(text)
 ; 不能用 cjson dump 否则 char 会被转为大写的 CHAR 。
 #Include %A_ScriptDir%\Lib\JSON.ahk
 #Include <CreateGradient>
+#Include <Language>
