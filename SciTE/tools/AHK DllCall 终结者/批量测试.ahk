@@ -1,8 +1,4 @@
-﻿; 加载类型数据库
-FileRead, ahkType, type.json
-ahkType := createAhkTypeFromJson(ahkType)
-
-; 多语言支持
+﻿; 多语言支持
 gosub, multiLanguage
 
 a1=
@@ -367,7 +363,7 @@ LPSTR GetCommandLineA();
 )
 
 loop, 40
-  out.=createDllCallTemplate(a%A_Index%, "", ahkType, false, true, true, true) "`r`n`r`n"
+  out.=createDllCallTemplate(a%A_Index%, "", false, true, true, true, true, true) "`r`n`r`n"
 
 FileDelete, 批量测试结果.txt
 FileAppend, % out, 批量测试结果.txt
