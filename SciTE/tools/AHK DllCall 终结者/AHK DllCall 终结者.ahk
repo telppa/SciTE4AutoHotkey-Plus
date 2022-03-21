@@ -3,10 +3,19 @@
 ; https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types
 ; https://docs.microsoft.com/en-us/cpp/cpp/data-type-ranges
 
+/* 隐藏功能
+F1 帮助
+F10 测试解析的例子
+F11 输出批量测试结果
+F12 输出structor用的类型列表
+*/
+
 #NoEnv
 #NoTrayIcon
 #SingleInstance Force
 SetBatchLines, -1
+
+SetWorkingDir, %A_ScriptDir%
 
 ; 多语言支持
 gosub, multiLanguage
@@ -18,9 +27,12 @@ gosub, loadSettings
 Menu, Tray, Icon, %A_ScriptDir%\DllCall.ico
 
 ; 界面
-Gui +AlwaysOnTop
+Gui +AlwaysOnTop +HwndhGUI -DPIScale
 
-Gui Font, , 微软雅黑
+; DPI 缩放下的字号
+fontSizeWithDpiScale := Round(9/(A_ScreenDPI/96))
+
+Gui Font, s%fontSizeWithDpiScale%, 微软雅黑
 Gui Add, Edit, x10 y40 w600 h180 gtranslateWithDelay vedit1
 
 Gui Add, Button, x9 y229 w100 h24 gtranslate, %l_gui_1%
@@ -45,14 +57,13 @@ else
   Gui Add, Checkbox, x310 y476 w120 h24 +Checked%createVariables% gtranslate vcreateVariables, %l_gui_8%
   Gui Add, Checkbox, x440 y476 w200 h24 +Checked%printRetValAndErrorLevel% gtranslate vprintRetValAndErrorLevel, %l_gui_9%
 }
-
-Gui Font, s9 cWhite Bold, Segoe UI
+Gui Font, s%fontSizeWithDpiScale% cWhite Bold, Segoe UI
 Gui Add, Picture, x10 y10 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%MSDN Syntax
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v2.7
+Gui Show, w620 h505, %l_gui_10% v3.0
 return
 
 GuiEscape:
@@ -77,7 +88,7 @@ loadSettings:
   IniRead, showWarn, settings.ini, settings, showWarn, 1
   IniRead, showInfo, settings.ini, settings, showInfo, 1
   IniRead, createVariables, settings.ini, settings, createVariables, 1
-  IniRead, printRetValAndErrorLevel, settings.ini, settings, printRetValAndErrorLevel, 1
+  IniRead, printRetValAndErrorLevel, settings.ini, settings, printRetValAndErrorLevel, 0
 return
 
 saveSettings:
@@ -89,6 +100,13 @@ saveSettings:
   IniWrite, %createVariables%, settings.ini, settings, createVariables
   IniWrite, %printRetValAndErrorLevel%, settings.ini, settings, printRetValAndErrorLevel
 return
+
+#If WinActive("ahk_id " hGUI)
+F1::帮助()
+F10::测试解析的例子()
+F11::输出批量测试结果()
+F12::输出structor用的类型列表()
+#If
 
 createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true, createVariables:=true, printRetValAndErrorLevel:=true)
 {
@@ -566,5 +584,9 @@ parseMsdnFunctionSyntax(text)
 
 ; 不能用 cjson dump 否则 char 会被转为大写的 CHAR 。
 #Include %A_ScriptDir%\Lib\JSON.ahk
-#Include <CreateGradient>
-#Include <Language>
+#Include %A_ScriptDir%\Lib\CreateGradient.ahk
+#Include %A_ScriptDir%\Lib\Language.ahk
+#Include %A_ScriptDir%\Lib\测试解析的例子.ahk
+#Include %A_ScriptDir%\Lib\输出批量测试结果.ahk
+#Include %A_ScriptDir%\Lib\输出structor用的类型列表.ahk
+#Include %A_ScriptDir%\Lib\帮助.ahk
