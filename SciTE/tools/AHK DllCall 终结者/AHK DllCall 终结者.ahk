@@ -4,15 +4,18 @@
 ; https://docs.microsoft.com/en-us/cpp/cpp/data-type-ranges
 
 #NoEnv
+#NoTrayIcon
 #SingleInstance Force
 SetBatchLines, -1
 
-; 加载类型数据库
-FileRead, ahkType, type.json
-ahkType := createAhkTypeFromJson(ahkType)
-
 ; 多语言支持
 gosub, multiLanguage
+
+; 加载配置
+gosub, loadSettings
+
+; 设置图标必须放第一行，否则失效。
+Menu, Tray, Icon, %A_ScriptDir%\DllCall.ico
 
 ; 界面
 Gui +AlwaysOnTop
@@ -21,16 +24,27 @@ Gui Font, , 微软雅黑
 Gui Add, Edit, x10 y40 w600 h180 gtranslateWithDelay vedit1
 
 Gui Add, Button, x9 y229 w100 h24 gtranslate, %l_gui_1%
-Gui Add, Radio, x130 y230 w80 h24 gtranslate vradio1, %l_gui_2%
-Gui Add, Radio, x220 y230 w80 h24 gtranslate vmultiLine +Checked, %l_gui_3%
+Gui Add, Radio, x130 y230 w80 h24 gtranslate voneLine +Checked%oneLine%, %l_gui_2%
+Gui Add, Radio, x220 y230 w80 h24 gtranslate vmultiLine +Checked%multiLine%, %l_gui_3%
 Gui Add, Text, x360 y230 w100 h24 +0x202, %l_gui_4%
 Gui Add, Edit, x470 y230 w140 h22 gtranslateWithDelay vedit3
 
 Gui Add, Edit, x10 y294 w600 h180 vedit2
 
-Gui Add, Checkbox, x10 y476 w100 h24 +Checked gtranslate vshowError, %l_gui_5%
-Gui Add, Checkbox, x110 y476 w100 h24 +Checked gtranslate vshowWarn, %l_gui_6%
-Gui Add, Checkbox, x210 y476 w100 h24 +Checked gtranslate vshowInfo, %l_gui_7%
+Gui Add, Checkbox, x10 y476 w100 h24 +Checked%showError% gtranslate vshowError, %l_gui_5%
+Gui Add, Checkbox, x110 y476 w100 h24 +Checked%showWarn% gtranslate vshowWarn, %l_gui_6%
+Gui Add, Checkbox, x210 y476 w100 h24 +Checked%showInfo% gtranslate vshowInfo, %l_gui_7%
+; 因为不同语言下文字长度差别较大，因此控件需要不同的布局
+if (A_Language="0804")
+{
+  Gui Add, Checkbox, x310 y476 w100 h24 +Checked%createVariables% gtranslate vcreateVariables, %l_gui_8%
+  Gui Add, Checkbox, x410 y476 w150 h24 +Checked%printRetValAndErrorLevel% gtranslate vprintRetValAndErrorLevel, %l_gui_9%
+}
+else
+{
+  Gui Add, Checkbox, x310 y476 w120 h24 +Checked%createVariables% gtranslate vcreateVariables, %l_gui_8%
+  Gui Add, Checkbox, x440 y476 w200 h24 +Checked%printRetValAndErrorLevel% gtranslate vprintRetValAndErrorLevel, %l_gui_9%
+}
 
 Gui Font, s9 cWhite Bold, Segoe UI
 Gui Add, Picture, x10 y10 w602 h26, % "HBITMAP:" Gradient(602, 26)
@@ -38,11 +52,12 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_8% v2.6
+Gui Show, w620 h505, %l_gui_10% v2.7
 return
 
 GuiEscape:
 GuiClose:
+  gosub, saveSettings
   ExitApp
 return
 
@@ -52,17 +67,46 @@ return
 
 translate:
   Gui, Submit, NoHide
-  GuiControl, , edit2, % createDllCallTemplate(edit1, edit3, ahkType, multiLine, showError, showWarn, showInfo)
+  GuiControl, , edit2, % createDllCallTemplate(edit1, edit3, multiLine, showError, showWarn, showInfo, createVariables, printRetValAndErrorLevel)
 return
 
-createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true)
+loadSettings:
+  IniRead, oneLine, settings.ini, settings, oneLine, 0
+  IniRead, multiLine, settings.ini, settings, multiLine, 1
+  IniRead, showError, settings.ini, settings, showError, 1
+  IniRead, showWarn, settings.ini, settings, showWarn, 1
+  IniRead, showInfo, settings.ini, settings, showInfo, 1
+  IniRead, createVariables, settings.ini, settings, createVariables, 1
+  IniRead, printRetValAndErrorLevel, settings.ini, settings, printRetValAndErrorLevel, 1
+return
+
+saveSettings:
+  IniWrite, %oneLine%, settings.ini, settings, oneLine
+  IniWrite, %multiLine%, settings.ini, settings, multiLine
+  IniWrite, %showError%, settings.ini, settings, showError
+  IniWrite, %showWarn%, settings.ini, settings, showWarn
+  IniWrite, %showInfo%, settings.ini, settings, showInfo
+  IniWrite, %createVariables%, settings.ini, settings, createVariables
+  IniWrite, %printRetValAndErrorLevel%, settings.ini, settings, printRetValAndErrorLevel
+return
+
+createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true, createVariables:=true, printRetValAndErrorLevel:=true)
 {
-  global l_tip_1, l_tip_2, l_tip_3, l_tip_4, l_tip_5, l_tip_6
+  global l_tip_1, l_tip_2, l_tip_3, l_tip_4, l_tip_5, l_tip_6, l_errorlevel
+  static ahkType
+  
+  ; 加载类型数据库
+  if (!IsObject(ahkType))
+  {
+    FileRead, ahkType, type.json
+    ahkType := createAhkTypeFromJson(ahkType)
+  }
   
   ; 输入内容为空则直接返回
   if (RegExReplace(text, "\s+")="")
     return
   
+  ; 解析 msdn 的函数定义
   msdn := parseMsdnFunctionSyntax(text)
   
   ; 放在文首和行末的提示信息
@@ -92,7 +136,7 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
     prefix  := v.hungarian
     i       := A_Index+1
     
-    ; 没有在数据库中找到对应类型时，删除一些无用的前后缀
+    ; 没有在数据库中找到对应类型时，则删除一些无用的前后缀，之后再次尝试
     ; 例如 CONST BYTE -> BYTE
     if (!type)
     {
@@ -191,11 +235,12 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
       }
     }
     
-    ; 拼凑字符串 VarSetCapacity(var, 128, 0) 或 var=""
-    if (InStr(name, "&"))
-      varList .= Format("VarSetCapacity({}, 128, 0)`r`n", oriName)
-    else
-      varList .= name " := """"`r`n"
+    if (createVariables)
+      ; 拼凑字符串 VarSetCapacity(var, , 0) 或 var=""
+      if (InStr(name, "&"))
+        varList .= Format("VarSetCapacity({}, , 0)`r`n", oriName)
+      else
+        varList .= name " := """"`r`n"
     
     ; 拼凑字符串 , "Str", var
     template .= Format(", ""{}"", {}{}", type, name, CRLF)
@@ -229,7 +274,10 @@ createDllCallTemplate(text, dllName, ahkType, multiLine:=true, showError:=true, 
   for k, v in oInfo
     template := _lineAppend(template, v, k)
   
-  return, error warn info varList template
+  if (printRetValAndErrorLevel)
+    retValAndErrorLevel := "`r`n" l_errorlevel
+  
+  return, error warn info varList template retValAndErrorLevel
 }
 
 /*
