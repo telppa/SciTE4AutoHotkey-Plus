@@ -22,14 +22,12 @@ lpFmt := ""
 ret := DllCall("wsprintf", "Str", lpOut, "Str", lpFmt)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpFrequency 的类型 LARGE_INTEGER 未知，但根据特征猜测应为 Ptr 。
-VarSetCapacity(lpFrequency, , 0)
-ret := DllCall("QueryPerformanceFrequency", "Ptr", &lpFrequency)
+lpFrequency := ""
+ret := DllCall("QueryPerformanceFrequency", "Int64*", lpFrequency)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpPerformanceCount 的类型 LARGE_INTEGER 未知，但根据特征猜测应为 Ptr 。
-VarSetCapacity(lpPerformanceCount, , 0)
-ret := DllCall("QueryPerformanceCounter", "Ptr", &lpPerformanceCount)
+lpPerformanceCount := ""
+ret := DllCall("QueryPerformanceCounter", "Int64*", lpPerformanceCount)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
 hWnd := ""
@@ -37,14 +35,14 @@ nBar := ""
 ret := DllCall("GetScrollPos", "Ptr", hWnd, "Int", nBar)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpsi 的类型 LPSCROLLINFO 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lpsi 的类型 LPSCROLLINFO 对应为 Ptr 。
 hwnd := ""
 nBar := ""
 VarSetCapacity(lpsi, , 0)
 ret := DllCall("GetScrollInfo", "Ptr", hwnd, "Int", nBar, "Ptr", &lpsi)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpSecurityAttributes 的类型 LPSECURITY_ATTRIBUTES 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lpSecurityAttributes 的类型 LPSECURITY_ATTRIBUTES 对应为 Ptr 。
 lpFileName := ""
 dwDesiredAccess := ""
 dwShareMode := ""
@@ -55,7 +53,7 @@ hTemplateFile := ""
 ret := DllCall("CreateFile", "Str", lpFileName, "UInt", dwDesiredAccess, "UInt", dwShareMode, "Ptr", &lpSecurityAttributes, "UInt", dwCreationDisposition, "UInt", dwFlagsAndAttributes, "Ptr", hTemplateFile, "Ptr")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpOverlapped 的类型 LPOVERLAPPED 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lpOverlapped 的类型 LPOVERLAPPED 对应为 Ptr 。
 hFile := ""
 VarSetCapacity(lpBuffer, , 0)
 nNumberOfBytesToWrite := ""
@@ -68,7 +66,7 @@ hObject := ""
 ret := DllCall("CloseHandle", "Ptr", hObject)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpOverlapped 的类型 LPOVERLAPPED 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lpOverlapped 的类型 LPOVERLAPPED 对应为 Ptr 。
 hFile := ""
 VarSetCapacity(lpBuffer, , 0)
 nNumberOfBytesToRead := ""
@@ -105,7 +103,7 @@ id := ""
 ret := DllCall("SetSystemCursor", "Ptr", hcur, "UInt", id)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpRect 的类型 LPRECT 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lpRect 的类型 LPRECT 对应为 Ptr 。
 hWnd := ""
 VarSetCapacity(lpRect, , 0)
 ret := DllCall("GetWindowRect", "Ptr", hWnd, "Ptr", &lpRect)
@@ -119,7 +117,7 @@ color := ""
 ret := DllCall("CreateSolidBrush", "UInt", color, "Ptr")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lprc 的类型 const RECT 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lprc 的类型 const RECT 对应为 Ptr 。
 hDC := ""
 VarSetCapacity(lprc, , 0)
 hbr := ""
@@ -135,14 +133,13 @@ ho := ""
 ret := DllCall("DeleteObject", "Ptr", ho)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpSystemTime 的类型 const SYSTEMTIME 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lpSystemTime 的类型 const SYSTEMTIME 对应为 Ptr 。
 VarSetCapacity(lpSystemTime, , 0)
 ret := DllCall("SetSystemTime", "Ptr", &lpSystemTime)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 错误：返回值的类型 NTSTATUS 未知，需自行确定。
-; 提示：参数 hAlgorithm 的类型 BCRYPT_ALG_HANDLE 未知，但根据特征猜测应为 Ptr 。
-; 提示：参数 phHash 的类型 BCRYPT_HASH_HANDLE 未知，但根据特征猜测应为 Ptr* 。
+; 提示：猜测参数 hAlgorithm 的类型 BCRYPT_ALG_HANDLE 对应为 Ptr 。
+; 提示：猜测参数 phHash 的类型 BCRYPT_HASH_HANDLE 对应为 Ptr* 。
 hAlgorithm := ""
 phHash := ""
 pbHashObject := ""
@@ -150,37 +147,35 @@ cbHashObject := ""
 pbSecret := ""
 cbSecret := ""
 dwFlags := ""
-ret := DllCall("BCryptCreateHash", "Ptr", hAlgorithm, "Ptr*", phHash, "UChar*", pbHashObject, "UInt", cbHashObject, "UChar*", pbSecret, "UInt", cbSecret, "UInt", dwFlags, "Unknown")
+ret := DllCall("BCryptCreateHash", "Ptr", hAlgorithm, "Ptr*", phHash, "UChar*", pbHashObject, "UInt", cbHashObject, "UChar*", pbSecret, "UInt", cbSecret, "UInt", dwFlags)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 错误：返回值的类型 NTSTATUS 未知，需自行确定。
-; 提示：参数 ppAlgList 的类型 BCRYPT_ALGORITHM_IDENTIFIER 未知，但根据特征猜测应为 Ptr* 。
+; 提示：猜测参数 ppAlgList 的类型 BCRYPT_ALGORITHM_IDENTIFIER 对应为 Ptr* 。
 dwAlgOperations := ""
 pAlgCount := ""
 ppAlgList := ""
 dwFlags := ""
-ret := DllCall("BCryptEnumAlgorithms", "UInt", dwAlgOperations, "UInt*", pAlgCount, "Ptr*", ppAlgList, "UInt", dwFlags, "Unknown")
+ret := DllCall("BCryptEnumAlgorithms", "UInt", dwAlgOperations, "UInt*", pAlgCount, "Ptr*", ppAlgList, "UInt", dwFlags)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 错误：返回值的类型 NTSTATUS 未知，需自行确定。
-; 提示：参数 phAlgorithm 的类型 BCRYPT_ALG_HANDLE 未知，但根据特征猜测应为 Ptr* 。
+; 提示：猜测参数 phAlgorithm 的类型 BCRYPT_ALG_HANDLE 对应为 Ptr* 。
 phAlgorithm := ""
 pszAlgId := ""
 pszImplementation := ""
 dwFlags := ""
-ret := DllCall("BCryptOpenAlgorithmProvider", "Ptr*", phAlgorithm, "WStr", pszAlgId, "WStr", pszImplementation, "UInt", dwFlags, "Unknown")
+ret := DllCall("BCryptOpenAlgorithmProvider", "Ptr*", phAlgorithm, "WStr", pszAlgId, "WStr", pszImplementation, "UInt", dwFlags)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
 lpsz := ""
 ret := DllCall("CharLower", "Str", lpsz, "Str")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpProcessAttributes 的类型 LPSECURITY_ATTRIBUTES 未知，但根据特征猜测应为 Ptr 。
-; 提示：参数 lpThreadAttributes 的类型 LPSECURITY_ATTRIBUTES 未知，但根据特征猜测应为 Ptr 。
-; 提示：参数 lpStartupInfo 的类型 LPSTARTUPINFOA 未知，但根据特征猜测应为 Ptr 。
-; 提示：参数 lpProcessInformation 的类型 LPPROCESS_INFORMATION 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lpProcessAttributes 的类型 LPSECURITY_ATTRIBUTES 对应为 Ptr 。
+; 提示：猜测参数 lpThreadAttributes 的类型 LPSECURITY_ATTRIBUTES 对应为 Ptr 。
+; 提示：猜测参数 lpStartupInfo 的类型 LPSTARTUPINFOA 对应为 Ptr 。
+; 提示：猜测参数 lpProcessInformation 的类型 LPPROCESS_INFORMATION 对应为 Ptr 。
 lpApplicationName := ""
-lpCommandLine := ""
+VarSetCapacity(lpCommandLine, , 0)
 VarSetCapacity(lpProcessAttributes, , 0)
 VarSetCapacity(lpThreadAttributes, , 0)
 bInheritHandles := ""
@@ -204,15 +199,15 @@ TokenHandle := ""
 ret := DllCall("OpenProcessToken", "Ptr", ProcessHandle, "UInt", DesiredAccess, "Ptr*", TokenHandle)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpLuid 的类型 PLUID 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lpLuid 的类型 PLUID 对应为 Ptr 。
 lpSystemName := ""
 lpName := ""
 VarSetCapacity(lpLuid, , 0)
 ret := DllCall("LookupPrivilegeValueA", "AStr", lpSystemName, "AStr", lpName, "Ptr", &lpLuid)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 错误：参数 NewState 的类型 PTOKEN_PRIVILEGES 未知，需自行确定。
-; 错误：参数 PreviousState 的类型 PTOKEN_PRIVILEGES 未知，需自行确定。
+; 错误：参数 NewState 的类型 PTOKEN_PRIVILEGES 对应未知，需自行确定。
+; 错误：参数 PreviousState 的类型 PTOKEN_PRIVILEGES 对应未知，需自行确定。
 TokenHandle := ""
 DisableAllPrivileges := ""
 NewState := ""
@@ -230,18 +225,18 @@ MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
 hProcess := ""
 hModule := ""
-lpBaseName := ""
+VarSetCapacity(lpBaseName, , 0)
 nSize := ""
 ret := DllCall("GetModuleBaseNameA", "Ptr", hProcess, "Ptr", hModule, "AStr", lpBaseName, "UInt", nSize, "UInt")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
 hProcess := ""
-lpImageFileName := ""
+VarSetCapacity(lpImageFileName, , 0)
 nSize := ""
 ret := DllCall("GetProcessImageFileNameA", "Ptr", hProcess, "AStr", lpImageFileName, "UInt", nSize, "UInt")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：参数 lpfn 的类型 HOOKPROC 未知，但根据特征猜测应为 Ptr 。
+; 提示：猜测参数 lpfn 的类型 HOOKPROC 对应为 Ptr 。
 idHook := ""
 VarSetCapacity(lpfn, , 0)
 hmod := ""
@@ -264,5 +259,25 @@ ret := DllCall("LowLevelMouseProc", "Int", nCode, "UPtr", wParam, "Ptr", lParam,
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
 ret := DllCall("GetCommandLineA", "AStr")
+MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
+
+; 错误：参数 flags 的类型 SFBS_FLAGS 对应未知，需自行确定。
+; 错误：返回值的类型 LWSTDAPI 对应未知，需自行确定。
+ull := ""
+flags := ""
+VarSetCapacity(pszBuf, , 0)
+cchBuf := ""
+ret := DllCall("StrFormatByteSizeEx", "UInt64", ull, "Unknown", flags, "WStr", pszBuf, "UInt", cchBuf, "Unknown")
+MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
+
+; 警告：猜测参数 prefmaxlen 的类型 DWORD 对应为 UInt* ，但也可能是 UInt 。
+servername := ""
+level := ""
+bufptr := ""
+prefmaxlen := ""
+entriesread := ""
+totalentries := ""
+resume_handle := ""
+ret := DllCall("NetGroupEnum", "WStr", servername, "UInt", level, "UChar*", bufptr, "UInt*", prefmaxlen, "UInt*", entriesread, "UInt*", totalentries, "UPtr*", resume_handle, "UInt")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 

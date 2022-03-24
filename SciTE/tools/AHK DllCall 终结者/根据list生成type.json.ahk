@@ -1,8 +1,13 @@
 ﻿arr:={}
 loop, Read, list.txt
 {
-  if (A_LoopReadLine="-----------------------------------------------")
-    break
+  ; 跳过注释
+  if (SubStr(A_LoopReadLine, 1, 2)="; ")
+    continue
+  
+  ; 跳过空行
+  if (Trim(A_LoopReadLine, " `t`r`n`v`f")="")
+    continue
   
   arr.Push(StrReplace(A_LoopReadLine, "typedef ", "", "", 1))
 }
@@ -52,8 +57,10 @@ obj:={"__nullterminated CONST CHAR" : "char"
     , "BYTE far"                    : "unsigned char"
     , "CONST CHAR"                  : "char"
     , "CONST WCHAR"                 : "wchar_t"
+    , "INT_PTR"                     : "__int3264"
     , "LONGLONG"                    : "__int64"
     , "LPVOID"                      : "void"
+    , "UINT_PTR"                    : "unsigned __int3264"
     , "ULONGLONG"                   : "unsigned __int64"}
 ; 加盐
 for k, v in obj.Clone()
@@ -70,29 +77,29 @@ for k, v in obj
 
 ; 四次处理。将 __int64 之类的合并到 Int64 中，这一步将绝大多数类型合并到了对应的 AHK 类型下。
 ; 这个列表只能手动维护。
-obj:={"__int64"          : "Int64"
-    , "char"             : "Char"
-    , "CONST void"       : "Ptr"
-    , "float"            : "Float"
-    , "INT_PTR"          : "Ptr"
-    , "int"              : "Int"
-    , "LONG_PTR"         : "Ptr"
-    , "long"             : "Int"
-    , "PVOID"            : "Ptr"
-    , "short"            : "Short"
-    , "signed __int64"   : "Int64"
-    , "signed char"      : "Char"
-    , "signed int"       : "Int"
-    , "signed short"     : "Short"
-    , "UINT_PTR"         : "UPtr"
-    , "ULONG_PTR"        : "UPtr"
-    , "unsigned __int64" : "UInt64"
-    , "unsigned char"    : "UChar"
-    , "unsigned int"     : "UInt"
-    , "unsigned long"    : "UInt"
-    , "unsigned short"   : "UShort"
-    , "void"             : "Ptr"
-    , "wchar_t"          : "UShort"}
+obj:={"__int3264"          : "Ptr"
+    , "__int64"            : "Int64"
+    , "char"               : "Char"
+    , "CONST void"         : "Ptr"
+    , "const wchar_t"      : "UShort"
+    , "double"             : "Double"
+    , "float"              : "Float"
+    , "int"                : "Int"
+    , "long"               : "Int"
+    , "PVOID"              : "Ptr"
+    , "short"              : "Short"
+    , "signed __int64"     : "Int64"
+    , "signed char"        : "Char"
+    , "signed int"         : "Int"
+    , "signed short"       : "Short"
+    , "unsigned __int3264" : "UPtr"
+    , "unsigned __int64"   : "UInt64"
+    , "unsigned char"      : "UChar"
+    , "unsigned int"       : "UInt"
+    , "unsigned long"      : "UInt"
+    , "unsigned short"     : "UShort"
+    , "void"               : "Ptr"
+    , "wchar_t"            : "UShort"}
 ; 加盐
 for k, v in obj.Clone()
 {
@@ -114,11 +121,21 @@ ret:=json.load(out)
 ; 移动 HANDLE 下的类目。
 for k, v in ret["HANDLE"]
   ret["Ptr", "PVOID", "HANDLE", k]:=v
+; 移动 DWORD 下的类目。
+for k, v in ret["DWORD"]
+  ret["UInt", "unsigned long", "DWORD", k]:=v
+; 移动 PCONTEXT_HANDLE 下的类目。
+ret["Ptr", "void", "*PCONTEXT_HANDLE"]:=ret["PCONTEXT_HANDLE"]
 ; 移动 PDWORD 下的类目。
 ret["UInt", "unsigned long", "DWORD", "PDWORD"]:=ret["PDWORD"]
-; 因为根节点的 HANDLE PDWORD 已被移动到正确子节点，故这里直接删除。
+; 移动 STRING 下的类目。
+ret["UChar", "unsigned char", "UCHAR", "*STRING"]:=ret["STRING"]
+; 因为根节点的 HANDLE DWORD PCONTEXT_HANDLE PDWORD STRING 已被移动到正确子节点，故这里直接删除。
 ret.Delete("HANDLE")
+ret.Delete("DWORD")
+ret.Delete("PCONTEXT_HANDLE")
 ret.Delete("PDWORD")
+ret.Delete("STRING")
 ; 因为 TBYTE TCHAR 会在 createAhkTypeFromJson() 中单独处理，故这里直接删除。
 ret.Delete("TBYTE")
 ret.Delete("TCHAR")

@@ -361,7 +361,30 @@
   LPSTR GetCommandLineA();
   )
 
-  loop, 40
+  a41=
+  (
+  LWSTDAPI StrFormatByteSizeEx(
+        ULONGLONG  ull,
+        SFBS_FLAGS flags,
+  [out] PWSTR      pszBuf,
+        UINT       cchBuf
+  `);
+  )
+
+  a42=
+  (
+  NET_API_STATUS NET_API_FUNCTION NetGroupEnum(
+    [in]      LPCWSTR    servername,
+    [in]      DWORD      level,
+    [out]     LPBYTE     *bufptr,
+    [in]      DWORD      prefmaxlen,
+    [out]     LPDWORD    entriesread,
+    [out]     LPDWORD    totalentries,
+    [in, out] PDWORD_PTR resume_handle
+  `);
+  )
+
+  loop, 42
     out.=createDllCallTemplate(a%A_Index%, "", false, true, true, true, true, true) "`r`n`r`n"
 
   FileDelete, 批量测试结果.txt

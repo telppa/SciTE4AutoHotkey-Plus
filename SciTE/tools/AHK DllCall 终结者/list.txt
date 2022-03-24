@@ -1,3 +1,4 @@
+; 下面列表内容来自于 https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types
 typedef WORD ATOM;
 typedef int BOOL;
 typedef BYTE BOOLEAN;
@@ -135,7 +136,11 @@ typedef unsigned int UINT;
 typedef unsigned char UINT8;
 typedef unsigned short UINT16;
 typedef unsigned int UINT32;
+; -----------------------------------------------
+; 下面这行在微软官网写的是 typedef usigned __int 64 UINT64;
+; 经过翻看 BaseTsd.h 文件内容，确定这是笔误，因此直接进行了修正。
 typedef unsigned __int64 UINT64;
+; -----------------------------------------------
 typedef unsigned long ULONG;
 typedef unsigned int ULONG32;
 typedef unsigned __int64 ULONG64;
@@ -144,14 +149,42 @@ typedef LONGLONG USN;
 typedef wchar_t WCHAR;
 typedef unsigned short WORD;
 typedef UINT_PTR WPARAM;
------------------------------------------------
-微软官网
-https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types
------------------------------------------------
-typedef unsigned __int64 UINT64;
-在微软官网写的是
-typedef usigned __int 64 UINT64;
 
-经过翻看 BaseTsd.h 文件内容，确定这是笔误，因此直接在上述列表中进行了修正。
------------------------------------------------
-截止 2022.03.14 ，所有存在于微软官网，但未出现在上述列表中的条目，都在函数 createAhkTypeFromJson() 中进行了单独添加处理。
+
+
+; 下面列表内容来自于 https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-dtyp/24637f2d-238b-4d22-b44d-fe54b024280c
+; 与上表重复的内容已被剔除，且将所有 *空格 替换成了 空格* ，使得格式上与上表一致，方便处理。
+; LARGE_INTEGER    ULARGE_INTEGER    TOKEN_MANDATORY_POLICY
+; 上述3个类型实际被定义成结构体，但结构体中又只有一个成员，所以被我视为类型处理。
+typedef void *ADCONNECTION_HANDLE;
+typedef WCHAR *BSTR;
+typedef double DOUBLE;
+typedef unsigned long error_status_t;
+typedef DWORD HCALL;
+typedef void *LDAP_UDP_HANDLE;
+typedef const wchar_t *LMCSTR;
+typedef WCHAR *LMSTR;
+typedef __int3264 LONG_PTR;
+typedef unsigned __int3264 ULONG_PTR;
+typedef DWORD NET_API_STATUS;
+typedef long NTSTATUS;
+typedef void *PCONTEXT_HANDLE;
+typedef PCONTEXT_HANDLE *PPCONTEXT_HANDLE;
+typedef void *RPC_BINDING_HANDLE;
+typedef UCHAR *STRING;
+typedef STRING UNC;
+typedef wchar_t UNICODE;
+typedef signed __int64 LARGE_INTEGER;
+typedef LARGE_INTEGER *PLARGE_INTEGER;
+typedef unsigned __int64 ULARGE_INTEGER;
+typedef ULARGE_INTEGER *PULARGE_INTEGER;
+typedef DWORD ACCESS_MASK;
+typedef ACCESS_MASK *PACCESS_MASK;
+typedef DWORD TOKEN_MANDATORY_POLICY;
+typedef TOKEN_MANDATORY_POLICY *PTOKEN_MANDATORY_POLICY;
+typedef DWORD SECURITY_INFORMATION;
+typedef SECURITY_INFORMATION *PSECURITY_INFORMATION;
+
+
+
+; 截止 2022.03.24 ，上述两个网址中的所有条目，即使少部分没列在上面，也都在函数 createAhkTypeFromJson() 中进行了单独添加处理。

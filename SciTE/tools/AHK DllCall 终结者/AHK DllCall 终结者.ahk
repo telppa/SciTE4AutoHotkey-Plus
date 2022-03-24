@@ -1,6 +1,7 @@
 ﻿; https://docs.microsoft.com/en-us/windows/win32/learnwin32/windows-coding-conventions
 ; https://docs.microsoft.com/en-us/windows/win32/stg/coding-style-conventions
 ; https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types
+; https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-dtyp/24637f2d-238b-4d22-b44d-fe54b024280c
 ; https://docs.microsoft.com/en-us/cpp/cpp/data-type-ranges
 
 /* 隐藏功能
@@ -63,7 +64,7 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v3.0
+Gui Show, w620 h505, %l_gui_10% v4.0
 return
 
 GuiEscape:
@@ -110,7 +111,7 @@ F12::输出structor用的类型列表()
 
 createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true, createVariables:=true, printRetValAndErrorLevel:=true)
 {
-  global l_tip_1, l_tip_2, l_tip_3, l_tip_4, l_tip_5, l_tip_6, l_errorlevel
+  global l_tip_1, l_tip_2, l_tip_3, l_tip_4, l_tip_5, l_tip_6, l_tip_7, l_tip_8, l_errorlevel
   static ahkType
   
   ; 加载类型数据库
@@ -138,6 +139,9 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
   ; 换行符
   CRLF := multiLine ? "`r`n" : ""
   
+  ; 缩进
+  indent := multiLine ? "              " : ""
+  
   ; 拼凑字符串 DllCall("xxx.dll\xxxx"
   dllName  := dllName ? dllName "\" : ""
   template := Format("ret := DllCall(""{}{}""{}", dllName, msdn.funcName, CRLF)
@@ -147,12 +151,14 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
   
   for k, v in msdn.params
   {
-    type    := ahkType[v.paramType]
-    oriType := v.paramType
-    name    := v.paramName
-    oriName := v.paramName
-    prefix  := v.hungarian
-    i       := A_Index+1
+    type        := ahkType[v.paramType]
+    oriType     := v.paramType
+    name        := v.paramName
+    oriName     := v.paramName
+    prefix      := v.hungarian
+    prefixIsSus := v.isSus
+    isOut       := v.isOut
+    i           := A_Index+1
     
     ; 没有在数据库中找到对应类型时，则删除一些无用的前后缀，之后再次尝试
     ; 例如 CONST BYTE -> BYTE
@@ -189,17 +195,21 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
         }
       }
       
-      ; 类型为非 Ptr Ptr* Str WStr AStr
+      ; 类型为非 Ptr Ptr* Str AStr WStr
       if (!InStr(type, "Ptr") and !InStr(type, "Str"))
       {
-        ; 前缀为 lp p ，则类型应添加*，例如 ULONG *pAlgCount 则对应 UInt*
+        ; 前缀为 lp p ，且类型本身不带*，则应添加*，例如 ULONG *pAlgCount 则对应 UInt*
         ; 前缀为 h 时必然是 Ptr 类型，所以这里不用考虑 h
-        if (RegExMatch(prefix, "(lp|p)"))
+        if (RegExMatch(prefix, "(lp|p)") and SubStr(type, 0)!="*")
         {
-          ; 先删掉*再添加*，避免出现 UInt**
-          type := RTrim(type, "*")
           type := type "*"
           name := name
+          
+          if (showWarn and prefixIsSus)
+            if (multiLine)
+              oWarn[i] := Format(l_tip_7, type, RTrim(type, "*"))
+            else
+              warn     .= Format(l_tip_8, name, oriType, type, RTrim(type, "*"))
         }
       }
     }
@@ -227,6 +237,16 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
         {
           type := "Ptr"
           name := name
+          
+          if (showWarn and prefixIsSus)
+          {
+            if (multiLine)
+              oWarn[i] := Format(l_tip_7, type, "Unknown")
+            else
+              warn     .= Format(l_tip_8, name, oriType, type, "Unknown")
+            
+            skipShowInfo := true
+          }
         }
         else
         {
@@ -234,11 +254,13 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
           name := "&" name
         }
         
-        if (showInfo)
+        if (showInfo and !skipShowInfo)
           if (multiLine)
-            oInfo[i] := Format(l_tip_1, type)
+            oInfo[i] := Format(l_tip_1)
           else
             info     .= Format(l_tip_2, oriName, oriType, type)
+        
+        skipShowInfo := ""
       }
       else
       {
@@ -247,21 +269,26 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
         
         if (showError)
           if (multiLine)
-            oError[i] := l_tip_3
+            oError[i] := Format(l_tip_3, oriType)
           else
             error     .= Format(l_tip_4, oriName, oriType)
       }
     }
     
+    ; 拼凑字符串 VarSetCapacity(var, , 0) 或 var=""
     if (createVariables)
-      ; 拼凑字符串 VarSetCapacity(var, , 0) 或 var=""
-      if (InStr(name, "&"))
+      ; 所有 Str AStr WStr 类型，并且带 Out 的参数的，都用 VarSetCapacity(var, , 0)
+      if (InStr(type, "Str") and isOut)
+        varList .= Format("VarSetCapacity({}, , 0)`r`n", name)
+      ; 所有 Ptr 类型，并且用&传地址的，都用 VarSetCapacity(var, , 0)
+      else if (InStr(name, "&"))
         varList .= Format("VarSetCapacity({}, , 0)`r`n", oriName)
+      ; 其它则用 var=""
       else
         varList .= name " := """"`r`n"
     
     ; 拼凑字符串 , "Str", var
-    template .= Format(", ""{}"", {}{}", type, name, CRLF)
+    template .= Format("{}, ""{}"", {}{}", indent, type, name, CRLF)
   }
   
   retType := ahkType[msdn.retType]
@@ -276,12 +303,12 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
       
       if (showError)
         if (multiLine)
-          oError[i+1] := l_tip_5
+          oError[i+1] := Format(l_tip_5, msdn.retType)
         else
           error       .= Format(l_tip_6, msdn.retType)
     }
     
-    template .= Format(", ""{}"")", retType)
+    template .= Format("{}, ""{}"")", indent, retType)
   }
   
   ; 写入行末的提示信息
@@ -401,9 +428,6 @@ createAhkTypeFromJson(text)
   ; 因为 PLCID 的父级 PDWORD 本身就是一个指针，所以 PLCID 没有*，所以导致解析错误，所以这里直接修正。
   ret.PLCID := "UInt*"
   
-  ; 添加 double
-  ret.double := "Double"
-  
   ; 添加 HMONITOR
   ; 系统版本大于等于 win2000 才有效。难以判断系统版本，故直接添加。
   ret.HMONITOR := "Ptr"
@@ -437,6 +461,21 @@ createAhkTypeFromJson(text)
   ; Unicode 编译是 UShort ，Ansi 编译是 Char 。
   ret.TCHAR      := "(A_IsUnicode) ? ""UShort""  : ""Char"""
   ret.PTCHAR     := "(A_IsUnicode) ? ""UShort*"" : ""Char*"""
+  
+  ; 修正 UNC
+  ; 因为 UNC 的父级 STRING 本身就是一个指针，所以 UNC 没有*，所以导致解析错误，所以这里直接修正。
+  ret.UNC := "UChar*"
+  
+  ; void 下都应该是 Ptr
+  ret.ADCONNECTION_HANDLE := "Ptr"
+  ret.LDAP_UDP_HANDLE     := "Ptr"
+  ret.RPC_BINDING_HANDLE  := "Ptr"
+  ret.PCONTEXT_HANDLE     := "Ptr"
+  
+  ; 从 UShort 中分离出 WStr 类型
+  ret.LMSTR   := "WStr"
+  ret.LMCSTR  := "WStr"
+  ret.BSTR    := "WStr"
   
   return, ret
 }
@@ -494,7 +533,7 @@ BOOL CryptBinaryToStringA(
 */
 parseMsdnFunctionSyntax(text)
 {
-  global l_tip_7, l_tip_8, l_tip_9, l_tip_10, l_tip_11
+  global l_tip2_1, l_tip2_2, l_tip2_3, l_tip2_4, l_tip2_5
   
   ret := {}
   
@@ -504,24 +543,30 @@ parseMsdnFunctionSyntax(text)
   ; 分行解析
   for k, v in StrSplit(text, "`n", "`r")
   {
+    ; 保存原始行信息用于记录在错误信息中
+    oriLine := v
+    
     ; 首行提取函数名与返回值类型
     if (A_Index=1)
     {
-      ; 删除 LRESULT CALLBACK LowLevelMouseProc( 中的 CALLBACK 字样
-      v := RegExReplace(v, "CALLBACK")
       ; 解析 LRESULT LowLevelMouseProc( 这样的内容
       if (!RegExMatch(v, "([\w\s]*?)(\w+\s?)\(", OutputVar))
       {
-        ret.error .= Format(l_tip_7, A_Index, v)
-        ret.error .= l_tip_8
-        ret.error .= l_tip_9
+        ret.error .= Format(l_tip2_1, A_Index, oriLine)
+        ret.error .= l_tip2_2
+        ret.error .= l_tip2_3
       }
       
-      ret.retType  := Trim(OutputVar1, " `t`r`n`v`f")
+      ; 提取 NET_API_STATUS NET_API_FUNCTION NetGroupEnum( 中的 NET_API_STATUS 和 NetGroupEnum
+      ret.retType  := Trim(StrSplit(OutputVar1, " ")[1], " `t`r`n`v`f")
       ret.funcName := Trim(OutputVar2, " `t`r`n`v`f")
     }
     else
     {
+      ; 判断参数是否是 Out 类型的
+      if (!RegExMatch(v, "^\s*(_In_|_Out_)", inOrOut))
+        RegExMatch(v, "^\s*\[.+?\]", inOrOut)
+      
       ; 删除 _In_ 或 _Out_ 这样的内容
       v := RegExReplace(v, "^\s*(_In_|_Out_)")
       ; 删除 [out, optional] 这样的内容
@@ -548,9 +593,9 @@ parseMsdnFunctionSyntax(text)
       {
         ; 如果本行包含省略号 ... ，则跳过
         if (RegExMatch(v, "\.{3,}"))
-          ret.warn .= l_tip_10
+          ret.warn .= l_tip2_4
         else
-          ret.error .= Format(l_tip_11, A_Index, v)
+          ret.error .= Format(l_tip2_5, A_Index, oriLine)
         
         continue
       }
@@ -559,6 +604,7 @@ parseMsdnFunctionSyntax(text)
       name := LTrim(OutputVar1, "*")
       type := SubStr(v, 1, -StrLen(OutputVar1))
       
+      hungarianNotationIsSuspicious := false
       ; 提取变量名中的匈牙利命名规则
       ; 由于 MSDN 描述的混乱以及笔误等原因，即使在同一个函数中也可能存在仅部分使用匈牙利命名法
       ; 例如 SetWindowsHookExA 中，4个变量名分别为 idHook lpfn hmod dwThreadId ， hmod 明显有问题
@@ -566,9 +612,14 @@ parseMsdnFunctionSyntax(text)
       if (RegExMatch(name, "[A-Z]"))
         RegExMatch(name, "^[a-z_]+", hungarian)
       else
+      {
         ; 没有大写字母辅助定位的话，则尽量获取关键信息
         ; 注意长的字符串要放前面，这样才能 p 和 pp 都能被匹配
         RegExMatch(name, "^(lplp|lph|lp|pp|ph|p|h)", hungarian)
+        ; 如果仅提取到 p 和 h 单个字母，则标记特征太短了，以便做出可能误判的提示
+        if (hungarian="p" or hungarian="h")
+          hungarianNotationIsSuspicious := true
+      }
       
       ; 计次
       n++
@@ -576,6 +627,8 @@ parseMsdnFunctionSyntax(text)
       ret["params", n, "paramName"] := name
       ret["params", n, "paramType"] := Trim(type, " `t`r`n`v`f")
       ret["params", n, "hungarian"] := OutputVar1 ? hungarian : ""
+      ret["params", n, "isOut"]     := InStr(inOrOut, "out") ? true : false
+      ret["params", n, "isSus"]     := hungarianNotationIsSuspicious
     }
   }
   
