@@ -32,15 +32,34 @@
       }
     }
   },
+  "Int64": {
+    "__int64": {
+      "LONG64": {
+        "*PLONG64": 0
+      },
+      "LONGLONG": {
+        "*PLONGLONG": 0,
+        "USN": 0
+      }
+    },
+    "signed __int64": {
+      "INT64": {
+        "*PINT64": 0
+      },
+      "LARGE_INTEGER": {
+        "*PLARGE_INTEGER": 0
+      }
+    }
+  },
   "Int": {
     "int": {
       "*LPINT": 0,
       "*PINT": 0,
-      "BOOL": {
-        "*PBOOL": 0
-      },
       "BOOL far": {
         "*LPBOOL": 0
+      },
+      "BOOL": {
+        "*PBOOL": 0
       },
       "HFILE": 0,
       "INT": 0
@@ -62,25 +81,6 @@
       }
     }
   },
-  "Int64": {
-    "__int64": {
-      "LONG64": {
-        "*PLONG64": 0
-      },
-      "LONGLONG": {
-        "*PLONGLONG": 0,
-        "USN": 0
-      }
-    },
-    "signed __int64": {
-      "INT64": {
-        "*PINT64": 0
-      },
-      "LARGE_INTEGER": {
-        "*PLARGE_INTEGER": 0
-      }
-    }
-  },
   "Ptr": {
     "__int3264": {
       "INT_PTR": {
@@ -98,62 +98,60 @@
     "CONST void": {
       "*LPCVOID": 0
     },
-    "PVOID": {
-      "HANDLE": {
-        "*LPHANDLE": 0,
-        "*PHANDLE": 0,
-        "HACCEL": 0,
-        "HBITMAP": 0,
-        "HBRUSH": 0,
-        "HCOLORSPACE": 0,
-        "HCONV": 0,
-        "HCONVLIST": 0,
-        "HDC": 0,
-        "HDDEDATA": 0,
-        "HDESK": 0,
-        "HDROP": 0,
-        "HDWP": 0,
-        "HENHMETAFILE": 0,
-        "HFONT": 0,
-        "HGDIOBJ": 0,
-        "HGLOBAL": 0,
-        "HHOOK": 0,
-        "HICON": {
-          "HCURSOR": 0
-        },
-        "HINSTANCE": {
-          "HMODULE": 0
-        },
-        "HKEY": {
-          "*PHKEY": 0
-        },
-        "HKL": 0,
-        "HLOCAL": 0,
-        "HMENU": 0,
-        "HMETAFILE": 0,
-        "HPALETTE": 0,
-        "HPEN": 0,
-        "HRGN": 0,
-        "HRSRC": 0,
-        "HSZ": 0,
-        "HWND": 0,
-        "SC_HANDLE": 0,
-        "SERVICE_STATUS_HANDLE": 0,
-        "WINSTA": 0
-      }
-    },
     "void": {
       "*ADCONNECTION_HANDLE": 0,
       "*LDAP_UDP_HANDLE": 0,
-      "*LPVOID": 0,
+      "*LPVOID": {
+        "SC_LOCK": 0
+      },
       "*PCONTEXT_HANDLE": {
         "*PPCONTEXT_HANDLE": 0
       },
-      "*PVOID": 0,
-      "*RPC_BINDING_HANDLE": 0,
-      "LPVOID": {
-        "SC_LOCK": 0
-      }
+      "*PVOID": {
+        "HANDLE": {
+          "*LPHANDLE": 0,
+          "*PHANDLE": 0,
+          "HACCEL": 0,
+          "HBITMAP": 0,
+          "HBRUSH": 0,
+          "HCOLORSPACE": 0,
+          "HCONVLIST": 0,
+          "HCONV": 0,
+          "HDC": 0,
+          "HDDEDATA": 0,
+          "HDESK": 0,
+          "HDROP": 0,
+          "HDWP": 0,
+          "HENHMETAFILE": 0,
+          "HFONT": 0,
+          "HGDIOBJ": 0,
+          "HGLOBAL": 0,
+          "HHOOK": 0,
+          "HICON": {
+            "HCURSOR": 0
+          },
+          "HINSTANCE": {
+            "HMODULE": 0
+          },
+          "HKEY": {
+            "*PHKEY": 0
+          },
+          "HKL": 0,
+          "HLOCAL": 0,
+          "HMENU": 0,
+          "HMETAFILE": 0,
+          "HPALETTE": 0,
+          "HPEN": 0,
+          "HRGN": 0,
+          "HRSRC": 0,
+          "HSZ": 0,
+          "HWND": 0,
+          "SC_HANDLE": 0,
+          "SERVICE_STATUS_HANDLE": 0,
+          "WINSTA": 0
+        }
+      },
+      "*RPC_BINDING_HANDLE": 0
     }
   },
   "Short": {
@@ -170,14 +168,14 @@
   },
   "UChar": {
     "unsigned char": {
+      "BYTE far": {
+        "*LPBYTE": 0
+      },
       "BYTE": {
         "*PBYTE": 0,
         "BOOLEAN": {
           "*PBOOLEAN": 0
         }
-      },
-      "BYTE far": {
-        "*LPBYTE": 0
       },
       "UCHAR": {
         "*PUCHAR": 0,
@@ -187,51 +185,6 @@
       },
       "UINT8": {
         "*PUINT8": 0
-      }
-    }
-  },
-  "UInt": {
-    "unsigned int": {
-      "DWORD32": {
-        "*PDWORD32": 0
-      },
-      "UINT": {
-        "*PUINT": 0
-      },
-      "UINT32": {
-        "*PUINT32": 0
-      },
-      "ULONG32": {
-        "*PULONG32": 0
-      }
-    },
-    "unsigned long": {
-      "DWORD": {
-        "*LPCOLORREF": 0,
-        "*LPDWORD": 0,
-        "*PDWORD": 0,
-        "ACCESS_MASK": {
-          "*PACCESS_MASK": 0
-        },
-        "COLORREF": 0,
-        "HCALL": 0,
-        "LCID": 0,
-        "LCTYPE": 0,
-        "LGRPID": 0,
-        "NET_API_STATUS": 0,
-        "PDWORD": {
-          "PLCID": 0
-        },
-        "SECURITY_INFORMATION": {
-          "*PSECURITY_INFORMATION": 0
-        },
-        "TOKEN_MANDATORY_POLICY": {
-          "*PTOKEN_MANDATORY_POLICY": 0
-        }
-      },
-      "error_status_t": 0,
-      "ULONG": {
-        "*PULONG": 0
       }
     }
   },
@@ -255,6 +208,50 @@
       },
       "ULONGLONG": {
         "*PULONGLONG": 0
+      }
+    }
+  },
+  "UInt": {
+    "unsigned int": {
+      "DWORD32": {
+        "*PDWORD32": 0
+      },
+      "UINT32": {
+        "*PUINT32": 0
+      },
+      "UINT": {
+        "*PUINT": 0
+      },
+      "ULONG32": {
+        "*PULONG32": 0
+      }
+    },
+    "unsigned long": {
+      "DWORD": {
+        "*LPCOLORREF": 0,
+        "*LPDWORD": 0,
+        "*PDWORD": {
+          "PLCID": 0
+        },
+        "ACCESS_MASK": {
+          "*PACCESS_MASK": 0
+        },
+        "COLORREF": 0,
+        "HCALL": 0,
+        "LCID": 0,
+        "LCTYPE": 0,
+        "LGRPID": 0,
+        "NET_API_STATUS": 0,
+        "SECURITY_INFORMATION": {
+          "*PSECURITY_INFORMATION": 0
+        },
+        "TOKEN_MANDATORY_POLICY": {
+          "*PTOKEN_MANDATORY_POLICY": 0
+        }
+      },
+      "error_status_t": 0,
+      "ULONG": {
+        "*PULONG": 0
       }
     }
   },

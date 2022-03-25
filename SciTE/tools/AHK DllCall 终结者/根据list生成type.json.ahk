@@ -12,41 +12,41 @@ loop, Read, list.txt
   arr.Push(StrReplace(A_LoopReadLine, "typedef ", "", "", 1))
 }
 
-ret:={}
+ret:={}, typeWithStar:={}
+
+; 预处理，存储所有带*的类型
+; 这是为了自动合并类似 PDWORD 到 *PDWORD
+for k, v in arr
+{
+  o:=getType(v)
+  type:=o.type
+  
+  if (InStr(type, "*"))
+    typeWithStar[type] := true
+}
 
 ; 首次处理。将 *PBYTE 之类的合并到 BYTE 中。
 for k, v in arr
 {
-  RegExMatch(v, " \S+\;", type)
-  type:=LTrim(type, " ")
-  type:=RTrim(type, ";")
+  o:=getType(v)
+  type:=o.type
+  parentType:=o.parentType
   
-  parentType:=RegExReplace(v, " \S+\;", "")
-  
-  ; 不加盐的话，int 和 Int 会在 obj 中被视为相同的键。
-  parentTypeWithSalt:=parentType "|" Crypt.Hash.String("SHA1", parentType)
-  
-  ret[parentTypeWithSalt, type]:=0
+  ret[parentType, type]:=0
 }
 
 ; 二次处理。将 BYTE 之类的合并到 unsigned char 中。
 for k, v in arr
 {
-  RegExMatch(v, " \S+\;", type)
-  type:=LTrim(type, " ")
-  type:=RTrim(type, ";")
+  o:=getType(v)
+  type:=o.type
+  parentType:=o.parentType
   
-  parentType:=RegExReplace(v, " \S+\;", "")
-  
-  ; 不加盐的话，int 和 Int 会在 obj 中被视为相同的键。
-  parentTypeWithSalt:=parentType "|" Crypt.Hash.String("SHA1", parentType)
-  
-  typeWithSalt:=type "|" Crypt.Hash.String("SHA1", type)
-  if (ret.HasKey(typeWithSalt))
+  if (ret.HasKey(type))
   {
-    ret[parentTypeWithSalt].Delete(type)
-    ret[parentTypeWithSalt, type]:=ret[typeWithSalt]
-    ret.Delete(typeWithSalt)
+    ret[parentType].Delete(type)
+    ret[parentType, type]:=ret[type]
+    ret.Delete(type)
   }
 }
 
@@ -59,13 +59,12 @@ obj:={"__nullterminated CONST CHAR" : "char"
     , "CONST WCHAR"                 : "wchar_t"
     , "INT_PTR"                     : "__int3264"
     , "LONGLONG"                    : "__int64"
-    , "LPVOID"                      : "void"
     , "UINT_PTR"                    : "unsigned __int3264"
     , "ULONGLONG"                   : "unsigned __int64"}
 ; 加盐
 for k, v in obj.Clone()
 {
-  obj[k "|" Crypt.Hash.String("SHA1", k)]:=v "|" Crypt.Hash.String("SHA1", v)
+  obj[salt(k)]:=salt(v)
   obj.Delete(k)
 }
 ; 移动
@@ -86,7 +85,6 @@ obj:={"__int3264"          : "Ptr"
     , "float"              : "Float"
     , "int"                : "Int"
     , "long"               : "Int"
-    , "PVOID"              : "Ptr"
     , "short"              : "Short"
     , "signed __int64"     : "Int64"
     , "signed char"        : "Char"
@@ -103,7 +101,7 @@ obj:={"__int3264"          : "Ptr"
 ; 加盐
 for k, v in obj.Clone()
 {
-  obj[k "|" Crypt.Hash.String("SHA1", k)]:=v "|" Crypt.Hash.String("SHA1", v)
+  obj[salt(k)]:=salt(v)
   obj.Delete(k)
 }
 ; 移动
@@ -113,37 +111,59 @@ for k, v in obj
   ret.Delete(k)
 }
 
-; 删除加盐的部分重新导入。
+; 移动 HANDLE 下的类目。
+for k, v in ret[salt("HANDLE")]
+  ret[salt("Ptr"), salt("void"), salt("*PVOID"), salt("HANDLE"), k]:=v
+; 移动 DWORD 下的类目。
+for k, v in ret[salt("DWORD")]
+  ret[salt("UInt"), salt("unsigned long"), salt("DWORD"), k]:=v
+; 移动 UCHAR *STRING 下的类目。
+ret[salt("UChar"), salt("unsigned char"), salt("UCHAR"), salt("*STRING")]:=ret[salt("UCHAR"), salt("*STRING")]
+; 因为根节点的 HANDLE DWORD UCHAR 已被移动到正确子节点，故这里直接删除。
+ret.Delete(salt("HANDLE"))
+ret.Delete(salt("DWORD"))
+ret.Delete(salt("UCHAR"))
+; 因为 TBYTE TCHAR 会在 createAhkTypeFromJson() 中单独处理，故这里直接删除。
+ret.Delete(salt("TBYTE"))
+ret.Delete(salt("TCHAR"))
+
+; 导出并删除加盐部分
 out:=json.dump(ret)
 out:=RegExReplace(out, "\|\w+\""", """")
-ret:=json.load(out)
-
-; 移动 HANDLE 下的类目。
-for k, v in ret["HANDLE"]
-  ret["Ptr", "PVOID", "HANDLE", k]:=v
-; 移动 DWORD 下的类目。
-for k, v in ret["DWORD"]
-  ret["UInt", "unsigned long", "DWORD", k]:=v
-; 移动 PCONTEXT_HANDLE 下的类目。
-ret["Ptr", "void", "*PCONTEXT_HANDLE"]:=ret["PCONTEXT_HANDLE"]
-; 移动 PDWORD 下的类目。
-ret["UInt", "unsigned long", "DWORD", "PDWORD"]:=ret["PDWORD"]
-; 移动 STRING 下的类目。
-ret["UChar", "unsigned char", "UCHAR", "*STRING"]:=ret["STRING"]
-; 因为根节点的 HANDLE DWORD PCONTEXT_HANDLE PDWORD STRING 已被移动到正确子节点，故这里直接删除。
-ret.Delete("HANDLE")
-ret.Delete("DWORD")
-ret.Delete("PCONTEXT_HANDLE")
-ret.Delete("PDWORD")
-ret.Delete("STRING")
-; 因为 TBYTE TCHAR 会在 createAhkTypeFromJson() 中单独处理，故这里直接删除。
-ret.Delete("TBYTE")
-ret.Delete("TCHAR")
-
-out:=json.dump(ret)
 FileDelete, r:\type.json
 FileAppend, % out, r:\type.json
 ExitApp
+
+getType(text)
+{
+  global typeWithStar
+  
+  ret:={}
+  
+  RegExMatch(text, " \S+\;", type)
+  type:=LTrim(type, " ")
+  type:=RTrim(type, ";")
+  
+  parentType:=RegExReplace(text, " \S+\;", "")
+  
+  ; 不加盐的话，int 和 Int 会在 obj 中被视为相同的键。
+  parentTypeWithSalt:=salt(parentType)
+  parentTypeWithStarAndSalt:=salt("*" parentType)
+  
+  if (typeWithStar.HasKey(parentTypeWithStarAndSalt))
+    ret.parentType:=parentTypeWithStarAndSalt
+  else
+    ret.parentType:=parentTypeWithSalt
+  
+  ret.type:=salt(type)
+  
+  return, ret
+}
+
+salt(text)
+{
+  return, text "|" Crypt.Hash.String("SHA1", text)
+}
 
 ; 不能用 cjson dump 否则 char 会被转为大写的 CHAR 。
 #Include %A_ScriptDir%\Lib\JSON.ahk
