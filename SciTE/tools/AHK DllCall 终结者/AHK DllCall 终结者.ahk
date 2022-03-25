@@ -505,7 +505,7 @@ _forArray(obj, ByRef ret)
       appendAnAsterisk := SubStr(k, 1, 1)="*" ? "*" : ""
       
       key := LTrim(k, "*")
-      ; key 中的 CHAR FLOAT INT LONG *PVOID LPVOID SHORT PDWORD 会出现重复。
+      ; key 中的 CHAR DOUBLE FLOAT INT LONG SHORT 会出现重复。
       ; 当 key 出现重复时，以现存的 key 和 value 为准，不进行覆盖。
       if (!ret.HasKey(key))
         ret[key] := rootValue appendAnAsterisk
