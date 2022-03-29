@@ -117,7 +117,7 @@ color := ""
 ret := DllCall("CreateSolidBrush", "UInt", color, "Ptr")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：猜测参数 lprc 的类型 const RECT 对应为 Ptr 。
+; 提示：猜测参数 lprc 的类型 const RECT* 对应为 Ptr 。
 hDC := ""
 VarSetCapacity(lprc, , 0)
 hbr := ""
@@ -133,13 +133,13 @@ ho := ""
 ret := DllCall("DeleteObject", "Ptr", ho)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：猜测参数 lpSystemTime 的类型 const SYSTEMTIME 对应为 Ptr 。
+; 提示：猜测参数 lpSystemTime 的类型 const SYSTEMTIME* 对应为 Ptr 。
 VarSetCapacity(lpSystemTime, , 0)
 ret := DllCall("SetSystemTime", "Ptr", &lpSystemTime)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
 ; 提示：猜测参数 hAlgorithm 的类型 BCRYPT_ALG_HANDLE 对应为 Ptr 。
-; 提示：猜测参数 phHash 的类型 BCRYPT_HASH_HANDLE 对应为 Ptr* 。
+; 提示：猜测参数 phHash 的类型 BCRYPT_HASH_HANDLE* 对应为 Ptr* 。
 hAlgorithm := ""
 phHash := ""
 pbHashObject := ""
@@ -150,7 +150,7 @@ dwFlags := ""
 ret := DllCall("BCryptCreateHash", "Ptr", hAlgorithm, "Ptr*", phHash, "UChar*", pbHashObject, "UInt", cbHashObject, "UChar*", pbSecret, "UInt", cbSecret, "UInt", dwFlags)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：猜测参数 ppAlgList 的类型 BCRYPT_ALGORITHM_IDENTIFIER 对应为 Ptr* 。
+; 提示：猜测参数 ppAlgList 的类型 BCRYPT_ALGORITHM_IDENTIFIER** 对应为 Ptr* 。
 dwAlgOperations := ""
 pAlgCount := ""
 ppAlgList := ""
@@ -158,7 +158,7 @@ dwFlags := ""
 ret := DllCall("BCryptEnumAlgorithms", "UInt", dwAlgOperations, "UInt*", pAlgCount, "Ptr*", ppAlgList, "UInt", dwFlags)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 提示：猜测参数 phAlgorithm 的类型 BCRYPT_ALG_HANDLE 对应为 Ptr* 。
+; 提示：猜测参数 phAlgorithm 的类型 BCRYPT_ALG_HANDLE* 对应为 Ptr* 。
 phAlgorithm := ""
 pszAlgId := ""
 pszImplementation := ""
@@ -270,7 +270,6 @@ cchBuf := ""
 ret := DllCall("StrFormatByteSizeEx", "UInt64", ull, "Unknown", flags, "WStr", pszBuf, "UInt", cchBuf, "Unknown")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
-; 警告：猜测参数 prefmaxlen 的类型 DWORD 对应为 UInt* ，但也可能是 UInt 。
 servername := ""
 level := ""
 bufptr := ""
@@ -278,6 +277,6 @@ prefmaxlen := ""
 entriesread := ""
 totalentries := ""
 resume_handle := ""
-ret := DllCall("NetGroupEnum", "WStr", servername, "UInt", level, "UChar*", bufptr, "UInt*", prefmaxlen, "UInt*", entriesread, "UInt*", totalentries, "UPtr*", resume_handle, "UInt")
+ret := DllCall("NetGroupEnum", "WStr", servername, "UInt", level, "Ptr*", bufptr, "UInt", prefmaxlen, "UInt*", entriesread, "UInt*", totalentries, "UPtr*", resume_handle, "UInt")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 

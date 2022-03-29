@@ -9,23 +9,17 @@ loop, Read, list.txt
   if (Trim(A_LoopReadLine, " `t`r`n`v`f")="")
     continue
   
-  arr.Push(StrReplace(A_LoopReadLine, "typedef ", "", "", 1))
-}
-
-ret:={}, typeWithStar:={}
-
-; 预处理，存储所有带*的类型
-; 这是为了自动合并类似 PDWORD 到 *PDWORD
-for k, v in arr
-{
-  o:=getType(v)
-  type:=o.type
+  ; 去掉 typedef 
+  line:=StrReplace(A_LoopReadLine, "typedef ", "", "", 1)
+  ; 星号靠左 将 FLOAT *PFLOAT; 变成 FLOAT* PFLOAT;
+  line:=RegExReplace(line, "\s+\*", "* ")
   
-  if (InStr(type, "*"))
-    typeWithStar[type] := true
+  arr.Push(line)
 }
 
-; 首次处理。将 *PBYTE 之类的合并到 BYTE 中。
+ret:={}
+
+; 首次处理。将 PBYTE 之类的合并到 BYTE* 中。
 for k, v in arr
 {
   o:=getType(v)
@@ -50,17 +44,34 @@ for k, v in arr
   }
 }
 
-; 三次处理。将 __nullterminated CONST CHAR 之类的合并到 char 下，也就是让 __nullterminated CONST CHAR 与 CCHAR 同级。
+; 三次处理。将 BOOL far* 之类的移动到 BOOL 同级。
+read_ret:=ret.Clone()
+for k, v in read_ret
+{
+  pureType:=StrSplit(k, "|")[1]
+  
+  if ( InStr(pureType, "*") 
+    or InStr(pureType, "CONST ")
+    or InStr(pureType, "__nullterminated ")
+    or InStr(pureType, " far") )
+  {
+    pureType:=StrReplace(pureType, "*")
+    pureType:=StrReplace(pureType, "CONST ")
+    pureType:=StrReplace(pureType, "__nullterminated ")
+    pureType:=StrReplace(pureType, " far")
+    pureType:=salt(pureType)
+    
+    ; 移动成功则删除原位置的数据
+    if (findAndWrite(ret, pureType, k, v))
+      ret.Delete(k)
+  }
+}
+
+; 四次处理。将 INT_PTR* 之类的合并到 __int3264 下，也就是让 INT_PTR* 与 LONG_PTR 同级。
 ; 这个列表只能手动维护。
-obj:={"__nullterminated CONST CHAR" : "char"
-    , "BOOL far"                    : "int"
-    , "BYTE far"                    : "unsigned char"
-    , "CONST CHAR"                  : "char"
-    , "CONST WCHAR"                 : "wchar_t"
-    , "INT_PTR"                     : "__int3264"
-    , "LONGLONG"                    : "__int64"
-    , "UINT_PTR"                    : "unsigned __int3264"
-    , "ULONGLONG"                   : "unsigned __int64"}
+obj:={"INT_PTR*"  : "__int3264"
+    , "UINT_PTR*" : "unsigned __int3264"
+    , "UINT_PTR"  : "unsigned __int3264"}
 ; 加盐
 for k, v in obj.Clone()
 {
@@ -74,16 +85,17 @@ for k, v in obj
   ret.Delete(k)
 }
 
-; 四次处理。将 __int64 之类的合并到 Int64 中，这一步将绝大多数类型合并到了对应的 AHK 类型下。
+; 五次处理。将 __int3264 之类的合并到 Ptr 中，这一步将绝大多数类型合并到了对应的 AHK 类型下。
 ; 这个列表只能手动维护。
 obj:={"__int3264"          : "Ptr"
     , "__int64"            : "Int64"
     , "char"               : "Char"
-    , "CONST void"         : "Ptr"
-    , "const wchar_t"      : "UShort"
+    , "CONST void*"        : "Ptr"
     , "double"             : "Double"
     , "float"              : "Float"
+    , "int*"               : "Int"
     , "int"                : "Int"
+    , "long*"              : "Int"
     , "long"               : "Int"
     , "short"              : "Short"
     , "signed __int64"     : "Int64"
@@ -96,8 +108,7 @@ obj:={"__int3264"          : "Ptr"
     , "unsigned int"       : "UInt"
     , "unsigned long"      : "UInt"
     , "unsigned short"     : "UShort"
-    , "void"               : "Ptr"
-    , "wchar_t"            : "UShort"}
+    , "void*"              : "Ptr"}
 ; 加盐
 for k, v in obj.Clone()
 {
@@ -113,19 +124,12 @@ for k, v in obj
 
 ; 移动 HANDLE 下的类目。
 for k, v in ret[salt("HANDLE")]
-  ret[salt("Ptr"), salt("void"), salt("*PVOID"), salt("HANDLE"), k]:=v
-; 移动 DWORD 下的类目。
-for k, v in ret[salt("DWORD")]
-  ret[salt("UInt"), salt("unsigned long"), salt("DWORD"), k]:=v
-; 移动 UCHAR *STRING 下的类目。
-ret[salt("UChar"), salt("unsigned char"), salt("UCHAR"), salt("*STRING")]:=ret[salt("UCHAR"), salt("*STRING")]
-; 因为根节点的 HANDLE DWORD UCHAR 已被移动到正确子节点，故这里直接删除。
+  ret[salt("Ptr"), salt("void*"), salt("PVOID"), salt("HANDLE"), k]:=v
+; 删除已被移动的根节点。
 ret.Delete(salt("HANDLE"))
-ret.Delete(salt("DWORD"))
-ret.Delete(salt("UCHAR"))
 ; 因为 TBYTE TCHAR 会在 createAhkTypeFromJson() 中单独处理，故这里直接删除。
-ret.Delete(salt("TBYTE"))
-ret.Delete(salt("TCHAR"))
+ret.Delete(salt("TBYTE*"))
+ret.Delete(salt("TCHAR*"))
 
 ; 导出并删除加盐部分
 out:=json.dump(ret)
@@ -136,26 +140,14 @@ ExitApp
 
 getType(text)
 {
-  global typeWithStar
-  
   ret:={}
   
-  RegExMatch(text, " \S+\;", type)
-  type:=LTrim(type, " ")
-  type:=RTrim(type, ";")
-  
-  parentType:=RegExReplace(text, " \S+\;", "")
+  RegExMatch(text, " (\S+)\;", type)
+  parentType:=RegExReplace(text, " (\S+)\;", "")
   
   ; 不加盐的话，int 和 Int 会在 obj 中被视为相同的键。
-  parentTypeWithSalt:=salt(parentType)
-  parentTypeWithStarAndSalt:=salt("*" parentType)
-  
-  if (typeWithStar.HasKey(parentTypeWithStarAndSalt))
-    ret.parentType:=parentTypeWithStarAndSalt
-  else
-    ret.parentType:=parentTypeWithSalt
-  
-  ret.type:=salt(type)
+  ret.parentType:=salt(parentType)
+  ret.type:=salt(type1)
   
   return, ret
 }
@@ -163,6 +155,36 @@ getType(text)
 salt(text)
 {
   return, text "|" Crypt.Hash.String("SHA1", text)
+}
+
+; 在 obj 中查找目标，找到则在找到的位置的同级处写入值
+findAndWrite(obj, key_find, key_write, value_write, fromOutside:=1)
+{
+  static needToBreak
+  
+  if (fromOutside)
+    needToBreak:=0
+  
+  if (obj.HasKey(key_find) and !fromOutside)
+  {
+    ; 写入到 obj
+    obj[key_write]:=value_write
+    needToBreak:=1
+  }
+  else
+  {
+    for k, v in obj
+    {
+      if (needToBreak)
+        break
+      
+      if (IsObject(v))
+        findAndWrite(v, key_find, key_write, value_write, 0)
+    }
+  }
+  
+  if (fromOutside and needToBreak)
+    return, true
 }
 
 ; 不能用 cjson dump 否则 char 会被转为大写的 CHAR 。

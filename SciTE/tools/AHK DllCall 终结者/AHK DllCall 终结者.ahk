@@ -64,7 +64,7 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v4.0
+Gui Show, w620 h505, %l_gui_10% v5.0
 return
 
 GuiEscape:
@@ -112,14 +112,6 @@ F12::输出structor用的类型列表()
 createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true, createVariables:=true, printRetValAndErrorLevel:=true)
 {
   global l_tip_1, l_tip_2, l_tip_3, l_tip_4, l_tip_5, l_tip_6, l_tip_7, l_tip_8, l_errorlevel
-  static ahkType
-  
-  ; 加载类型数据库
-  if (!IsObject(ahkType))
-  {
-    FileRead, ahkType, type.json
-    ahkType := createAhkTypeFromJson(ahkType)
-  }
   
   ; 输入内容为空则直接返回
   if (RegExReplace(text, "\s+")="")
@@ -151,7 +143,7 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
   
   for k, v in msdn.params
   {
-    type        := ahkType[v.paramType]
+    type        := getAhkType(v.paramType)
     oriType     := v.paramType
     name        := v.paramName
     oriName     := v.paramName
@@ -160,57 +152,14 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
     isOut       := v.isOut
     i           := A_Index+1
     
-    ; 没有在数据库中找到对应类型时，则删除一些无用的前后缀，之后再次尝试
-    ; 例如 CONST BYTE -> BYTE
-    if (!type)
-    {
-      s := oriType
-      s := StrReplace(s, "CONST ")
-      s := StrReplace(s, " far")
-      type := ahkType[s]
-    }
-    
     if (type)
     {
-      ; 类型为 Ptr 或 Ptr*
-      if (type="Ptr" or type="Ptr*")
+      ; 类型为 Ptr 且原始类型名中包含 VOID （不区分大小写）字样，则传地址
+      ; 通常包括但不限于 LPCVOID, LPVOID, PVOID, CONST void, void
+      if (type="Ptr" and InStr(oriType, "VOID"))
       {
-        ; 原始类型名中包含 VOID （不区分大小写）字样，则传地址
-        ; 通常包括但不限于 LPCVOID, LPVOID, PVOID, CONST void, void
-        if (InStr(oriType, "VOID"))
-        {
-          type := "Ptr"
-          name := "&" name
-        }
-        ; 前缀为 lplp lph pp ph ，则类型应为 Ptr*
-        else if (RegExMatch(prefix, "(lplp|lph|pp|ph)"))
-        {
-          type := "Ptr*"
-          name := name
-        }
-        else
-        {
-          type := type
-          name := name
-        }
-      }
-      
-      ; 类型为非 Ptr Ptr* Str AStr WStr
-      if (!InStr(type, "Ptr") and !InStr(type, "Str"))
-      {
-        ; 前缀为 lp p ，且类型本身不带*，则应添加*，例如 ULONG *pAlgCount 则对应 UInt*
-        ; 前缀为 h 时必然是 Ptr 类型，所以这里不用考虑 h
-        if (RegExMatch(prefix, "(lp|p)") and SubStr(type, 0)!="*")
-        {
-          type := type "*"
-          name := name
-          
-          if (showWarn and prefixIsSus)
-            if (multiLine)
-              oWarn[i] := Format(l_tip_7, type, RTrim(type, "*"))
-            else
-              warn     .= Format(l_tip_8, name, oriType, type, RTrim(type, "*"))
-        }
+        type := "Ptr"
+        name := "&" name
       }
     }
     ; 没有在数据库中找到对应类型
@@ -232,21 +181,11 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
           type := "Ptr*"
           name := name
         }
-        ; 例如 BCRYPT_ALG_HANDLE hAlgorithm
+        ; 前缀为纯 h ，例如 BCRYPT_ALG_HANDLE hAlgorithm
         else if (InStr(prefix, "h") and !InStr(prefix, "lp") and !InStr(prefix, "p"))
         {
           type := "Ptr"
           name := name
-          
-          if (showWarn and prefixIsSus)
-          {
-            if (multiLine)
-              oWarn[i] := Format(l_tip_7, type, "Unknown")
-            else
-              warn     .= Format(l_tip_8, name, oriType, type, "Unknown")
-            
-            skipShowInfo := true
-          }
         }
         else
         {
@@ -254,13 +193,20 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
           name := "&" name
         }
         
-        if (showInfo and !skipShowInfo)
+        if (showWarn and prefixIsSus)
+        {
+          if (multiLine)
+            oWarn[i] := Format(l_tip_7, type, "Unknown")
+          else
+            warn     .= Format(l_tip_8, name, oriType, type, "Unknown")
+        }
+        else if (showInfo)
+        {
           if (multiLine)
             oInfo[i] := Format(l_tip_1)
           else
             info     .= Format(l_tip_2, oriName, oriType, type)
-        
-        skipShowInfo := ""
+        }
       }
       else
       {
@@ -291,7 +237,7 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
     template .= Format("{}, ""{}"", {}{}", indent, type, name, CRLF)
   }
   
-  retType := ahkType[msdn.retType]
+  retType := getAhkType(msdn.retType)
   ; 拼凑字符串 , "Ptr")
   if (retType="Int")
     template := RTrim(template, CRLF) ")"
@@ -325,6 +271,57 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
   return, error warn info varList template retValAndErrorLevel
 }
 
+getAhkType(win32Type)
+{
+  static ahkType
+  
+  ; 加载类型数据库
+  if (!IsObject(ahkType))
+  {
+    FileRead, ahkType, type.json
+    ahkType := createAhkTypeFromJson(ahkType)
+  }
+  
+  type := ahkType[win32Type]
+  
+  ; 没有在数据库中找到对应类型时，则删除一些无用的前后缀，之后再次尝试
+  ; 例如 CONST BYTE -> BYTE
+  if (!type)
+  {
+    win32Type := StrReplace(win32Type, "CONST ")
+    win32Type := StrReplace(win32Type, "__nullterminated ")
+    win32Type := StrReplace(win32Type, " far")
+    win32Type := StrReplace(win32Type, " near")
+    type := ahkType[win32Type]
+  }
+  
+  ; 删除无用前后缀之后，依然没找到对应类型，则尝试添加或删除星号并再次进行尝试
+  if (!type)
+  {
+    if (InStr(win32Type, "*"))
+    {
+      type := ahkType[StrReplace(win32Type, "*")]
+      
+      if (type)
+        type := type "*"
+    }
+    else
+    {
+      type := ahkType[win32Type "*"]
+      
+      if (type)
+        type := StrReplace(type, "*")
+    }
+  }
+  
+  ; 将两个以上*的类型转为 Ptr*
+  StrReplace(type, "*", "", OutputVarCount)
+  if (OutputVarCount>=2)
+    type := "Ptr*"
+  
+  return, type
+}
+
 /*
 这是专门给 createDllCallTemplate() 用的
 
@@ -356,7 +353,7 @@ _lineAppend(str, sLine, nLine)
       "i": 0
     },
     "j": {
-      "*k": {
+      "k*": {
         "l": 0
       },
       "m": {
@@ -365,9 +362,9 @@ _lineAppend(str, sLine, nLine)
     }
   },
   "Ptr": {
-    "*o": {
+    "o*": {
       "p": {
-        "*q": 0
+        "q": 0
       },
       "r": {
         "s": 0
@@ -391,25 +388,26 @@ lala:=createAhkTypeFromJson(测试用JSON)
 */
 createAhkTypeFromJson(text)
 {
-  ret:={}
+  ret := {}
   
   _forArray(JSON.Load(text), ret)
   
   /* 下面这些不是直接用 typedef 定义的，故无法处理。
-
+  
+  __stdcall
   APIENTRY
   CALLBACK
   CONST
   UNICODE_STRING
   WINAPI
-
+  
   POINTER_32
   POINTER_64
   POINTER_SIGNED
   POINTER_UNSIGNED
   */
   /* 64位编译是 Int64 ，32位编译是 Int 。跟 Ptr 完全一样，故不用处理。
-
+  
   INT_PTR
   UINT_PTR
   LONG_PTR
@@ -419,34 +417,14 @@ createAhkTypeFromJson(text)
   LONGLONG
   ULONGLONG
   */
-  /* 无类型，通常意味着 Ptr 。
+  /* 无类型，通常意味着此参数不填 。
   
   VOID
   */
   
-  ; 修正 PLCID
-  ; 因为 PLCID 的父级 PDWORD 本身就是一个指针，所以 PLCID 没有*，所以导致解析错误，所以这里直接修正。
-  ret.PLCID := "UInt*"
-  
   ; 添加 HMONITOR
   ; 系统版本大于等于 win2000 才有效。难以判断系统版本，故直接添加。
   ret.HMONITOR := "Ptr"
-  
-  ; Str 类型
-  ret.LPTSTR  := "Str"
-  ret.LPCTSTR := "Str"
-  ret.PTSTR   := "Str"
-  ret.PCTSTR  := "Str"
-  ; 从 Char 中分离出 AStr 类型
-  ret.LPSTR   := "AStr"
-  ret.LPCSTR  := "AStr"
-  ret.PSTR    := "AStr"
-  ret.PCSTR   := "AStr"
-  ; 从 UShort 中分离出 WStr 类型
-  ret.LPWSTR  := "WStr"
-  ret.LPCWSTR := "WStr"
-  ret.PWSTR   := "WStr"
-  ret.PCWSTR  := "WStr"
   
   ; 64位编译是 Int ，32位编译是 Short 。
   ret.HALF_PTR   := "(A_PtrSize=8) ? ""Int""     : ""Short"""
@@ -460,22 +438,14 @@ createAhkTypeFromJson(text)
   
   ; Unicode 编译是 UShort ，Ansi 编译是 Char 。
   ret.TCHAR      := "(A_IsUnicode) ? ""UShort""  : ""Char"""
-  ret.PTCHAR     := "(A_IsUnicode) ? ""UShort*"" : ""Char*"""
+  ret.PTCHAR     := "Str"
   
-  ; 修正 UNC
-  ; 因为 UNC 的父级 STRING 本身就是一个指针，所以 UNC 没有*，所以导致解析错误，所以这里直接修正。
-  ret.UNC := "UChar*"
-  
-  ; void 下都应该是 Ptr
-  ret.ADCONNECTION_HANDLE := "Ptr"
-  ret.LDAP_UDP_HANDLE     := "Ptr"
-  ret.RPC_BINDING_HANDLE  := "Ptr"
-  ret.PCONTEXT_HANDLE     := "Ptr"
-  
-  ; 从 UShort 中分离出 WStr 类型
-  ret.LMSTR   := "WStr"
-  ret.LMCSTR  := "WStr"
-  ret.BSTR    := "WStr"
+  ; Str 类型
+  ret["TCHAR*"]  := "Str"
+  ret.LPTSTR     := "Str"
+  ret.LPCTSTR    := "Str"
+  ret.PTSTR      := "Str"
+  ret.PCTSTR     := "Str"
   
   return, ret
 }
@@ -484,39 +454,45 @@ createAhkTypeFromJson(text)
 这是专门给 createAhkTypeFromJson() 用的
 
 */
-_forArray(obj, ByRef ret)
+_forArray(obj, ByRef ret, fromOutside:=true, haveAsterisk:=false)
 {
-  static rootValue := ""
+  static rootValue
+  
+  if (fromOutside)
+    rootValue := ""
   
   for k, v in obj
   {
-    ; 根节点的值没被记录（也就是首次进入循环），或者现在就处于根节点
-    ; 则更新根节点的值并标记状态 - 现在处于根节点
-    if (!rootValue or isRoot)
-    {
-      rootValue := k
-      isRoot := 1
-    }
+    ; 带星号的节点及其后代节点，都将被标记
+    flag := (InStr(k, "*") or haveAsterisk) and (k!="void*" and k!="CONST void*")
     
+    ; 函数从外部被调用，说明现在处于根节点，则更新根节点的值
+    if (fromOutside)
+      rootValue := k
     ; 子节点迭代循环中
-    if (rootValue and !isRoot)
+    else
     {
-      ; 有星号前缀的转换时将被添加星号后缀，例如 *LPLONG -> Int*
-      appendAnAsterisk := SubStr(k, 1, 1)="*" ? "*" : ""
-      
-      key := LTrim(k, "*")
-      ; key 中的 CHAR DOUBLE FLOAT INT LONG SHORT 会出现重复。
+      ; key 中的 CHAR DOUBLE FLOAT INT LONG long* SHORT 会出现重复。
       ; 当 key 出现重复时，以现存的 key 和 value 为准，不进行覆盖。
-      if (!ret.HasKey(key))
-        ret[key] := rootValue appendAnAsterisk
+      if (!ret.HasKey(k))
+      {
+        if (flag)
+        {
+          switch, rootValue
+          {
+            case "Char"  : ret[k] := "AStr"
+            case "UShort": ret[k] := "WStr"
+            default      : ret[k] := rootValue "*"
+          }
+        }
+        else
+          ret[k] := rootValue
+      }
     }
     
     if IsObject(v)
-      _forArray(v, ret)
+      _forArray(v, ret, false, flag ? true : false)
   }
-  
-  if (isRoot)
-    rootValue := ""
 }
 
 /*
@@ -545,6 +521,9 @@ parseMsdnFunctionSyntax(text)
   {
     ; 保存原始行信息用于记录在错误信息中
     oriLine := v
+    
+    ; 星号靠左
+    v := RegExReplace(v, "\s+(\*+)", "$1 ")
     
     ; 首行提取函数名与返回值类型
     if (A_Index=1)
@@ -589,7 +568,7 @@ parseMsdnFunctionSyntax(text)
         v := SubStr(v, 1, -2)
       
       ; 获取变量名
-      if (!RegExMatch(v, "([\w\*]+)$", OutputVar))
+      if (!RegExMatch(v, "(\w+)$", OutputVar))
       {
         ; 如果本行包含省略号 ... ，则跳过
         if (RegExMatch(v, "\.{3,}"))
@@ -601,7 +580,7 @@ parseMsdnFunctionSyntax(text)
       }
       
       ; 分解出变量名和类型名
-      name := LTrim(OutputVar1, "*")
+      name := OutputVar1
       type := SubStr(v, 1, -StrLen(OutputVar1))
       
       hungarianNotationIsSuspicious := false

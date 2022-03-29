@@ -9,16 +9,12 @@
   for k, v in ahkType
   {
     ; 不输出所有带*的类型例如 UInt*
-    ; 例外情况是类型带*但包含关键字 void 的
-    if ((InStr(v, "*") and !InStr(k, "void")))
+    if (InStr(v, "*"))
       continue
     
     ; 不输出 TCHAR TBYTE HALF_PTR UHALF_PTR
     if k in TCHAR,TBYTE,HALF_PTR,UHALF_PTR
       continue
-    
-    ; 去掉右侧*
-    v := RTrim(v, "*")
     
     ; 所有 Str AStr WStr 类型都转为 Ptr
     if (InStr(v, "Str"))
