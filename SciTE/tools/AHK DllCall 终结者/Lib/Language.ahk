@@ -20,8 +20,8 @@
     l_tip_4 := "; 错误：参数 {} 的类型 {} 对应未知，需自行确定。`r`n"
     l_tip_5 := "  `; 错误：返回值的类型 {} 对应未知，需自行确定。"
     l_tip_6 := "; 错误：返回值的类型 {} 对应未知，需自行确定。`r`n"
-    l_tip_7 := "  `; 警告：猜测类型是 {} ，但也可能是 {} 。"
-    l_tip_8 := "; 警告：猜测参数 {} 的类型 {} 对应为 {} ，但也可能是 {} 。`r`n"
+    l_tip_7 := "  `; 警告：猜测类型是 {} ，但可信度较低。"
+    l_tip_8 := "; 警告：猜测参数 {} 的类型 {} 对应为 {} ，但可信度较低。`r`n"
     
     ; 在 parseMsdnFunctionSyntax() 里
     l_tip2_1 := "/* 错误：第{}行内容解析失败。`r`n--------`r`n{}`r`n--------`r`n*/`r`n"
@@ -53,8 +53,8 @@
     l_tip_4  := "; Error : the {}'s type {} is unknown, need to determine by yourself.`r`n"
     l_tip_5  := "  `; Error : the return value type {} is unknown, need to determine by yourself."
     l_tip_6  := "; Error : the return value type {} is unknown, need to determine by yourself.`r`n"
-    l_tip_7  := "  `; Warn : guess the type is {} , but it may also be {} ."
-    l_tip_8  := "; Warn : guess {}'s type {} is {} , but it may also be {} .`r`n"
+    l_tip_7  := "  `; Warn : guess the type is {} , but it is less credible."
+    l_tip_8  := "; Warn : guess {}'s type {} is {} , but it is less credible.`r`n"
     
     ; in parseMsdnFunctionSyntax()
     l_tip2_1 := "/* Error : line {} failed to parse.`r`n--------`r`n{}`r`n--------`r`n*/`r`n"

@@ -50,12 +50,12 @@ Gui Add, Checkbox, x210 y476 w100 h24 +Checked%showInfo% gtranslate vshowInfo, %
 ; 因为不同语言下文字长度差别较大，因此控件需要不同的布局
 if (A_Language="0804")
 {
-  Gui Add, Checkbox, x310 y476 w100 h24 +Checked%createVariables% gtranslate vcreateVariables, %l_gui_8%
+  Gui Add, Checkbox, x310 y476 w100 h24 +Checked%createVars% gtranslate vcreateVars, %l_gui_8%
   Gui Add, Checkbox, x410 y476 w150 h24 +Checked%printRetValAndErrorLevel% gtranslate vprintRetValAndErrorLevel, %l_gui_9%
 }
 else
 {
-  Gui Add, Checkbox, x310 y476 w120 h24 +Checked%createVariables% gtranslate vcreateVariables, %l_gui_8%
+  Gui Add, Checkbox, x310 y476 w120 h24 +Checked%createVars% gtranslate vcreateVars, %l_gui_8%
   Gui Add, Checkbox, x440 y476 w200 h24 +Checked%printRetValAndErrorLevel% gtranslate vprintRetValAndErrorLevel, %l_gui_9%
 }
 Gui Font, s%fontSizeWithDpiScale% cWhite Bold, Segoe UI
@@ -64,7 +64,7 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v5.0
+Gui Show, w620 h505, %l_gui_10% v5.1
 return
 
 GuiEscape:
@@ -79,7 +79,7 @@ return
 
 translate:
   Gui, Submit, NoHide
-  GuiControl, , edit2, % createDllCallTemplate(edit1, edit3, multiLine, showError, showWarn, showInfo, createVariables, printRetValAndErrorLevel)
+  GuiControl, , edit2, % createDllCallTemplate(edit1, edit3, multiLine, showError, showWarn, showInfo, createVars, printRetValAndErrorLevel)
 return
 
 loadSettings:
@@ -88,7 +88,7 @@ loadSettings:
   IniRead, showError, settings.ini, settings, showError, 1
   IniRead, showWarn, settings.ini, settings, showWarn, 1
   IniRead, showInfo, settings.ini, settings, showInfo, 1
-  IniRead, createVariables, settings.ini, settings, createVariables, 1
+  IniRead, createVars, settings.ini, settings, createVars, 1
   IniRead, printRetValAndErrorLevel, settings.ini, settings, printRetValAndErrorLevel, 0
 return
 
@@ -98,7 +98,7 @@ saveSettings:
   IniWrite, %showError%, settings.ini, settings, showError
   IniWrite, %showWarn%, settings.ini, settings, showWarn
   IniWrite, %showInfo%, settings.ini, settings, showInfo
-  IniWrite, %createVariables%, settings.ini, settings, createVariables
+  IniWrite, %createVars%, settings.ini, settings, createVars
   IniWrite, %printRetValAndErrorLevel%, settings.ini, settings, printRetValAndErrorLevel
 return
 
@@ -109,7 +109,7 @@ F11::输出批量测试结果()
 F12::输出structor用的类型列表()
 #If
 
-createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true, createVariables:=true, printRetValAndErrorLevel:=true)
+createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true, createVars:=true, printRetValAndErrorLevel:=true)
 {
   global l_tip_1, l_tip_2, l_tip_3, l_tip_4, l_tip_5, l_tip_6, l_tip_7, l_tip_8, l_errorlevel
   
@@ -175,7 +175,7 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
       
       if (rule1 or rule2 or rule3)
       {
-        ; 例如 BCRYPT_ALG_HANDLE *phAlgorithm
+        ; 前缀为双字母，例如 BCRYPT_ALG_HANDLE *phAlgorithm
         if (RegExMatch(prefix, "(lplp|lph|pp|ph)"))
         {
           type := "Ptr*"
@@ -196,9 +196,9 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
         if (showWarn and prefixIsSus)
         {
           if (multiLine)
-            oWarn[i] := Format(l_tip_7, type, "Unknown")
+            oWarn[i] := Format(l_tip_7, type)
           else
-            warn     .= Format(l_tip_8, name, oriType, type, "Unknown")
+            warn     .= Format(l_tip_8, name, oriType, type)
         }
         else if (showInfo)
         {
@@ -221,15 +221,13 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
       }
     }
     
-    ; 拼凑字符串 VarSetCapacity(var, , 0) 或 var=""
-    if (createVariables)
-      ; 所有 Str AStr WStr 类型，并且带 Out 的参数的，都用 VarSetCapacity(var, , 0)
-      if (InStr(type, "Str") and isOut)
-        varList .= Format("VarSetCapacity({}, , 0)`r`n", name)
-      ; 所有 Ptr 类型，并且用&传地址的，都用 VarSetCapacity(var, , 0)
-      else if (InStr(name, "&"))
+    if (createVars)
+      ; 所有 Str AStr WStr 类型，并且带 Out 的参数的
+      ; 或者所有 Ptr 类型，并且用&传地址的，都用 VarSetCapacity(var, , 0) 创建变量
+      if ( (InStr(type, "Str") and isOut)
+        or (InStr(name, "&")) )
         varList .= Format("VarSetCapacity({}, , 0)`r`n", oriName)
-      ; 其它则用 var=""
+      ; 其它则用 var := "" 创建变量
       else
         varList .= name " := """"`r`n"
     
@@ -271,6 +269,21 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
   return, error warn info varList template retValAndErrorLevel
 }
 
+/* 这是专门给 createDllCallTemplate() 用的
+
+*/
+_lineAppend(str, sLine, nLine)
+{
+  oStr := StrSplit(str, "`n", "`r")
+  oStr[nLine] .= sLine
+  for k, v in oStr
+    ret .= v "`r`n"
+  return, RTrim(ret, "`r`n")
+}
+
+/* 获取 Win32 类型对应的 AHK 类型
+
+*/
 getAhkType(win32Type)
 {
   static ahkType
@@ -295,7 +308,7 @@ getAhkType(win32Type)
     type := ahkType[win32Type]
   }
   
-  ; 删除无用前后缀之后，依然没找到对应类型，则尝试添加或删除星号并再次进行尝试
+  ; 删除无用前后缀之后，依然没找到对应类型，则添加或删除星号后再次进行尝试
   if (!type)
   {
     if (InStr(win32Type, "*"))
@@ -322,20 +335,8 @@ getAhkType(win32Type)
   return, type
 }
 
-/*
-这是专门给 createDllCallTemplate() 用的
+/* 以下为测试代码
 
-*/
-_lineAppend(str, sLine, nLine)
-{
-  oStr := StrSplit(str, "`n", "`r")
-  oStr[nLine] .= sLine
-  for k, v in oStr
-    ret .= v "`r`n"
-  return, RTrim(ret, "`r`n")
-}
-
-/*
 测试用JSON=
 (
 {
@@ -414,6 +415,7 @@ createAhkTypeFromJson(text)
   ULONG_PTR
   */
   /* 32位 CPU 是 Double ，64位 CPU 是 Int64 。难以判断 CPU 版本，故直接算作 Int64 。
+  
   LONGLONG
   ULONGLONG
   */
@@ -450,8 +452,7 @@ createAhkTypeFromJson(text)
   return, ret
 }
 
-/*
-这是专门给 createAhkTypeFromJson() 用的
+/* 这是专门给 createAhkTypeFromJson() 用的
 
 */
 _forArray(obj, ByRef ret, fromOutside:=true, haveAsterisk:=false)
@@ -463,7 +464,7 @@ _forArray(obj, ByRef ret, fromOutside:=true, haveAsterisk:=false)
   
   for k, v in obj
   {
-    ; 带星号的节点及其后代节点，都将被标记
+    ; 除 void* 与 CONST void* 外，其它带星号的节点及其后代节点，都将被标记
     flag := (InStr(k, "*") or haveAsterisk) and (k!="void*" and k!="CONST void*")
     
     ; 函数从外部被调用，说明现在处于根节点，则更新根节点的值
@@ -480,6 +481,7 @@ _forArray(obj, ByRef ret, fromOutside:=true, haveAsterisk:=false)
         {
           switch, rootValue
           {
+            ; Char* 全转为 AStr ， UShort* 全转为 WStr
             case "Char"  : ret[k] := "AStr"
             case "UShort": ret[k] := "WStr"
             default      : ret[k] := rootValue "*"
@@ -495,8 +497,7 @@ _forArray(obj, ByRef ret, fromOutside:=true, haveAsterisk:=false)
   }
 }
 
-/*
-解析下面这种 MSDN 网站上的函数说明
+/* 解析下面这种 MSDN 网站上的函数说明
 
 BOOL CryptBinaryToStringA(
   [in]            const BYTE *pbBinary,
@@ -581,7 +582,7 @@ parseMsdnFunctionSyntax(text)
       
       ; 分解出变量名和类型名
       name := OutputVar1
-      type := SubStr(v, 1, -StrLen(OutputVar1))
+      type := SubStr(v, 1, -StrLen(name))
       
       hungarianNotationIsSuspicious := false
       ; 提取变量名中的匈牙利命名规则
@@ -605,7 +606,7 @@ parseMsdnFunctionSyntax(text)
       
       ret["params", n, "paramName"] := name
       ret["params", n, "paramType"] := Trim(type, " `t`r`n`v`f")
-      ret["params", n, "hungarian"] := OutputVar1 ? hungarian : ""
+      ret["params", n, "hungarian"] := hungarian
       ret["params", n, "isOut"]     := InStr(inOrOut, "out") ? true : false
       ret["params", n, "isSus"]     := hungarianNotationIsSuspicious
     }

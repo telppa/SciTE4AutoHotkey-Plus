@@ -8,12 +8,12 @@
   ahkType_flip := {}
   for k, v in ahkType
   {
-    ; 不输出所有带*的类型例如 UInt*
-    if (InStr(v, "*"))
-      continue
-    
     ; 不输出 TCHAR TBYTE HALF_PTR UHALF_PTR
     if k in TCHAR,TBYTE,HALF_PTR,UHALF_PTR
+      continue
+    
+    ; 不输出所有带*的类型例如 UInt*
+    if (InStr(v, "*"))
       continue
     
     ; 所有 Str AStr WStr 类型都转为 Ptr
