@@ -6,7 +6,8 @@
 
 /* 隐藏功能
 F1 帮助
-F10 测试解析的例子
+F5 测试解析的例子
+F10 输出全部类型列表
 F11 输出批量测试结果
 F12 输出structor用的类型列表
 */
@@ -64,7 +65,7 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v5.1
+Gui Show, w620 h505, %l_gui_10% v5.2
 return
 
 GuiEscape:
@@ -104,7 +105,8 @@ return
 
 #If WinActive("ahk_id " hGUI)
 F1::帮助()
-F10::测试解析的例子()
+F5::测试解析的例子()
+F10::输出全部类型列表()
 F11::输出批量测试结果()
 F12::输出structor用的类型列表()
 #If
@@ -620,6 +622,7 @@ parseMsdnFunctionSyntax(text)
 #Include %A_ScriptDir%\Lib\CreateGradient.ahk
 #Include %A_ScriptDir%\Lib\Language.ahk
 #Include %A_ScriptDir%\Lib\测试解析的例子.ahk
+#Include %A_ScriptDir%\Lib\输出全部类型列表.ahk
 #Include %A_ScriptDir%\Lib\输出批量测试结果.ahk
 #Include %A_ScriptDir%\Lib\输出structor用的类型列表.ahk
 #Include %A_ScriptDir%\Lib\帮助.ahk
