@@ -280,3 +280,28 @@ resume_handle := ""
 ret := DllCall("NetGroupEnum", "WStr", servername, "UInt", level, "Ptr*", bufptr, "UInt", prefmaxlen, "UInt*", entriesread, "UInt*", totalentries, "UPtr*", resume_handle, "UInt")
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
+; 提示：猜测参数 lpClassName 的类型  对应为 Ptr 。
+; 提示：猜测参数 lpWindowName 的类型  对应为 Ptr 。
+; 提示：猜测参数 dwStyle 的类型  对应为 UInt 。
+; 提示：猜测参数 x 的类型  对应为 Short 。
+; 提示：猜测参数 y 的类型  对应为 Short 。
+; 提示：猜测参数 nWidth 的类型  对应为 Short 。
+; 提示：猜测参数 nHeight 的类型  对应为 Short 。
+; 提示：猜测参数 hWndParent 的类型  对应为 Ptr 。
+; 提示：猜测参数 hMenu 的类型  对应为 Ptr 。
+; 提示：猜测参数 hInstance 的类型  对应为 Ptr 。
+; 提示：猜测参数 lpParam 的类型  对应为 Ptr 。
+VarSetCapacity(lpClassName, , 0)
+VarSetCapacity(lpWindowName, , 0)
+dwStyle := ""
+x := ""
+y := ""
+nWidth := ""
+nHeight := ""
+hWndParent := ""
+hMenu := ""
+hInstance := ""
+VarSetCapacity(lpParam, , 0)
+ret := DllCall("CreateWindowA", "Ptr", &lpClassName, "Ptr", &lpWindowName, "UInt", dwStyle, "Short", x, "Short", y, "Short", nWidth, "Short", nHeight, "Ptr", hWndParent, "Ptr", hMenu, "Ptr", hInstance, "Ptr", &lpParam)
+MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
+

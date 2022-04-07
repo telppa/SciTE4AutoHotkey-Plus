@@ -7,9 +7,9 @@
 /* 隐藏功能
 F1 帮助
 F5 测试解析的例子
-F10 输出全部类型列表
-F11 输出批量测试结果
-F12 输出structor用的类型列表
+F10 输出 structor 用的类型列表
+F11 输出全部类型列表
+F12 输出批量测试结果
 */
 
 #NoEnv
@@ -65,7 +65,11 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v5.2
+Gui Show, w620 h505, %l_gui_10% v5.3
+
+; 首次运行则显示帮助
+if (!FileExist("settings.ini"))
+  帮助()
 return
 
 GuiEscape:
@@ -106,9 +110,9 @@ return
 #If WinActive("ahk_id " hGUI)
 F1::帮助()
 F5::测试解析的例子()
-F10::输出全部类型列表()
-F11::输出批量测试结果()
-F12::输出structor用的类型列表()
+F10::输出structor用的类型列表()
+F11::输出全部类型列表()
+F12::输出批量测试结果()
 #If
 
 createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:=true, showInfo:=true, createVars:=true, printRetValAndErrorLevel:=true)
@@ -167,6 +171,7 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
     ; 没有在数据库中找到对应类型
     else
     {
+      ; rule1-3 是处理 Ptr 类型的
       ; 原始类型名以 LP 开头
       rule1 := SubStr(oriType, 1, 2)=="LP"
       ; 前缀包含 lp 或 p 或 h
@@ -174,25 +179,49 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
       ; 原始类型名以 P 开头，同时前缀包含 lp 或 p 或 h
       ; 其实 rule3 是 rule2 的一个子集，单独写出来只是为了让逻辑更清晰
       rule3 := SubStr(oriType, 1, 1)=="P" and rule2
+      ; rule4 是处理普通类型的
+      ; 前缀是以下列表之一
+      rule4 := RegExMatch(prefix, "(b|c|dw|i|l|n|u|ul|w|x|y)")
       
-      if (rule1 or rule2 or rule3)
+      if (rule1 or rule2 or rule3 or rule4)
       {
-        ; 前缀为双字母，例如 BCRYPT_ALG_HANDLE *phAlgorithm
-        if (RegExMatch(prefix, "(lplp|lph|pp|ph)"))
+        if (rule1 or rule2 or rule3)
         {
-          type := "Ptr*"
-          name := name
+          ; 前缀为双字母，例如 BCRYPT_ALG_HANDLE *phAlgorithm
+          if (RegExMatch(prefix, "(lplp|lph|pp|ph)"))
+          {
+            type := "Ptr*"
+            name := name
+          }
+          ; 前缀为纯 h ，例如 BCRYPT_ALG_HANDLE hAlgorithm
+          else if (InStr(prefix, "h") and !InStr(prefix, "lp") and !InStr(prefix, "p"))
+          {
+            type := "Ptr"
+            name := name
+          }
+          else
+          {
+            type := "Ptr"
+            name := "&" name
+          }
         }
-        ; 前缀为纯 h ，例如 BCRYPT_ALG_HANDLE hAlgorithm
-        else if (InStr(prefix, "h") and !InStr(prefix, "lp") and !InStr(prefix, "p"))
+        
+        if (rule4)
         {
-          type := "Ptr"
-          name := name
-        }
-        else
-        {
-          type := "Ptr"
-          name := "&" name
+          switch, prefix
+          {
+            case "b"  : type := getAhkType("BOOL"),  name := name
+            case "c"  : type := getAhkType("Char"),  name := name
+            case "dw" : type := getAhkType("DWORD"), name := name
+            case "i"  : type := getAhkType("Int"),   name := name
+            case "l"  : type := getAhkType("Long"),  name := name
+            case "n"  : type := getAhkType("Short"), name := name
+            case "u"  : type := getAhkType("UInt"),  name := name
+            case "ul" : type := getAhkType("ULONG"), name := name
+            case "w"  : type := getAhkType("WORD"),  name := name
+            case "x"  : type := getAhkType("short"), name := name
+            case "y"  : type := getAhkType("short"), name := name
+          }
         }
         
         if (showWarn and prefixIsSus)
@@ -239,7 +268,7 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
   
   retType := getAhkType(msdn.retType)
   ; 拼凑字符串 , "Ptr")
-  if (retType="Int")
+  if (retType="Int" or msdn.retType="void")
     template := RTrim(template, CRLF) ")"
   else
   {
@@ -595,12 +624,18 @@ parseMsdnFunctionSyntax(text)
         RegExMatch(name, "^[a-z_]+", hungarian)
       else
       {
-        ; 没有大写字母辅助定位的话，则尽量获取关键信息
-        ; 注意长的字符串要放前面，这样才能 p 和 pp 都能被匹配
-        RegExMatch(name, "^(lplp|lph|lp|pp|ph|p|h)", hungarian)
-        ; 如果仅提取到 p 和 h 单个字母，则标记特征太短了，以便做出可能误判的提示
-        if (hungarian="p" or hungarian="h")
-          hungarianNotationIsSuspicious := true
+        ; 如果变量名为单个小写字母 x 或 y ，则认为它同时也是匈牙利命名规则
+        if (name=="x" or name=="y")
+          hungarian := name
+        else
+        {
+          ; 没有大写字母辅助定位的话，则尽量获取关键信息
+          ; 注意长的字符串要放前面，这样才能 p 和 pp 都能被匹配
+          RegExMatch(name, "^(lplp|lph|lp|pp|ph|p|h)", hungarian)
+          ; 如果仅提取到 p 和 h 单个字母，则标记特征太短了，以便做出可能误判的提示
+          if (hungarian="p" or hungarian="h")
+            hungarianNotationIsSuspicious := true
+        }
       }
       
       ; 计次

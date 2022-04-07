@@ -384,7 +384,24 @@
   `);
   )
 
-  loop, 42
+  a43=
+  (
+  void CreateWindowA(
+    [in, optional]  lpClassName,
+    [in, optional]  lpWindowName,
+    [in]            dwStyle,
+    [in]            x,
+    [in]            y,
+    [in]            nWidth,
+    [in]            nHeight,
+    [in, optional]  hWndParent,
+    [in, optional]  hMenu,
+    [in, optional]  hInstance,
+    [in, optional]  lpParam
+  `);
+  )
+
+  loop, 43
     out.=createDllCallTemplate(a%A_Index%, "", false, true, true, true, true, true) "`r`n`r`n"
 
   FileDelete, 批量测试结果.txt
