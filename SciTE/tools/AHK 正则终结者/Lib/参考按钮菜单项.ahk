@@ -20,17 +20,19 @@
   Menu, 正则参考菜单, Add, []`t范围内的字符, InsertRegEx
   Menu, 正则参考菜单, Add, [^]`t不在范围内的字符, InsertRegEx
   Menu, 正则参考菜单, Add,
-  Menu, 正则参考菜单, Add, \n`t换行, InsertRegEx
-  Menu, 正则参考菜单, Add, \r`t回车(在文件中查找时使用), InsertRegEx
-  Menu, 正则参考菜单, Add, \t`t制表符, InsertRegEx
-  Menu, 正则参考菜单, Add, \w`t单词, InsertRegEx
-  Menu, 正则参考菜单, Add, \s`t空格, InsertRegEx
   Menu, 正则参考菜单, Add, \d`t数字, InsertRegEx
-  Menu, 正则参考菜单, Add, \l`t小写字母, InsertRegEx
-  Menu, 正则参考菜单, Add, \u`t大写字母, InsertRegEx
-  Menu, 正则参考菜单, Add, \Q`t开始引用, InsertRegEx
-  Menu, 正则参考菜单, Add, \E`t结束引用, InsertRegEx
+  Menu, 正则参考菜单, Add, \s`t空白符, InsertRegEx
+  Menu, 正则参考菜单, Add, \t`t制表符, InsertRegEx
+  Menu, 正则参考菜单, Add, \r`t回车, InsertRegEx
+  Menu, 正则参考菜单, Add, \n`t换行, InsertRegEx
+  Menu, 正则参考菜单, Add, \w`t单词, InsertRegEx
+  Menu, 正则参考菜单, Add, \b`t单词边界, InsertRegEx
+  Menu, 正则参考菜单, Add, \Q`t原义开始, InsertRegEx
+  Menu, 正则参考菜单, Add, \E`t原义结束, InsertRegEx
   Menu, 正则参考菜单, Add, \`t转义符, InsertRegEx
+  Menu, 正则参考菜单, Add,
+  Menu, 正则参考菜单, Add, [a-z]`t小写字母, InsertRegEx
+  Menu, 正则参考菜单, Add, [A-Z]`t大写字母, InsertRegEx
   ; 注意是小写x，不需要 (*UCP) 选项。https://www.qqxiuzi.cn/zh/hanzi-unicode-bianma.php
   Menu, 正则参考菜单, Add, [\x{4e00}-\x{9fa5}]`t匹配汉字, InsertRegEx
   ; 也可以直接用中文，等价于 [\x{4e00}-\x{9f9f}] ，比 9fa5 仅少6个生僻字。
