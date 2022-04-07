@@ -4,8 +4,8 @@
 ;  https://autohotkey.com/boards/viewtopic.php?f=6&t=17834
 ;
 ;  脚本作者 : FeiYue
-;  最新版本 : 8.7
-;  更新时间 : 2022-01-24
+;  最新版本 : 8.8
+;  更新时间 : 2022-03-22
 ;
 ;  用法:  (需要最新版本 AHK v1.1.31+)
 ;  1. 将本脚本保存为“FindText.ahk”并复制到AHK程序的Lib子目录中
@@ -48,7 +48,7 @@ if (!A_IsCompiled and A_LineFile=A_ScriptFullPath)
 ;    , Text --> 由工具生成的查找图像的数据，可以一次查找多个，用“|”分隔
 ;    , ScreenShot --> 是否截屏，为0则使用上一次的截屏数据
 ;    , FindAll --> 是否搜索所有位置，为0则找到一个位置就返回
-;    , JoinText --> 是否组合图像，为1则多个数据组合为一幅图来查找
+;    , JoinText --> 如果想组合查找，可以为1，或者是要查找单词的数组
 ;    , offsetX --> 组合图像的每个字和前一个字的最大横向间隔
 ;    , offsetY --> 组合图像的每个字和前一个字的最大高低间隔
 ;    , dir --> 查找的方向，有上、下、左、右、中心9种
@@ -60,13 +60,13 @@ if (!A_IsCompiled and A_LineFile=A_ScriptFullPath)
 ;        , x:中心点X, y:中心点Y, id:图像识别文本 }
 ;  坐标都是相对于屏幕，颜色使用RGB格式
 ;
-; 如果 OutputX 等于 "wait" 或 "wait1" 意味着等待图像出现，
-; 如果 OutputX 等于 "wait0" 意味着等待图像消失
-; 此时 OutputY 设置等待时间的秒数，如果小于0则无限等待
-; 如果超时则返回0，意味着失败，如果等待图像出现成功，则返回位置数组
-; 如果等待图像消失成功，则返回 1
-; 例1: FindText(X:="wait", Y:=3, 0,0,0,0,0,0,Text)   ; 等待3秒等图像出现
-; 例2: FindText(X:="wait0", Y:=-1, 0,0,0,0,0,0,Text) ; 无限等待等图像消失
+;  如果 OutputX 等于 "wait" 或 "wait1" 意味着等待图像出现，
+;  如果 OutputX 等于 "wait0" 意味着等待图像消失
+;  此时 OutputY 设置等待时间的秒数，如果小于0则无限等待
+;  如果超时则返回0，意味着失败，如果等待图像出现成功，则返回位置数组
+;  如果等待图像消失成功，则返回 1
+;  例1: FindText(X:="wait", Y:=3, 0,0,0,0,0,0,Text)   ; 等待3秒等图像出现
+;  例2: FindText(X:="wait0", Y:=-1, 0,0,0,0,0,0,Text) ; 无限等待等图像消失
 ;--------------------------------
 
 FindText(ByRef x:="FindTextClass", ByRef y:="", args*)
@@ -107,13 +107,18 @@ FindText(ByRef OutputX:="", ByRef OutputY:=""
     , OutputX:=OutputY:=""
     Loop
     {
-      ok:=this.FindText(OutputX, OutputY
-        , x1, y1, x2, y2, err1, err0
-        , text, ScreenShot, FindAll
-        , JoinText, offsetX, offsetY, dir)
-      if (found and ok)
-        return ok
-      else if (!found and !ok)
+      ; Wait for the image to remain stable
+      While (ok:=this.FindText(OutputX, OutputY
+        , x1, y1, x2, y2, err1, err0, text, ScreenShot, FindAll
+        , JoinText, offsetX, offsetY, dir)) and (found)
+      {
+        v:=ok[1], x:=v[1], y:=v[2], w:=v[3], h:=v[4]
+        hash:=this.GetPicHash(x, y, x+w-1, y+h-1, 0)
+        Sleep, 10
+        if (hash=this.GetPicHash(x, y, x+w-1, y+h-1, 1))
+          return ok
+      }
+      if (!found and !ok)
         return 1
       if (time>=0 and A_TickCount>=timeout)
         Break
@@ -137,25 +142,46 @@ FindText(ByRef OutputX:="", ByRef OutputY:=""
     SetBatchLines, %bch%
     return 0
   }
-  arr:=[], ini:={zx:zx, zy:zy, zw:zw, zh:zh
-    , sx:x, sy:y, sw:w, sh:h, comment:""}, k:=0
+  arr:=[], info2:=[], k:=0, s:=""
+  , mode:=(IsObject(JoinText) ? 2 : JoinText ? 1 : 0)
   For i,j in info
-    k:=Max(k, j[2]*j[3]), ini.comment .= j[11]
-  VarSetCapacity(s1, k*4), VarSetCapacity(s0, k*4)
+    k:=Max(k, j[2]*j[3]), s.="|" i, v:=(mode=1 ? i : j[11])
+    , (mode && !info2[v] && info2[v]:=[])
+    , (mode && info2[v].Push(j))
+  JoinText:=(mode=1 ? [s] : JoinText)
+  , VarSetCapacity(s1, k*4), VarSetCapacity(s0, k*4)
   , VarSetCapacity(ss, 2*(w+2)*(h+2))
   , FindAll:=(dir=9 ? 1 : FindAll)
-  , JoinText:=(num=1 ? 0 : JoinText)
   , allpos_max:=(FindAll or JoinText ? 10240 : 1)
-  , VarSetCapacity(allpos, allpos_max*8)
+  , ini:={sx:x, sy:y, sw:w, sh:h, zx:zx, zy:zy, zw:zw, zh:zh
+  , bits:bits, ss:&ss, s1:&s1, s0:&s0, allpos_max:allpos_max}
   Loop 2
   {
     if (err1=0 and err0=0) and (num>1 or A_Index>1)
       err1:=0.05, err0:=0.05
-    Loop % JoinText ? 1 : num
+    ini.err1:=err1, ini.err0:=err0
+    if (!JoinText)
     {
-      this.PicFind(arr, ini, info, A_Index, err1, err0
-        , FindAll, JoinText, offsetX, offsetY, dir
-        , bits, ss, s1, s0, allpos, allpos_max)
+      VarSetCapacity(allpos, allpos_max*8)
+      For i,j in info
+      Loop % this.PicFind(ini, j, dir, allpos
+      , ini.sx, ini.sy, ini.sw, ini.sh)
+      {
+        x:=NumGet(allpos, 8*A_Index-8, "uint") + zx
+        , y:=NumGet(allpos, 8*A_Index-4, "uint") + zy
+        , w:=j[2], h:=j[3], comment:=j[11]
+        , arr.Push({1:x, 2:y, 3:w, 4:h, x:x+w//2, y:y+h//2, id:comment})
+        if (!FindAll)
+          Break, 2
+      }
+    }
+    else
+    For k,v in JoinText
+    {
+      v:=RegExReplace(v, "\s*\|[|\s]*", "|")
+      , v:=StrSplit(Trim(v,"|"), (InStr(v,"|")?"|":""))
+      , this.JoinText(ini, arr, info2, v, offsetX, offsetY, FindAll
+      , 1, v.Length(), dir, 0, 0, ini.sx, ini.sy, ini.sw, ini.sh)
       if (!FindAll and arr.Length())
         Break, 2
     }
@@ -173,10 +199,43 @@ FindText(ByRef OutputX:="", ByRef OutputY:=""
   return 0
 }
 
-PicFind(arr, ini, info, index, err1, err0
-  , FindAll, JoinText, offsetX, offsetY, dir
-  , bits, ByRef ss, ByRef s1, ByRef s0
-  , ByRef allpos, allpos_max)
+; the join text object <==> [ "abc", "xyz", "a1|a2|a3" ]
+
+JoinText(ini, arr, info2, text, offsetX, offsetY, FindAll
+  , index:="", Len:="", dir:="", minY:="", maxY:=""
+  , sx:="", sy:="", sw:="", sh:="")
+{
+  VarSetCapacity(allpos, ini.allpos_max*8)
+  For i,j in info2[text[index]]
+  Loop % this.PicFind(ini, j, dir, allpos, sx, sy
+    , (index=1 ? sw : Min(sx+offsetX+j[2],ini.sx+ini.sw)-sx), sh)
+  {
+    x:=NumGet(allpos, 8*A_Index-8, "uint")
+    , y:=NumGet(allpos, 8*A_Index-4, "uint"), w:=j[2], h:=j[3]
+    , (index=1) && (ini.x:=x, minY:=y, maxY:=y+h)
+    if (index<Len)
+    {
+      if this.JoinText(ini, arr, info2, text, offsetX, offsetY, FindAll
+      , index+1, Len, 5, (y1:=Min(y,minY)), (y2:=Max(y+h,maxY)), x+w
+      , (y:=Max(y1-offsetY,ini.sy)), 0, Min(y2+offsetY,ini.sy+ini.sh)-y)
+      and (index>1 or !FindAll)
+        return 1
+    }
+    else
+    {
+      comment:=""
+      For k,v in text
+        comment.=info2[v][1][11]
+      w:=x+w-ini.x, x:=ini.x+ini.zx
+      , h:=Max(y+h,maxY)-Min(y,minY), y:=Min(y,minY)+ini.zy
+      , arr.Push({1:x, 2:y, 3:w, 4:h, x:x+w//2, y:y+h//2, id:comment})
+      if (index>1 or !FindAll)
+        return 1
+    }
+  }
+}
+
+PicFind(ini, j, dir, ByRef allpos, sx, sy, sw, sh)
 {
   local
   static MyFunc:=""
@@ -413,59 +472,18 @@ PicFind(arr, ini, info, index, err1, err0
     . "2438010000E97FF4FFFFC744243000000000E9BBF6FFFF909090909090909090"
     this.MCode(MyFunc, A_PtrSize=8 ? x64:x32)
   }
-  num:=info.Length(), j:=info[index]
-  , text:=j[1], w:=j[2], h:=j[3]
-  , e1:=(!j[12] ? Floor(j[4]*err1) : j[6])
-  , e0:=(!j[12] ? Floor(j[5]*err0) : j[7])
-  , mode:=j[8], color:=j[9], n:=j[10], comment:=j[11]
-  , sx:=ini.sx, sy:=ini.sy, sw:=ini.sw, sh:=ini.sh
-  if (JoinText and index>1)
-  {
-    x:=ini.x, y:=ini.y, sw:=Min(x+offsetX+w,sx+sw), sx:=x, sw-=sx
-    , sh:=Min(y+offsetY+h,sy+sh), sy:=Max(y-offsetY,sy), sh-=sy
-    , allpos_max:=1
-  }
-  ok:=!bits.Scan0 ? 0 : DllCall(&MyFunc
+  text:=j[1], w:=j[2], h:=j[3]
+  , e1:=(j[12] ? j[6] : Floor(j[4] * ini.err1))
+  , e0:=(j[12] ? j[7] : Floor(j[5] * ini.err0))
+  , mode:=j[8], color:=j[9], n:=j[10]
+  return (!ini.bits.Scan0) ? 0 : DllCall(&MyFunc
     , "int",mode, "uint",color, "uint",n, "int",dir
-    , "Ptr",bits.Scan0, "int",bits.Stride
+    , "Ptr",ini.bits.Scan0, "int",ini.bits.Stride
     , "int",ini.zw, "int",ini.zh
     , "int",sx, "int",sy, "int",sw, "int",sh
-    , "Ptr",&ss, "Ptr",&s1, "Ptr",&s0
+    , "Ptr",ini.ss, "Ptr",ini.s1, "Ptr",ini.s0
     , "AStr",text, "int",w, "int",h, "int",e1, "int",e0
-    , "Ptr",&allpos, "int",allpos_max)
-  Loop % ok
-  {
-    x:=NumGet(allpos, 8*A_Index-8, "uint")
-    , y:=NumGet(allpos, 8*A_Index-4, "uint")
-    if (!JoinText)
-    {
-      x1:=x+ini.zx, y1:=y+ini.zy
-      , arr.Push( {1:x1, 2:y1, 3:w, 4:h
-      , x:x1+w//2, y:y1+h//2, id:comment} )
-    }
-    else if (index=1)
-    {
-      ini.x:=x+w, ini.y:=y, ini.minY:=y, ini.maxY:=y+h
-      Loop % num-1
-        if !this.PicFind(arr, ini, info, A_Index+1, err1, err0
-        , FindAll, JoinText, offsetX, offsetY, 5
-        , bits, ss, s1, s0, allpos, 1)
-          Continue, 2
-      x1:=x+ini.zx, y1:=ini.minY+ini.zy
-      , w1:=ini.x-x, h1:=ini.maxY-ini.minY
-      , arr.Push( {1:x1, 2:y1, 3:w1, 4:h1
-      , x:x1+w1//2, y:y1+h1//2, id:ini.comment} )
-    }
-    else
-    {
-      ini.x:=x+w, ini.y:=y
-      , (y<ini.minY && ini.minY:=y)
-      , (y+h>ini.maxY && ini.maxY:=y+h)
-      return 1
-    }
-    if (!FindAll)
-      return
-  }
+    , "Ptr",&allpos, "int",ini.allpos_max)
 }
 
 GetBitsFromScreen(ByRef x:=0, ByRef y:=0, ByRef w:=0, ByRef h:=0
@@ -576,7 +594,7 @@ PicInfo(text)
   static info:=[]
   if !InStr(text,"$")
     return
-  key:=(r:=StrLen(text))<1000 ? text
+  key:=(r:=StrLen(text))<10000 ? text
     : DllCall("ntdll\RtlComputeCrc32", "uint",0
     , "Ptr",&text, "uint",r*(1+!!A_IsUnicode), "uint")
   if (info[key])
@@ -799,11 +817,12 @@ base64tobit(s)
   local
   Chars:="0123456789+/ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     . "abcdefghijklmnopqrstuvwxyz"
+  SetFormat, IntegerFast, d
   Loop Parse, Chars
   {
     s:=RegExReplace(s, "[" A_LoopField "]"
-    , StrReplace( ((i:=A_Index-1)>>5&1) . (i>>4&1)
-    . (i>>3&1) . (i>>2&1) . (i>>1&1) . (i&1), "0x"))
+    , ((i:=A_Index-1)>>5&1) . (i>>4&1)
+    . (i>>3&1) . (i>>2&1) . (i>>1&1) . (i&1))
   }
   return RegExReplace(RegExReplace(s,"[^01]+"),"10*$")
 }
@@ -816,11 +835,12 @@ bit2base64(s)
   s:=RegExReplace(s,".{6}","|$0")
   Chars:="0123456789+/ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     . "abcdefghijklmnopqrstuvwxyz"
+  SetFormat, IntegerFast, d
   Loop Parse, Chars
   {
-    s:=StrReplace(s, StrReplace("|" . ((i:=A_Index-1)>>5&1)
+    s:=StrReplace(s, "|" . ((i:=A_Index-1)>>5&1)
     . (i>>4&1) . (i>>3&1) . (i>>2&1) . (i>>1&1) . (i&1)
-    , "0x"), A_LoopField)
+    , A_LoopField)
   }
   return s
 }
@@ -935,7 +955,7 @@ GetColor(x, y, fmt:=1)
   return (fmt ? Format("0x{:06X}",c&0xFFFFFF) : c)
 }
 
-; 在最后一个屏幕截图中设置点的RGB颜色
+; 在“上一次的截屏”中设置点的RGB颜色
 
 SetColor(x, y, color:=0x000000)
 {
@@ -995,23 +1015,24 @@ Sort(ok, dy:=10)
   local
   if !IsObject(ok)
     return ok
-  ypos:=[]
+  s:="", n:=150000, ypos:=[]
   For k,v in ok
   {
     x:=v.x, y:=v.y, add:=1
-    For k2,v2 in ypos
-      if Abs(y-v2)<=dy
-      {
-        y:=v2, add:=0
-        Break
-      }
+    For k1,v1 in ypos
+    if Abs(y-v1)<=dy
+    {
+      y:=v1, add:=0
+      Break
+    }
     if (add)
       ypos.Push(y)
-    n:=(y*150000+x) "." k, s:=A_Index=1 ? n : s "-" n
+    s.=(y*n+x) "." k "|"
   }
-  Sort, s, N D-
+  s:=Trim(s,"|")
+  Sort, s, N D|
   ok2:=[]
-  Loop Parse, s, -
+  Loop Parse, s, |
     ok2.Push( ok[(StrSplit(A_LoopField,".")[2])] )
   return ok2
 }
@@ -1023,11 +1044,39 @@ Sort2(ok, px, py)
   local
   if !IsObject(ok)
     return ok
+  s:=""
   For k,v in ok
-    n:=((v.x-px)**2+(v.y-py)**2) "." k, s:=A_Index=1 ? n : s "-" n
-  Sort, s, N D-
+    s.=((v.x-px)**2+(v.y-py)**2) "." k "|"
+  s:=Trim(s,"|")
+  Sort, s, N D|
   ok2:=[]
-  Loop Parse, s, -
+  Loop Parse, s, |
+    ok2.Push( ok[(StrSplit(A_LoopField,".")[2])] )
+  return ok2
+}
+
+; 按指定的查找方向，排序FindText()的结果，返回排序后的数组
+
+Sort3(ok, dir:=1)
+{
+  local
+  if !IsObject(ok)
+    return ok
+  s:="", n:=150000
+  For k,v in ok
+    x:=v[1], y:=v[2]
+    , s.=(dir=1 ? y*n+x
+    : dir=2 ? y*n-x
+    : dir=3 ? -y*n+x
+    : dir=4 ? -y*n-x
+    : dir=5 ? x*n+y
+    : dir=6 ? x*n-y
+    : dir=7 ? -x*n+y
+    : dir=8 ? -x*n-y : y*n+x) "." k "|"
+  s:=Trim(s,"|")
+  Sort, s, N D|
+  ok2:=[]
+  Loop Parse, s, |
     ok2.Push( ok[(StrSplit(A_LoopField,".")[2])] )
   return ok2
 }
@@ -1042,25 +1091,44 @@ MouseTip(x:="", y:="", w:=10, h:=10, d:=4)
     VarSetCapacity(pt,16,0), DllCall("GetCursorPos","ptr",&pt)
     x:=NumGet(pt,0,"uint"), y:=NumGet(pt,4,"uint")
   }
-  x:=Round(x-w-d), y:=Round(y-h-d), w:=(2*w+1)+2*d, h:=(2*h+1)+2*d
-  ;-------------------------
-  Gui, _MouseTip_: +AlwaysOnTop -Caption +ToolWindow +Hwndmyid -DPIScale
-  Gui, _MouseTip_: Show, Hide w%w% h%h%
-  ;-------------------------
-  DetectHiddenWindows, % (dhw:=A_DetectHiddenWindows)?"On":"On"
-  i:=w-d, j:=h-d
-  s:="0-0 " (w "-0 ") (w "-" h) (" 0-" h) " 0-0  "
-    . (d "-" d) " " (i "-" d) " " (i "-" j) " " (d "-" j) " " (d "-" d)
-  WinSet, Region, %s%, ahk_id %myid%
-  DetectHiddenWindows, %dhw%
-  ;-------------------------
-  Gui, _MouseTip_: Show, NA x%x% y%y%
   Loop 4
   {
-    Gui, _MouseTip_: Color, % A_Index & 1 ? "Red" : "Blue"
+    this.RangeTip(x-w, y-h, 2*w+1, 2*h+1, (A_Index & 1 ? "Red":"Blue"), d)
     Sleep, 500
   }
-  Gui, _MouseTip_: Destroy
+  this.RangeTip()
+}
+
+; 显示范围的边框，类似于 ToolTip
+
+RangeTip(x:="", y:="", w:="", h:="", color:="Red", d:=2)
+{
+  local
+  static id:=0
+  if (x="")
+  {
+    id:=0
+    Loop 4
+      Gui, Range_%A_Index%: Destroy
+    return
+  }
+  if (!id)
+  {
+    Loop 4
+      Gui, Range_%A_Index%: +Hwndid +AlwaysOnTop -Caption +ToolWindow
+        -DPIScale +E0x08000000
+  }
+  x:=Floor(x), y:=Floor(y), w:=Floor(w), h:=Floor(h), d:=Floor(d)
+  Loop 4
+  {
+    i:=A_Index
+    , x1:=(i=2 ? x+w : x-d)
+    , y1:=(i=3 ? y+h : y-d)
+    , w1:=(i=1 or i=3 ? w+2*d : d)
+    , h1:=(i=2 or i=4 ? h+2*d : d)
+    Gui, Range_%i%: Color, %color%
+    Gui, Range_%i%: Show, NA x%x1% y%y1% w%w1% h%h1%
+  }
 }
 
 ; 快速获取屏幕图像的搜索文本数据
@@ -1220,8 +1288,9 @@ ShowScreenShot(x1:=0, y1:=0, x2:=0, y2:=0, ScreenShot:=1)
     Gui, FindText_Screen: Margin, 0, 0
     Gui, FindText_Screen: Add, Pic, HwndhPic w%w% h%h%
     Gui, FindText_Screen: Show, NA x%zx% y%zy% w%w% h%h%, Show Pic
+    oldw:=w, oldh:=h
   }
-  if (oldw!=w or oldh!=h)
+  else if (oldw!=w or oldh!=h)
   {
     oldw:=w, oldh:=h
     GuiControl, FindText_Screen: Move, %hPic%, w%w% h%h%
@@ -1251,7 +1320,7 @@ WaitChange(time:=-1, x1:=0, y1:=0, x2:=0, y2:=0)
   timeout:=A_TickCount+Round(time*1000)
   Loop
   {
-    if this.GetPicHash(x1, y1, x2, y2, 1)!=hash
+    if (hash!=this.GetPicHash(x1, y1, x2, y2, 1))
       return 1
     if (time>=0 and A_TickCount>=timeout)
       Break
@@ -1355,12 +1424,13 @@ Class Thread
   __Delete()
   {
     DetectHiddenWindows, On
+    WinWait, % "ahk_pid " this.pid,, 0.5
     IfWinExist, % "ahk_class AutoHotkey ahk_pid " this.pid
     {
       PostMessage, 0x111, 65307
       WinWaitClose,,, 0.5
-      IfEqual, ErrorLevel, 1, Process, Close, % this.pid
     }
+    Process, Close, % this.pid
   }
   Exec(s, Ahk:="", args:="")
   {
@@ -1448,7 +1518,7 @@ ToolTip(s:="", x:="", y:="", num:=1, arg:="")
   Gui, %f%: Show, NA x%x% y%y%
 }
 
-; 调试查看对象的值
+; FindText().ObjView() 查看对象的值用于调试
 
 ObjView(obj, keyname="")
 {
@@ -1456,17 +1526,20 @@ ObjView(obj, keyname="")
   {
     s:=""
     For k,v in obj
-      s.=this.ObjView(v, keyname "[" ([k].GetCapacity(1)?"""" k """":k) "]")
+      s.=this.ObjView(v, keyname "[" (StrLen(k)>1000
+      || [k].GetCapacity(1) ? """" k """":k) "]")
   }
   else
-    s:=keyname ": " ([obj].GetCapacity(1) ? """" obj """":obj) "`n"
+    s:=keyname ": " (StrLen(obj)>1000
+    || [obj].GetCapacity(1) ? """" obj """":obj) "`n"
   if (keyname!="")
     return s
   ;------------------
   Gui, Gui_DeBug_Gui: Destroy
   Gui, Gui_DeBug_Gui: +AlwaysOnTop +Hwndid
   Gui, Gui_DeBug_Gui: Add, Button, y270 w350 gCancel Default, OK
-  Gui, Gui_DeBug_Gui: Add, Edit, xp y10 w350 h250 -WantReturn, %s%
+  Gui, Gui_DeBug_Gui: Add, Edit, xp y10 w350 h250 -Wrap -WantReturn
+  GuiControl, Gui_DeBug_Gui:, Edit1, %s%
   Gui, Gui_DeBug_Gui: Show,, Debug view object values
   DetectHiddenWindows, Off
   WinWaitClose, ahk_id %id%
@@ -1988,7 +2061,7 @@ Gui(cmd, arg1:="")
     Hotkey, IfWinExist, FindText_HotkeyIf
     For k,v in StrSplit("RButton|Up|Down|Left|Right","|")
     {
-      if GetKeyState(%v%)
+      if GetKeyState(v)
         Send {%v% Up}
       Hotkey, *%v%, %Gui_Off%, On UseErrorLevel
     }
@@ -2012,7 +2085,7 @@ Gui(cmd, arg1:="")
         (w>1 && w--), hk:=""
       else if GetKeyState("Right","P") || (hk="Right")
         w++, hk:=""
-      %Gui_%("Mini_Show")
+      this.RangeTip(x-w,y-h,2*w+1,2*h+1,(A_MSec<500?"Red":"Blue"))
       if (oldx=x and oldy=y)
         Continue
       oldx:=x, oldy:=y
@@ -2034,7 +2107,7 @@ Gui(cmd, arg1:="")
         (w>1 && w--), hk:=""
       else if GetKeyState("Right","P") || (hk="Right")
         w++, hk:=""
-      %Gui_%("Mini_Show")
+      this.RangeTip(x-w,y-h,2*w+1,2*h+1,(A_MSec<500?"Red":"Blue"))
       MouseGetPos, x1, y1
       if (oldx=x1 and oldy=y1)
         Continue
@@ -2047,7 +2120,7 @@ Gui(cmd, arg1:="")
       Sleep, 50
     ToolTip
     Critical
-    %Gui_%("Mini_Hide")
+    this.RangeTip()
     For k,v in StrSplit("RButton|Up|Down|Left|Right","|")
       Hotkey, *%v%, %Gui_Off%, Off UseErrorLevel
     Hotkey, IfWinExist
@@ -2216,35 +2289,6 @@ Gui(cmd, arg1:="")
   Case "OpenDir":
     Run, % A_Temp "\Ahk_ScreenShot\"
     return
-  Case "Mini_Show":
-    Gui, FindText_Mini_4: +LastFoundExist
-    IfWinNotExist
-    {
-      Loop 4
-      {
-        i:=A_Index
-        Gui, FindText_Mini_%i%: +AlwaysOnTop -Caption +ToolWindow -DPIScale +E0x08000000
-        Gui, FindText_Mini_%i%: Show, Hide, Mini
-      }
-    }
-    d:=2, w:=w<0 ? 0:w, h:=h<0 ? 0:h, c:=A_MSec<500 ? "Red":"Blue"
-    Loop 4
-    {
-      i:=A_Index
-      x1:=Floor(i=3 ? x+w+1 : x-w-d)
-      y1:=Floor(i=4 ? y+h+1 : y-h-d)
-      w1:=Floor(i=1 or i=3 ? d : 2*(w+d)+1)
-      h1:=Floor(i=2 or i=4 ? d : 2*(h+d)+1)
-      Gui, FindText_Mini_%i%: Color, %c%
-      Gui, FindText_Mini_%i%: Show, NA x%x1% y%y1% w%w1% h%h1%
-    }
-    return
-  Case "Mini_Hide":
-    Gui, FindText_Mini_4: +Hwndid
-    Loop 4
-      Gui, FindText_Mini_%A_Index%: Destroy
-    WinWaitClose, ahk_id %id%,, 3
-    return
   Case "getcors":
     this.xywh2xywh(px-ww,py-hh,2*ww+1,2*hh+1,x,y,w,h)
     if (w<1 or h<1)
@@ -2302,16 +2346,16 @@ Gui(cmd, arg1:="")
     }
     Until (hk!="") or (State!=%Gui_%("State",1))
     hk:="", State:=%Gui_%("State",1)
-    px:=x, py:=y, oldx:=oldy:=""
+    x1:=x, y1:=y, oldx:=oldy:=""
     Loop
     {
       Sleep, 50
-      MouseGetPos, x, y
-      w:=Abs(px-x)//2, h:=Abs(py-y)//2, x:=(px+x)//2, y:=(py+y)//2
-      %Gui_%("Mini_Show")
-      if (oldx=x and oldy=y)
+      MouseGetPos, x2, y2
+      x:=Min(x1,x2), y:=Min(y1,y2), w:=Abs(x1-x2), h:=Abs(y1-y2)
+      this.RangeTip(x, y, w, h, (A_MSec<500 ? "Red":"Blue"))
+      if (oldx=x2 and oldy=y2)
         Continue
-      oldx:=x, oldy:=y
+      oldx:=x2, oldy:=y2
       ToolTip, %r%
     }
     Until (hk!="") or (State!=%Gui_%("State",1))
@@ -2320,13 +2364,13 @@ Gui(cmd, arg1:="")
       Sleep, 50
     ToolTip
     Critical
-    %Gui_%("Mini_Hide")
+    this.RangeTip()
     Hotkey, *LButton, %Gui_Off%, Off UseErrorLevel
     Hotkey, *LButton Up, %Gui_Off%, Off UseErrorLevel
     Hotkey, IfWinExist
     Gui, FindText_HotkeyIf: Destroy
     Gui, FindText_GetRange: Destroy
-    Clipboard:=p:=(x-w) ", " (y-h) ", " (x+w) ", " (y+h)
+    Clipboard:=p:=x ", " y ", " (x+w-1) ", " (y+h-1)
     if (!show_gui)
       return StrSplit(p, ",", " ")
     ;---------------------
@@ -2360,7 +2404,7 @@ Gui(cmd, arg1:="")
       DetectHiddenWindows, On
       WinWait, % "ahk_class AutoHotkey ahk_pid " Thread.pid,, 3
       if (!ErrorLevel)
-        WinWaitClose,,, 30
+        WinWaitClose,,, 8
       Thread:=""  ; kill the Thread
     }
     else
@@ -2427,6 +2471,8 @@ Gui(cmd, arg1:="")
       GuiControlGet, r,, AddFunc
       if (r != 1)
         s:=RegExReplace(s,"\n\K[\s;=]+ Copy The[\s\S]*")
+        , s:=RegExReplace(s, "\n; ok:=FindText[\s\S]*")
+        , s:=SubStr(s, (s~="\n[^\n]*?Text"))
     }
     Clipboard:=RegExReplace(s,"\R","`r`n")
     GuiControl, Focus, scr
@@ -2931,13 +2977,13 @@ Gui(cmd, arg1:="")
     . "`n{"
     . "`n  `; FindText().Click(" . "X, Y, ""L"")"
     . "`n}`n"
-    . "`n`; ok:=FindText(X:=""wait"", Y:=3, 0,0,0,0,0,0,Text)    `; 等待3秒等图像出现"
-    . "`n`; ok:=FindText(X:=""wait0"", Y:=-1, 0,0,0,0,0,0,Text)  `; 无限等待等图像消失`n"
-    . "`nMsgBox, 4096, Tip, `% """ r[1] ":``t"" Round(ok.Length())"
+    . "`n`; ok:=FindText(X:=""wait"", Y:=3, 0,0,0,0,0,0,Text)    `; " r[7]
+    . "`n`; ok:=FindText(X:=""wait0"", Y:=-1, 0,0,0,0,0,0,Text)  `; " r[8]
+    . "`n`nMsgBox, 4096, Tip, `% """ r[1] ":``t"" Round(ok.Length())"
     . "`n  . ""``n``n" r[2] ":``t"" (A_TickCount-t1) "" " r[3] """"
     . "`n  . ""``n``n" r[4] ":``t"" X "", "" Y"
     . "`n  . ""``n``n" r[5] ":``t<"" (Comment:=ok[1].id) "">""`n"
-    . "`nfor i,v in ok  `; ok 值可以这样获取 ok:=FindText().ok"
+    . "`nfor i,v in ok  `; ok " r[6] " ok:=FindText().ok"
     . "`n  if (i<=2)"
     . "`n    FindText().MouseTip(ok[i].x, ok[i].y)`n"
     Event:=cmd, Result:=s
@@ -3073,7 +3119,7 @@ CutD2      = 下删 = 裁剪下面编辑框中文字的下边缘
 Update     = 更新 = 更新下面编辑框中文字到代码行中
 GetRange   = 获取屏幕范围 = 获取屏幕范围到剪贴板并替换代码中的范围
 GetOffset  = 获取相对坐标 = 获取相对图像中心的坐标并替换代码中的坐标
-GetClipOffset  = 获取相对坐标2 = 获取相对左边编辑框的坐标，结果复制到剪贴板
+GetClipOffset  = 获取相对坐标2 = 获取相对左边编辑框的坐标
 Capture    = 抓图 = 开始屏幕抓图
 CaptureS   = 截屏抓图 = 先恢复上一次的截屏到屏幕再开始抓图
 Test       = 测试 = 测试生成的代码是否可以找字成功
@@ -3141,7 +3187,7 @@ s4  = 抓图生成字库及找字代码
 s5  = 位置|先点击右键一次\n把鼠标移开\n再点击右键一次
 s6  = 解绑窗口使用
 s7  = 请用左键拖动范围\n坐标复制到剪贴板
-s8  = 找到|时间|毫秒|位置|结果|成功|失败
+s8  = 找到|时间|毫秒|位置|结果|值可以这样获取|等待3秒等图像出现|无限等待等图像消失
 s9  = 截屏成功
 s10 = 鼠标位置|穿透显示绑定窗口\n点击右键完成抓图
 s11 = 请先设定灰度差值
