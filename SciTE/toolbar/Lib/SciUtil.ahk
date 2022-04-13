@@ -4,116 +4,232 @@
 
 SciUtil_GetCP(hSci)
 {
-	; Retrieve active codepage. SCI_GETCODEPAGE
+	; Retrieve active codepage. SCI_GETCODEPAGE = 2137
 	SendMessage, 2137, 0, 0,, ahk_id %hSci%
 	return ErrorLevel
 }
 
 SciUtil_GetCurPos(hSci)
 {
-	; Get the current position. SCI_GETCURRENTPOS
+	; Get the current position. SCI_GETCURRENTPOS = 2008
 	SendMessage, 2008, 0, 0,, ahk_id %hSci%
 	return ErrorLevel
 }
 
 SciUtil_SetCurPos(hSci, pos)
 {
-	; Set the current position. SCI_GOTOPOS
+	; Set the current position. SCI_GOTOPOS = 2025
 	SendMessage, 2025, pos, 0,, ahk_id %hSci%
-	; Ensure the caret is visible. SCI_SCROLLCARET
-	;SendMessage, 2169, 0, 0,, ahk_id %hSci%
+	; Ensure the caret is visible. SCI_SCROLLCARET = 2169
+	; SendMessage, 2169, 0, 0,, ahk_id %hSci%
 }
 
-SciUtil_GetText(hSci)
-{	
-	; Retrieve text length. SCI_GETLENGTH
-	SendMessage, 2006, 0, 0,, ahk_id %hSci%
-	iLength := ErrorLevel
+SciUtil_GetStyle(hSci, pos)
+{
+	; pos 为空则使用当前位置
+	if (pos="")
+		pos := SciUtil_GetCurPos(hSci)
 	
-	; Open remote buffer (add 1 for 0 at the end of the string)
-	RemoteBuf_Open(hBuf, hSci, iLength + 1)
-	
-	; Fill buffer with text. SCI_GETTEXT
-	SendMessage, 2182, iLength + 1, RemoteBuf_Get(hBuf),, ahk_id %hSci%
-	
-	; Read buffer
-	VarSetCapacity(sText, iLength)
-	RemoteBuf_Read(hBuf, sText, iLength + 1)
-	
-	; We're done with the remote buffer
-	RemoteBuf_Close(hBuf)
-	
-	return StrGet(&sText, "CP" SciUtil_GetCP(hSci))
+	; SCI_GETSTYLEAT = 2010
+	SendMessage, 2010, pos, 0,, ahk_id %hSci%
+	return, ErrorLevel
 }
 
 SciUtil_GetSelection(hSci)
-{	
-	;Get length. SCI_GETSELTEXT
+{
+	; SCI_GETSELTEXT = 2161
 	SendMessage, 2161, 0, 0,, ahk_id %hSci%
-	iLength := ErrorLevel
+	; len 已包含零终止符长度
+	len := ErrorLevel
 	
-	;Check if the line is empty
-	if iLength = 1
+	; Check if the selection is empty
+	if (len<=1)
 		return
 	
 	; Open remote buffer
-	RemoteBuf_Open(hBuf, hSci, iLength)
+	mem.open(hSci, len)
 	
-	; Fill buffer. SCI_GETSELTEXT
-	SendMessage, 2161, 0, RemoteBuf_Get(hBuf),, ahk_id %hSci%
-	
-	; Prep var
-	VarSetCapacity(sText, iLength)
-	RemoteBuf_Read(hBuf, sText, iLength)
-	
-	; Done
-	RemoteBuf_Close(hBuf)
-
-	return StrGet(&sText, "CP" SciUtil_GetCP(hSci))
-}
-
-SciUtil_GetLine(hSci, iLine)
-{
-	; Retrieve line length. SCI_LINELENGTH
-	SendMessage, 2350, iLine, 0,, ahk_id %hSci%
-	iLength := ErrorLevel
-	
-	; Open remote buffer (add 1 for 0 at the end of the string)
-	RemoteBuf_Open(hBuf, hSci, iLength + 1)
-	
-	; Fill buffer with text. SCI_GETLINE
-	SendMessage, 2153, iLine, RemoteBuf_Get(hBuf),, ahk_id %hSci%
+	; SCI_GETSELTEXT = 2161
+	SendMessage, 2161, 0, mem.baseAddress,, ahk_id %hSci%
 	
 	; Read buffer
-	VarSetCapacity(sText, iLength)
-	RemoteBuf_Read(hBuf, sText, iLength + 1)
+	text := mem.read()
+	mem.close()
 	
-	; We're done with the remote buffer
-	RemoteBuf_Close(hBuf)
-	
-	; Trim off ending characters & return
-	return Trim(StrGet(&sText, "CP" SciUtil_GetCP(hSci)), "`r`n")
+	; return
+	return, StrGet(&text, "CP" SciUtil_GetCP(hSci))
 }
 
-SciUtil_InsertText(hSci, sText, pos := -1)
+SciUtil_GetText(hSci)
 {
-	; Prepare a local buffer for conversion
-	sNewLen := StrPut(sText, "CP" (cp := SciUtil_GetCP(hSci)))
-	VarSetCapacity(sTextCnv, sNewLen)
+	; Retrieve text length. SCI_GETLENGTH = 2006
+	SendMessage, 2006, 0, 0,, ahk_id %hSci%
+	len := ErrorLevel + 1
 	
 	; Open remote buffer (add 1 for 0 at the end of the string)
-	RemoteBuf_Open(hBuf, hSci, sNewLen + 1)
+	mem.open(hSci, len)
 	
-	; Convert the text to the destination codepage
-	StrPut(sText, &sTextCnv, "CP" cp)
-	RemoteBuf_Write(hBuf, sTextCnv, sNewLen + 1)
+	; Fill buffer with text. SCI_GETTEXT = 2182
+	SendMessage, 2182, len, mem.baseAddress,, ahk_id %hSci%
 	
-	; Call Scintilla to insert the text. SCI_INSERTTEXT
-	SendMessage, 2003, pos, RemoteBuf_Get(hBuf),, ahk_id %hSci%
+	; Read buffer
+	text := mem.read()
+	mem.close()
 	
-	; Move the caret to the end of the insertion
-	SciUtil_SetCurPos(hSci, SciUtil_GetCurPos(hSci) + sNewLen)
+	return, StrGet(&text, "CP" SciUtil_GetCP(hSci))
+}
+
+SciUtil_GetTextRange(hSci, startPos, endPos)
+{
+	; mem 是接收字符串的
+	len := Abs(endPos - startPos) + 1
+	mem.open(hSci, len)
+	
+	; textRange 是结构体
+	VarSetCapacity(textRange, 8 + A_PtrSize, 0)
+	, NumPut(startPos,        textRange, 0, "Int")
+	, NumPut(endPos,          textRange, 4, "Int")
+	, NumPut(mem.baseAddress, textRange, 8, "Ptr")
+	
+	; 结构体写入 mem2
+	mem2.open(hSci, 8 + A_PtrSize)
+	mem2.write(textRange)
+	
+	; 取文字， SCI_GETTEXTRANGE = 2162
+	SendMessage, 2162, 0, mem2.baseAddress,, ahk_id %hSci%
+	
+	; 释放 mem2
+	mem2.close()
+	
+	; 读出文字，释放 mem
+	text := mem.read()
+	mem.close()
+	
+	return, StrGet(&text, "CP" SciUtil_GetCP(hSci))
+}
+
+SciUtil_GetWord(hSci)
+{
+	currentPos := SciUtil_GetCurPos(hSci)
+	
+	; SCI_WORDSTARTPOSITION = 2266
+	SendMessage, 2266, currentPos, true, , ahk_id %hSci%
+	startPos := ErrorLevel
+	
+	; SCI_WORDENDPOSITION = 2267
+	SendMessage, 2267, currentPos, true, , ahk_id %hSci%
+	endPos := ErrorLevel
+	
+	return, SciUtil_GetTextRange(hSci, startPos, endPos)
+}
+
+SciUtil_GetLine(hSci, lineNumber)
+{
+	; lineNumber 为空则使用当前行
+	if (lineNumber="")
+	{
+		currentPos := SciUtil_GetCurPos(hSci)
+		; SCI_LINEFROMPOSITION = 2166
+		SendMessage, 2166, currentPos, 0,, ahk_id %hSci%
+		lineNumber := ErrorLevel
+	}
+	
+	; SCI_LINELENGTH = 2350
+	SendMessage, 2350, lineNumber, 0,, ahk_id %hSci%
+	; 为零终止符 +1 长度
+	len := ErrorLevel + 1
+	
+	; Open remote buffer
+	mem.open(hSci, len)
+	
+	; SCI_GETLINE = 2153
+	SendMessage, 2153, lineNumber, mem.baseAddress,, ahk_id %hSci%
+	
+	; Read buffer
+	text := mem.read()
+	mem.close()
+	
+	; Trim off ending characters & return
+	return, Trim(StrGet(&text, "CP" SciUtil_GetCP(hSci)), "`r`n")
+}
+
+SciUtil_GetHome(hSci)
+{
+	currentPos := SciUtil_GetCurPos(hSci)
+	
+	; SCI_LINEFROMPOSITION = 2166
+	SendMessage, 2166, currentPos, 0,, ahk_id %hSci%
+	currentLineNumber := ErrorLevel
+	; SCI_POSITIONFROMLINE = 2167
+	SendMessage, 2167, currentLineNumber, 0,, ahk_id %hSci%
+	lineStartPos := ErrorLevel
+	
+	return, SciUtil_GetTextRange(hSci, lineStartPos, currentPos)
+}
+
+SciUtil_GetEnd(hSci)
+{
+	currentPos := SciUtil_GetCurPos(hSci)
+	
+	; SCI_LINEFROMPOSITION = 2166
+	SendMessage, 2166, currentPos, 0,, ahk_id %hSci%
+	currentLineNumber := ErrorLevel
+	; SCI_GETLINEENDPOSITION = 2136
+	SendMessage, 2136, currentLineNumber, 0,, ahk_id %hSci%
+	lineEndPos := ErrorLevel
+	
+	return, SciUtil_GetTextRange(hSci, currentPos, lineEndPos)
+}
+
+SciUtil_DeleteEnd(hSci)
+{
+	currentPos := SciUtil_GetCurPos(hSci)
+	
+	; SCI_LINEFROMPOSITION = 2166
+	SendMessage, 2166, currentPos, 0,, ahk_id %hSci%
+	currentLineNumber := ErrorLevel
+	; SCI_GETLINEENDPOSITION = 2136
+	SendMessage, 2136, currentLineNumber, 0,, ahk_id %hSci%
+	lineEndPos := ErrorLevel
+	
+	; SCI_DELETERANGE = 2645
+	SendMessage, 2645, currentPos, Abs(lineEndPos - currentPos),, ahk_id %hSci%
+}
+
+SciUtil_InsertText(hSci, text, pos)
+{
+	; len 已包含末尾零终止符的长度（写入时以零终止符作为终止判断依据）
+	len := StrPutVar(text, textConverted, "CP" SciUtil_GetCP(hSci))
+	
+	; 在 scite.exe 的内存中写入数据
+	mem.open(hSci, len)
+	mem.write(textConverted)
+	
+	; SCI_INSERTTEXT = 2003
+	SendMessage, 2003, pos, mem.baseAddress,, ahk_id %hSci%
+	
+	; 移动光标，注意需要减去1的零终止符的长度
+	pos := (pos=-1) ? SciUtil_GetCurPos(hSci) : pos
+	SciUtil_SetCurPos(hSci, pos + len - 1)
 	
 	; Done
-	RemoteBuf_Close(hBuf)
+	mem.close()
 }
+
+SciUtil_ReplaceSel(hSci, text)
+{
+	; len 已包含末尾零终止符的长度（写入时以零终止符作为终止判断依据）
+	len := StrPutVar(text, textConverted, "CP" SciUtil_GetCP(hSci))
+	
+	; 在 scite.exe 的内存中写入数据
+	mem.open(hSci, len)
+	mem.write(textConverted)
+	
+	; SCI_REPLACESEL = 2170
+	SendMessage, 2170, 0, mem.baseAddress,, ahk_id %hSci%
+	
+	; Done
+	mem.close()
+}
+
+#Include %A_LineFile%\..\mem.ahk

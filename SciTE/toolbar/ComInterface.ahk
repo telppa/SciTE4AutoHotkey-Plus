@@ -11,6 +11,19 @@
 
 CoI_Methods =
 (Join, Com
+; New
+GetCurPos
+SetCurPos
+GetStyle
+GetSelection & Selection = CoI_GetSelection
+GetWord
+GetLine
+GetHome
+GetEnd
+DeleteEnd
+ReplaceSel
+Msg
+
 ; Meta
 GetVersion & Version = CoI_GetVersion
 GetSciTEHandle & SciTEHandle = CoI_GetSciTEHandle
@@ -29,7 +42,6 @@ SwitchToTab
 
 ; Text
 GetDocument & Document = CoI_GetDocument
-GetSelection & Selection = CoI_GetSelection
 InsertText
 Output
 
@@ -44,22 +56,105 @@ SendDirectorMsgRetArray
 ResolveProp
 )
 
+CoI_GetCurPos(this)
+{
+	global scintillahwnd
+	
+	return SciUtil_GetCurPos(scintillahwnd)
+}
+
+CoI_SetCurPos(this, pos)
+{
+	global scintillahwnd
+	
+	return SciUtil_SetCurPos(scintillahwnd, pos)
+}
+
+CoI_GetStyle(this, pos := "")
+{
+	global scintillahwnd
+	
+	return SciUtil_GetStyle(scintillahwnd, pos)
+}
+
+CoI_GetSelection(this)
+{
+	global scintillahwnd
+	
+	return SciUtil_GetSelection(scintillahwnd)
+}
+
+CoI_GetWord(this)
+{
+	global scintillahwnd
+	
+	return, SciUtil_GetWord(scintillahwnd)
+}
+
+CoI_GetLine(this, lineNumber := "")
+{
+	global scintillahwnd
+	
+	return, SciUtil_GetLine(scintillahwnd, lineNumber)
+}
+
+CoI_GetHome(this)
+{
+	global scintillahwnd
+	
+	return, SciUtil_GetHome(scintillahwnd)
+}
+
+CoI_GetEnd(this)
+{
+	global scintillahwnd
+	
+	return, SciUtil_GetEnd(scintillahwnd)
+}
+
+CoI_DeleteEnd(this)
+{
+	global scintillahwnd
+	
+	return SciUtil_DeleteEnd(scintillahwnd)
+}
+
+CoI_ReplaceSel(this, text)
+{
+	global scintillahwnd
+
+	SciUtil_ReplaceSel(scintillahwnd, text)
+}
+
+CoI_Msg(this, msg, wParam := 0, lParam := 0)
+{
+	global scintillahwnd
+	
+	SendMessage, msg, wParam, lParam, , ahk_id %scintillahwnd%
+	return, ErrorLevel
+}
+
 CoI_Message(this, msg, wParam := 0, lParam := 0)
 {
 	global _msg, _wParam, _lParam, scitehwnd, hwndgui, ATM_OFFSET
+	
 	if (_msg := msg+0) = "" || (_wParam := wParam+0) = "" || (_lParam := lParam+0) = ""
 		return
+	
 	if (msg >= ATM_OFFSET)
 	{
+		; 大于 0x1000 的消息将发给 toolbar
 		; Send message in a different thread in order to not crap out whilst exiting
 		Critical
 		SetTimer, SelfMessage, -10
-	}else
+	}
+	else
 		SendMessage, _msg, _wParam, _lParam,, ahk_id %scitehwnd%
+	
 	return ErrorLevel
 	
 	SelfMessage:
-	PostMessage, _msg, _wParam, _lParam,, ahk_id %hwndgui%
+		PostMessage, _msg, _wParam, _lParam,, ahk_id %hwndgui%
 	return
 }
 
@@ -162,17 +257,11 @@ CoI_GetDocument(this)
 	return SciUtil_GetText(scintillahwnd)
 }
 
-CoI_InsertText(this, text, pos=-1)
+CoI_InsertText(this, text, pos := -1)
 {
 	global scintillahwnd
 	if !IsObject(text) && text && !IsObject(pos) && (pos+0) >= -1
 		SciUtil_InsertText(scintillahwnd, text, pos)
-}
-
-CoI_GetSelection(this)
-{
-	global scintillahwnd
-	return SciUtil_GetSelection(scintillahwnd)
 }
 
 CoI_Output(this, text)
@@ -286,6 +375,7 @@ InitComInterface()
 {
 	global CLSID_SciTE4AHK, APPID_SciTE4AHK, oSciTE, hSciTE_Remote, CoI_Methods, IsPortable
 	
+	; 便携版注册 clsid 和 appid ，并在退出时清理注册信息
 	if IsPortable
 	{
 		; Register our CLSID and APPID
@@ -293,6 +383,7 @@ InitComInterface()
 		RegisterIDs(CLSID_SciTE4AHK, APPID_SciTE4AHK)
 	}
 	
+	; 根据本文件最前面的那个变量 CoI_Methods 里的值，注册接口
 	; Create an IDispatch interface
 	Loop, Parse, CoI_Methods, `,
 	{

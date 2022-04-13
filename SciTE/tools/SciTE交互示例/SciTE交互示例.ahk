@@ -1,7 +1,5 @@
 ﻿; SciTE 交互示例
 ; 因为是调用 SciTE 的 COM 接口，所以显然运行本脚本需要 “SciTE.exe” 处于运行状态
-; 同时，SciTE 的内置变量 “LocalAHK” 必须指向32位版本的 AHK ，否则运行本脚本时报错（此问题已解决，在此说明仅作提示用）
-; 最后，运行本脚本的 AHK 版本最好也是32位，否则 “自动完成” 功能无法正常演示
 Run, ..\..\SciTE.exe
 MsgBox,  262208, , 等待2秒, 2		; 等2秒以便 COM 接口加载完成
 
@@ -20,7 +18,7 @@ MsgBox, % "获取 SciTE 用户目录`n`n" oSciTE.UserDir
 MsgBox, % "获取 SciTE 安装目录`n`n" oSciTE.SciTEDir
 
 ; 获取 platform
-MsgBox, % "获取当前 platform`n`n" oSciTE.ActivePlatform()
+MsgBox, % "获取当前 platform`n`n" oSciTE.ActivePlatform
 
 ; 设置 platform
 ; 就是工具栏上 “运行” 按钮左边的那个按钮的功能
@@ -39,8 +37,41 @@ MsgBox, % "获取当前文件路径`n`n" oSciTE.CurrentFile
 ; 获取当前文件内容
 MsgBox, % "获取当前文件内容`n`n" oSciTE.Document
 
-; 获取当前选中内容
-MsgBox, % "获取当前选中内容`n`n" oSciTE.Selection
+; 获取光标位置
+MsgBox, % "获取光标位置`n`n" oSciTE.GetCurPos
+
+; 设置光标位置
+MsgBox, % "设置光标位置`n`n" oSciTE.SetCurPos(5)
+
+; 获取光标处样式
+MsgBox, % "获取光标处样式`n`n" oSciTE.GetStyle
+
+; 获取指定位置样式
+MsgBox, % "获取指定位置样式`n`n" oSciTE.GetStyle(0)
+
+; 获取选中内容
+MsgBox, % "获取选中内容`n`n" oSciTE.Selection
+
+; 获取光标处单词
+MsgBox, % "获取光标处单词`n`n" oSciTE.GetWord
+
+; 获取当前行
+MsgBox, % "获取当前行`n`n" oSciTE.GetLine
+
+; 获取指定行，首行是0，以此类推
+MsgBox, % "获取指定行`n`n" oSciTE.GetLine(0)
+
+; 获取行首到光标处内容
+MsgBox, % "获取行首到光标处内容`n`n" oSciTE.GetHome
+
+; 获取光标处到行尾内容
+MsgBox, % "获取光标处到行尾内容`n`n" oSciTE.GetEnd
+
+; 删除光标处到行尾内容
+MsgBox, % "删除光标处到行尾内容`n`n" oSciTE.DeleteEnd()
+
+; 替换选中内容
+MsgBox, % "替换选中内容`n`n" oSciTE.ReplaceSel("选中内容被替换了")
 
 ; 打开一个文件
 oSciTE.OpenFile(filename)
@@ -67,56 +98,50 @@ OutputText:="output only support english"
 oSciTE.Output(OutputText)
 MsgBox, 在输出框显示文本
 
-; 切换标签
-tabidx:=0		; 标签编号从0开始
+; 切换标签，标签编号从0开始
+tabidx:=0
 oSciTE.SwitchToTab(tabidx)
 MsgBox, 切换标签
 
 ; 获取 Scintilla 句柄，不是 SciTE 的
 hSci:=获取Scintilla句柄()
-MsgBox, % "获取 Scintilla 句柄，不是 SciTE 的`n（此功能必须使用32位版本 AHK 运行本脚本才能正常）`n`n" hSci
+MsgBox, % "获取 Scintilla 句柄，不是 SciTE 的`n`n" hSci
 获取Scintilla句柄()
 {
-	oSciTE := ComObjActive("SciTE4AHK.Application")
-	hEditor:=oSciTE.SciTEHandle
+	oSciTE  := ComObjActive("SciTE4AHK.Application")
+	hEditor := oSciTE.SciTEHandle
 	; COM 得到的句柄是 SciTE 的，而需要的是 Scintilla 的
 	; Get handle to focused control
 	ControlGetFocus, cSci, ahk_id %hEditor%
 	; Check if it fits the class name
-	If InStr(cSci, "Scintilla")
+	if InStr(cSci, "Scintilla")
 	{
 		ControlGet, hSci, Hwnd,, %cSci%, ahk_id %hEditor%
-		Return, hSci
+		return, hSci
 	}
-	Else
-		Return, 0
+	else
+		return, 0
 }
 
-; 此功能必须用32位 AHK 运行才能正常显示
 ; 显示出一个自动完成框（需引用两个文件）
 ; 单词用空格分隔，例如 “abc bcd” 会显示成 “abc`r`nbcd”
-MsgBox, 显示出一个自动完成框`n（此功能必须使用32位版本 AHK 运行本脚本才能正常）
+MsgBox, 显示出一个自动完成框
 SciUtil_Autocompletion_Show(hSci, "word1 word2 单词1 单词2")
-SciUtil_Autocompletion_Show(hSci, sText)
+SciUtil_Autocompletion_Show(hSci, text)
 {
-	; Prepare a local buffer for conversion
-	sNewLen := StrPut(sText, "CP" (cp := SciUtil_GetCP(hSci)))
-	VarSetCapacity(sTextCnv, sNewLen)
-
-	; Open remote buffer (add 1 for 0 at the end of the string)
-	RemoteBuf_Open(hBuf, hSci, sNewLen + 1)
-
-	; Convert the text to the destination codepage
-	StrPut(sText, &sTextCnv, "CP" cp)
-	RemoteBuf_Write(hBuf, sTextCnv, sNewLen + 1)
-
-	; Call Scintilla to insert the text. SCI_INSERTTEXT
-	SendMessage, 2100, 0, RemoteBuf_Get(hBuf),, ahk_id %hSci%
-
-	; Done
-	RemoteBuf_Close(hBuf)
+	; 文本转换编码
+	len := StrPutVar(text, textConverted, "CP" SciUtil_GetCP(hSci))
+	
+	; 在 scite.exe 的内存中写入数据
+	mem.open(hSci, len)
+	mem.write(textConverted)
+	
+	SendMessage, 2100, 0, mem.baseAddress,, ahk_id %hSci%
+	
+	mem.close()
 }
-#Include ..\..\toolbar\Lib\RemoteBuf.ahk
+
+#Include ..\..\toolbar\Lib\StrPutVar.ahk
 #Include ..\..\toolbar\Lib\SciUtil.ahk
 
 /*
@@ -128,10 +153,14 @@ oSciTE.ReloadProps()
 ; AutoHotkeyDir=$(SciteDefaultHome)\..
 oSciTE.ResolveProp(propname)
 
+; 向 Scintilla 发消息
+oSciTE.Msg(msg , wParam, lParam)
+
 ; 向 SciTE 发消息
 oSciTE.Message(msg , wParam, lParam)
 
 ; 用 Director interface 方式向 SciTE 发消息
+; https://www.scintilla.org/SciTEDirector.html
 oSciTE.SendDirectorMsg(message)
 
 ; 同上，不过返回值是对象， verb 和 value
