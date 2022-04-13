@@ -29,12 +29,9 @@ gosub, loadSettings
 Menu, Tray, Icon, %A_ScriptDir%\DllCall.ico
 
 ; 界面
-Gui +AlwaysOnTop +HwndhGUI -DPIScale
+Gui +AlwaysOnTop +HwndhGUI
 
-; DPI 缩放下的字号
-fontSizeWithDpiScale := Round(9/(A_ScreenDPI/96))
-
-Gui Font, s%fontSizeWithDpiScale%, 微软雅黑
+Gui Font, s9, 微软雅黑
 Gui Add, Edit, x10 y40 w600 h180 gtranslateWithDelay vedit1
 
 Gui Add, Button, x9 y229 w100 h24 gtranslate, %l_gui_1%
@@ -59,13 +56,13 @@ else
   Gui Add, Checkbox, x310 y476 w120 h24 +Checked%createVars% gtranslate vcreateVars, %l_gui_8%
   Gui Add, Checkbox, x440 y476 w200 h24 +Checked%printRetValAndErrorLevel% gtranslate vprintRetValAndErrorLevel, %l_gui_9%
 }
-Gui Font, s%fontSizeWithDpiScale% cWhite Bold, Segoe UI
+Gui Font, s9 cWhite Bold, Segoe UI
 Gui Add, Picture, x10 y10 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%MSDN Syntax
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v5.3
+Gui Show, w620 h505, %l_gui_10% v5.4
 
 ; 首次运行则显示帮助
 if (!FileExist("settings.ini"))
