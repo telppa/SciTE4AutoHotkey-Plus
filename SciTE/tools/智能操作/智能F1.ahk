@@ -1,4 +1,5 @@
-﻿; 按 F1 键可在中文帮助中查询光标下单词。
+﻿; 按 F1 键可在中文帮助中查询光标处单词。
+; 2022.04.12 可以直接获取光标处单词了（不需要先选中单词了）。
 ; 2021.11.05 修复在帮助中打开查找框时切换帮助失败的问题。帮助的位置固定在 “SciTE\中文帮助\” 。
 ; 2021.06.27 “智能F1” 升级 2.2。使用 ACC 实现全后台操作，提升稳定性。
 ; 2020.07.24 “智能F1” 全面接管 F1 功能。
@@ -21,54 +22,55 @@ return
   }
 return
 
-#If WinActive("ahk_id " . SciTE_Hwnd)                  ; 限制 “智能F1” 的作用范围只在 scite 中。
+#If WinActive("ahk_id " . SciTE_Hwnd)                    ; 限制 “智能F1” 的作用范围只在 scite 中。
 F1::
-  Send, ^{Left}^+{Right}
-  Sleep, 50                                            ; 延时是必须的，否则偶尔会取不到词。
-  光标下单词:=Trim(oSciTE.Selection(), " `t`r`n`v`f")  ; 把两侧的空白符去掉，不然 “else” 无法被正确激活。
-
-  WinGetPos, X, Y, W, H, ahk_pid %PID%
-  if (PID="" or !(X+Y+W+H))                            ; 首次打开或窗口被最小化（为0）或窗口被关闭（为空）。
+  智能F1()
   {
-    ; 某些时候最小化帮助后，获取到的坐标与大小全为0。
-    ; 某些时候最小化帮助后，获取到的坐标为负大小为正。
-    ; 前者无法被 WinActivate 或 WinRestore 还原。
-    ; 后者则可以。
-    ; 对于前者，只能杀进程后重开。
-    if (X+Y+W+H=0)
-      Process, Close, %PID%                            ; 帮助窗口最小化后无法激活，所以只能杀掉重开。
-
-    Run, % 中文帮助路径,,,PID                          ; 打开帮助文件。
-    WinWait, ahk_pid %PID%                             ; 这行不能少，否则初次打开无法输入文本并搜索。
-    WinActivate, ahk_pid %PID%                         ; 这行不能少，否则初次打开无法输入文本并搜索。
-
-    SysGet, WorkArea, MonitorWorkArea, 1               ; 获取工作区尺寸，即不含任务栏的屏幕尺寸。
-    DPIScale:=A_ScreenDPI/96
-    W:=(WorkAreaRight-WorkAreaLeft)//2
-    X:=WorkAreaLeft+W+(-1+8)*DPIScale
-    Y:=WorkAreaTop
-    H:=WorkAreaBottom-Y+(-1+8)*DPIScale
-    WinMove, ahk_pid %PID%,, X, Y, W, H                ; 显示在屏幕右侧并占屏幕一半尺寸。
-
-    oWB:=IE_GetWB(PID).document                        ; 获取帮助文件的对象。
+    global PID, 中文帮助路径, oSciTE
+    static oWB
+    
+    WinGetPos, X, Y, W, H, ahk_pid %PID%
+    if (PID="" or !(X+Y+W+H))                            ; 首次打开或窗口被最小化（为0）或窗口被关闭（为空）。
+    {
+      ; 某些时候最小化帮助后，获取到的坐标与大小全为0。
+      ; 某些时候最小化帮助后，获取到的坐标为负大小为正。
+      ; 前者无法被 WinActivate 或 WinRestore 还原。
+      ; 后者则可以。
+      ; 对于前者，只能杀进程后重开。
+      if (X+Y+W+H=0)
+        Process, Close, %PID%                            ; 帮助窗口最小化后无法激活，所以只能杀掉重开。
+      
+      Run, % 中文帮助路径,,,PID                          ; 打开帮助文件。
+      WinWait, ahk_pid %PID%                             ; 这行不能少，否则初次打开无法输入文本并搜索。
+      WinActivate, ahk_pid %PID%                         ; 这行不能少，否则初次打开无法输入文本并搜索。
+      
+      SysGet, WorkArea, MonitorWorkArea, 1               ; 获取工作区尺寸，即不含任务栏的屏幕尺寸。
+      DPIScale:=A_ScreenDPI/96
+      W:=(WorkAreaRight-WorkAreaLeft)//2
+      X:=WorkAreaLeft+W+(-1+8)*DPIScale
+      Y:=WorkAreaTop
+      H:=WorkAreaBottom-Y+(-1+8)*DPIScale
+      WinMove, ahk_pid %PID%,, X, Y, W, H                ; 显示在屏幕右侧并占屏幕一半尺寸。
+      
+      oWB:=IE_GetWB(PID).document                        ; 获取帮助文件的对象。
+    }
+    
+    WinActivate, ahk_pid %PID%                           ; 激活。
+    
+    WinClose, 查找 ahk_pid %PID%                         ; 关掉查找窗口，它存在会无法切换结果。
+    
+    ; 有2种方法可以直接让 chm 定位到某个页面中
+    ; 1. hh.exe mk:@MSITStore:R:\AutoHotkey.chm::/docs/Variables.htm#IsCompiled
+    ; 2. KeyHH.exe -MyID R:\AutoHotkey.chm::/docs/Variables.htm#IsCompiled
+    ; 在浏览器中使用 search.htm?q=Call&m=1 可以跳到通过索引搜索单词 Call 的结果页面
+    ; 但 hh.exe 和 KeyHH.exe 都不支持带参数的 htm 所以下面这个例子是失败的
+    ; 3. KeyHH.exe -MyID R:\AutoHotkey.chm::/docs/search.htm?q=Call&m=1
+    ; 所以只能用模拟的方式实现了
+    oWB.getElementsByTagName("BUTTON")[2].click()        ; 索引按钮。
+    oWB.querySelector("INPUT").value := oSciTE.GetWord   ; 输入关键词。
+    ControlSend, , {Enter}{Enter}, ahk_pid %PID%         ; 按两下回车进行搜索。
+    oWB.getElementsByTagName("BUTTON")[1].click()        ; 目录按钮。
   }
-
-  WinActivate, ahk_pid %PID%                           ; 激活。
-
-  WinClose, 查找 ahk_pid %PID%                         ; 关掉查找窗口，它存在会无法切换结果。
-
-  ; 有2种方法可以直接让 chm 定位到某个页面中
-  ; 1. hh.exe mk:@MSITStore:R:\AutoHotkey.chm::/docs/Variables.htm#IsCompiled
-  ; 2. KeyHH.exe -MyID R:\AutoHotkey.chm::/docs/Variables.htm#IsCompiled
-  ; 在浏览器中使用 search.htm?q=Call&m=1 可以跳到通过索引搜索单词 Call 的结果页面
-  ; 但 hh.exe 和 KeyHH.exe 都不支持带参数的 htm 所以下面这个例子是失败的
-  ; 3. KeyHH.exe -MyID R:\AutoHotkey.chm::/docs/search.htm?q=Call&m=1
-  ; 所以只能用模拟的方式实现了
-  oWB.getElementsByTagName("BUTTON")[2].click()        ; 索引按钮。
-  oWB.querySelector("INPUT").value := 光标下单词       ; 输入关键词。
-  ControlSend, , {Enter}{Enter}, ahk_pid %PID%         ; 按两下回车进行搜索。
-  oWB.getElementsByTagName("BUTTON")[1].click()        ; 目录按钮。
-return
 #If
 
 IE_GetWB(PID) { ; get the parent windows & coord from the element
@@ -89,7 +91,7 @@ IE_GetWB(PID) { ; get the parent windows & coord from the element
   if !(sClass == "Internet Explorer_Server")
   ; document property will fail if no valie com object
   or !(oDoc := ComObject(9, ComObjQuery(Acc_ObjectFromWindow(hCtl), IID_IHTMLWindow2, IID_IHTMLWindow2), 1).document)
-      return
+    return
 
   oWin := ComObject(9, ComObjQuery(oDoc, IID_IHTMLWindow2, IID_IHTMLWindow2), 1)
   return, oWB := ComObject(9, ComObjQuery(oWin, IID_IWebBrowserApp, IID_IWebBrowserApp), 1)
