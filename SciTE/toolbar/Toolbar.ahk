@@ -5,9 +5,8 @@
 
 #NoEnv
 #NoTrayIcon
-; 这里要用 Force ，否则会出现 Toolbar 启动失败，但又无法退出造成一片空白的情况。
-#SingleInstance Force
-#Include %A_ScriptDir%
+#SingleInstance Force  ; 这里要用 Force ，否则会出现 Toolbar 启动失败，但又无法退出造成一片空白的情况。
+#Include %A_ScriptDir%  ; 改变后面 #Include 的默认目录
 #Include PlatformRead.ahk
 #Include ComInterface.ahk
 #Include SciTEDirector.ahk
@@ -32,14 +31,11 @@ ATM_DRUNTOGGLE := ATM_OFFSET+4
 if !A_IsAdmin
 	runasverb := "*RunAs "
 
-if 0 < 2
+if A_Args.Length() < 2
 {
 	MsgBox, 16, SciTE4AutoHotkey Toolbar, This script cannot be run independently.
 	ExitApp
 }
-
-SciTEDir := A_WorkingDir
-CurAhkExe := SciTEDir "\..\AutoHotkey.exe" ; Fallback AutoHotkey binary
 
 FileRead, CurrentSciTEVersion, $VER
 if CurrentSciTEVersion =
@@ -56,7 +52,7 @@ IfNotExist, toolbar.properties
 }
 
 ; Get the HWND of the SciTE window
-scitehwnd = %1%
+scitehwnd := A_Args.1
 IfWinNotExist, ahk_id %scitehwnd%
 {
 	MsgBox, 16, SciTE4AutoHotkey Toolbar, SciTE not found!
@@ -64,7 +60,7 @@ IfWinNotExist, ahk_id %scitehwnd%
 }
 
 ; Get the HWND of the SciTE director window
-directorhwnd = %2%
+directorhwnd := A_Args.2
 IfWinNotExist, ahk_id %directorhwnd%
 {
 	MsgBox, 16, SciTE4AutoHotkey Toolbar, SciTE director window not found!
@@ -77,6 +73,9 @@ filesmenu := DllCall("GetSubMenu", "ptr", scitemenu, "int", 7, "ptr")
 
 ; Get the HWND of its Scintilla control
 ControlGet, scintillahwnd, Hwnd,, Scintilla1, ahk_id %scitehwnd%
+
+SciTEDir := A_WorkingDir
+CurAhkExe := SciTEDir "\..\AutoHotkey.exe" ; Fallback AutoHotkey binary
 
 IsPortable := FileExist("$PORTABLE")
 if !IsPortable
@@ -162,7 +161,7 @@ Tools[6]  := { Path: "?pause" }
 Tools[7]  := { Path: "?stop" }
 Tools[8]  := { Path: "?stepinto" }
 Tools[9]  := { Path: "?stepover" }
-Tools[10]  := { Path: "?stepout" }
+Tools[10] := { Path: "?stepout" }
 Tools[11] := { Path: "?stacktrace" }
 Tools[12] := { Path: "?varlist" }
 i := 11
@@ -213,7 +212,7 @@ Loop, Parse, ToolbarProps, `n, `r
 	IL_Add(_ToolIL, curtool.Picture, curtool.IconNumber)
 }
 
-;  Get HWND of real SciTE toolbar. ~L
+; Get HWND of real SciTE toolbar. ~L
 ControlGet, scitool, Hwnd,, ToolbarWindow321, ahk_id %scitehwnd%
 ControlGetPos,,, guiw, guih,, ahk_id %scitool% ; Get size of real SciTE toolbar. ~L
 ; Get width of real SciTE toolbar to determine placement for our toolbar. ~L
@@ -342,7 +341,7 @@ if DirectorReady
 	CurAhkExe := CoI_ResolveProp("", "AutoHotkey")
 
 ; Run the autorun script
-if 3 != /NoAutorun
+if (A_Args.3 != "/NoAutorun")
 	Run, "%A_AhkPath%" "%SciTEDir%\tools\Autorun.ahk"
 
 ; Safety SciTE window existance timer
