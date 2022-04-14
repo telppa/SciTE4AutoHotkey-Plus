@@ -18,7 +18,7 @@ MsgBox, % "获取 SciTE 用户目录`n`n" oSciTE.UserDir
 MsgBox, % "获取 SciTE 安装目录`n`n" oSciTE.SciTEDir
 
 ; 获取 platform
-MsgBox, % "获取当前 platform`n`n" oSciTE.ActivePlatform
+MsgBox, % "获取 platform`n`n" oSciTE.ActivePlatform
 
 ; 设置 platform
 ; 就是工具栏上 “运行” 按钮左边的那个按钮的功能
@@ -52,13 +52,19 @@ MsgBox, % "获取指定位置样式`n`n" oSciTE.GetStyle(0)
 ; 获取选中内容
 MsgBox, % "获取选中内容`n`n" oSciTE.Selection
 
-; 获取光标处单词
+; 获取指定范围文本
+MsgBox, % "获取指定范围文本`n`n" oSciTE.GetTextRange(2, 5)
+
+; 获取光标处单词（只获取单词，括号等符号取不到）
 MsgBox, % "获取光标处单词`n`n" oSciTE.GetWord
+
+; 获取指定位置单词（只获取单词，括号等符号取不到）
+MsgBox, % "获取指定位置单词`n`n" oSciTE.GetWord(10)
 
 ; 获取当前行
 MsgBox, % "获取当前行`n`n" oSciTE.GetLine
 
-; 获取指定行，首行是0，以此类推
+; 获取指定行（首行是0，以此类推）
 MsgBox, % "获取指定行`n`n" oSciTE.GetLine(0)
 
 ; 获取行首到光标处内容
@@ -88,17 +94,22 @@ MsgBox, % "获取已打开文件数量`n`n" oTabs.Count
 ; oSciTE.DebugFile(filename)
 ; MsgBox, 调试一个文件
 
-; 插入文本。省略第二参数 pos ，则使用光标所在位置
-text:="这是一段插入到当前位置的文本"
+; 光标处插入文本
+text:="这是一段光标处插入文本"
 oSciTE.InsertText(text)
-MsgBox, 插入文本
+MsgBox, 光标处插入文本
+
+; 指定位置插入文本
+text:="这是一段指定位置插入文本"
+oSciTE.InsertText(text, 0)
+MsgBox, 指定位置插入文本
 
 ; 在输出框显示文本
 OutputText:="output only support english"
 oSciTE.Output(OutputText)
 MsgBox, 在输出框显示文本
 
-; 切换标签，标签编号从0开始
+; 切换标签（标签编号从0开始）
 tabidx:=0
 oSciTE.SwitchToTab(tabidx)
 MsgBox, 切换标签
@@ -159,8 +170,10 @@ oSciTE.Msg(msg , wParam, lParam)
 ; 向 SciTE 发消息
 oSciTE.Message(msg , wParam, lParam)
 
-; 用 Director interface 方式向 SciTE 发消息
+; 用 Director 接口向 SciTE 发消息
 ; https://www.scintilla.org/SciTEDirector.html
+; 使用宏进行光标左移操作
+oSciTE.SendDirectorMsg("macrocommand:2304;0II;0;0")
 oSciTE.SendDirectorMsg(message)
 
 ; 同上，不过返回值是对象， verb 和 value

@@ -108,16 +108,17 @@ SciUtil_GetTextRange(hSci, startPos, endPos)
 	return, StrGet(&text, "CP" SciUtil_GetCP(hSci))
 }
 
-SciUtil_GetWord(hSci)
+SciUtil_GetWord(hSci, pos)
 {
-	currentPos := SciUtil_GetCurPos(hSci)
+	if (pos="")
+		pos := SciUtil_GetCurPos(hSci)
 	
 	; SCI_WORDSTARTPOSITION = 2266
-	SendMessage, 2266, currentPos, true, , ahk_id %hSci%
+	SendMessage, 2266, pos, true, , ahk_id %hSci%
 	startPos := ErrorLevel
 	
 	; SCI_WORDENDPOSITION = 2267
-	SendMessage, 2267, currentPos, true, , ahk_id %hSci%
+	SendMessage, 2267, pos, true, , ahk_id %hSci%
 	endPos := ErrorLevel
 	
 	return, SciUtil_GetTextRange(hSci, startPos, endPos)

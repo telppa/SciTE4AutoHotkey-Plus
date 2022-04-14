@@ -16,6 +16,7 @@ GetCurPos
 SetCurPos
 GetStyle
 GetSelection & Selection = CoI_GetSelection
+GetTextRange
 GetWord
 GetLine
 GetHome
@@ -84,11 +85,18 @@ CoI_GetSelection(this)
 	return SciUtil_GetSelection(scintillahwnd)
 }
 
-CoI_GetWord(this)
+CoI_GetTextRange(this, startPos, endPos)
 {
 	global scintillahwnd
 	
-	return, SciUtil_GetWord(scintillahwnd)
+	return, SciUtil_GetTextRange(scintillahwnd, startPos, endPos)
+}
+
+CoI_GetWord(this, pos := "")
+{
+	global scintillahwnd
+	
+	return, SciUtil_GetWord(scintillahwnd, pos)
 }
 
 CoI_GetLine(this, lineNumber := "")
