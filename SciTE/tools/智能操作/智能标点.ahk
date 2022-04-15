@@ -88,7 +88,7 @@ return
   {
     dec := Ord(字符)
     hex := Format("{1:X}", dec)
-    SendInput, {U+%hex%}
+    Send, {U+%hex%}
     ; 这里也需要修复一次，这是因为当 shift 键被按下时
     ; 此时的 Send a 命令实际操作是 {shift up}{a down}{a up}{shift down}
     ; 所以之前发送的无用按键效果就没了，所以这里要再发送一次
@@ -96,4 +96,61 @@ return
   }
   else
     oSciTE.ReplaceSel(字符)
+  
+  if (字符="(" or 字符="[" or 字符="{" or 字符="""") 
+    补齐配对符号(字符)
+}
+
+; 改自 Adventure 3.0.4
+补齐配对符号(Char)
+{
+  global oSciTE
+  
+  CurPos := oSciTE.GetCurPos
+  
+  ; GetCharAt = 2007
+  PrevChar := Chr(oSciTE.Msg(2007, CurPos - 2))
+  NextChar := Chr(oSciTE.Msg(2007, CurPos))
+  
+  NextWord := oSciTE.GetWord(CurPos + 1)
+  If (NextWord != "" && NextWord != "`r`n") {
+      Return
+  }
+  
+  ; 圆括号
+  If (Char == "(" && NextChar != ")") {
+    oSciTE.InsertText(")")
+    Send, {Left}
+  
+  ; 方括号
+  } Else If (Char == "[" && NextChar != "]") {
+    oSciTE.InsertText("]")
+    Send, {Left}
+  
+  ; 花括号
+  } Else If (Char == "{" && NextChar != "}") {
+    
+    PrevChars := oSciTE.GetTextRange(CurPos - 5, CurPos)
+    ; 新建函数时的花括号
+    If (RegExMatch(PrevChars, "\)\s?\r?\n?")) {
+      Send, {Enter}
+      Send, {Blind}{vkE8 Up}
+      pos := oSciTE.GetCurPos
+      hex := Format("{1:X}", Ord("}"))
+      Send, {Enter}{U+%hex%}
+      oSciTE.SetCurPos(pos)
+    
+    ; 普通花括号
+    } Else {
+      oSciTE.InsertText("}")
+      Send, {Left}
+    }
+  
+  ; 引号
+  } Else If (Char == """" && NextChar != """" && (PrevChar == "" || PrevChar ~= "[\s,\(\[\=\:\n\rL]")) {
+    oSciTE.InsertText("""")
+    Send, {Left}
+  }
+  
+  Send, {Blind}{vkE8 Up}
 }
