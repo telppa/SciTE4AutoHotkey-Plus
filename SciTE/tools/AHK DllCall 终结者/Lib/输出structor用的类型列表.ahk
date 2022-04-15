@@ -4,21 +4,23 @@
   FileRead, ahkType, type.json
   ahkType := createAhkTypeFromJson(ahkType)
   
+  ; TCHAR WCHAR wchar_t INT_PTR 进行手动分类
+  ahkType["TCHAR"] := "Str"
+  ahkType["WCHAR"] := "WStr"
+  ahkType["wchar_t"] := "WStr"
+  ahkType["INT_PTR"] := "Ptr"
+  
   ; 反转 ahkType 的 key 和 value
   ahkType_flip := {}
   for k, v in ahkType
   {
-    ; 不输出 TCHAR TBYTE HALF_PTR UHALF_PTR
-    if k in TCHAR,TBYTE,HALF_PTR,UHALF_PTR
+    ; 不输出 TBYTE HALF_PTR UHALF_PTR
+    if k in TBYTE,HALF_PTR,UHALF_PTR
       continue
     
     ; 不输出所有带*的类型例如 UInt*
     if (InStr(v, "*"))
       continue
-    
-    ; 所有 Str AStr WStr 类型都转为 Ptr
-    if (InStr(v, "Str"))
-      v := "Ptr"
     
     ; 所有 UInt64 类型都转为 Int64
     if (InStr(v, "UInt64"))

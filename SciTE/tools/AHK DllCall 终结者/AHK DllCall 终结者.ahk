@@ -1,4 +1,5 @@
-﻿; https://docs.microsoft.com/en-us/windows/win32/learnwin32/windows-coding-conventions
+﻿; https://www.autohotkey.com/boards/viewtopic.php?f=75&t=69790
+; https://docs.microsoft.com/en-us/windows/win32/learnwin32/windows-coding-conventions
 ; https://docs.microsoft.com/en-us/windows/win32/stg/coding-style-conventions
 ; https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types
 ; https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-dtyp/24637f2d-238b-4d22-b44d-fe54b024280c
@@ -62,7 +63,7 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v5.4
+Gui Show, w620 h505, %l_gui_10% v5.5
 
 ; 首次运行则显示帮助
 if (!FileExist("settings.ini"))
