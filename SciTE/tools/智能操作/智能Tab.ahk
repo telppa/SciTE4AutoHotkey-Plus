@@ -102,6 +102,9 @@ $Enter::
     ; 例如 aa,|bb),cc,dd 中的 bb),cc,dd
     str := RTrim(oSciTE.GetEnd, " `t`r`n`v`f")
     
+    ; 光标处 style 为字符串，且右边存在引号，则需补引号
+    try quote := oSciTE.GetStyle()=6 and InStr(str, """")
+    
     ; str2 = 第1个闭括号右边的字符
     ; 例如 aa,|bb),cc,dd 中的 ,cc,dd
     pos := InStr(str, ")")
@@ -115,6 +118,8 @@ $Enter::
     ; 例如 aa|,bb,cc
     if (pos=0)
     {
+      if (quote)
+        发送原义字符("""")
       Send, {Enter}
       标记 := 0
       ToolTip
@@ -128,7 +133,7 @@ $Enter::
       ; 例如 aa|,bb,cc)
       if (行末闭括号数量=1 and str2="")
       {
-        发送原义字符(")")
+        发送原义字符(quote ? """)" : ")")
         Send, {Enter}
         标记 := 0
         ToolTip
@@ -137,7 +142,7 @@ $Enter::
       ; 例如 aa|,bb)))
       else if (行末闭括号数量>1 and RTrim(str2, ")")="")
       {
-        发送原义字符(")")
+        发送原义字符(quote ? """)" : ")")
         curPos := oSciTE.GetCurPos
         oSciTE.InsertText(str2)
         oSciTE.SetCurPos(curPos)
@@ -147,7 +152,7 @@ $Enter::
       ; 例如 aa|,bb),cc)))
       else
       {
-        发送原义字符(")")
+        发送原义字符(quote ? """)" : ")")
         curPos := oSciTE.GetCurPos
         oSciTE.InsertText(str2)
         oSciTE.SetCurPos(curPos)
