@@ -305,3 +305,12 @@ VarSetCapacity(lpParam, , 0)
 ret := DllCall("CreateWindowA", "Ptr", &lpClassName, "Ptr", &lpWindowName, "UInt", dwStyle, "Short", x, "Short", y, "Short", nWidth, "Short", nHeight, "Ptr", hWndParent, "Ptr", hMenu, "Ptr", hInstance, "Ptr", &lpParam)
 MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
 
+; 警告：猜测参数 &psfi 的类型 SHFILEINFO FAR* 对应为 Ptr ，但可信度较低。
+pszPath := ""
+dwFileAttributes := ""
+VarSetCapacity(psfi, , 0)
+cbFileInfo := ""
+uFlags := ""
+ret := DllCall("SHGetFileInfo", "Str", pszPath, "UInt", dwFileAttributes, "Ptr", &psfi, "UInt", cbFileInfo, "UInt", uFlags, "UInt")
+MsgBox, % "返回值:" ret "`r`n错误码:" ErrorLevel
+

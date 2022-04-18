@@ -401,7 +401,18 @@
   `);
   )
 
-  loop, 43
+  a44=
+  (
+  WINSHELLAPI DWORD WINAPI SHGetFileInfo(
+    LPCTSTR pszPath, 
+    DWORD dwFileAttributes, 
+    SHFILEINFO FAR* psfi, 
+    UINT cbFileInfo, 
+    UINT uFlags 
+  `);
+  )
+
+  loop, 44
     out.=createDllCallTemplate(a%A_Index%, "", false, true, true, true, true, true) "`r`n`r`n"
 
   FileDelete, 批量测试结果.txt

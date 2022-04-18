@@ -63,7 +63,7 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v5.5
+Gui Show, w620 h505, %l_gui_10% v5.6
 
 ; 首次运行则显示帮助
 if (!FileExist("settings.ini"))
@@ -566,9 +566,19 @@ parseMsdnFunctionSyntax(text)
         ret.error .= l_tip2_3
       }
       
+      retType := StrSplit(OutputVar1, " ", " `t`r`n`v`f")
       ; 提取 NET_API_STATUS NET_API_FUNCTION NetGroupEnum( 中的 NET_API_STATUS 和 NetGroupEnum
-      ret.retType  := Trim(StrSplit(OutputVar1, " ")[1], " `t`r`n`v`f")
+      ret.retType  := retType[1]
       ret.funcName := Trim(OutputVar2, " `t`r`n`v`f")
+      
+      ; 逐个判断 WINSHELLAPI DWORD WINAPI SHGetFileInfo( 中的 WINSHELLAPI DWORD
+      if (retType.Length()>1)
+        for k, v in retType
+          if (getAhkType(v))
+          {
+            ret.retType := v
+            break
+          }
     }
     else
     {
