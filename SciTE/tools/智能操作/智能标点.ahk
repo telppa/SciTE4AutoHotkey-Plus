@@ -130,9 +130,10 @@ return
   ; 花括号
   } Else If (Char == "{" && NextChar != "}") {
     
+    BlankLine := Trim(oSciTE.GetLine, " `t`r`n`v`f")="{"
     PrevChars := oSciTE.GetTextRange(CurPos - 5, CurPos)
     ; 新建函数时的花括号
-    If (RegExMatch(PrevChars, "\)\s?\r?\n?")) {
+    If (RegExMatch(PrevChars, "\)\s?\r?\n?") or BlankLine) {
       Send, {Enter}
       Send, {Blind}{vkE8 Up}
       pos := oSciTE.GetCurPos
