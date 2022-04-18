@@ -6,9 +6,6 @@
 为实现工具便携性与使用傻瓜化，部分代码有修改，需自行对比原版。
 
 */
-/*
-把不同的字符串 astr wstr 的大小确定了
-*/
 
 ; Structor - Structure Helper
 
@@ -23,7 +20,7 @@ SetBatchLines -1
 
 Global C
     , AppName := "Structor"
-    , Version := "1.1.0"
+    , Version := "1.2.0"
     , g_AppData := A_ScriptDir
     , StructSize32 := 0
     , StructSize64 := 0
@@ -338,18 +335,29 @@ GenerateCode:
         LV_GetText(Offset32, Row, 3)
         LV_GetText(Offset64, Row, 4)
 
+        fStr := False, ftype := ""
+
         If (FoundPos := InStr(Member, "[")) {
             Member := SubStr(Member, 1, FoundPos - 1)
+            If (RegExMatch(DataType, "i)(TCHAR|WCHAR|wchar_t|CHAR)", fType))
+                fStr := True
         }
 
         AHKType := GetAHKType(DataType, Member, Row)
-        if (!InStr(AHKType, "="))  ; Add quotes.    int->"int"    (a=b)?c:d->(a=b)?c:d
+        If (!InStr(AHKType, "=")) {  ; Add quotes.    int->"int"    (a=b)?c:d->(a=b)?c:d
             AHKType := Format("""{}""", AHKType)
+            If (InStr(AHKType, "Str"))  ; Str AStr WStr
+                fStr := True
+        }
 
-        fStr := False
-        If (InStr(AHKType, "Str")) {  ; Str AStr WStr
-            fStr := True
+        switch, fType
+        {
+            case "TCHAR"            : AHKType := """Str"""
+            case "CHAR"             : AHKType := """AStr"""
+            case "WCHAR", "wchar_t" : AHKType := """WStr"""
+        }
 
+        If (fStr) {
             If (Row == LV_GetCount()) {
                 Length := (Offset64 != "") ? (StructSize64 - Offset64) : (StructSize32 - Offset32)
             } Else {
@@ -357,7 +365,19 @@ GenerateCode:
                 LV_GetText(NextOffset64, Row + 1, 4)
                 Length := (Offset64 != "") ? (NextOffset64 - Offset64) : (NextOffset32 - Offset32)
             }
-            Length /= 2
+
+            switch, Trim(AHKType, """")
+            {
+                case "Str": 
+                    Encoding := "(A_IsUnicode ? ""UTF-16"" : ""CP0"")"
+                    Length   := Format("(A_IsUnicode ? {} : {})", Length//2, Length)
+                case "AStr":
+                    Encoding := """CP0"""
+                    Length   := Length
+                case "WStr":
+                    Encoding := """UTF-16"""
+                    Length   //= 2
+            }
         }
 
         u := (Offset32 == PrevOffset
@@ -396,11 +416,12 @@ GenerateCode:
             Continue
         }
 
+        If (InStr(Offset, ":"))
+            Offset := Format("({})", Offset)
+
         If (fGet) {
             If (fStr) {
-                if (InStr(Offset, ":"))
-                    Offset := Format("({})", Offset)
-                Get .= Format("{} := StrGet(&{} + {}, {}, ""UTF-16"")`r`n", u . Member, StructName, Offset, Length)
+                Get .= Format("{} := StrGet(&{} + {}, {}, {})`r`n", u . Member, StructName, Offset, Length, Encoding)
             } Else {
                 Get .= Format("{} := NumGet({}, {}, {})`r`n", u . Member, StructName, Offset, AHKType)
             }
@@ -408,9 +429,7 @@ GenerateCode:
 
         If (fPut) {
             If (fStr) {
-                if (InStr(Offset, ":"))
-                    Offset := Format("({})", Offset)
-                Put .= Format("{}StrPut({}, &{} + {}, {}, ""UTF-16"")`r`n", u, Member, StructName, Offset, Length)
+                Put .= Format("{}StrPut({}, &{} + {}, {}, {})`r`n", u, Member, StructName, Offset, Length, Encoding)
             } Else {
                 Put .= Format("{}NumPut({}, {}, {}, {})`r`n", u, Member, StructName, Offset, AHKType)
             }
@@ -447,12 +466,12 @@ GetAHKType(DataType, Member, Row) {
     , Int64Types = "__int64,DWORD64,DWORDLONG,INT64,LARGE_INTEGER,LONG64,LONGLONG,QWORD,signed __int64,UINT64,ULARGE_INTEGER,ULONG64,ULONGLONG,unsigned __int64,USN"
     , PtrTypes = "__int3264,ADCONNECTION_HANDLE,CONST void*,HACCEL,HANDLE,HBITMAP,HBRUSH,HCOLORSPACE,HCONV,HCONVLIST,HCURSOR,HDC,HDDEDATA,HDESK,HDROP,HDWP,HENHMETAFILE,HFONT,HGDIOBJ,HGLOBAL,HHOOK,HICON,HINSTANCE,HKEY,HKL,HLOCAL,HMENU,HMETAFILE,HMODULE,HMONITOR,HPALETTE,HPEN,HRGN,HRSRC,HSZ,HWND,INT_PTR,LDAP_UDP_HANDLE,LONG_PTR,LPARAM,LPCVOID,LPVOID,LRESULT,PCONTEXT_HANDLE,PVOID,RPC_BINDING_HANDLE,SC_HANDLE,SC_LOCK,SERVICE_STATUS_HANDLE,SSIZE_T,void*,WINSTA"
     , ShortTypes = "INT16,short,signed short"
-    , StrTypes = "LPCTSTR,LPTSTR,PCTSTR,PTCHAR,PTSTR,TCHAR,TCHAR*"
+    , StrTypes = "LPCTSTR,LPTSTR,PCTSTR,PTCHAR,PTSTR,TCHAR*"
     , UCharTypes = "BOOLEAN,BYTE,UCHAR,UINT8,unsigned char"
     , UIntTypes = "ACCESS_MASK,COLORREF,DWORD,DWORD32,error_status_t,HCALL,LCID,LCTYPE,LGRPID,NET_API_STATUS,SECURITY_INFORMATION,TOKEN_MANDATORY_POLICY,UINT,UINT32,ULONG,ULONG32,unsigned int,unsigned long"
     , UPtrTypes = "DWORD_PTR,SIZE_T,UINT_PTR,ULONG_PTR,unsigned __int3264,WPARAM"
-    , UShortTypes = "ATOM,LANGID,UINT16,UNICODE,unsigned short,USHORT,WORD"
-    , WStrTypes = "BSTR,CONST WCHAR*,const wchar_t*,LMCSTR,LMSTR,LPCWSTR,LPWORD,LPWSTR,PCWSTR,PUINT16,PUSHORT,PWCHAR,PWORD,PWSTR,UINT16*,USHORT*,WCHAR,WCHAR*,wchar_t,WORD*"
+    , UShortTypes = "ATOM,LANGID,UINT16,UNICODE,unsigned short,USHORT,WCHAR,wchar_t,WORD"
+    , WStrTypes = "BSTR,CONST WCHAR*,const wchar_t*,LMCSTR,LMSTR,LPCWSTR,LPWORD,LPWSTR,PCWSTR,PUINT16,PUSHORT,PWCHAR,PWORD,PWSTR,UINT16*,USHORT*,WCHAR*,WORD*"
 
     Loop Parse, Types, `,
     {
@@ -464,13 +483,13 @@ GetAHKType(DataType, Member, Row) {
         }
     }
 
-    if (Type == "TBYTE")
+    If (Type == "TBYTE")
         Return "(A_IsUnicode) ? ""UShort"" : ""UChar"""
 
-    if (Type == "HALF_PTR")
+    If (Type == "HALF_PTR")
         Return "(A_PtrSize=8) ? ""Int"" : ""Short"""
 
-    if (Type == "UHALF_PTR")
+    If (Type == "UHALF_PTR")
         Return "(A_PtrSize=8) ? ""UInt"" : ""UShort"""
 
     If (SubStr(DataType, 1, 2) == "LP" || SubStr(Member, 1, 2) == "lp") {
