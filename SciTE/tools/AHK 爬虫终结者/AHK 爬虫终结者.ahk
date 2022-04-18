@@ -1,36 +1,18 @@
 ﻿/*
-更新日志：
-  2022.04.11
+主要更新日志：
+  2022.04.18
     调整界面大小， DPI 缩放下显示起来更好看。
-    版本号 3.9.2。
-  2021.11.24
-    修复 DPI 缩放下的界面显示问题。
-    版本号 3.9.1。
+    版本号 3.9.4。
   2021.11.15
     使用新界面。
     更新 WinHttp 库为 3.9。
     版本号 3.9。
-  2021.10.22
-    更新 WinHttp 库为 3.7。
-    版本号 3.7。
-  2021.08.18
-    更新 WinHttp 库为 3.6。
-    版本号 3.6。
-  2021.08.16
-    更新 WinHttp 库为 3.5。
-    版本号 3.5。
   2021.06.29
-    修复智能库引用错误使用本地库作为判断依据。
-    版本号 3.4
-  2021.04.13
     更智能的库引用，生成的代码无需手动引用。
-    版本号 3.3
+    版本号 3.4
   2021.04.11
     更新 WinHttp 库为 3.2。
     版本号 3.2。
-  2021.04.06
-    更新 WinHttp 库为 3.1。
-    版本号 3.1。
   2021.03.17
     返回值框使用 JSONEditor 。
     版本号 2.0。
@@ -99,26 +81,29 @@
   Gui, Add, Button, xs-1 y+10 w474 h49 g发送, 发送
   
   ; 返回值框。 ActiveX 必须放 GroupBox 前面，否则显示不出来。
-  Gui, Add, ActiveX, Section vWB x522 y42 w472 h310, %A_ScriptDir%\jsoneditor-5.15.0\jsonEditor.html
+  h := calculateHeight("48+29+24+5+24+5+24+1+24+1+24+29+72")  ; 左侧对应控件的高度挨个缩放再四舍五入最后累和
+  Gui, Add, ActiveX, Section vWB x522 y42 w472 h%h%, %A_ScriptDir%\jsoneditor-5.15.0\jsonEditor.html
   Gui, Add, GroupBox, x512 y6 w492 h516, 输出
   
-  ; 响应头与代码框
-  Gui, Add, Edit, xs ys+339 w231 h130 -Wrap v响应头,
+  ; 响应头与代码框。这里必须使用控件 v提交数据 的 y 坐标，否则 150% 缩放下位置不正常。
+  GuiControlGet, 提交数据Pos_, Pos, 提交数据
+  h := calculateHeight("72+10+48")
+  Gui, Add, Edit, xs y%提交数据Pos_Y% w231 h%h% -Wrap v响应头,
   Gui, Add, Edit, x+10 yp w231 h130 -Wrap v代码,
   
   ; 标签
-  Gui, Add, Text, x72 y18 w372 h24 +0x200 Center, 网址
+  Gui, Add, Text, x72 y17 w372 h24 +0x200 Center, 网址
   Gui, Add, Text, x72 y+53 w372 h24 +0x200 Center, 设置
   Gui, Add, Text, x72 y+137 w372 h24 +0x200 Center, 请求头
   Gui, Add, Text, Section x72 y+77 w372 h24 +0x200 Center, 提交数据
-  Gui, Add, Text, x572 y18 w372 h24 +0x200 Center, 返回值
+  Gui, Add, Text, x572 y17 w372 h24 +0x200 Center, 返回值
   Gui, Add, Text, Section x572 ys w131 h24 +0x200 Center, 响应头
   Gui, Add, Text, xs+241 ys w131 h24 +0x200 Center, 代码
   
   Gui, Add, StatusBar, v状态栏, %A_Space%%A_Space%%A_Space%%A_Space%主页
   SB_SetParts(80)
   
-  Gui, Show, , AHK 爬虫终结者 v3.9.2
+  Gui, Show, , AHK 爬虫终结者 v3.9.4
   
   gosub, 智能库引用
   
@@ -429,12 +414,14 @@ gui_KeyDown(wParam, lParam, nMsg, hWnd) { ; http://www.autohotkey.com/board/topi
   }
 }
 
-GuiDefaultFont() { ; by SKAN (modified by just me)
-   VarSetCapacity(LF, szLF := 28 + (A_IsUnicode ? 64 : 32), 0) ; LOGFONT structure
-   If DllCall("GetObject", "Ptr", DllCall("GetStockObject", "Int", 17, "Ptr"), "Int", szLF, "Ptr", &LF)
-      Return {Name: StrGet(&LF + 28, 32), Size: Round(Abs(NumGet(LF, 0, "Int")) * (72 / A_ScreenDPI), 1)
-            , Weight: NumGet(LF, 16, "Int"), Quality: NumGet(LF, 26, "UChar")}
-   Return False
+calculateHeight(expression)  ; 计算缩放状态下由多个控件叠加形成的新控件的高度
+{
+  sum := 0, DPIScale := A_ScreenDPI/96
+  
+  for k, v in StrSplit(expression, "+")
+    sum += Round(v*DPIScale)
+  
+  return, Round(sum/DPIScale)
 }
 
 #Include <WinHttp>
