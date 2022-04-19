@@ -32,7 +32,7 @@ Menu, Tray, Icon, %A_ScriptDir%\DllCall.ico
 ; 界面
 Gui +AlwaysOnTop +HwndhGUI
 
-Gui Font, s9, 微软雅黑
+Gui Font, s9, %l_gui_11%
 Gui Add, Edit, x10 y40 w600 h180 gtranslateWithDelay vedit1
 
 Gui Add, Button, x9 y229 w100 h24 gtranslate, %l_gui_1%

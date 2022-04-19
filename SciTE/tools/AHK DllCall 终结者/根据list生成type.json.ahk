@@ -134,8 +134,8 @@ ret.Delete(salt("TCHAR*"))
 ; 导出并删除加盐部分
 out:=json.dump(ret)
 out:=RegExReplace(out, "\|\w+\""", """")
-FileDelete, r:\type.json
-FileAppend, % out, r:\type.json
+FileDelete, type.json
+FileAppend, % out, type.json
 ExitApp
 
 getType(text)

@@ -11,7 +11,8 @@
     l_gui_7  := "显示提示"
     l_gui_8  := "创建变量"
     l_gui_9  := "打印返回值与错误码"
-    l_gui_10  := "AHK DllCall 终结者"
+    l_gui_10 := "AHK DllCall 终结者"
+    l_gui_11 := "微软雅黑"
     
     ; 在 createDllCallTemplate() 里
     l_tip_1 := "  `; 提示：此类型是根据特征猜测的。"
@@ -44,7 +45,8 @@
     l_gui_7  := "Show Info"
     l_gui_8  := "Create Variables"
     l_gui_9  := "Print RetVal && ErrorLevel"
-    l_gui_10  := "AHK DllCall Terminator"
+    l_gui_10 := "AHK DllCall Terminator"
+    l_gui_11 := "Segoe UI"
     
     ; in createDllCallTemplate()
     l_tip_1  := "  `; Info : guessed from text features."
