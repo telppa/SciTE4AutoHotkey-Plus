@@ -5,6 +5,9 @@
 
 为实现工具便携性与使用傻瓜化，部分代码有修改，需自行对比原版。
 
+Original Version : https://www.autohotkey.com/boards/viewtopic.php?t=31711
+Modified Version : https://github.com/telppa/Structor
+
 */
 
 ; Structor - Structure Helper
@@ -20,7 +23,7 @@ SetBatchLines -1
 
 Global C
     , AppName := "Structor"
-    , Version := "1.2.0"
+    , Version := "1.2.1"
     , g_AppData := A_ScriptDir
     , StructSize32 := 0
     , StructSize64 := 0
@@ -366,11 +369,16 @@ GenerateCode:
                 Length := (Offset64 != "") ? (NextOffset64 - Offset64) : (NextOffset32 - Offset32)
             }
 
+            ; If the type is Str(e.g. TCHAR), and you want to do compatibility for ansi and unicode.
+            ; The right way is to generate the structure twice by checked and no checked the checkbox-Unicode in Settings.
+            ; The ansi size calculated by unicode size is not accurate, that's why we should get the them by generating it twice.
+            Tips := ""
             switch, Trim(AHKType, """")
             {
                 case "Str": 
-                    Encoding := "(A_IsUnicode ? ""UTF-16"" : ""CP0"")"
-                    Length   := Format("(A_IsUnicode ? {} : {})", Length//2, Length)
+                    Encoding := Unicode ? """UTF-16""" : """CP0"""
+                    Length   := Unicode ? Length//2 : Length
+                    Tips     := Unicode ? "  `; work on AutoHotkeyU32(U64).exe" : "  `; work on AutoHotkeyA32.exe"
                 case "AStr":
                     Encoding := """CP0"""
                     Length   := Length
@@ -421,7 +429,7 @@ GenerateCode:
 
         If (fGet) {
             If (fStr) {
-                Get .= Format("{} := StrGet(&{} + {}, {}, {})`r`n", u . Member, StructName, Offset, Length, Encoding)
+                Get .= Format("{} := StrGet(&{} + {}, {}, {}){}`r`n", u . Member, StructName, Offset, Length, Encoding, Tips)
             } Else {
                 Get .= Format("{} := NumGet({}, {}, {})`r`n", u . Member, StructName, Offset, AHKType)
             }
@@ -429,7 +437,7 @@ GenerateCode:
 
         If (fPut) {
             If (fStr) {
-                Put .= Format("{}StrPut({}, &{} + {}, {}, {})`r`n", u, Member, StructName, Offset, Length, Encoding)
+                Put .= Format("{}StrPut({}, &{} + {}, {}, {}){}`r`n", u, Member, StructName, Offset, Length, Encoding, Tips)
             } Else {
                 Put .= Format("{}NumPut({}, {}, {}, {})`r`n", u, Member, StructName, Offset, AHKType)
             }
@@ -455,6 +463,7 @@ GenerateCode:
 Return
 
 GetAHKType(DataType, Member, Row) {
+    ; You can get the following list of types by press F10 in "AHK DllCall Terminator".
     ; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=101795
     ; https://autohotkey.com/board/topic/25250-structparser-for-cc-structs/
     Static Types = "Int,UInt,Ptr,UPtr,Short,UShort,Char,UChar,Int64,Float,Double,Str,AStr,WStr"
