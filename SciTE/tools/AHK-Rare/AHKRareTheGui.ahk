@@ -570,39 +570,39 @@ RareIndexer(ARFile) {                                                           
 
 	; defining some variables
 		ARData:= Object(), ARData.DescriptionKeys := Object()
-		s:=fI:=descFlag:=descKeyFlag:=descKeyFlagO :=0
-		Brackets             	:= 0                                                         	; counter to find the end of a function
-		DoBracketCount	:= 0                                                        	; flag
-		FirstBracket      	:= 0                                                        	; flag
-		originchange    	:= 0                                                         ; counter for changed lines in AHKRare.ahk - Autosyntax correcting functionality
+		s:=fI:=descFlag:=descKeyFlag:=descKeyFlagO := 0
+		Brackets       := 0                                                         ; counter to find the end of a function
+		DoBracketCount := 0                                                        	; flag
+		FirstBracket   := 0                                                        	; flag
+		originchange   := 0                                                         ; counter for changed lines in AHKRare.ahk - Autosyntax correcting functionality
 
 	; parsing algorithm for AHK-Rare
 		Loop, % ARFile.MaxIndex() - 1
 		{
 			line:= ARFile[A_Index]
-			If (DoBracketCount = 1) && !descflag && !exampleFlag                                                                                                                                              	; to find the last bracket of a function
+			If (DoBracketCount = 1) && !descflag && !exampleFlag  ; to find the last bracket of a function
 			{
 					Brackets += BracketCount(line)
 					If (Brackets > 0) && (FirstBracket = 0)
 						FirstBracket:= 1
 			}
 
-			If RegExMatch(line, "(?<=\{\s;)[\w\s-\+\/\(\)]+(?=\(\d+\))")                                                                                                                                         	; name of mainsection
+			If RegExMatch(line, "(?<=\{\s;)[\w\s-\+\/\(\)]+(?=\(\d+\))")  ; name of mainsection
 			{
-						RegExMatch(line, "(?<=\{\s;)[\w\s-\+\/\(\)]+(?=\(\d+\))", mainsection)
-						mainsection	:= Trim(mainsection)
-						subsection	:= ""
-						RegExMatch(line, "(?<=--\s)[\w\s]+(?=\s--)", MainSectionDescription)
-						descFlag:=descKeyFlag:=descKeyFlagO:=TrailingSpacesO:=TrailingSpaces := 0
-						continue
+					RegExMatch(line, "(?<=\{\s;)[\w\s-\+\/\(\)]+(?=\(\d+\))", mainsection)
+					mainsection	:= Trim(mainsection)
+					subsection	:= ""
+					RegExMatch(line, "(?<=--\s)[\w\s]+(?=\s--)", MainSectionDescription)
+					descFlag:=descKeyFlag:=descKeyFlagO:=TrailingSpacesO:=TrailingSpaces := 0
+					continue
 			}
-			else If RegExMatch(line, "(?<=\{\s;)\<\d\d\.\d\d[\d\.]*\>\:\s[\w\-\_\+\/\(\)]+")                                                                                                              	; name of subsection
+			else If RegExMatch(line, "(?<=\{\s;)\<\d\d\.\d\d[\d\.]*\>\:\s[\w\-\_\+\/\(\)]+")  ; name of subsection
 			{
-						RegExMatch(line, "(?<=\>\:\s)[\w\-\_\s\+\/]+", subsection)
-						subsection:= Trim(subsection)
-						continue
+					RegExMatch(line, "(?<=\>\:\s)[\w\-\_\s\+\/]+", subsection)
+					subsection:= Trim(subsection)
+					continue
 			}
-			else If RegExMatch(line, "(;\s*\<\d\d\.\d\d\.\d\d\d\d\d)|(;\s*\<\d\d\.\d\d\.\d\d.\d\d\d\d\d\d)")                                                                                 	; new function
+			else If RegExMatch(line, "(;\s*\<\d\d\.\d\d\.\d\d\d\d\d)|(;\s*\<\d\d\.\d\d\.\d\d.\d\d\d\d\d\d)")  ; new function
 			{
 				; ---------------------------------------------------------------------------------------------------------------------------------------------------------
 				; last data from previous function will be stored
@@ -646,7 +646,7 @@ RareIndexer(ARFile) {                                                           
 
 				; shorten example code
 					ARData[(fI)].examples :=    Trim(ARData[(fI)].examples, "`n`r")
-					Loop, 5                                                                                                 	; deletes up 2 empty lines
+					Loop, 5  ; deletes up 2 empty lines
 					{
 							ARData[(fI)].examples 	:= StrReplace(ARData[(fI)].examples	, SubStr("`n`n`n`n`n`n`n`n`n", 1, 8 - A_Index), "`n")
 							ARData[(fI)].code      	:= StrReplace(ARData[(fI)].code       	, SubStr("`n`n`n`n`n`n`n`n`n", 1, 8 - A_Index), "`n")
@@ -658,16 +658,16 @@ RareIndexer(ARFile) {                                                           
 				; ---------------------------------------------------------------------------------------------------------------------------------------------------------
 				; data collecting for a new function starts here
 				; --------------------------------------------------------------------------------------------------------------------------------------------------------- ;{
-					FirstBracket:= descFlag:=descKeyFlag:=descKeyFlagO:=TrailingSpacesO:=TrailingSpaces:=NoCode:= 0       	; re-initialize flags
-					RegExMatch(line, "[\d\.]+", FnHash)                                                                                                                 	; gets the function hash
-					fi ++                                                                                                                                                                   	; function index (fi) enumerator
-					ARData[(fI)]                                                   	:= Object()
-					ARData[(fi)].description                                	:= Object()
-					ARData[(fI)].FnHash                                       	:= FnHash
-					ARData[(fI)].start                                          	:= A_Index+1
-					ARData[(fI)].mainsection                              	:= mainsection
-					ARData[(fI)].mainsectionDescription           	:= mainsectionDescription
-					ARData[(fI)].subsection                                	:= subsection
+					FirstBracket:= descFlag:=descKeyFlag:=descKeyFlagO:=TrailingSpacesO:=TrailingSpaces:=NoCode:= 0  ; re-initialize flags
+					RegExMatch(line, "[\d\.]+", FnHash)  ; gets the function hash
+					fi ++  ; function index (fi) enumerator
+					ARData[(fI)]                        := Object()
+					ARData[(fi)].description            := Object()
+					ARData[(fI)].FnHash                 := FnHash
+					ARData[(fI)].start                  := A_Index+1
+					ARData[(fI)].mainsection            := mainsection
+					ARData[(fI)].mainsectionDescription := mainsectionDescription
+					ARData[(fI)].subsection             := subsection
 
 					GuiControl, Text, Field2, % fI ", " fname "`)"
 					continue

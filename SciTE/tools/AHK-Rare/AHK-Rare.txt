@@ -3565,7 +3565,7 @@ CreateDIB( PixelData, W, H, ResizeW := 0, ResizeH := 0, Gradient := 1  ) {      
 			hBM := DllCall( "CopyImage", "Ptr",hBM, "UInt",0, "Int",0, "Int",0, "UInt",LR_Flag3, "Ptr" )
 		Return DllCall( "CopyImage", "Ptr",hBM, "Int",0, "Int",ResizeW, "Int",ResizeH, "Int",LR_Flag2, "UPtr" )
 	} ;</05.01.000049>
-;<05.01.000050	>
+;<05.01.000050>
 GuiControlLoadImage(HCTRL, PicPath, Rotate = "") {                                         	;-- scale down a picture to fit the given width and height of a picture control
 
 	/*    	DESCRIPTION of function GuiControlLoadImage()
@@ -8156,7 +8156,7 @@ LV_EX_SetTileViewLines(HLV, Lines, tileX := "", tileY := "") {                  
 	License         	:	--
 	Syntax          	:	--
 	Parameter(s)	:	Lines - 	Maximum number of text lines in each item label, not counting the title
-	                                    	One line is added internally because the item might be wrapped to two lines!;<04.01.000001>
+	                                    	One line is added internally because the item might be wrapped to two lines!
 	Return value	:
 	Remark(s)    	:
 	Dependencies	:	none
@@ -8198,7 +8198,7 @@ LV_EX_SetTileViewLines(HLV, Lines, tileX := "", tileY := "") {                  
 	NumPut(Lines, LVTVI, OffLines, "Int") ; c_lines: max lines below first line
 	SendMessage, 0x10A2, 0, % &LVTVI, , % "ahk_id " . HLV ; LVM_SETTILEVIEWINFO
 	Return ErrorLevel
-} ;</04.01.000001>
+} ;</06.03.05.000041>
 
 }
 
@@ -8705,12 +8705,12 @@ UpdateScrollBars(GuiNum, GuiWidth, GuiHeight) {                                 
 	; Update scroll bar.
 	NumPut(new_pos, si, 20, "int") ; nPos
 	DllCall("SetScrollInfo", "uint", hwnd, "int", bar, "uint", &si, "int", 1)
-} ;</06.03.08.000001>
+}
+} ;</06.03.09.000001>
 
 }
-}
 
-{ ;<06.03.10>: MonthCal      	(2)
+{ ;<06.03.10>: MonthCal      	(0)
 
 }
 }
@@ -8747,6 +8747,7 @@ UpdateScrollBars(GuiNum, GuiWidth, GuiHeight) {                                 
 { ;gui - get informations (82) -- get informations from windows and screens --                                          	baseID: <06.04>
 
 { ;<06.04.01> screen get 						(02)
+;<06.04.01.000001>
 screenDims() {                                                                                                          	;-- returns informations of active screen (size, DPI and orientation)
 
 	W := A_ScreenWidth
@@ -8756,8 +8757,8 @@ screenDims() {                                                                  
 	;MsgBox % "W: "W "`nH: "H "`nDPI: "DPI
 	return {W:W, H:H, DPI:DPI, OR:Orient}
 
-}
-
+} ;</06.04.01.000001>
+;<06.04.01.000002>
 DPIFactor() {                                                                                                            	;-- determines the Windows setting to the current DPI factor
 
 	RegRead, DPI_value, HKEY_CURRENT_USER, Control Panel\Desktop\WindowMetrics, AppliedDPI
@@ -8768,12 +8769,12 @@ DPIFactor() {                                                                   
 	else
 		Return  DPI_Value/96
 
-}
+} ;</06.04.01.000002>
 
 }
 
 { ;<06.04.02> control get 					(30)
-;<06.04.02.00001>
+;<06.04.02.000001>
 ControlExists(class) {                                                                                                	;-- true/false for ControlClass
   WinGet, WinList, List  ;gets a list of all windows
   Loop, % WinList
@@ -8784,8 +8785,8 @@ ControlExists(class) {                                                          
       return temp
   }
   return 0
-} ;</06.04.02.00001>
-;<06.04.02.00002>
+} ;</06.04.02.000001>
+;<06.04.02.000002>
 GetFocusedControl()  {                                                                                            	;-- retrieves the ahk_id (HWND) of the active window's focused control.
 
         ; This script requires Windows 98+ or NT 4.0 SP3+.
@@ -8816,8 +8817,8 @@ GetFocusedControl()  {                                                          
    focusedHwnd := NumGet(guiThreadInfo,8+A_PtrSize, "Ptr") ; *(addr + 12) + (*(addr + 13) << 8) +  (*(addr + 14) << 16) + (*(addr + 15) << 24)
 
 	Return focusedHwnd
-} ;</06.04.02.00002>
-;<06.04.02.00003>
+} ;</06.04.02.000002>
+;<06.04.02.000003>
 GetControls(hwnd, controls="") {                                                                            	;-- returns an array with ClassNN, Hwnd and text of all controls of a window
 
 	if !isobject(controls)
@@ -8845,14 +8846,14 @@ GetControls(hwnd, controls="") {                                                
 	}
 	return controls
 
-} ;</06.04.02.00003>
-;<06.04.02.00004>
+} ;</06.04.02.000003>
+;<06.04.02.000004>
 GetOtherControl(refHwnd,shift,controls,type="hwnd") {                                        	;--
 	for k,v in controls
 		if v[type]=refHwnd
 			return controls[k+shift].hwnd
-} ;</06.04.02.00004>
-;<06.04.02.00005>
+} ;</06.04.02.000004>
+;<06.04.02.000005>
 ListControls(hwnd, obj=0, arr="") {                                                                         	;-- similar function to GetControls but returns a comma seperated list
 
 	if !isobject(arr)
@@ -8874,8 +8875,8 @@ ListControlsReturn:
 		str.="""" v["Hwnd"] """,""" v["ClassNN"] """,""" v["text"] """`n"
 	return str
 
-} ;</06.04.02.00005>
-;<06.04.02.00006>
+} ;</06.04.02.000005>
+;<06.04.02.000006>
 Control_GetClassNN( hWnd, hCtrl ) {  																		;-- no-loop
 
 	; SKAN: www.autohotkey.com/forum/viewtopic.php?t=49471
@@ -8886,8 +8887,8 @@ Control_GetClassNN( hWnd, hCtrl ) {  																		;-- no-loop
 	 StringGetPos, P, CN, `n, L%ErrorLevel%
 	 Return SubStr( CN, P+2, InStr( CN, LF, 0, P+2 ) -P-2 )
 
-} ;</06.04.02.00006>
-;<06.04.02.00007>
+} ;</06.04.02.000006>
+;<06.04.02.000007>
 ControlGetClassNN(hWndWindow,hWndControl) {													;-- with loop
 
 	; https://autohotkey.com/board/topic/45627-function-control-getclassnn-get-a-control-classnn/
@@ -8900,8 +8901,8 @@ ControlGetClassNN(hWndWindow,hWndControl) {													;-- with loop
 			return A_LoopField
 	}
 
-} ;</06.04.02.00007>
-;<06.04.02.00008>
+} ;</06.04.02.000007>
+;<06.04.02.000008>
 ControlGetClassNN( control="", Window="", Text="", ExWin="", ExText="" ) {	    	;-- different method is used here in compare to the already existing functions in this collection
 
 	WinGet, cl, ControlList, % Window, % Text, % ExWin, % ExText
@@ -8914,17 +8915,16 @@ ControlGetClassNN( control="", Window="", Text="", ExWin="", ExText="" ) {	    	
 		If (A_LoopField = ch)
 			return cl%A_Index%
 	return 0
-} ;</06.04.02.00008>
-;<06.04.02.00009>
+} ;</06.04.02.000008>
+;<06.04.02.000009>
 GetClassName( hwnd ) { 																						    	;-- returns HWND's class name without its instance number, e.g. "Edit" or "SysListView32"
 		;https://autohotkey.com/board/topic/45515-remap-hjkl-to-act-like-left-up-down-right-arrow-keys/#entry283368
 		VarSetCapacity( buff, 256, 0 )
 		DllCall("GetClassName", "uint", hwnd, "str", buff, "int", 255 )
 return buff
-} ;</06.03.09.000001>
+} ;</06.04.02.000009>
 ;<06.04.02.000010>
-Control_GetFont(hWnd, ByRef Name, ByRef Size, ByRef Style, 									;-- get the currently used font of a control
-IsGDIFontSize := 0) {
+Control_GetFont(hWnd, ByRef Name, ByRef Size, ByRef Style, IsGDIFontSize := 0) { 									;-- get the currently used font of a control
 
     SendMessage 0x31, 0, 0, , ahk_id %hWnd% ; WM_GETFONT
     If (ErrorLevel == "FAIL") {
@@ -8943,13 +8943,13 @@ IsGDIFontSize := 0) {
     . (NumGet(LOGFONT, 22, "UChar") ? " Strikeout" : ""))
 
     Size := IsGDIFontSize ? -NumGet(LOGFONT, 0, "Int") : Round((-NumGet(LOGFONT, 0, "Int") * 72) / A_ScreenDPI)
-} ;</06.04.02.00011>
-;<06.04.02.00011>
+} ;</06.04.02.000010>
+;<06.04.02.000011>
 IsControlFocused(hwnd) {																							;-- true/false if a specific control is focused
     VarSetCapacity(GuiThreadInfo, 48) , NumPut(48, GuiThreadInfo, 0)
     Return DllCall("GetGUIThreadInfo", uint, 0, str, GuiThreadInfo) ? (hwnd = NumGet(GuiThreadInfo, 12)) ? True : False : False
-} ;</06.04.02.00012>
-;<06.04.02.00012>
+} ;</06.04.02.000011>
+;<06.04.02.000012>
 getControlNameByHwnd(winHwnd,controlHwnd) {													;-- self explaining
 
 	bufSize=1024
@@ -8966,8 +8966,8 @@ getControlNameByHwnd(winHwnd,controlHwnd) {													;-- self explaining
 	DllCall("VirtualFreeEx","Ptr", hProcess,"UInt",otherMem,"UInt", 0, "UInt", 0x8000)
 	return var1
 
-} ;</06.04.02.00013>
-;<06.04.02.00013>
+} ;</06.04.02.000012>
+;<06.04.02.000013>
 getByControlName(winHwnd,name) {																		;-- search by control name return hwnd
 
 	winget,controlList,controlListhwnd,ahk_id %winHwnd%
@@ -9000,8 +9000,8 @@ getByControlName(winHwnd,name) {																		;-- search by control name ret
 	DllCall("CloseHandle","Ptr",hProcess)
     return arr
 
-} ;</06.04.02.00013>
-;<06.04.02.00014>
+} ;</06.04.02.000013>
+;<06.04.02.000014>
 getNextControl(winHwnd, controlName="", accName="", classNN="", accHelp="") {	;-- I'm not sure if this feature works could be an AHK code for the Control.GetNextControl method for System.Windows.Forms
 
 	winget, list, controllisthwnd, ahk_id %winHwnd%
@@ -9051,15 +9051,15 @@ getNextControl(winHwnd, controlName="", accName="", classNN="", accHelp="") {	;-
 	DllCall("FreeLibrary", "Ptr", hModule)
 	return ret
 
-} ;</06.04.02.00014>
-;<06.04.02.00015>
+} ;</06.04.02.000014>
+;<06.04.02.000015>
 IsControlUnderCursor(ControlClass) {																			;-- Checks if a specific control is under the cursor and returns its ClassNN if it is.
 	MouseGetPos, , , , control
 	if (InStr(Control, ControlClass))
 		return control
 	return false
-} ;</06.04.02.00015>
-;<06.04.02.00016>
+} ;</06.04.02.000015>
+;<06.04.02.000016>
 GetFocusedControl(Option := "") {																				;-- get focused control from active window -multi Options[ClassNN \ Hwnd \ Text \ List \ All] available
 
 	; https://autohotkey.com/boards/viewtopic.php?f=6&t=23987 from V for Vendetta
@@ -9093,8 +9093,8 @@ GetFocusedControl(Option := "") {																				;-- get focused control fro
 		return, FocusedControlList
 
 	return, FocusedControl " - " FocusedControlId "`n`n____Text____`n`n" FocusedControlText "`n`n____List____`n`n" FocusedControlList
-} ;</06.04.02.00016>
-;<06.04.02.00017>
+} ;</06.04.02.000016>
+;<06.04.02.000017>
 ControlGetTextExt(hControl, hWinTitle)  {                                                       			;-- 3 different variants are tried to determine the text of a control
 
 	/*                                                   	DESCRIPTION
@@ -9120,8 +9120,8 @@ ControlGetTextExt(hControl, hWinTitle)  {                                       
          SendMessage, 0xD, ControlTextSize, &ControlText, %hControl%, %hWinTitle%
    }
    Return ControlText
-} ;</06.04.02.00017>
-;<06.04.02.00018>
+} ;</06.04.02.000017>
+;<06.04.02.000018>
 getControlInfo(type="button", text="", ret="w", fontsize="", fontmore="") {			;-- get width and heights of controls
 	static test
 	Gui, wasteGUI:New
@@ -9133,8 +9133,8 @@ getControlInfo(type="button", text="", ret="w", fontsize="", fontmore="") {			;-
 		return testw
 	if ret=h
 		return testh
-} ;</06.04.02.00018>
-;<06.04.02.00019>
+} ;</06.04.02.000018>
+;<06.04.02.000019>
 FocusedControl() { 																								    	;-- returns the HWND of the currently focused control, or 0 if there was a problem
 	;https://autohotkey.com/board/topic/45515-remap-hjkl-to-act-like-left-up-down-right-arrow-keys/#entry283368
 	NumPut(VarSetCapacity( gti, 48, 0 ), gti, 0, "int")
@@ -9142,8 +9142,8 @@ FocusedControl() { 																								    	;-- returns the HWND of the curr
 		return NumGet(gti, 12, "uint")
 	return 0
 
-} ;</06.04.02.00019>
-;<06.04.02.00020>
+} ;</06.04.02.000019>
+;<06.04.02.000020>
 Control_GetFont( hwnd ,ByRef Name,ByRef Style,ByRef Size) { 									;-- retrieves the used font of a control
 ; www.autohotkey.com/forum/viewtopic.php?p=465438#465438
 ; https://autohotkey.com/board/topic/7984-ahk-functions-incache-cache-list-of-recent-items/page-11
@@ -9154,8 +9154,8 @@ Control_GetFont( hwnd ,ByRef Name,ByRef Style,ByRef Size) { 									;-- retriev
  Name := DllCall( "MulDiv",Int,&LF+28, Int,1,Int,1, Str )
  Style := Trim(((W:=NumGet(LF,16,"Int"))=700 ? " Bold" : W=400 ? "" : " w" W ) . (NumGet(LF,20,"UChar") ? " Italic" : "") . (NumGet(LF,21,"UChar") ? " Underline" : "") . (NumGet(LF,22,"UChar") ? " StrikeOut" : ""))
  Size := Round( ( -NumGet( LF,0,"Int" )*72 ) / DPI )
-} ;</06.04.02.00020>
-;<06.04.02.00021>
+} ;</06.04.02.000020>
+;<06.04.02.000021>
 WinForms_GetClassNN(WinID, fromElement, ElementName) {                              	;-- Check which ClassNN an element has
 
 	; function by Ixiko 2018 last_change 28.01.02.2018
@@ -9184,8 +9184,8 @@ WinForms_GetClassNN(WinID, fromElement, ElementName) {                          
 
 
 return classNN
-} ;</06.04.02.00021>
-;<06.04.02.00022>
+} ;</06.04.02.000021>
+;<06.04.02.000022>
 GetExtraStyle(hWnd) {                                                                                             	;-- get Extra Styles from a control
 
     WinGetClass Class, ahk_id %hWnd%
@@ -9205,8 +9205,8 @@ GetExtraStyle(hWnd) {                                                           
     SendMessage %Message%, 0, 0,, ahk_id %hWnd%
     Return Format("0x{:08X}", ErrorLevel)
 
-} ;</06.04.02.00022>
-;<06.04.02.00023>
+} ;</06.04.02.000022>
+;<06.04.02.000023>
 GetToolbarItems(hToolbar) {                                                                                    	;-- retrieves the text/names of all items of a toolbar
 
     WinGet PID, PID, ahk_id %hToolbar%
@@ -9263,8 +9263,8 @@ GetToolbarItems(hToolbar) {                                                     
     DllCall("CloseHandle", "Ptr", hProc)
 
     Return ToolbarItems
-} ;</06.04.02.00023>
-;<06.04.02.00024>
+} ;</06.04.02.000023>
+;<06.04.02.000024>
 ControlGetTabs(hTab) {                                                                                            	;-- retrieves the text of tabs in a tab control
 
     ; https://autohotkey.com/board/topic/70727-ahk-l-controlgettabs/
@@ -9340,8 +9340,8 @@ ControlGetTabs(hTab) {                                                          
     DllCall("CloseHandle", "Ptr", hProc)
 
     Return Tabs
-} ;</06.04.02.00024>
-;<06.04.02.00025>
+} ;</06.04.02.000024>
+;<06.04.02.000025>
 GetHeaderInfo(hHeader) {                                                                                       	;-- Returns an object containing width and text for each item of a remote header control
     ; Returns an object containing width and text for each item of a remote header control
     Static MAX_TEXT_LENGTH := 260
@@ -9402,8 +9402,8 @@ GetHeaderInfo(hHeader) {                                                        
     DllCall("CloseHandle", "Ptr", hProc)
 
     Return HDInfo
-} ;</06.04.02.00025>
-;<06.04.02.00026>
+} ;</06.04.02.000025>
+;<06.04.02.000026>
 WinSaveCheckboxes(hWin) {                                                                                     	;-- save the status of checkboxes in other apps
 
 	/*    	DESCRIPTION of function WinSaveCheckboxes() ID: 06.04.02.00026
@@ -9486,8 +9486,8 @@ WinSaveCheckboxes(hWin) {                                                       
 		return 0
 
 return oControls2
-} ;</06.04.02.00026>
-;<06.04.02.00027>
+} ;</06.04.02.000026>
+;<06.04.02.000027>
 GetButtonType(hwndButton) {                                                                                 	;-- uses the style of a button to get it's name
 
 	/*    	DESCRIPTION of function GetButtonType() ID: 06.04.02.00027
@@ -9563,8 +9563,8 @@ GetButtonType(hwndButton) {                                                     
 
   WinGet, btnStyle, Style, ahk_id %hwndButton%
   return types[1+(btnStyle & 0xF)]
-} ;</06.04.02.00027>
-;<06.04.02.00028>
+} ;</06.04.02.000027>
+;<06.04.02.000028>
 HWNDToClassNN(hwnd) {                                                                                      	;-- a different approach to get classNN from handle
 
 	/*	DESCRIPTION OF FUNCTION: -- HWNDToClassNN --
@@ -9584,8 +9584,8 @@ HWNDToClassNN(hwnd) {                                                           
 		if(hwnd1=hwnd)
 			return A_LoopField
 	}
-} ;</06.04.02.00028>
-;<06.04.02.00029>
+} ;</06.04.02.000028>
+;<06.04.02.000029>
 IsCheckboxStyle(style) {                                                                                           	;-- checks style(code) if it's a checkbox
 
 	/*	DESCRIPTION OF FUNCTION: -- IsCheckboxStyle --
@@ -9629,8 +9629,8 @@ IsCheckboxStyle(style) {                                                        
         Return True
 
 	Return False
-} ;</06.04.02.00029>
- ;<06.04.02.00030>
+} ;</06.04.02.000029>
+ ;<06.04.02.000030>
 Control_GetFont(hwnd) {                                                                                         	;-- Given an handle to a GuiControl, Control_GetFont() will return the Fontname & Fontsize
 
 	/*	DESCRIPTION OF FUNCTION: -- Control_GetFont --
@@ -9661,11 +9661,11 @@ Control_GetFont(hwnd) {                                                         
 	 hDC := DllCall( "GetDC", UInt,hwnd ), DPI := DllCall( "GetDeviceCaps", UInt,hDC, Int,90 )
 	 DllCall( "ReleaseDC", Int,0, UInt,hDC ), S := Round( ( -NumGet( LF,0,"Int" )*72 ) / DPI )
 Return DllCall( "MulDiv",Int,&LF+28, Int,1,Int,1, Str ), DllCall( "SetLastError", UInt,S )
-} ;</06.04.02.00030>
+} ;</06.04.02.000030>
 }
 
 { ;<06.04.03> gui + window get/find 	(44)
-;<06.04.03.00001>
+;<06.04.03.000001>
 IsOverTitleBar(x, y, hWnd) { 																						;-- WM_NCHITTEST wrapping: what's under a screen point?
 
 	; This function is from http://www.autohotkey.com/forum/topic22178.html
@@ -9674,10 +9674,9 @@ IsOverTitleBar(x, y, hWnd) { 																						;-- WM_NCHITTEST wrapping: wh
       return true
    else
       return false
-} ;</06.04.03.00001>
-;<06.04.03.00002>
-WinGetPosEx(hWindow,ByRef X="",ByRef Y="",ByRef Width="", 								;-- gets the position, size, and offset of a window
-ByRef Height="", ByRef Offset_X="",ByRef Offset_Y="")  {
+} ;</06.04.03.000001>
+;<06.04.03.000002>
+WinGetPosEx(hWindow,ByRef X="",ByRef Y="",ByRef Width="",ByRef Height="",ByRef Offset_X="",ByRef Offset_Y="")  { 								;-- gets the position, size, and offset of a window
 
 	/*								Function: WinGetPosEx
 	;
@@ -9847,23 +9846,23 @@ ByRef Height="", ByRef Offset_X="",ByRef Offset_Y="")  {
     NumPut(Offset_X:=(dpiAdjusted_Width-GWR_Width)//2,RECTPlus,16,"Int")
     NumPut(Offset_Y:=(dpiAdjusted_Height-GWR_Height)//2,RECTPlus,20,"Int")
     Return &RECTPlus
-} ;<06.04.03.00002>
-;<06.04.03.00003>
+} ;</06.04.03.000002>
+;<06.04.03.000003>
 GetParent(hWnd) {																										;-- get parent win handle of a window
 
 	return DllCall("GetParent", "Ptr", hWnd, "Ptr")
 
-} ;</06.04.03.00003>
-;<06.04.03.00004>
+} ;</06.04.03.000003>
+;<06.04.03.000004>
 GetWindow(hWnd,uCmd) {																							;-- DllCall wrapper for GetWindow function
 
 	return DllCall( "GetWindow", "Ptr", hWnd, "uint", uCmd, "Ptr")
 
-} ;</06.04.03.00004>
-;<06.04.03.00005>
+} ;</06.04.03.000004>
+;<06.04.03.000005>
 GetForegroundWindow() {																							;-- returns handle of the foreground window
 	return DllCall("GetForeGroundWindow", "Ptr")
-} ;</06.04.02.000010>
+} ;</06.04.03.000005>
 ;<06.04.000006>
 IsWindowVisible(hWnd) {																							;-- self explaining
 	return DllCall("IsWindowVisible", "Ptr", hWnd)
@@ -13476,7 +13475,7 @@ MenuSub="MenuSub",ReturnMenu="") {
 ;|   Menu_Show(13)                       	|   CreateMenu(14)                       	|   CreateDDMenu(15)                  	|
 
 { ;gui - icon (4) -                                                                                                                                               	baseID: <06.07>
-;<06.07.00001>
+;<06.07.000001>
 ExtractIcon(Filename, IconNumber, IconSize=0) {                                            	;-- extract icon from a resource file
 
 	/*    	DESCRIPTION of function ExtractIcon() - ID: 06.07.00001
@@ -13555,8 +13554,8 @@ ExtractIcon(Filename, IconNumber, IconSize=0) {                                 
     }
 
     return h_icon
-} ;</06.07.00001>
-;<06.07.00002>
+} ;</06.07.000001>
+;<06.07.000002>
 GetIconSize(h_icon, ByRef width, ByRef height) {                                               	;-- determines the size of the icon (Lexikos function)
 
 	/*    	DESCRIPTION of function GetIconSize() ID: 06.07.00002
@@ -13591,8 +13590,8 @@ GetIconSize(h_icon, ByRef width, ByRef height) {                                
         return ret
     }
     return false
-} ;</06.07.00002>
-;<06.07.00003>
+} ;</06.07.000002>
+;<06.07.000003>
 Gdip_GetHICONDimensions(hIcon, ByRef Width, ByRef Height) {                   	;-- get icon dimensions
 
 	/*    	DESCRIPTION of function Gdip_GetHICONDimensions() ID: 06.07.00003
@@ -13630,8 +13629,8 @@ Gdip_GetHICONDimensions(hIcon, ByRef Width, ByRef Height) {                   	;
 
     DllCall("Gdi32\DeleteObject", Ptr, hbmMask)
     DllCall("Gdi32\DeleteObject", Ptr, hbmColor)
-} ;</06.07.00003>
-;<06.07.00004>
+} ;</06.07.000003>
+;<06.07.000004>
 SetTrayIcon( Gui0=0 ) {                                                                                      	;-- sets a hex coded icon to as try icon
 	/*    	DESCRIPTION of function SetTrayIcon() ID: 06.07.0004
         	-------------------------------------------------------------------------------------------------------------------
@@ -13664,7 +13663,7 @@ SetTrayIcon( Gui0=0 ) {                                                         
  NumPut( Gui0,NID,4 ), NumPut( 1028,NID,8 ), NumPut( 2,NID,12 ), NumPut( hIcon,NID,20 )
  Menu, Tray, Icon,,, 1
  DllCall( "shell32\Shell_NotifyIcon", UInt,0x1, UInt,&NID )
-} ;</06.07.00004>
+} ;</06.07.000004>
 
 }
 ;|                                                   	|                                                   	|                                                   	|                                                   	|
@@ -23661,7 +23660,7 @@ timer-tick:
 Timer_Stop(timer) {
     timer.next_run := 0
 }
-;} ;</16.01.00060>
+;} ;</16.01.000060>
 ;<16.01.000061>
 DisableFadeEffect() {                                                                                                   	;-- disabling fade effect on gui animations
 	; SPI_GETCLIENTAREAANIMATION = 0x1042
