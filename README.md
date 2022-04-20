@@ -16,7 +16,7 @@
 ##### 3. 智能F1  
 ![智能F1](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/3.%20智能F1.gif)  
   
-##### 4. 调试代码 F7  
+##### 4. 调试代码 f7  
 ![调试代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/4.%20调试代码.gif)  
   
 ##### 5. 运行选区代码  ctrl+3  
@@ -28,7 +28,7 @@
 ##### 7. 代码格式化 ctrl+4  
 ![代码格式化](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/7.%20代码格式化.gif)  
   
-##### 8. 热键、标签、函数识别并跳转 F12或中键  
+##### 8. 热键、标签、函数识别并跳转 f12或中键  
 ![热键、标签、函数识别并跳转](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/8.%20热键、标签、函数识别并跳转.gif)  
   
 ##### 9. 切换ahk版本  
@@ -49,47 +49,53 @@
 ##### 14. 缩略词 ctrl+b  
 ![缩略词](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/14.%20ctrl+b.gif)  
   
-##### 15. 创建GUI ctrl+1  
-![创建GUI](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/15.%20创建GUI.png)  
+##### 15. 创建对话框  
+![创建对话框](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/15.%20创建对话框.png)  
   
-##### 16. 创建对话框 ctrl+2  
-![创建对话框](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/16.%20创建对话框.png)  
+##### 16. 创建GUI  
+![创建GUI](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/16.%20创建GUI.png)  
   
-##### 17. 可搜索函数库 ctrl+5  
-![可搜索函数库](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/17.%20可搜索函数库%20(1).png)  
-![可搜索函数库](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/17.%20可搜索函数库%20(2).png)  
+##### 17. 获取窗口信息  
+![获取窗口信息](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/17.%20获取窗口信息.png)  
   
-##### 18. 获取窗口信息 ctrl+6  
-![获取窗口信息](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/18.%20获取窗口信息.png)  
+##### 18. 获取窗口信息增强版  
+![获取窗口信息增强版](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/18.%20获取窗口信息增强版.png)  
   
-##### 19. 获取窗口信息增强版 ctrl+7  
-![获取窗口信息增强版](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/19.%20获取窗口信息增强版.png)  
+##### 19. 调试正则表达式  
+![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/19.%20调试正则表达式.png)  
   
-##### 20. 调试正则表达式 ctrl+8  
-![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/20.%20调试正则表达式.png)  
+##### 20. 调试爬虫  
+![调试爬虫](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/20.%20调试爬虫.png)    
   
-##### 21. 调试爬虫 ctrl+9  
-![调试爬虫](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/21.%20调试爬虫.png)    
+##### 21. 找字识图取色  
+![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/21.%20找字识图取色%20(1).png)  
+![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/21.%20找字识图取色%20(2).png)  
   
-##### 22. 找字识图取色  
-![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20找字识图取色%20(1).png)  
-![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20找字识图取色%20(2).png)  
-![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20找字识图取色%20(3).png)  
+##### 22. 生成 DllCall 代码  
+![生成 DllCall 代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20生成%20DllCall%20代码.png)    
   
-##### 23. 集成等宽字体  
-![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/23.%20集成等宽字体.png)  
+##### 23. 生成结构体代码  
+![生成结构体代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/23.%20生成结构体代码.png)    
+  
+##### 24. 查询类型大小、成员偏移、常量值  
+![查询类型大小、成员偏移、常量值](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/24.%20查询类型大小、成员偏移、常量值.png)    
+  
+##### 25. 集成等宽字体  
+![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/25.%20集成等宽字体.png)  
 ------------  
   
 - 技巧：  
 > * 工具栏上的“代码格式化”或Ctrl+4可快速格式化全部或选中代码。  
-> * 工具栏上的“AHK-Rare”可搜索数百个函数。  
 > * 工具栏上的“MagicBox”可轻松创建各种MsgBox弹窗。  
-> * 工具栏上的“AutoGUI”可轻松创建GUI。（它里面还有更多实用工具）  
-> * 工具栏上的“窗口信息工具”可取各种窗口信息。（简单但较易使用）  
-> * 工具栏上的“强力窗口信息工具”可取到QQ聊天框内容。（强大但使用复杂）  
+> * 工具栏上的“AutoGUI”可轻松创建GUI。  
+> * 工具栏上的“窗口信息查看”可取各种窗口信息。（简单但较易使用）  
+> * 工具栏上的“强力窗口信息查看”可取到QQ聊天框内容。（强大但使用复杂）  
 > * 工具栏上的“AHK 正则终结者”可清晰显示正则的各种匹配与子匹配。  
 > * 工具栏上的“AHK 爬虫终结者”可模拟伪造各种状态访问网址。（方便调试爬虫）  
 > * 工具栏上的“找字识图取色”可简单高效的进行文字、颜色等查找识别。
+> * 工具栏上的“AHK DllCall 终结者”可生成 DllCall 代码。
+> * 工具栏上的“Structor”可生成结构体代码。
+> * 工具栏上的“Verifier”可查询类型大小、成员偏移、常量值。
   
 > * 右键菜单，可“打开文件所在目录”。  
 > * 右键菜单，可“运行选区代码”。  
