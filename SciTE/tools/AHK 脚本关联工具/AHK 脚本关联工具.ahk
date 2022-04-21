@@ -14,7 +14,7 @@
 2021.10.17	新增“编译脚本 (GUI)”的汉化
 2021.11.02	自动根据 AutoHotkey.exe 的位置定位基准目录。
 2021.11.05	重构代码，精简界面，修复新建模板时的编码问题，修复编辑模板时的权限问题。
-2022.04.21	为日志系统增加缓存，解决日志写入时的性能问题。
+2022.04.21	为日志系统增加缓存，解决日志写入时的性能问题。微调显示。
 
 修改作者：	布谷布谷
 2022.04.15	增加.ah2 .ahk2 文件的关联，并增加脚本关联选项 
@@ -44,7 +44,7 @@ Gui, Add, GroupBox, xp+60 yp-8   w205 h328 vState__1,
 Gui, Add, Button,   xp+10 yp+20  w185 h40  vState__2 gState__         , 删除所有关联
 Gui, Font
 Gui, Add, Checkbox, xp+2  yp+50  wp   h30  vState__3 gState__ Checked1, 右键 >> 编译脚本
-Gui, Add, Checkbox, xp+   yp+30  wp   hp   vState__4 gState__ Checked1, 右键 >> 编译脚本<GUI>
+Gui, Add, Checkbox, xp+   yp+30  wp   hp   vState__4 gState__ Checked1, 右键 >> 编译脚本 (GUI)
 Gui, Add, Checkbox, xp+   yp+30  wp   hp   vState__5 gState__ Checked1, 右键 >> 编辑脚本
 Gui, Add, Checkbox, xp+   yp+30  wp   hp   vState__6 gState__ Checked1, 右键 >> 新建 >> ahk脚本
 Gui, Add, Checkbox, xp+   yp+30  wp   hp   vState__7 gState__ Checked1, 右键 >> 以管理员身份运行
@@ -302,8 +302,9 @@ Install:
 	RegWrite_("REG_SZ", RootKey "\" Subkey "." ahk__, , FileType)
 	RegWrite_("REG_SZ", RootKey "\" Subkey "." ahk__ "\ShellNew", "FileName", Template_Name)
 	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell", , "Open")
-	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open", , "运行脚本(&O)")
-	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open","Icon", """" AHK_Path """")
+	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open", , "运行脚本")
+	; %AHK_Path%,1 这种图标设置方式没有成功
+	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open","Icon", """" Compiler_Path """")
 	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open\Command", , """" AHK_Path """ ""%1"" %*")
 	if State__3
 	{
@@ -330,7 +331,7 @@ Install:
 			MsgBox, % 4096+16, , 编译器路径错误 ！
 			return
 		}
-		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Compile-Gui", , "编译脚本<GUI>")
+		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Compile-Gui", , "编译脚本 (GUI)")
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Compile-Gui","Icon", """" Compiler_Path """")
 		IfInString, Compiler_Path, Ahk2Exe.exe
 			RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Compile-Gui\Command", , """" Compiler_Path """ /gui /in ""%1""")
@@ -347,7 +348,7 @@ Install:
 			MsgBox, % 4096+16, , 编辑器路径错误 ！
 			return
 		}
-		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Edit", , "编辑脚本(&E)")
+		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Edit", , "编辑脚本")
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Edit","Icon", """" Editor_Path """")
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Edit\Command", , """" Editor_Path """ ""%1""")
 	}
@@ -359,7 +360,7 @@ Install:
 		FilePattern=%A_WinDir%\ShellNew\%Template_Name%
 		IfNotExist, %FilePattern%
 			gosub Create_Template
-		RegWrite_("REG_SZ", RootKey "\" Subkey FileType, , "AutoHotkey " ahk__ " 脚本")
+		RegWrite_("REG_SZ", RootKey "\" Subkey FileType, , "AutoHotkey" (ahk__="ahk" ? "" : 2) " 脚本")
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\DefaultIcon", , AHK_Path ",1")
 	}
 	else
