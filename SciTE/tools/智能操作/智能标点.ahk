@@ -82,12 +82,12 @@ return
   ; 从而避免被识别为单按了 shift
   Send, {Blind}{vkE8 Up}
   
-  ; 没有获取焦点（可能焦点在查找框中），或输入是花括号，则用按键方式模拟
-  ; GETFOCUS = 2381
-  if (!oSciTE.Msg(2381) or 字符="{" or 字符="}")
+  GETFOCUS      := oSciTE.Msg(2381)
+  GETSELECTIONS := oSciTE.Msg(2570)
+  ; 没有获取焦点（可能焦点在查找框中），或输入是花括号，或是多光标模式下，则用按键方式模拟
+  if (!GETFOCUS or (字符="{" or 字符="}") or GETSELECTIONS>1)
   {
-    dec := Ord(字符)
-    hex := Format("{1:X}", dec)
+    hex := Format("{1:X}", Ord(字符))
     Send, {U+%hex%}
     ; 这里也需要修复一次，这是因为当 shift 键被按下时
     ; 此时的 Send a 命令实际操作是 {shift up}{a down}{a up}{shift down}
@@ -97,7 +97,7 @@ return
   else
     oSciTE.ReplaceSel(字符)
   
-  if (字符="(" or 字符="[" or 字符="{" or 字符="""") 
+  if (GETSELECTIONS=1 and (字符="(" or 字符="[" or 字符="{" or 字符=""""))
     补齐配对符号(字符)
 }
 
@@ -134,12 +134,8 @@ return
     PrevChars := oSciTE.GetTextRange(CurPos - 5, CurPos)
     ; 新建函数时的花括号
     If (RegExMatch(PrevChars, "\)\s?\r?\n?") or BlankLine) {
-      Send, {Enter}
+      Send, ^b
       Send, {Blind}{vkE8 Up}
-      pos := oSciTE.GetCurPos
-      hex := Format("{1:X}", Ord("}"))
-      Send, {Enter}{U+%hex%}
-      oSciTE.SetCurPos(pos)
     
     ; 普通花括号
     } Else {
