@@ -23,6 +23,7 @@ GetHome
 GetEnd
 DeleteEnd
 ReplaceSel
+FindText
 Msg
 
 ; Meta
@@ -132,6 +133,13 @@ CoI_ReplaceSel(this, text)
 	global scintillahwnd
 
 	SciUtil_ReplaceSel(scintillahwnd, text)
+}
+
+CoI_FindText(this, text, startPos := "", endPos := "", flag := "")
+{
+	global scintillahwnd
+
+	return, SciUtil_FindText(scintillahwnd, text, startPos, endPos, flag)
 }
 
 CoI_Msg(this, msg, wParam := 0, lParam := 0)

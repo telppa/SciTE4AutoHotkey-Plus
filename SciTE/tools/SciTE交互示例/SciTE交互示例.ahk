@@ -79,6 +79,14 @@ MsgBox, % "删除光标处到行尾内容`n`n" oSciTE.DeleteEnd()
 ; 替换选中内容
 MsgBox, % "替换选中内容`n`n" oSciTE.ReplaceSel("选中内容被替换了")
 
+; 搜索文本
+matchPos := oSciTE.FindText("SciTE")
+MsgBox, % "搜索文本`n`n" matchPos[1] "|" matchPos[2]
+
+; 用正则在指定范围搜索文本
+matchPos := oSciTE.FindText("Sci\w+", 0, 100, 0x00200000)
+MsgBox, % "用正则在指定范围搜索文本`n`n" matchPos[1] "|" matchPos[2]
+
 ; 打开一个文件
 oSciTE.OpenFile(filename)
 MsgBox, 打开一个文件

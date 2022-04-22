@@ -35,7 +35,13 @@
 		this.size := ""
 	}
 	
-	read()
+	/* 一定要用 ByRef 返回值
+	
+	lpBuffer 很可能包含二进制0。
+	接收时即使提前设置了变量大小，也很可能收不全数据。
+	
+	*/
+	read(ByRef lpBuffer)
 	{
 		VarSetCapacity(lpBuffer, this.size, 0)
 		ret := DllCall("ReadProcessMemory"
@@ -46,8 +52,6 @@
 									, "UPtr*", 0)
 		if (ret=0)
 			throw, A_ThisFunc ">   Unable to read process memory (" A_LastError ")"
-		else
-			return, lpBuffer
 	}
 	
 	/* 为什么一定要加 ByRef

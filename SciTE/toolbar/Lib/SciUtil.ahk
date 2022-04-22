@@ -53,7 +53,7 @@ SciUtil_GetSelection(hSci)
 	SendMessage, 2161, 0, mem.baseAddress,, ahk_id %hSci%
 	
 	; Read buffer
-	text := mem.read()
+	mem.read(text)
 	mem.close()
 	
 	; return
@@ -73,7 +73,7 @@ SciUtil_GetText(hSci)
 	SendMessage, 2182, len, mem.baseAddress,, ahk_id %hSci%
 	
 	; Read buffer
-	text := mem.read()
+	mem.read(text)
 	mem.close()
 	
 	return, StrGet(&text, "CP" SciUtil_GetCP(hSci))
@@ -86,13 +86,13 @@ SciUtil_GetTextRange(hSci, startPos, endPos)
 	mem.open(hSci, len)
 	
 	; textRange 是结构体
-	VarSetCapacity(textRange, 8 + A_PtrSize, 0)
+	VarSetCapacity(textRange, 12, 0)
 	, NumPut(startPos,        textRange, 0, "Int")
 	, NumPut(endPos,          textRange, 4, "Int")
-	, NumPut(mem.baseAddress, textRange, 8, "Ptr")
+	, NumPut(mem.baseAddress, textRange, 8, "UInt")
 	
 	; 结构体写入 mem2
-	mem2.open(hSci, 8 + A_PtrSize)
+	mem2.open(hSci, 12)
 	mem2.write(textRange)
 	
 	; 取文字， SCI_GETTEXTRANGE = 2162
@@ -102,7 +102,7 @@ SciUtil_GetTextRange(hSci, startPos, endPos)
 	mem2.close()
 	
 	; 读出文字，释放 mem
-	text := mem.read()
+	mem.read(text)
 	mem.close()
 	
 	return, StrGet(&text, "CP" SciUtil_GetCP(hSci))
@@ -147,7 +147,7 @@ SciUtil_GetLine(hSci, lineNumber)
 	SendMessage, 2153, lineNumber, mem.baseAddress,, ahk_id %hSci%
 	
 	; Read buffer
-	text := mem.read()
+	mem.read(text)
 	mem.close()
 	
 	; Trim off ending characters & return
@@ -231,6 +231,63 @@ SciUtil_ReplaceSel(hSci, text)
 	
 	; Done
 	mem.close()
+}
+
+SciUtil_FindText(hSci, text, startPos, endPos, flag)
+{
+	if (text="")
+		return
+	
+	if (startPos="")
+		startPos := SciUtil_GetCurPos(hSci)
+	
+	if (endPos="")
+	{
+		; SCI_GETLENGTH = 2006
+		SendMessage, 2006, 0, 0,, ahk_id %hSci%
+		endPos := ErrorLevel
+	}
+	
+	; SCFIND_NONE      = 0x0
+	; SCFIND_WHOLEWORD = 0x2
+	; SCFIND_MATCHCASE = 0x4
+	; SCFIND_WORDSTART = 0x00100000
+	; SCFIND_REGEXP    = 0x00200000
+	; SCFIND_POSIX     = 0x00400000
+	if (flag="")
+		flag := 0x0
+	
+	; 写入待搜索字符
+	len := StrPutVar(text, textConverted, "CP" SciUtil_GetCP(hSci))
+	mem2.open(hSci, len)
+	mem2.write(textConverted)
+	
+	; Sci_TextToFind 是结构体
+	VarSetCapacity(Sci_TextToFind, 20, 0)
+	, NumPut(startPos,          Sci_TextToFind, 0,  "Int")
+	, NumPut(endPos,            Sci_TextToFind, 4,  "Int")
+	, NumPut(mem2.baseAddress,  Sci_TextToFind, 8,  "UInt")  ; 指针。 SciLexer.dll 是32位的，所以直接设为 uint
+	, NumPut(out_matchStartPos, Sci_TextToFind, 12, "Int")
+	, NumPut(out_matchEndPos,   Sci_TextToFind, 16, "Int")
+	
+	; 结构体写入 mem
+	mem.open(hSci, 20)
+	mem.write(Sci_TextToFind)
+	
+	; SCI_FINDTEXT = 2150
+	SendMessage, 2150, flag, mem.baseAddress,, ahk_id %hSci%
+	
+	; 读取找到字符的位置
+	ret := []
+	, mem.read(out)
+	, ret.Push(NumGet(out, 12, "Int"))
+	, ret.Push(NumGet(out, 16, "Int"))
+	
+	; 释放
+	mem.close()
+	mem2.close()
+	
+	return, ret
 }
 
 #Include %A_LineFile%\..\mem.ahk
