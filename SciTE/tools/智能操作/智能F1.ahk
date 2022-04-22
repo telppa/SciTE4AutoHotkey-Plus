@@ -59,6 +59,9 @@ F1::
     
     WinClose, 查找 ahk_pid %PID%                         ; 关掉查找窗口，它存在会无法切换结果。
     
+    word := oSciTE.Selection
+    word := word ? word : oSciTE.GetWord
+    
     ; 有2种方法可以直接让 chm 定位到某个页面中
     ; 1. hh.exe mk:@MSITStore:R:\AutoHotkey.chm::/docs/Variables.htm#IsCompiled
     ; 2. KeyHH.exe -MyID R:\AutoHotkey.chm::/docs/Variables.htm#IsCompiled
@@ -67,7 +70,7 @@ F1::
     ; 3. KeyHH.exe -MyID R:\AutoHotkey.chm::/docs/search.htm?q=Call&m=1
     ; 所以只能用模拟的方式实现了
     oWB.getElementsByTagName("BUTTON")[2].click()        ; 索引按钮。
-    oWB.querySelector("INPUT").value := oSciTE.GetWord   ; 输入关键词。
+    oWB.querySelector("INPUT").value := word             ; 输入关键词。
     ControlSend, , {Enter}{Enter}, ahk_pid %PID%         ; 按两下回车进行搜索。
     oWB.getElementsByTagName("BUTTON")[1].click()        ; 目录按钮。
   }
