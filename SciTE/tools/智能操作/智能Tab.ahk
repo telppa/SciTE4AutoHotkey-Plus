@@ -14,11 +14,11 @@ return
     global oSciTE, 标记
     
     str := oSciTE.GetEnd
-    Send, ^b                        ; 展开缩略语。SendInput 发送快捷键是不一定生效的，所以全部使用 Send 代替。
-    Sleep, 50                       ; 添加这个延时可解决 “获取选中内容时而有效时而失效的问题” 。
-    if (oSciTE.GetEnd!=str)
+    Send, ^b                   ; 展开缩略语。SendInput 发送快捷键是不一定生效的，所以全部使用 Send 代替。
+    Sleep, 50                  ; 添加这个延时可解决 “获取选中内容时而有效时而失效的问题” 。
+    if (oSciTE.GetEnd!=str)    ; 行末内容发生变化，说明缩略语被展开了。
     {
-      Send, ^+{Right}               ; 在缩略语文件中已经设置过光标位置为单词前，所以这里直接选择下一单词就是了。
+      selNext()                ; 在缩略语文件中已经设置过光标位置为单词前，所以这里直接选择下一单词就是了。
       标记 := 1
       ToolTip, 智能Tab 已启用
     }
@@ -32,53 +32,86 @@ $Tab::
   {
     global oSciTE, 标记
     
-    if (oSciTE.Selection!="")                        ; 当前已有选中文字，则发送右箭头取消选择状态。
+    if (oSciTE.Selection!="")                      ; 当前已有选中文字，则发送右箭头取消选择状态。
       Send, {Right}
     
     loop, 25
     {
-      Send, ^+{Right}                                ; 选中右边单词。
-      选中文本 := Trim(oSciTE.Selection, " `t`v`f")  ; 获取被选中的内容。
+      光标右边文本 := getNext()                    ; 获取光标右边文本。大致等效于 Ctrl+Shift+Right
+      右边文本末1  := SubStr(光标右边文本, 0, 1)
+      右边文本末2  := SubStr(光标右边文本, -1, 2)
       
-      ; 文末
-      if (选中文本="")
+      ; 空格或制表符
+      if (RegExMatch(光标右边文本, "^[ \t]+$"))
       {
-        Send, {Right}
+        ctrlRight()
+        continue
+      }
+      ; 文末
+      else if (光标右边文本="")
+      {
         Send, {Enter}
         标记 := 0
         ToolTip
         return
       }
       ; 行末 例如 msg,aa,bb|`r`nxxxxxx
-      else if (SubStr(选中文本, -1, 2)="`r`n")
+      else if (右边文本末2="`r`n")
       {
-        Send, ^{Left}
         Send, {Enter}
         标记 := 0
         ToolTip
         return
       }
-      ; 带闭括号的行末 例如 instr(aa|)`r`nxxxxxx
-      else if (SubStr(选中文本, 0, 1)=")")
+      ; 闭括号 例如 instr(aa|)`r`nxxxxxx
+      else if (右边文本末1=")")
+      {
+        Send, {Right}
+        continue
+      }
+      ; 闭引号 例如 msg, "aa|" ,bb`r`nxxxxxx
+      else if (右边文本末1="""")
       {
         Send, {Right}
         continue
       }
       ; 分隔参数的逗号
-      else if (SubStr(选中文本, 0, 1)=",")
+      else if (右边文本末1=",")
       {
-        Send, {Right}
-        Send, ^+{Right}
-        return
+        ctrlRight()
+        
+        ; 例如 numget(var, 20, |"int/uint") 选中 int/uint
+        if (getNext()="""")
+        {
+          Send, {Right}
+          matchPos := oSciTE.FindText("""")
+          if (matchPos!=0)
+          {
+            ; SCI_SETSELECTIONEND = 2144
+            oSciTE.Msg(2144, matchPos[1])
+            return
+          }
+          else
+            continue
+        }
+        ; 例如 instr(var, |str) 选中 str
+        else
+        {
+          selNext()
+          return
+        }
       }
       ; 专为 for 和 class 设置
-      else if (选中文本="in" or 选中文本="extends")
+      else if (光标右边文本="in" or 光标右边文本="extends")
       {
-        Send, {Left}
-        Send, {Space}
-        Send, ^{Right}
-        Send, ^+{Right}
+        ctrlRight()
+        selNext()
         return
+      }
+      else
+      {
+        ctrlRight()
+        continue
       }
     }
   }
@@ -157,9 +190,39 @@ $Enter::
         oSciTE.InsertText(str2)
         oSciTE.SetCurPos(curPos)
         if (SubStr(str2, 1, 1)=",")
-          Send, ^{Right}
-        Send, ^+{Right}
+          ctrlRight()
+        selNext()
       }
     }
   }
 #If
+
+ctrlRight()
+{
+  global oSciTE
+  
+  oSciTE.SendDirectorMsg("macrocommand:2310;0II;0;0")
+}
+
+; 大致等效于 Ctrl+Shift+Right 选中后得到的内容
+getNext()
+{
+  global oSciTE
+  
+  curPos  := oSciTE.GetCurPos()
+  ; SCI_WORDENDPOSITION = 2267
+  nextPos := oSciTE.Msg(2267, curPos, false)
+  return, oSciTE.GetTextRange(curPos, nextPos)
+}
+
+; 大致等效于 Ctrl+Shift+Right
+selNext()
+{
+  global oSciTE
+  
+  curPos  := oSciTE.GetCurPos()
+  ; SCI_WORDENDPOSITION = 2267
+  nextPos := oSciTE.Msg(2267, curPos, false)
+  ; SCI_SETSELECTIONEND = 2144
+  oSciTE.Msg(2144, nextPos)
+}
