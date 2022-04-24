@@ -1,7 +1,7 @@
 ﻿; 单词自动完成时使用 Tab 键，可自动补全命令、函数等，并设好参数。
 ; 此时若继续按 Tab 则可以在参数间跳跃，高效连贯的完成输入。
 ; BUG：
-  ; 参数中含有特殊字符（例如英文引号， “\” “/” 等等）时无法被自动选中。
+  ; SetFormat DllCall LoadPicture 不够完美。
 智能Tab:
   标记 := 0
 return
@@ -14,8 +14,7 @@ return
     global oSciTE, 标记
     
     str := oSciTE.GetEnd
-    Send, ^b                   ; 展开缩略语。SendInput 发送快捷键是不一定生效的，所以全部使用 Send 代替。
-    Sleep, 50                  ; 添加这个延时可解决 “获取选中内容时而有效时而失效的问题” 。
+    ctrlB()                    ; 展开缩略语。
     if (oSciTE.GetEnd!=str)    ; 行末内容发生变化，说明缩略语被展开了。
     {
       selNext()                ; 在缩略语文件中已经设置过光标位置为单词前，所以这里直接选择下一单词就是了。
@@ -79,27 +78,8 @@ $Tab::
       else if (右边文本末1=",")
       {
         ctrlRight()
-        
-        ; 例如 numget(var, 20, |"int/uint") 选中 int/uint
-        if (getNext()="""")
-        {
-          Send, {Right}
-          matchPos := oSciTE.FindText("""")
-          if (matchPos!=0)
-          {
-            ; SCI_SETSELECTIONEND = 2144
-            oSciTE.Msg(2144, matchPos[1])
-            return
-          }
-          else
-            continue
-        }
-        ; 例如 instr(var, |str) 选中 str
-        else
-        {
-          selNext()
-          return
-        }
+        selNext()
+        return
       }
       ; 专为 for 和 class 设置
       else if (光标右边文本="in" or 光标右边文本="extends")
@@ -176,9 +156,7 @@ $Enter::
       else if (行末闭括号数量>1 and RTrim(str2, ")")="")
       {
         发送原义字符(quote ? """)" : ")")
-        curPos := oSciTE.GetCurPos
         oSciTE.InsertText(str2)
-        oSciTE.SetCurPos(curPos)
       }
       ; 有1个闭括号在中间
       ; 例如 aa|,bb),cc
@@ -186,9 +164,7 @@ $Enter::
       else
       {
         发送原义字符(quote ? """)" : ")")
-        curPos := oSciTE.GetCurPos
         oSciTE.InsertText(str2)
-        oSciTE.SetCurPos(curPos)
         if (SubStr(str2, 1, 1)=",")
           ctrlRight()
         selNext()
@@ -196,6 +172,16 @@ $Enter::
     }
   }
 #If
+
+; 这里还可以用 AutomationID 的方式实现
+; https://www.cnblogs.com/guyk/p/15572335.html
+ctrlB()
+{
+  global oSciTE
+  
+  ; IDM_ABBREV = 242
+  oSciTE.SendDirectorMsg("menucommand:242")
+}
 
 ctrlRight()
 {
@@ -215,14 +201,16 @@ getNext()
   return, oSciTE.GetTextRange(curPos, nextPos)
 }
 
-; 大致等效于 Ctrl+Shift+Right
+; 选中右边的单词（单词定义为 a-z|<>*\-+ ）
 selNext()
 {
   global oSciTE
   
-  curPos  := oSciTE.GetCurPos()
-  ; SCI_WORDENDPOSITION = 2267
-  nextPos := oSciTE.Msg(2267, curPos, false)
-  ; SCI_SETSELECTIONEND = 2144
-  oSciTE.Msg(2144, nextPos)
+  matchPos := oSciTE.FindText("[\w\|\<\>\*\\\-\+]+","","",0x00200000)
+  if (matchPos[1]!=0)
+  {
+    ; SCI_SETSELECTIONSTART = 2142, SCI_SETSELECTIONEND = 2144
+    oSciTE.Msg(2142, matchPos[1])
+    oSciTE.Msg(2144, matchPos[2])
+  }
 }

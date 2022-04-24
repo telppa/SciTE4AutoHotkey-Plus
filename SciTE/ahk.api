@@ -336,7 +336,7 @@ StrPut (String, Address [, Length, Encoding])
 
 VarSetCapacity (Var [, RequestedCapacity, FillByte])
 NumGet (VarOrAddress [, Offset, "UInt|Int|Int64|Short|UShort|Char|UChar|Double|Float|Ptr|UPtr"])
-NumPut (Number, VarOrAddress [, Offset, "UInt|Int|Int64|Short|UShort|Char|UChar|Double|Float|Ptr|UPtr"])
+NumPut (Number, VarOrAddress [, Offset, "UInt|UInt64|Int|Int64|Short|UShort|Char|UChar|Double|Float|Ptr|UPtr"])
 DllCall ([DllFile\\]Function [, Type1, Arg1, Type2, Arg2, ..., ..., Type_n, Arg_n, "Cdecl ReturnType"])
 RegisterCallback (FunctionName [, "Fast|CDecl", ParamCount, EventInfo])
 
