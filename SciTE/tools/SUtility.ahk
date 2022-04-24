@@ -185,7 +185,7 @@ InsertDirect:
 if text2insert =
 	return
 WinActivate, ahk_id %scitehwnd%
-scite.InsertText(text2insert)
+scite.InsertText(text2insert, "", true)
 return
 
 SaveBut:
