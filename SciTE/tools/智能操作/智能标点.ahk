@@ -120,12 +120,10 @@ return
   ; 圆括号
   If (Char == "(" && NextChar != ")") {
     oSciTE.InsertText(")")
-    Send, {Left}
   
   ; 方括号
   } Else If (Char == "[" && NextChar != "]") {
     oSciTE.InsertText("]")
-    Send, {Left}
   
   ; 花括号
   } Else If (Char == "{" && NextChar != "}") {
@@ -134,20 +132,15 @@ return
     PrevChars := oSciTE.GetTextRange(CurPos - 5, CurPos)
     ; 新建函数时的花括号
     If (RegExMatch(PrevChars, "\)\s?\r?\n?") or BlankLine) {
-      Send, ^b
-      Send, {Blind}{vkE8 Up}
+      ctrlB()
     
     ; 普通花括号
     } Else {
       oSciTE.InsertText("}")
-      Send, {Left}
     }
   
   ; 引号
   } Else If (Char == """" && NextChar != """" && (PrevChar == "" || PrevChar ~= "[\s,\(\[\=\:\n\rL]")) {
     oSciTE.InsertText("""")
-    Send, {Left}
   }
-  
-  Send, {Blind}{vkE8 Up}
 }
