@@ -374,6 +374,7 @@ function isStartBlockStatement(line)
 		or isTryLine(line) or isCatchLineAllowBraces(line) or isFinallyAllowBraces(line)
 end
 
+-- 来自 自动完成增强版.lua handleChar
 -- This function is called when the user presses {Enter}
 function AutoIndent_OnNewLine()
 	local cmtLineStyle = SCE_AHK_COMMENTLINE
@@ -405,6 +406,7 @@ function AutoIndent_OnNewLine()
 	return false
 end
 
+-- 来自 自动完成增强版.lua handleChar
 -- This function is called when the user presses {
 function AutoIndent_OnOpeningBrace()
 	local cmtLineStyle = SCE_AHK_COMMENTLINE
@@ -426,6 +428,7 @@ function AutoIndent_OnOpeningBrace()
 	end
 end
 
+-- 来自 自动完成增强版.lua handleChar
 -- This function is called when the user presses }
 function AutoIndent_OnClosingBrace()
 	local cmtLineStyle = SCE_AHK_COMMENTLINE
