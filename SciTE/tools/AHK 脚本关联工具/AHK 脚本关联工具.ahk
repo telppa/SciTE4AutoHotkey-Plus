@@ -4,8 +4,11 @@
 脚本说明：  此工具用来修改 AutoHotkey 脚本的右键菜单关联，适用于 AutoHotkey 安装版、绿色版。
 脚本版本：  2009-01-21
 
+TODO：
+静默设置参数支持 ah2 和 ahk2 。
+保留部分关联时，需要在管理员权限和普通权限下分别进行1次相同的操作才能让右键菜单显示正常。
+
 修改作者：	兔子
-更新说明：
 2010.01.09	之前某个时间，修改AHK路径、编辑器路径、编译器路径，默认全部在当前目录下寻找
 2010.01.09	去掉默认在新建菜单的勾
 2010.06.21	如果SCITE为默认编辑器，则复制个人配置文件“SciTEUser.properties”到%USERPROFILE%
@@ -15,6 +18,7 @@
 2021.11.02	自动根据 AutoHotkey.exe 的位置定位基准目录。
 2021.11.05	重构代码，精简界面，修复新建模板时的编码问题，修复编辑模板时的权限问题。
 2022.04.21	为日志系统增加缓存，解决日志写入时的性能问题。微调显示。
+2022.04.24	静默模式下，成功时不提示。微调显示。
 
 修改作者：	布谷布谷
 2022.04.15	增加.ah2 .ahk2 文件的关联，并增加脚本关联选项 
@@ -27,7 +31,7 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 
 ; 版本(仅用于显示）
-Script_Version=v1.2.2
+Script_Version=v1.2.3
 administrator:=(A_IsAdmin?"已":"未" ) . "获得管理员权限"
 
 Gui, Font, bold s15
@@ -40,15 +44,15 @@ Gui, Add, Radio,  xp+50  yp- wp  hp vRadio_3  gOptions__         , ah2
 Gui, Add, Button, xp+50  yp- w50 hp vState__0 gState__           , 选项>>
 
 Gui, Font, bold s12
-Gui, Add, GroupBox, xp+60 yp-8   w205 h328 vState__1,
-Gui, Add, Button,   xp+10 yp+20  w185 h40  vState__2 gState__         , 删除所有关联
+Gui, Add, GroupBox, xp+60 yp   w205 h320 vState__1                   , 保留以下关联
 Gui, Font
-Gui, Add, Checkbox, xp+2  yp+50  wp   h30  vState__3 gState__ Checked1, 右键 >> 编译脚本
-Gui, Add, Checkbox, xp+   yp+30  wp   hp   vState__4 gState__ Checked1, 右键 >> 编译脚本 (GUI)
-Gui, Add, Checkbox, xp+   yp+30  wp   hp   vState__5 gState__ Checked1, 右键 >> 编辑脚本
-Gui, Add, Checkbox, xp+   yp+30  wp   hp   vState__6 gState__ Checked1, 右键 >> 新建 >> ahk脚本
-Gui, Add, Checkbox, xp+   yp+30  wp   hp   vState__7 gState__ Checked1, 右键 >> 以管理员身份运行
-Gui, Add, Button,   xp-2  yp+100 wp   hp   vState__8 gRunAs__         , 重启并获得管理员权限
+Gui, Add, Checkbox, xp+12 yp+30 w185 h30  vState__3 gState__ Checked1, 右键 >> 编译脚本
+Gui, Add, Checkbox, xp+   yp+35 wp   hp   vState__4 gState__ Checked1, 右键 >> 编译脚本 (GUI)
+Gui, Add, Checkbox, xp+   yp+35 wp   hp   vState__5 gState__ Checked1, 右键 >> 编辑脚本
+Gui, Add, Checkbox, xp+   yp+35 wp   hp   vState__6 gState__ Checked1, 右键 >> 新建 >> ahk脚本
+Gui, Add, Checkbox, xp+   yp+35 wp   hp   vState__7 gState__ Checked1, 右键 >> 以管理员身份运行
+Gui, Add, Button,   xp-2  yp+70 wp   hp   vState__2 gState__         , 删除所有关联
+Gui, Add, Button,   xp+   yp+35 wp   hp   vState__8 gRunAs__         , 重启并获得管理员权限
 
 Gui, Add, GroupBox, x15    y44   w480 h50          , “运行脚本”
 Gui, Add, Edit,     xp+10  yp+18 w340 h20 vAHK_Path,
@@ -136,6 +140,7 @@ Options__:
 	Gui, Submit, NoHide
 	ahk__:=Radio_3?"ah2":Radio_2?"ahk2":"ahk"
 	GuiControl, Text, Text__, 设置 .%ahk__% 文件的右键菜单
+	GuiControl, Text, State__1, 保留 .%ahk__% 以下关联
 	GuiControl, Text, State__2, 删除 .%ahk__% 所有关联
 	
 	; AutoHotkey 原版的相关信息写在注册表HKCR主键中，
@@ -303,7 +308,7 @@ Install:
 	RegWrite_("REG_SZ", RootKey "\" Subkey "." ahk__ "\ShellNew", "FileName", Template_Name)
 	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell", , "Open")
 	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open", , "运行脚本")
-	; %AHK_Path%,1 这种图标设置方式没有成功
+	; %AHK_Path%,1 这种图标设置方式没有成功，所以只能改为 Compiler_Path
 	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open","Icon", """" Compiler_Path """")
 	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open\Command", , """" AHK_Path """ ""%1"" %*")
 	if State__3
@@ -374,7 +379,8 @@ Install:
 		RegDelete_(RootKey "\" Subkey "\" FileType "\Shell\runas")
 	logup("设置完毕 ！")
 	logup("--------------------------------------------------------------")
-	MsgBox, % 4096+64, , 设置完毕 ！
+	if (A_Args.1!="/set")
+		MsgBox, % 4096+64, , 设置完毕 ！
 return
 
 ; 编辑脚本模板
