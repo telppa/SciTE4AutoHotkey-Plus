@@ -197,8 +197,11 @@ SciUtil_DeleteEnd(hSci)
 	SendMessage, 2645, currentPos, Abs(lineEndPos - currentPos),, ahk_id %hSci%
 }
 
-SciUtil_InsertText(hSci, text, pos)
+SciUtil_InsertText(hSci, text, pos, moveCaret)
 {
+	if (pos="")
+		pos := -1
+	
 	; len 已包含末尾零终止符的长度（写入时以零终止符作为终止判断依据）
 	len := StrPutVar(text, textConverted, "CP" SciUtil_GetCP(hSci))
 	
@@ -209,12 +212,15 @@ SciUtil_InsertText(hSci, text, pos)
 	; SCI_INSERTTEXT = 2003
 	SendMessage, 2003, pos, mem.baseAddress,, ahk_id %hSci%
 	
-	; 移动光标，注意需要减去1的零终止符的长度
-	pos := (pos=-1) ? SciUtil_GetCurPos(hSci) : pos
-	SciUtil_SetCurPos(hSci, pos + len - 1)
-	
 	; Done
 	mem.close()
+	
+	if (moveCaret)
+	{
+		; 移动光标，注意需要减去1的零终止符的长度
+		pos := (pos=-1) ? SciUtil_GetCurPos(hSci) : pos
+		SciUtil_SetCurPos(hSci, pos + len - 1)
+	}
 }
 
 SciUtil_ReplaceSel(hSci, text)

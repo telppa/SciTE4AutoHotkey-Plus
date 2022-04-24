@@ -273,11 +273,11 @@ CoI_GetDocument(this)
 	return SciUtil_GetText(scintillahwnd)
 }
 
-CoI_InsertText(this, text, pos := -1)
+CoI_InsertText(this, text, pos := "", moveCaret := "")
 {
 	global scintillahwnd
-	if !IsObject(text) && text && !IsObject(pos) && (pos+0) >= -1
-		SciUtil_InsertText(scintillahwnd, text, pos)
+	
+	SciUtil_InsertText(scintillahwnd, text, pos, moveCaret)
 }
 
 CoI_Output(this, text)

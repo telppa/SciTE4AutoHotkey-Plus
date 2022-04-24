@@ -62,7 +62,7 @@
 	
 	; 不加 ByRef 时
 	StrPutVar("字符串abc", var2, "CP1200")
-	Msgbox, % var2  ; 此时有可能打印出值，也有可能打印不出值
+	Msgbox, % var2  ; F5 运行打印为空，使用 “运行选区代码” 则正常打印，原因可能在于后者加了 /CP65001 参数
 	write(var2)     ; write 内部打印 lpBuffer 不能显示 var2 的值
 	
 	*/

@@ -107,6 +107,11 @@ text:="这是一段光标处插入文本"
 oSciTE.InsertText(text)
 MsgBox, 光标处插入文本
 
+; 光标处插入文本并移动光标
+text:="这是一段光标处插入文本并移动光标"
+oSciTE.InsertText(text, "", true)
+MsgBox, 光标处插入文本并移动光标
+
 ; 指定位置插入文本
 text:="这是一段指定位置插入文本"
 oSciTE.InsertText(text, 0)
