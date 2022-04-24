@@ -1,4 +1,4 @@
-
+﻿
 ExtractExtension(dir, extFile, ByRef outExtId)
 {
 	global SciTEVersionInt

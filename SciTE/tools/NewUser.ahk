@@ -1,4 +1,4 @@
-;
+﻿;
 ; SciTE4AutoHotkey New User Profile Script
 ;
 

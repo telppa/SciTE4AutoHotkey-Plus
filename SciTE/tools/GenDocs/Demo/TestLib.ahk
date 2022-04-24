@@ -1,4 +1,4 @@
-/*!
+﻿/*!
 	Library: Test library
 		This library does something
 		

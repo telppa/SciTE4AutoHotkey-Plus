@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  * SciTE4AutoHotkey Syntax Highlighting Demo
  * - by fincs

@@ -1,4 +1,4 @@
-;Reveal information on windows, controls, etc. 
+﻿;Reveal information on windows, controls, etc. 
 ;by toralf
 ;requires AHK 1.0.44.04
 ;www.autohotkey.com/forum/topic8976.html

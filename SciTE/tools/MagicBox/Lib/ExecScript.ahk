@@ -1,4 +1,4 @@
-ExecScript(Script, Params := "", AhkPath := "") {
+﻿ExecScript(Script, Params := "", AhkPath := "") {
     Local Name, Pipe, Call, Shell, Exec
 
     Name := "AHK_CQT_" . A_TickCount

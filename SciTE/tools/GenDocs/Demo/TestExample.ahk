@@ -1,4 +1,4 @@
-; This example shows how to DINNER
+﻿; This example shows how to DINNER
 
 o := new MyClass("test")
 o.Hello()

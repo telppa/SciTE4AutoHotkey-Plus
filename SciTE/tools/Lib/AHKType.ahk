@@ -1,4 +1,4 @@
-
+﻿
 AHKType(exeName)
 {
 	FileGetVersion, vert, %exeName%

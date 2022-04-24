@@ -1,4 +1,4 @@
-;Auto-genererated by an AHK script
+﻿;Auto-genererated by an AHK script
 SciControl_InitConstants()
 {
 global

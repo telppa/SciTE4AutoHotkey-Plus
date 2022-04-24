@@ -1,4 +1,4 @@
-;
+﻿;
 ; SciTE4AutoHotkey Script Debugger
 ;
 ;TillaGoto.iIncludeMode = 0x10111111

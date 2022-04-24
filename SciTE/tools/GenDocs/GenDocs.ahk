@@ -1,4 +1,4 @@
-;
+﻿;
 ; File encoding:  UTF-8
 ; Platform:  Windows XP/Vista/7
 ; Author:    fincs

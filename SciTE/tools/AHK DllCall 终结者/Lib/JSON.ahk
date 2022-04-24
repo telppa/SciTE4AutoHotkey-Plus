@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Lib: JSON.ahk
  *     JSON lib for AutoHotkey.
  * Version:
@@ -15,7 +15,7 @@
  *     Forum Topic - http://goo.gl/r0zI8t
  *     Email:      - cocobelgica <at> gmail <dot> com
  *
- * JSON.Load() ������ķ���ֵ��Ҫȡ���� json ���Ḳ�ǵ��˿��е�ȫ�ֱ�����������һ�ε��ý��� JSON.Load() ����ʱʧ��
+ * JSON.Load() 处理后的返回值不要取名叫 json ，会覆盖掉此库中的全局变量，导致下一次调用解析 JSON.Load() 处理时失败
  */
 
 /**

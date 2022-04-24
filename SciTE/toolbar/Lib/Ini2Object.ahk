@@ -1,4 +1,4 @@
-
+﻿
 Ini2Object(file)
 {
 	obj := {}, curSect := ""

@@ -1,4 +1,4 @@
-;
+ï»¿;
 ; Scriptlet Utility
 ;
 
@@ -8,12 +8,12 @@
 DetectHiddenWindows, On
 FileEncoding, UTF-8
 Menu, Tray, Icon, %A_ScriptDir%\..\toolicon.icl, 11
-progName := "½Å±¾Æ¬¶Î"
+progName := "è„šæœ¬ç‰‡æ®µ"
 
 scite := GetSciTEInstance()
 if !scite
 {
-	MsgBox, 16, %progName%, Ã»ÓĞÕÒµ½ SciTE COM ¶ÔÏó!
+	MsgBox, 16, %progName%, æ²¡æœ‰æ‰¾åˆ° SciTE COM å¯¹è±¡!
 	ExitApp
 }
 
@@ -24,7 +24,7 @@ scitehwnd := scite.SciTEHandle
 sdir = %LocalSciTEPath%\Scriptlets
 IfNotExist, %sdir%
 {
-	MsgBox, 16, %progName%, Scriptlet ÎÄ¼ş¼Ğ(Ä¿Â¼)²»´æÔÚ!
+	MsgBox, 16, %progName%, Scriptlet æ–‡ä»¶å¤¹(ç›®å½•)ä¸å­˜åœ¨!
 	ExitApp
 }
 
@@ -33,16 +33,16 @@ if 1 = /insert
 {
 	if 2 =
 	{
-		MsgBox, 64, %progName%, Ê¾Àı: %A_ScriptName% /insert ½Å±¾Æ¬¶ÎÃû
+		MsgBox, 64, %progName%, ç¤ºä¾‹: %A_ScriptName% /insert è„šæœ¬ç‰‡æ®µå
 		ExitApp
 	}
 	IfNotExist, %sdir%\%2%.scriptlet
 	{
 		MsgBox, 52, %progName%,
 		(LTrim
-		ÎŞĞ§µÄ½Å±¾Æ¬¶Î: "%2%".
-		¹¤¾ßÀ¸Í¼±ê¶ÔÓ¦µÄ½Å±¾Æ¬¶Î²»´æÔÚ.
-		µã»÷¡°È·¶¨¡±±à¼­¹¤¾ßÀ¸ÎÄ¼ş.
+		æ— æ•ˆçš„è„šæœ¬ç‰‡æ®µ: "%2%".
+		å·¥å…·æ å›¾æ ‡å¯¹åº”çš„è„šæœ¬ç‰‡æ®µä¸å­˜åœ¨.
+		ç‚¹å‡»â€œç¡®å®šâ€ç¼–è¾‘å·¥å…·æ æ–‡ä»¶.
 		)
 		IfMsgBox, Yes
 			scite.OpenFile(LocalSciTEPath "\UserToolbar.properties")
@@ -58,27 +58,27 @@ if 1 = /addScriptlet
 	defaultScriptlet := scite.Selection
 	if defaultScriptlet =
 	{
-		MsgBox, 16, %progName%, Ã»ÓĞÑ¡ÔñÄÚÈİ!
+		MsgBox, 16, %progName%, æ²¡æœ‰é€‰æ‹©å†…å®¹!
 		ExitApp
 	}
 	gosub AddBut ; that does it all
 	if !_RC
 		ExitApp ; Maybe the user has cancelled the action.
-	MsgBox, 68, %progName%, ½Å±¾Æ¬¶ÎÒÑ³É¹¦Ìí¼Ó¡£ ÊÇ·ñ´ò¿ª½Å±¾Æ¬¶Î¹ÜÀíÆ÷?
+	MsgBox, 68, %progName%, è„šæœ¬ç‰‡æ®µå·²æˆåŠŸæ·»åŠ ã€‚ æ˜¯å¦æ‰“å¼€è„šæœ¬ç‰‡æ®µç®¡ç†å™¨?
 	IfMsgBox, Yes
 		Reload ; no parameters are passed to script
 	ExitApp
 }
 
 Gui, +MinSize Resize Owner%scitehwnd%
-Gui, Add, Button, Section gAddBut, ĞÂ½¨
-Gui, Add, Button, ys gRenBut, ÖØÃüÃû
-Gui, Add, Button, ys gSubBut, É¾³ı
+Gui, Add, Button, Section gAddBut, æ–°å»º
+Gui, Add, Button, ys gRenBut, é‡å‘½å
+Gui, Add, Button, ys gSubBut, åˆ é™¤
 Gui, Add, ListBox, xs w160 h240 vMainListbox gSelectLB HScroll
-Gui, Add, Button, ys Section gToolbarBut, Ìí¼Óµ½¹¤¾ßÀ¸
-Gui, Add, Button, ys gInsertBut, ²åÈëµ½ SciTE
-Gui, Add, Button, ys gSaveBut, ±£´æ
-Gui, Add, Button, ys gOpenInSciTE, ÔÚ SciTE ÖĞ´ò¿ª
+Gui, Add, Button, ys Section gToolbarBut, æ·»åŠ åˆ°å·¥å…·æ 
+Gui, Add, Button, ys gInsertBut, æ’å…¥åˆ° SciTE
+Gui, Add, Button, ys gSaveBut, ä¿å­˜
+Gui, Add, Button, ys gOpenInSciTE, åœ¨ SciTE ä¸­æ‰“å¼€
 Gui, Font, S9, %textFont%
 Gui, Add, Edit, xs w320 h240 vScriptPane -Wrap WantTab HScroll
 Gui, Show,, %progName%
@@ -111,7 +111,7 @@ Return
 
 AddBut:
 Gui +OwnDialogs
-InputBox, fname2create, %progName%, ÊäÈëÒª´´½¨µÄ½Å±¾Æ¬¶ÎµÄÃû³Æ:
+InputBox, fname2create, %progName%, è¾“å…¥è¦åˆ›å»ºçš„è„šæœ¬ç‰‡æ®µçš„åç§°:
 if ErrorLevel
 	return
 if !fname2create
@@ -140,7 +140,7 @@ Gui +OwnDialogs
 GuiControlGet, selected,, MainListbox
 if selected =
 	return
-MsgBox, 52, %progName%,È·¶¨ÒªÉ¾³ı '%selected%'?
+MsgBox, 52, %progName%,ç¡®å®šè¦åˆ é™¤ '%selected%'?
 IfMsgBox, No
 	return
 FileDelete, %sdir%\%selected%.scriptlet
@@ -153,7 +153,7 @@ Gui +OwnDialogs
 GuiControlGet, selected,, MainListbox
 if selected =
 	return
-InputBox, fname2create, %progName%, ÊäÈë½Å±¾Æ¬¶ÎµÄĞÂÃû³Æ:,,,,,,,, %selected%
+InputBox, fname2create, %progName%, è¾“å…¥è„šæœ¬ç‰‡æ®µçš„æ–°åç§°:,,,,,,,, %selected%
 if ErrorLevel
 	return
 if !fname2create
@@ -163,7 +163,7 @@ if (fname2create = selected)
 fname2create := ValidateFilename(fname2create)
 IfExist, %sdir%\%fname2create%.scriptlet
 {
-	MsgBox, 48, %progName%, ¸ÃÃû³ÆÒÑ´æÔÚ£¡`nÇëÑ¡ÔñÆäËûÃû³Æ.
+	MsgBox, 48, %progName%, è¯¥åç§°å·²å­˜åœ¨ï¼`nè¯·é€‰æ‹©å…¶ä»–åç§°.
 	return
 }
 FileMove, %sdir%\%selected%.scriptlet, %sdir%\%fname2create%.scriptlet
