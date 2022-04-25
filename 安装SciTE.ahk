@@ -43,7 +43,7 @@ if (旧版本号)
 	; 20211115 之后的版本，可以直接复制整个 user 文件夹。
 	if (StrReplace(旧版本号, ".")+0>=20211115)
 	{
-		FileCopy, SciTE\user\Styles\SciTE4AutoHotkey-Plus.style.properties, %OutDir%\SciTE\user\SciTE4AutoHotkey-Plus.style.properties, 1
+		FileCopy, SciTE\user\Styles\SciTE4AutoHotkey-Plus.style.properties, %OutDir%\SciTE\user\Styles\SciTE4AutoHotkey-Plus.style.properties, 1
 		FileCopyDir, %OutDir%\SciTE\user, SciTE\user, 1
 	}
 	else
