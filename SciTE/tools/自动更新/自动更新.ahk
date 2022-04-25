@@ -38,17 +38,74 @@ return
 return
 
 执行更新:
-	网址:="https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/tools/自动更新/update.ahk"
-	路径:=A_ScriptDir "\update.ahk"
-	WinHttp.Download(网址, "Timeout:60",,,路径)
-	if (WinHttp.StatusCode!=200)
+	网址:="https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/README.md"
+	返回值:=WinHttp.Download(网址, 设置, 请求头, 提交数据)
+	
+	; 从 README.md 中提取当前更新信息
+	if (返回值!="")
 	{
-		MsgBoxEx("自动更新失败，请尝试手动下载更新。", "错误", "前往主页", 4)
-		Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
+		更新日志:=strMatch(返回值, "- 更新日志：", "<details>")
+		
+		RegExMatch(更新日志, "m)^> ([\d\.]{10})", 版本号)
+		版本号:= "v" StrReplace(版本号1, ".")                             ; 2022.04.25 -> v20220425
+		
+		更新日志:=RegExReplace(更新日志, "m)^[ \t]*$\r\n", "")            ; 移除空行
+		更新日志:=RegExReplace(更新日志, "m)^> ([\d\.]{10})", "$1`r`n")   ; 移除 “> ”
+		更新日志:=RegExReplace(更新日志, "m)^> \* ", "    ")              ; 移除 “> * ”
+		
+		link_github:=Trim(strMatch(t, "[Github](", """"), " `t`r`n`v`f")  ; github 链接
+		link_lanzou:=Trim(strMatch(t, "[蓝奏云](", """"), " `t`r`n`v`f")  ; lanzou 链接
+		
+		if (更新日志="" or 版本号="" or link_github="" or link_lanzou="")
+				gosub, GFW
+		
+		Result := MsgBoxEx(更新日志, 版本号 "版已更新", "蓝奏云下载|Github 下载|主页", 0, "", "AlwaysOnTop")
+		
+		If (Result == "蓝奏云下载") {
+			Run, %link_lanzou%
+		} Else If (Result == "Github 下载") {
+			Run, %link_github%
+		} Else If (Result == "主页") {
+			Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
+		} Else If (Result == "Cancel") {
+			ExitApp
+		}
 	}
 	else
-		Run, %路径%, %SciteDefaultHome%
+		gosub, GFW
 return
+
+GFW:
+	说明 := "因为 GFW 的屏蔽，无法收到详细更新日志。`n请尝试点击下方按钮进行手动下载。"
+	
+	Result := MsgBoxEx(说明, "检测到新版 SciTE4AutoHotkey-Plus", "Github 下载|主页", 0, "", "AlwaysOnTop")
+	
+	If (Result == "Github 下载") {
+		Run, %link_github%
+	} Else If (Result == "主页") {
+		Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
+	} Else If (Result == "Cancel") {
+		ExitApp
+	}
+return
+
+; 例如 strMatch("<em>123</em>", "<e", "m>") 将返回 “m>123</e”
+; 例如 strMatch("<em>123</em><em>456</em>", "<e", "m>", 2) 将返回 “m>456</e”
+strMatch(text, strStart, strEnd, occurrence := 1, caseSensitive := false)
+{
+	if (text="" or strStart="" or strEnd="")
+		return
+	
+	posStart := InStr(text, strStart, caseSensitive, 1, occurrence)
+	if (posStart=0)
+		return
+	
+	posEnd := InStr(text, strEnd, caseSensitive, posStart+StrLen(strstart))
+	if (posEnd=0)
+		return
+	
+	return, SubStr(text, posStart, posEnd-posStart)
+}
 
 #Include %A_ScriptDir%\..\AHK 正则终结者\Lib\RunWith.ahk
 #Include %A_ScriptDir%\..\AHK 爬虫终结者\Lib\WinHttp.ahk
