@@ -379,8 +379,9 @@ Install:
 		RegDelete_(RootKey "\" Subkey "\" FileType "\Shell\runas")
 	logup("设置完毕 ！")
 	logup("--------------------------------------------------------------")
-	if (A_Args.1!="/set")
-		MsgBox, % 4096+64, , 设置完毕 ！
+	if (A_Args.1="/set")
+		ExitApp
+	MsgBox, % 4096+64, , 设置完毕 ！
 return
 
 ; 编辑脚本模板
