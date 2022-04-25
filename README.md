@@ -4,7 +4,7 @@
 #### 由于原版早已不更新了，故多年来在原版基础上做了非常多的改进，目的只有一个，让大家用得更顺手。  
 ---
   
-#### 可在 [Github](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases") 或 [蓝奏云](https://ahk.lanzouh.com/iWPLd03rgkah "蓝奏云") 下载最新打包版。  
+#### 可在 [Github](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases") 或 [蓝奏云](https://ahk.lanzouh.com/i2Hfr03riped "蓝奏云") 下载最新打包版。  
 ---
   
 ##### 1. 自动完成增强版  
@@ -84,7 +84,7 @@
 ---
   
 - 更新日志：  
-> 2022.04.25  
+> 2022.04.26  
 > * 新增 “AHK DllCall 终结者” （系统函数转代码工具）。  
 > * 新增 “Structor” （结构体转代码工具）。  
 > * 新增 “Verifier” （类型大小、成员偏移、常量值查询工具）。  
