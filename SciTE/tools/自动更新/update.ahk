@@ -1,41 +1,62 @@
-﻿Text=
-(
-2021.11.15  
-    优化目录结构，将“user”目录完全还给用户，以后升级将不影响用户的自定义设置。  
-    优化目录结构，将“SciTE”目录外的文件全部放置于目录中，方便手动安装。  
-    优化目录结构，将所有“增强功能”放置在独立清晰的文件夹中。  
-    优化目录结构，删除部分过时无用的文件。  
-    移除过时的“ahkv2”代码与设置。  
-    移除过时的“自动更新”代码。  
-    字体安装改为非强制。  
-    更新“AHK 正则终结者”到1.42。  
-    更新“AHK 爬虫终结者”到3.9。  
-    更新“AHK 脚本关联工具”到1.1。  
-    更新“FindText”到8.6。  
-    更新“Auto-GUI”到3.0.1。（提取自 Adventure IDE 3.0.3）  
-    解除“Auto-GUI”对高分屏的限制。  
-    禁止“Window Clone Tool”频繁刷新窗口。  
-    更新“MagicBox”到1.0.4。（提取自 Adventure IDE 3.0.3）  
-    更新“AHK-Rare”的自动翻译部分。  
-    更新“Auto-Syntax-Tidy”的语法文件。  
-    更新“SciTE交互示例”。  
-    更新“智能F1”。  
-    更新技巧说明。  
-    更新遗漏的关键词。  
-    更新高亮配色文件。  
-    更新“中文帮助文件”到1.1.33.10。  
+﻿网址=
+(`%
+https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/README.md
 )
+请求头=
+(`%
+User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3314.0 Safari/537.36 SE 2.X MetaSr 1.0
+)
+返回值:=WinHttp.Download(网址, 设置, 请求头, 提交数据)
 
-Result := MsgBoxEx(Text, "v20211115版已更新", "蓝奏云下载|Github 下载", 0, "", "AlwaysOnTop")
-
-If (Result == "蓝奏云下载") {
-	Run, https://ahk.lanzoui.com/i9oFkwjcm8d
-} Else If (Result == "Github 下载") {
-	Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
-} Else If (Result == "Cancel") {
-	ExitApp
+; 从 README.md 中提取当前更新信息
+if (返回值!="")
+{
+    更新日志:=strMatch(返回值, "- 更新日志：", "<details>")
+    
+    RegExMatch(更新日志, "m)^> ([\d\.]{10})", 版本号)
+    版本号:= "v" StrReplace(版本号1, ".")                             ; 2022.04.25 -> v20220425
+    
+    更新日志:=RegExReplace(更新日志, "m)^[ \t]*$\r\n", "")            ; 移除空行
+    更新日志:=RegExReplace(更新日志, "m)^> ([\d\.]{10})", "$1`r`n")   ; 移除 “> ”
+    更新日志:=RegExReplace(更新日志, "m)^> \* ", "    ")              ; 移除 “> * ”
+    
+    link_github:=Trim(strMatch(t, "[Github](", """"), " `t`r`n`v`f")  ; github 链接
+    link_lanzou:=Trim(strMatch(t, "[蓝奏云](", """"), " `t`r`n`v`f")  ; lanzou 链接
+    
+    if (更新日志="" or 版本号="" or link_github="" or link_lanzou="")
+        gosub, GFW
+    
+    Result := MsgBoxEx(更新日志, 版本号 "版已更新", "蓝奏云下载|Github 下载|主页", 0, "", "AlwaysOnTop")
+    
+    If (Result == "蓝奏云下载") {
+      Run, %link_lanzou%
+    } Else If (Result == "Github 下载") {
+      Run, %link_github%
+    } Else If (Result == "主页") {
+      Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
+    } Else If (Result == "Cancel") {
+      ExitApp
+    }
 }
-ExitApp
+else
+    gosub, GFW
+return
+
+GFW:
+    说明 := "因为 GFW 的屏蔽，无法收到详细更新日志。`n请尝试点击下方按钮进行手动下载。"
+    
+    Result := MsgBoxEx(说明, "检测到新版 SciTE4AutoHotkey-Plus", "Github 下载|主页", 0, "", "AlwaysOnTop")
+    
+    If (Result == "Github 下载") {
+      Run, %link_github%
+    } Else If (Result == "主页") {
+      Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
+    } Else If (Result == "Cancel") {
+      ExitApp
+    }
+    
+    ExitApp
+return
 
 MsgBoxEx(Text, Title := "", Buttons := "", Icon := "", ByRef CheckText := "", Styles := "", Owner := "", Timeout := "", FontOptions := "", FontName := "", BGColor := "", Callback := "") {
     Static hWnd, y2, p, px, pw, c, cw, cy, ch, f, o, gL, hBtn, lb, DHW, ww, Off, k, v, RetVal
@@ -131,3 +152,23 @@ MsgBoxEx(Text, Title := "", Buttons := "", Icon := "", ByRef CheckText := "", St
         Gui %hWnd%: Destroy
     Return
 }
+
+; 例如 strMatch("<em>123</em>", "<e", "m>") 将返回 “m>123</e”
+; 例如 strMatch("<em>123</em><em>456</em>", "<e", "m>", 2) 将返回 “m>456</e”
+strMatch(text, strStart, strEnd, occurrence := 1, caseSensitive := false)
+{
+	if (text="" or strStart="" or strEnd="")
+		return
+	
+	posStart := InStr(text, strStart, caseSensitive, 1, occurrence)
+	if (posStart=0)
+		return
+	
+	posEnd := InStr(text, strEnd, caseSensitive, posStart+StrLen(strstart))
+	if (posEnd=0)
+		return
+	
+	return, SubStr(text, posStart, posEnd-posStart)
+}
+
+#Include %A_LineFile%\..\..\AHK 爬虫终结者\Lib\WinHttp.ahk
