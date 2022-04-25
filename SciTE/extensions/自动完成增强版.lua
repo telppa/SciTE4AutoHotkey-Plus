@@ -380,7 +380,7 @@ end
 local function checkCodepage()
     if props['FileExt']=="ahk" then
         if editor.CodePage ~= 65001 then
-            local FileNameExt = props['FileNameExt']
+            -- local FileNameExt = props['FileNameExt']
             -- 3.5.6开始才支持editor:EncodedFromUTF8()……
             -- editor:EncodedFromUTF8(FileNameExt)
             -- print("注意：当前文件 "..FileNameExt.." 编码不是“UTF-8带BOM”。\nAHK本身可能因为错误的编码造成难以发现的 Bug。\n同时这也影响TillaGoto的跳转、自动完成增强版对中文关键字的支持。\n所以强烈建议你将文件编码转换为“UTF-8带BOM”。")
@@ -419,7 +419,7 @@ local events = {
         -- words in comments and strings.
         editor:Colourise(0, editor.Length)
         -- Then do the real work.
-        checkCodepage()
+        -- checkCodepage()
         if not buffer.namesCache then
             if DEBUG_MODE then print("OnOpen_no_cache|   endpos:"..editor.TextLength) end
             -- Otherwise, build a new list.

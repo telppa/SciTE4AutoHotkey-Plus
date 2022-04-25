@@ -25,6 +25,7 @@ SetWorkingDir, %A_ScriptDir%
 	
   gosub, 智能F1
   gosub, 智能Tab
+  gosub, 智能编码
   gosub, 智能标点
 	
   WinWaitClose, ahk_id %SciTE_Hwnd% ; 随 SciTE 退出。
@@ -34,4 +35,5 @@ return
 
 #Include %A_LineFile%\..\智能操作\智能F1.ahk
 #Include %A_LineFile%\..\智能操作\智能Tab.ahk
+#Include %A_LineFile%\..\智能操作\智能编码.ahk
 #Include %A_LineFile%\..\智能操作\智能标点.ahk
