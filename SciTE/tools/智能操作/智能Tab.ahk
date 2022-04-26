@@ -3,7 +3,7 @@
 ; BUG：
   ; SetFormat DllCall LoadPicture 不够完美。
 智能Tab:
-  标记 := 0
+  智能Tab已启用 := false
 return
 
 ; 自动完成状态下，使用 Tab 将展开缩略语，并选中第一个参数。
@@ -11,25 +11,25 @@ return
 ~$Tab::
   Tab展开()
   {
-    global oSciTE, 标记
+    global 智能Tab已启用
     
     str := oSciTE.GetEnd
     ctrlB()                    ; 展开缩略语。
     if (oSciTE.GetEnd!=str)    ; 行末内容发生变化，说明缩略语被展开了。
     {
       selNext()                ; 在缩略语文件中已经设置过光标位置为单词前，所以这里直接选择下一单词就是了。
-      标记 := 1
+      智能Tab已启用 := true
       ToolTip, 智能Tab 已启用
     }
   }
 
 ; 使用 Tab 在参数间跳跃。
 ; 智能 Tab 启用期间， Tab 键只起 “在参数间跳跃” 这一个作用。
-#If (标记=1) and WinActive("ahk_id " . SciTE_Hwnd) and !WinExist("ahk_class SoPY_Comp")
+#If (智能Tab已启用) and WinActive("ahk_id " . SciTE_Hwnd) and !WinExist("ahk_class SoPY_Comp")
 $Tab::
   Tab跳跃()
   {
-    global oSciTE, 标记
+    global 智能Tab已启用
     
     if (oSciTE.Selection!="")                      ; 当前已有选中文字，则发送右箭头取消选择状态。
       Send, {Right}
@@ -50,7 +50,7 @@ $Tab::
       else if (光标右边文本="")
       {
         Send, {Enter}
-        标记 := 0
+        智能Tab已启用 := false
         ToolTip
         return
       }
@@ -58,7 +58,7 @@ $Tab::
       else if (右边文本末2="`r`n")
       {
         Send, {Enter}
-        标记 := 0
+        智能Tab已启用 := false
         ToolTip
         return
       }
@@ -100,12 +100,12 @@ $Tab::
 ; “搜狗输入法框” 存在时，回车键作用为上屏输入的英文。
 ; “自动完成框” 与 “搜狗输入法框” 均存在时，回车键作用为上屏输入的英文。
 ; “自动完成框” 与 “搜狗输入法框” 均不存在时，回车键作用为 “关闭智能 Tab ” 。
-#If (标记=1) and WinActive("ahk_id " . SciTE_Hwnd) and !WinExist("ahk_class ListBoxX") and !WinExist("ahk_class SoPY_Comp")
+#If (智能Tab已启用) and WinActive("ahk_id " . SciTE_Hwnd) and !WinExist("ahk_class ListBoxX") and !WinExist("ahk_class SoPY_Comp")
 $NumpadEnter::
 $Enter::
   Enter跳跃()
   {
-    global oSciTE, 标记
+    global 智能Tab已启用
     
     ; 当前已有选中文字，则发送右箭头取消选择状态。
     if (oSciTE.Selection!="")
@@ -116,7 +116,7 @@ $Enter::
     str := RTrim(oSciTE.GetEnd, " `t`r`n`v`f")
     
     ; 光标处 style 为字符串，且右边存在引号，则需补引号
-    try quote := oSciTE.GetStyle()=6 and InStr(str, """")
+    quote := oSciTE.GetStyle()=6 and InStr(str, """")
     
     ; str2 = 第1个闭括号右边的字符
     ; 例如 aa,|bb),cc,dd 中的 ,cc,dd
@@ -134,7 +134,7 @@ $Enter::
       if (quote)
         发送原义字符("""")
       Send, {Enter}
-      标记 := 0
+      智能Tab已启用 := false
       ToolTip
     }
     else
@@ -148,7 +148,7 @@ $Enter::
       {
         发送原义字符(quote ? """)" : ")")
         Send, {Enter}
-        标记 := 0
+        智能Tab已启用 := false
         ToolTip
       }
       ; 多个闭括号在且仅在行末
@@ -177,24 +177,18 @@ $Enter::
 ; https://www.cnblogs.com/guyk/p/15572335.html
 ctrlB()
 {
-  global oSciTE
-  
   ; IDM_ABBREV = 242
   oSciTE.SendDirectorMsg("menucommand:242")
 }
 
 ctrlRight()
 {
-  global oSciTE
-  
   oSciTE.SendDirectorMsg("macrocommand:2310;0II;0;0")
 }
 
 ; 大致等效于 Ctrl+Shift+Right 选中后得到的内容
 getNext()
 {
-  global oSciTE
-  
   curPos  := oSciTE.GetCurPos()
   ; SCI_WORDENDPOSITION = 2267
   nextPos := oSciTE.Msg(2267, curPos, false)
@@ -204,8 +198,6 @@ getNext()
 ; 选中右边的单词（单词定义为 a-z|<>*\-+ ）
 selNext()
 {
-  global oSciTE
-  
   matchPos := oSciTE.FindText("[\w\|\<\>\*\\\-\+]+","","",0x00200000)
   if (matchPos[1]!=0)
   {

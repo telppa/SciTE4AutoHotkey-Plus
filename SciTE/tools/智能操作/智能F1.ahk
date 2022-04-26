@@ -26,8 +26,10 @@ return
 F1::
   智能F1()
   {
-    global PID, 中文帮助路径, oSciTE
+    global 中文帮助PID, 中文帮助路径
     static oWB
+    
+    PID := 中文帮助PID
     
     WinGetPos, X, Y, W, H, ahk_pid %PID%
     if (PID="" or !(X+Y+W+H))                            ; 首次打开或窗口被最小化（为0）或窗口被关闭（为空）。
@@ -41,6 +43,7 @@ F1::
         Process, Close, %PID%                            ; 帮助窗口最小化后无法激活，所以只能杀掉重开。
       
       Run, % 中文帮助路径,,,PID                          ; 打开帮助文件。
+      中文帮助PID := PID
       WinWait, ahk_pid %PID%                             ; 这行不能少，否则初次打开无法输入文本并搜索。
       WinActivate, ahk_pid %PID%                         ; 这行不能少，否则初次打开无法输入文本并搜索。
       

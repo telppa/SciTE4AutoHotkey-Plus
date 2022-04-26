@@ -56,10 +56,7 @@ return
 ; 当然，这也可能跟加入了 50ms 延时有关。
 获取当前位置语法高亮风格()
 {
-  global oSciTE
-  
-  ; 加 try 是因为退出 scite.exe 后，这里容易报错
-  try style := oSciTE.GetStyle()
+  style := oSciTE.GetStyle()
   
   if style in 1,2,6  ; 理论上区域20也是可以有中文标点的，但是这会造成输入一个英文双引号后，第二个英文双引号很难输出来，所以只有1、2、6。
     return, "注释"   ; 在注释区，标点由输入法自行决定。
@@ -72,8 +69,6 @@ return
 ; Send, {Asc 41} 方式绕得过搜狗和微软输入法，似乎也绕得过某些输入法，但因为 {Asc 41} 实现方式就是按住 Alt 再按41，所以会额外激活如 Alt+4 的快捷键。
 发送原义字符(字符)
 {
-  global oSciTE
-  
   ; 修复 shift+x 会导致输入法状态被切换的问题
   ; 原因是用了钩子的热键，例如 $+9:: 或 #If`r`n+9::
   ; 其它程序只能收到消息 {shift down}{shift up}
@@ -104,8 +99,6 @@ return
 ; 改自 Adventure 3.0.4
 补齐配对符号(Char)
 {
-  global oSciTE
-  
   CurPos := oSciTE.GetCurPos
   
   ; GetCharAt = 2007

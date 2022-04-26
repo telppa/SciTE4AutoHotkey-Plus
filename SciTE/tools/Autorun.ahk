@@ -8,8 +8,18 @@
 SetWorkingDir, %A_ScriptDir%
 
 公用:
-  oSciTE := ComObjActive("SciTE4AHK.Application")
-  SciTE_Hwnd := oSciTE.SciTEHandle
+	; oSciTE 是超级全局变量
+	global oSciTE
+	; 屏蔽退出时的无用报错
+	ComObjError(false)
+	oSciTE := ComObjActive("SciTE4AHK.Application")
+	SciTE_Hwnd := oSciTE.SciTEHandle
+	
+	if (!SciTE_Hwnd)
+	{
+		MsgBox 0x40030, SciTE4AutoHotkey-Plus, 辅助功能加载失败！`n`n请尝试退出 SciTE4AutoHotkey-Plus 并以普通权限重新运行。
+		ExitApp
+	}
 	
 	bTillaGotoEnabled := oSciTE.ResolveProp("tillagoto.enable") + 0
 	if bTillaGotoEnabled
@@ -29,7 +39,7 @@ SetWorkingDir, %A_ScriptDir%
   gosub, 智能标点
 	
   WinWaitClose, ahk_id %SciTE_Hwnd% ; 随 SciTE 退出。
-  WinClose, ahk_pid %PID%           ; 退出时关闭帮助。
+  WinClose, ahk_pid %中文帮助PID%   ; 退出时关闭帮助。
   ExitApp
 return
 

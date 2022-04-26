@@ -14,27 +14,24 @@ return
 
 检测当前编码()
 {
-  global oSciTE, SciTE_Hwnd, codePageWarning
+  global SciTE_Hwnd, codePageWarning
   
-  try
-    ; GETCODEPAGE = 2137
-    if (WinActive("ahk_id " . SciTE_Hwnd) and oSciTE.Msg(2137)!=65001 and 获取当前文件扩展名()="ahk")
-    {
-      codePageWarning := true
-      SetTimer, 显示编码提示, 20
-    }
-    else if (codePageWarning)
-    {
-      codePageWarning := false
-      SetTimer, 显示编码提示, Off
-      btt("")
-    }
+  ; GETCODEPAGE = 2137
+  if (WinActive("ahk_id " . SciTE_Hwnd) and oSciTE.Msg(2137)!=65001 and 获取当前文件扩展名()="ahk")
+  {
+    codePageWarning := true
+    SetTimer, 显示编码提示, 20
+  }
+  else if (codePageWarning)
+  {
+    codePageWarning := false
+    SetTimer, 显示编码提示, Off
+    btt("")
+  }
 }
 
 获取当前文件扩展名()
 {
-  global oSciTE
-  
   SplitPath, % oSciTE.CurrentFile, , , ext
   return, ext
 }
@@ -53,8 +50,6 @@ return
 F2::
 转换编码为UTF8()
 {
-  global oSciTE
-  
   ; IDM_ENCODING_UTF8 = 153
   oSciTE.SendDirectorMsg("menucommand:153")
   
