@@ -4,7 +4,7 @@
 #### 由于原版早已不更新了，故多年来在原版基础上做了非常多的改进，目的只有一个，让大家用得更顺手。  
 ---
   
-#### 可在 [Github](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases") 或 [蓝奏云](https://ahk.lanzouh.com/i2Hfr03riped "蓝奏云") 下载最新打包版。  
+#### 可在 [Github](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases") 或 [蓝奏云](https://ahk.lanzouh.com/ig18z03rr18h "蓝奏云") 下载最新打包版。  
 ---
   
 ##### 1. 自动完成增强版  
@@ -88,11 +88,12 @@
 > * 新增 “AHK DllCall 终结者” （系统函数转代码工具）。  
 > * 新增 “Structor” （结构体转代码工具）。  
 > * 新增 “Verifier” （类型大小、成员偏移、常量值查询工具）。  
+> * 新增 “智能标点” 配对符号自动完成。  
 > * 新增 “智能编码” 可对错误的文件编码进行提示并一键转换。  
 > * 删除 “AHK-Rare” （已修复35个 bug ，但还有几十个 bug ，且难以修复）。  
 > * 删除 “Ctrl+数字” 快捷键（只保留了3和4，即运行选区代码和格式化代码）。  
 > * 修复 “中文帮助” 部分页面失效的问题。  
-> * 修复 “安装SciTE” 中的1个过时文件夹。  
+> * 修复 “安装SciTE” 中的错误路径与过时文件夹。  
 > * 修复 “AHK 正则终结者” 中的2个错误参考示例。  
 > * 修复 “智能标点” 可能导致输入法状态被切换的问题。  
 > * 修复 “智能标点” 导致部分符号多点输入失败的问题。  
@@ -104,7 +105,7 @@
 > * 更新 “智能Tab” 参数选择更准确。  
 > * 更新 “智能Tab” 参数跳转更快速。  
 > * 更新 “智能Tab” 补全命令支持嵌套。  
-> * 更新 “智能标点” 配对符号自动完成。  
+> * 更新 “智能操作” 加载失败时的提示。  
 > * 重写 “RemoteBuf.ahk” 并改名 “mem.ahk” 。  
 > * 更新 “SciTE交互示例” 增加19个新示例。  
 > * 更新 “SciTE交互示例” 所有示例均可在 x32 x64 下运行。  
