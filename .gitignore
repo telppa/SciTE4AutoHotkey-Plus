@@ -9,7 +9,7 @@ AutoHotkeyU32.exe
 AutoHotkeyU64.exe
 Installer.ahk
 license.txt
-scite 5.1.1 这里是使用 lua 为 scite 做语法解析的最小测试环境.zip
+scite 5.2.2 这里是使用 lua 为 scite 做语法解析的最小测试环境.zip
 WindowSpy.ahk
 SciTE/user/lexers
 SciTE/user/_platform.properties
