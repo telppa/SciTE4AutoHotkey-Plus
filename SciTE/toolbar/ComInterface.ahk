@@ -44,6 +44,7 @@ SwitchToTab
 
 ; Text
 GetDocument & Document = CoI_GetDocument
+SetDocument
 InsertText
 Output
 
@@ -271,6 +272,12 @@ CoI_GetDocument(this)
 {
 	global scintillahwnd
 	return SciUtil_GetText(scintillahwnd)
+}
+
+CoI_SetDocument(this, text, codePage := "")
+{
+	global scintillahwnd
+	SciUtil_SetText(scintillahwnd, text, codePage)
 }
 
 CoI_InsertText(this, text, pos := "", moveCaret := "")

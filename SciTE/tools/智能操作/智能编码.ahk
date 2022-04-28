@@ -50,15 +50,12 @@ return
 F2::
 转换编码为UTF8()
 {
+  text := oSciTE.GetDocument()
+  
   ; IDM_ENCODING_UTF8 = 153
   oSciTE.SendDirectorMsg("menucommand:153")
   
-  ; SCI_GETLENGTH = 2006
-  len := oSciTE.Msg(2006)
-  
-  ; 通过在文末插入并删除一个空格来创造保存点。 SCI_DELETERANGE = 2645
-  oSciTE.InsertText(" ", len)
-  oSciTE.Msg(2645, len, 1)
+  oSciTE.SetDocument(text, "65001")
 }
 #If
 

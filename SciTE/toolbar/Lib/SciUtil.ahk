@@ -26,8 +26,8 @@ SciUtil_SetCurPos(hSci, pos)
 
 SciUtil_GetStyle(hSci, pos)
 {
-	; pos 为空则使用当前位置
-	if (pos="")
+	; pos 非数字或为空则使用当前位置
+	if (pos+0="")
 		pos := SciUtil_GetCurPos(hSci)
 	
 	; SCI_GETSTYLEAT = 2010
@@ -79,6 +79,26 @@ SciUtil_GetText(hSci)
 	return, StrGet(&text, "CP" SciUtil_GetCP(hSci))
 }
 
+SciUtil_SetText(hSci, text, codePage)
+{
+	; codePage 非数字或为空则使用当前编码
+	if (codePage+0="")
+		codePage := SciUtil_GetCP(hSci)
+	
+	; len 已包含末尾零终止符的长度（写入时以零终止符作为终止判断依据）
+	len := StrPutVar(text, textConverted, "CP" codePage)
+	
+	; 在 scite.exe 的内存中写入数据
+	mem.open(hSci, len)
+	mem.write(textConverted)
+	
+	; SCI_SETTEXT = 2181
+	SendMessage, 2181, 0, mem.baseAddress,, ahk_id %hSci%
+	
+	; Done
+	mem.close()
+}
+
 SciUtil_GetTextRange(hSci, startPos, endPos)
 {
 	; mem 是接收字符串的
@@ -110,7 +130,8 @@ SciUtil_GetTextRange(hSci, startPos, endPos)
 
 SciUtil_GetWord(hSci, pos)
 {
-	if (pos="")
+	; pos 非数字或为空则使用当前位置
+	if (pos+0="")
 		pos := SciUtil_GetCurPos(hSci)
 	
 	; SCI_WORDSTARTPOSITION = 2266
@@ -126,8 +147,8 @@ SciUtil_GetWord(hSci, pos)
 
 SciUtil_GetLine(hSci, lineNumber)
 {
-	; lineNumber 为空则使用当前行
-	if (lineNumber="")
+	; lineNumber 非数字或为空则使用当前行
+	if (lineNumber+0="")
 	{
 		currentPos := SciUtil_GetCurPos(hSci)
 		; SCI_LINEFROMPOSITION = 2166
@@ -199,7 +220,8 @@ SciUtil_DeleteEnd(hSci)
 
 SciUtil_InsertText(hSci, text, pos, moveCaret)
 {
-	if (pos="")
+	; pos 非数字或为空则使用当前位置
+	if (pos+0="")
 		pos := -1
 	
 	; len 已包含末尾零终止符的长度（写入时以零终止符作为终止判断依据）
@@ -244,10 +266,12 @@ SciUtil_FindText(hSci, text, startPos, endPos, flag)
 	if (text="")
 		return
 	
-	if (startPos="")
+	; startPos 非数字或为空则使用当前位置
+	if (startPos+0="")
 		startPos := SciUtil_GetCurPos(hSci)
 	
-	if (endPos="")
+	; endPos 非数字或为空则使用文末位置
+	if (endPos+0="")
 	{
 		; SCI_GETLENGTH = 2006
 		SendMessage, 2006, 0, 0,, ahk_id %hSci%
