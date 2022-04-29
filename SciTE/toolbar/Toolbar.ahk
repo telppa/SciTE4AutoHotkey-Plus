@@ -342,7 +342,7 @@ if DirectorReady
 
 ; Run the autorun script
 if (A_Args.3 != "/NoAutorun")
-	Run, "%A_AhkPath%" "%SciTEDir%\tools\Autorun.ahk"
+	Run, "%A_AhkPath%" "%SciTEDir%\tools\Autorun.ahk", , , AutorunPID
 
 ; Safety SciTE window existance timer
 SetTimer, check4scite, 1000
@@ -453,6 +453,25 @@ SciTE_OnClosing()
 {
 	Critical
 	SetTimer, check4scite, 10
+}
+
+SciTE_OnClosed(path)
+{
+	global AutorunPID
+	
+	Send_WM_COPYDATA("closed:" path, AutorunPID)
+}
+
+Send_WM_COPYDATA(ByRef StringToSend, pid)
+{
+	VarSetCapacity(CopyDataStruct, 3*A_PtrSize, 0)
+	
+	SizeInBytes := (StrLen(StringToSend) + 1) * (A_IsUnicode ? 2 : 1)
+	NumPut(SizeInBytes, CopyDataStruct, A_PtrSize)
+	NumPut(&StringToSend, CopyDataStruct, 2*A_PtrSize)
+	
+	SendMessage, 0x004A, 0, &CopyDataStruct,, ahk_pid %pid%
+	return ErrorLevel
 }
 
 ; Hotkey handler

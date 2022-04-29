@@ -9,34 +9,58 @@
   ; 2.不美观。
 
 智能编码:
-  SetTimer, 检测当前编码, 1000
+  fileTransformed := {}
+  SetTimer, 检测当前编码, 400
 return
 
 检测当前编码()
 {
-  global SciTE_Hwnd, codePageWarning
+  global SciTE_Hwnd, codePageWarning, fileTransformed
+  
+  ; scite 的处理逻辑是，有 bom 头的按头识别，无头的按配置文件中 code.page 值处理。
+  ; code.page 值真正生效的配置文件是 _config.properties 。
+  ; _config.properties 文件由 菜单栏——工具——设置 生成。
+  ; 例1设置 codepage 为 GBK ，那么 utf8 无头与 ansi 都会按 GBK 处理，这时 oSciTE.Msg(2137) 读到的值就是 936 。
+  ; 例2设置 codepage 为 utf-8 ，那么 utf8 无头与 ansi 都会按 utf8 处理，这时 oSciTE.Msg(2137) 读到的值就是 65001 。
+  ; 例3设置 codepage 为 system ，那么 utf8 无头与 ansi 都会按 cp0 处理，这时 oSciTE.Msg(2137) 读到的值就是 0 。
+  ; 例1、例2、例3中， utf8bom utf16le utf16be 因为有头，所以都能正确显示。
+  ; 例1中， utf8 无头被错当 GBK 处理，所以乱码。
+  ; 例2中， ansi 被错当 utf8 处理，所以乱码。
+  ; 例3中， uft8 无头被错当 cp0 处理，所以乱码。
+  ; 综合所述，不同语言下，最佳的 codepage 设置就是 system 。
+  ; 因为它能在中日韩等不同国家下，都正确显示 ansi 和 utf8bom 。
+  ; 只需在 oSciTE.Msg(2137) = 0 时判断一下内容到底是 ansi 还是 utf8 无头，即可正确区分所有。
+  codePageWarning := false
   
   ; GETCODEPAGE = 2137
-  if (WinActive("ahk_id " . SciTE_Hwnd) and oSciTE.Msg(2137)!=65001 and 获取当前文件扩展名()="ahk")
+  if (WinActive("ahk_id " SciTE_Hwnd) and oSciTE.Msg(2137)!=65001)
   {
-    codePageWarning := true
-    SetTimer, 显示编码提示, 20
+    path := oSciTE.CurrentFile
+    SplitPath, path, , , ext
+    
+    if (ext="ahk")  ; 是 ahk 文件
+    {
+      codePageWarning := true
+      SetTimer, 对编码错误的AHK文件进行警告, 20
+    }
+    else if (path)  ; 是普通文件
+    {
+      if (!fileTransformed.HasKey(path))  ; 没有转换过编码
+      {
+        fileTransformed[path] := true
+        对显示为ANSI的文件进行转换()
+      }
+    }
   }
-  else if (codePageWarning)
+  
+  if (!codePageWarning)
   {
-    codePageWarning := false
-    SetTimer, 显示编码提示, Off
+    SetTimer, 对编码错误的AHK文件进行警告, Off
     btt("")
   }
 }
 
-获取当前文件扩展名()
-{
-  SplitPath, % oSciTE.CurrentFile, , , ext
-  return, ext
-}
-
-显示编码提示()
+对编码错误的AHK文件进行警告()
 {
   global SciTE_Hwnd
   
@@ -46,17 +70,46 @@ return
     , A_ScreenWidth, A_ScreenHeight, , "Style4", {TargetHWND:SciTE_Hwnd, CoordMode:"Client"})
 }
 
+对显示为ANSI的文件进行转换()
+{
+  encoding := FileGetEncoding(oSciTE.CurrentFile)
+  if (encoding=65001)
+    ; IDM_ENCODING_UCOOKIE = 154
+    oSciTE.SendDirectorMsg("menucommand:154")
+}
+
+更新fileTransformed(path)
+{
+  global fileTransformed
+  
+  fileTransformed.Delete(path)
+}
+
 #If codePageWarning
 F2::
-转换编码为UTF8()
+ANSI与UTF8转为UTF8BOM()
 {
-  text := oSciTE.GetDocument()
+  encoding := FileGetEncoding(oSciTE.CurrentFile)
+  
+  if (encoding=65001)
+  {
+    ; SCI_GETLENGTH = 2006
+    len := oSciTE.Msg(2006)
+    ; 通过在文末插入并删除一个空格来创造保存点。
+    oSciTE.InsertText(" ", len)
+    ; SCI_DELETERANGE = 2645
+    oSciTE.Msg(2645, len, 1)
+  }
+  else
+  {
+    text := oSciTE.GetDocument()
+    oSciTE.SetDocument(text, "65001")
+  }
   
   ; IDM_ENCODING_UTF8 = 153
   oSciTE.SendDirectorMsg("menucommand:153")
-  
-  oSciTE.SetDocument(text, "65001")
 }
 #If
 
 #Include %A_LineFile%\..\..\AHK 正则终结者\Lib\BTT.ahk
+#Include %A_LineFile%\..\Ude\Ude.ahk

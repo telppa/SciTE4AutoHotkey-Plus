@@ -21,6 +21,8 @@ SetWorkingDir, %A_ScriptDir%
 		ExitApp
 	}
 	
+	OnMessage(0x004A, "Receive_WM_COPYDATA")
+	
 	bTillaGotoEnabled := oSciTE.ResolveProp("tillagoto.enable") + 0
 	if bTillaGotoEnabled
 		Run, "%A_AhkPath%" TillaGoto.ahk
@@ -42,6 +44,21 @@ SetWorkingDir, %A_ScriptDir%
   WinClose, ahk_pid %中文帮助PID%   ; 退出时关闭帮助。
   ExitApp
 return
+
+; 响应 scite 的事件并分发
+Receive_WM_COPYDATA(wParam, lParam)
+{
+  StringAddress := NumGet(lParam + 2*A_PtrSize)
+  CopyOfData := StrGet(StringAddress)
+  event := StrSplit(CopyOfData, ":", , 2)
+  
+	switch event[1]
+	{
+		case "closed":更新fileTransformed(event[2])  ; 智能编码
+	}
+	
+  return true
+}
 
 #Include %A_LineFile%\..\智能操作\智能F1.ahk
 #Include %A_LineFile%\..\智能操作\智能Tab.ahk
