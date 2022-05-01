@@ -3,6 +3,25 @@
 ; BUG：
   ; 1.在行注释的行首处，中文输入法状态下，输入一个英文字，比如 “f” ，然后用 “Shift” 键让英文上屏，这时获取到的高亮状态是不正确的。
   ; 不过由于随便再动一下光标就又能获取到正确高亮状态了，所以这个 bug 几乎没任何影响。
+  
+/*为什么要用这个 SetTimer 而不是直接在 #If 中判断呢？
+  因为在 #If 中用表达式进行判断，会触发一个错误，大致与 SendMessage 有关。
+  以下是错误重现代码。
+  
+  oSciTE := ComObjActive("SciTE4AHK.Application")
+  aaaa()
+  return
+  
+  #If aaaa()
+    c::ToolTip,lalala
+  #If
+  
+  aaaa(){
+    global oSciTE
+    MsgBox, % oSciTE.Version
+    MsgBox, % oSciTE.GetCurPos
+  }
+*/
 智能标点:
   SetTimer, 检测光标位置语法高亮风格是否变化, 50
 return
