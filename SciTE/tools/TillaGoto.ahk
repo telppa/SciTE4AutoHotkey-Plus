@@ -53,6 +53,11 @@ iIncludeMode     := oSciTE.ResolveProp("tillagoto.include.mode") + 0
 bCacheFiles      := oSciTE.ResolveProp("tillagoto.cache.files") + 0
 bDirectives      := oSciTE.ResolveProp("tillagoto.directives") + 0
 
+; #1D2125 -> 1D2125
+cGUIBG     := LTrim(cGUIBG, "#")
+cControlBG := LTrim(cControlBG, "#")
+cControlFG := LTrim(cControlFG, "#")
+
 _AhkScriptIsActive()
 {
 	global oSciTE
@@ -109,14 +114,13 @@ _SciTEIsActive()
 	}
 	
 	;Create GUI
-	Gui, +AlwaysOnTop +Border +ToolWindow +LastFound -Caption
+	Gui, +AlwaysOnTop +Border +ToolWindow +LastFound -Caption +HwndhGui
 	Gui, Font, s%iControlFontSize% c%cControlFG%, %fControlFont%
 	Gui, Color, %cGUIBG%, %cControlBG%
 	Gui, Margin, %iMargin%, %iMargin%
-	Gui, Add, Edit, h20 w%iGUIWidth% vtxtSearch gtxtSearch_Event hwndhtxtsearch
+	Gui, Add, Edit, w%iGUIWidth% vtxtSearch gtxtSearch_Event hwndhtxtsearch ; height is automatically set by font size
 	sortOpt := bSortEntries ? "Sort" : ""
 	Gui, Add, ListBox, %sortOpt% wp vlblList glblList_Event hwndhlblList +HScroll +256 ;LBS_NOINTEGRALHEIGHT
-	hGui := WinExist()
 	
 	;Get the height of a listbox item
 	SendMessage, 417,,,, ahk_id %hlblList% ;LB_GETITEMHEIGHT
