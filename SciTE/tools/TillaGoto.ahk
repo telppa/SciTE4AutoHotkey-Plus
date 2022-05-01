@@ -126,10 +126,11 @@ _SciTEIsActive()
 	SendMessage, 417,,,, ahk_id %hlblList% ;LB_GETITEMHEIGHT
 	iGUIItemHeight := ErrorLevel
 	
-	;Catch WM_INPUT, WM_KEYDOWN and WM_MOUSEWHEEL
-	OnMessage(255, "GUIInteract")
+	;Catch WM_KEYDOWN and WM_MOUSEWHEEL
 	OnMessage(256, "GUIInteract")
 	OnMessage(522, "GUIInteract")
+	;Catch WM_INPUT 搞不懂为什么要用获取原始输入的方式来抓鼠标中键
+	OnMessage(255, "GUIInteract")
 	
 	;Register the mouse with RIDEV_INPUTSINK
 	If HID_Register(1, 2, hGui, 0x00000100)
@@ -524,7 +525,8 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 			If (wParam = 38) Or (wParam = 40)
 				Return WrapSel(wParam = 38) ? True : ""
 		}
-	} Else If (msg = 522) And (hwnd = htxtSearch) { ;WM_MOUSEWHEEL
+	} 
+	Else If (msg = 522) And (hwnd = htxtSearch) { ;WM_MOUSEWHEEL
 		
 		;Check if the listbox is even populated
 		SendMessage, 395, 0, 0,, ahk_id %hlblList%
@@ -542,7 +544,8 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 			If Not WrapSel(bForward)
 				ControlSend,, % bForward ? "{Up}" : "{Down}", ahk_id %hlblList%
 		
-	} Else If (msg = 255) { ;WM_INPUT
+	}
+	Else If (msg = 255) { ;WM_INPUT
 		
 		;Get flags
 		flags := HID_GetInputInfo(lParam, (12 + A_PtrSize * 2) | 0x0100)
@@ -653,8 +656,8 @@ AnalyseScript:
 	;Ban comments if necessary
 	;下面这两句的作用是将某些注释（例如文本最最前面的注释）给替换为空格，也正是由于这个函数的作用，导致坐标计算始终出问题，所以被屏蔽掉了
 	;副作用是被注释掉的函数或标签也会被识别出来
-	;~ If bFilterComments
-		;~ FilterComments(sScript)
+	; If bFilterComments
+		; FilterComments(sScript)
 	
 	;Get labels and functions
 	GetScriptLabels(sScript)
@@ -2056,9 +2059,9 @@ CheckTextClick(x, y) {
 		clickedFunc := lineText
 		
 		;Trim after and before the first illegal character
-		If (i := RegExMatch(clickedFunc, "[^a-zA-Z0-9#_@\$\?\[\]]", "", iInLinePos + 1))
+		If (i := RegExMatch(clickedFunc, "(*UCP)[^\w#@\$\?\[\]]", "", iInLinePos + 1))
 			StringLeft, clickedFunc, clickedFunc, i - 1
-		If (i := RegExMatch(StringReverse(clickedFunc), "[^a-zA-Z0-9#_@\$\?\[\]]", ""
+		If (i := RegExMatch(StringReverse(clickedFunc), "(*UCP)[^\w#@\$\?\[\]]", ""
 													  , StrLen(clickedFunc) - iInLinePos + 1))
 			StringTrimLeft, clickedFunc, clickedFunc, StrLen(clickedFunc) - i + 1
 		
@@ -2066,10 +2069,10 @@ CheckTextClick(x, y) {
 		clickedLabel := lineText
 		
 		;Trim after and before the first illegal character
-		If (i := RegExMatch(clickedLabel, "[^a-zA-Z0-9\Q@#$_[]?~``!%^&*+-()={}|\:;""'<>./\E]", ""
+		If (i := RegExMatch(clickedLabel, "(*UCP)[^\w\Q@#$[]?~``!%^&*+-()={}|\:;""'<>./\E]", ""
 										, iInLinePos + 1))
 			StringLeft, clickedLabel, clickedLabel, i - 1
-		If (i := RegExMatch(StringReverse(clickedLabel), "[^a-zA-Z0-9\Q@#$_[]?~``!%^&*+-()={}|\:;""'<>./\E]", ""
+		If (i := RegExMatch(StringReverse(clickedLabel), "(*UCP)[^\w\Q@#$[]?~``!%^&*+-()={}|\:;""'<>./\E]", ""
 													   , StrLen(clickedLabel) - iInLinePos + 1)) {
 			i := StrLen(clickedLabel) - i + 1, iInLinePos -= i
 			StringTrimLeft, clickedLabel, clickedLabel, i
@@ -2375,6 +2378,7 @@ GetFileCRC32(path = False) {
 ;用于计算字符在指定代码页下的长度
 StrPutVar(string, ByRef var, encoding)
 {
-	VarSetCapacity(var, StrPut(string, encoding) * ((encoding="utf-16"||encoding="cp1200") ? 2 : 1))	;确定容量. StrPut 返回字符数,但 VarSetCapacity 需要字节数
-	return StrPut(string, &var, encoding)								;复制或转换字符串
+	VarSetCapacity(var, StrPut(string, encoding)
+	* ((encoding="utf-16"||encoding="cp1200") ? 2 : 1))  ; 确定容量. StrPut 返回字符数,但 VarSetCapacity 需要字节数
+	return StrPut(string, &var, encoding)								 ; 复制或转换字符串
 }
