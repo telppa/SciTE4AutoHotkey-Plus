@@ -32,17 +32,13 @@ IfNotExist, %UserPropsFile%
 FileEncoding, UTF-8
 FileRead, UserProps, %UserPropsFile%
 
-cplist_v := "0|65001|932|936|949|950|1361"
-cplist_n := "System default|UTF-8|Shift-JIS|Chinese GBK|Korean Wansung|Chinese Big5|Korean Johab"
-
 p_style  := FindProp("import Styles\\(.*)\.style", "Classic")
 p_locale := FindProp("locale\.properties=locales\\(.*)\.locale\.properties", "English")
-p_encoding := FindProp("code\.page=(" cplist_v ")", 0)
 p_backup := FindProp("make\.backup=([01])", 1)
 p_savepos := FindProp("save\.position=([01])", 1)
 p_zoom := FindProp("magnification=(-?\d+)", -1)
 
-if 1 = /regenerate
+if (A_Args.1 = "/regenerate")
 {
 	regenMode := true
 	gosub Update2
@@ -54,31 +50,28 @@ org_zoom := p_zoom
 
 stylelist := CountStylesAndChoose(ch1)
 localelist := CountLocalesAndChoose(ch2)
-p_encoding := FindInList(cplist_v, p_encoding)
 
 Gui, +ToolWindow +AlwaysOnTop
+Gui, Margin, 10, 20
 
-Gui, Add, Text, Section +Right w70, Language:
-Gui, Add, DDL, ys R10 Choose%ch2% vp_locale, %localelist%
+Gui, Add, Text, Section +Right w100, Language:
+Gui, Add, DDL, ys-4 R10 Choose%ch2% vp_locale w150, %localelist%
 
-Gui, Add, Text, xs Section +Right w70, Style:
-Gui, Add, DDL, ys Choose%ch1% vp_style gDDL_Choose, %stylelist%|New...
+Gui, Add, Text, xs Section +Right w100, Style:
+Gui, Add, DDL, ys-4 Choose%ch1% vp_style gDDL_Choose w150, %stylelist%|New...
 
-Gui, Add, Text, xs Section +Right w70, File codepage:
-Gui, Add, DDL, ys +AltSubmit Choose%p_encoding% vp_encoding, %cplist_n%
-
-Gui, Add, Text, xs Section +Right w70, Default zoom:
-Gui, Add, Edit, ys w50
+Gui, Add, Text, xs Section +Right w100, Default zoom:
+Gui, Add, Edit, ys-4 w50
 Gui, Add, UpDown, vp_zoom Range-10-10, %p_zoom%
 
-Gui, Add, Text, xs Section +Right w70, Auto-backups:
+Gui, Add, Text, xs Section +Right w100, Auto backups:
 Gui, Add, CheckBox, ys Checked%p_backup% vp_backup
 
-Gui, Add, Text, xs Section +Right, Remember window position:
+Gui, Add, Text, xs Section +Right w100, Remember window position:
 Gui, Add, CheckBox, ys Checked%p_savepos% vp_savepos
 
-Gui, Add, Button, xs+40 Section gUpdate, Update
-Gui, Add, Button, ys xs+70 gEditStyle, Edit style
+Gui, Add, Button, xs+6 Section gUpdate w100 h36, Update
+Gui, Add, Button, ys xs+148 gEditStyle w100 h36, Edit style
 Gui, Show,, SciTE settings
 return
 
@@ -130,8 +123,6 @@ Update:
 Gui, Submit, NoHide
 Update2:
 
-p_encoding := GetItem(cplist_v, p_encoding)
-
 FileRead, qvar, %LocalSciTEPath%\Styles\%p_style%.style.properties
 p_extra := ""
 if RegExMatch(qvar, "`am)^s4ahk\.style=1$")
@@ -172,8 +163,6 @@ UserProps =
 # THIS FILE IS SCRIPT-GENERATED - DON'T TOUCH
 locale.properties=locales\%p_locale%.locale.properties
 make.backup=%p_backup%
-code.page=%p_encoding%
-output.code.page=%p_encoding%
 save.position=%p_savepos%
 magnification=%p_zoom%
 import Styles\%p_style%.style
