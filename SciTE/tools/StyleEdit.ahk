@@ -92,8 +92,16 @@ for _,style in styles
 	isFirst := A_Index = 1, Check3 := isFirst ? "" : "Check3"
 	data[style.prop] := StrSplit(GetTheProp(style.prop), ",", " `t")
 	Gui Add, Text, xs Section w80 Center, % style.name
-	Gui Add, Text, ys Border w80 Center vtxtFgClr%A_Index% gChooseColor, % GetStyleParam(style.prop, "fore:")
-	Gui Add, Text, ys Border w80 Center vtxtBgClr%A_Index% gChooseColor, % GetStyleParam(style.prop, "back:")
+	if (style.name="Base Style")
+	{
+		Gui Add, Text, ys Border w80 Center vtxtFgClr%A_Index% gChooseColor, % GetTheProp("default.text.fore")
+		Gui Add, Text, ys Border w80 Center vtxtBgClr%A_Index% gChooseColor, % GetTheProp("default.text.back")
+	}
+	else
+	{
+		Gui Add, Text, ys Border w80 Center vtxtFgClr%A_Index% gChooseColor, % GetStyleParam(style.prop, "fore:")
+		Gui Add, Text, ys Border w80 Center vtxtBgClr%A_Index% gChooseColor, % GetStyleParam(style.prop, "back:")
+	}
 	cB := GetStyleCheck(style.prop, "bold", isFirst)
 	cI := GetStyleCheck(style.prop, "italics", isFirst)
 	cU := GetStyleCheck(style.prop, "underlined", isFirst)
@@ -103,7 +111,7 @@ for _,style in styles
 	Gui Add, CheckBox, ys %Check3% w25 vchkU%A_Index% Checked%cU%
 	Gui Add, CheckBox, ys %Check3% w25 vchkE%A_Index% Checked%cE%
 }
-GuiControl,, editFontSize, % GetStyleParam(styles[1].prop, "size:")
+GuiControl,, editFontSize, % GetTheProp("default.text.size")
 Gui Add, Button, xs+150 Section gSaveStyle, Save Style
 Gui Show,, SciTE4AutoHotkey Style Editor
 WinSet, Redraw,, ahk_id %MainWin%
@@ -152,11 +160,6 @@ for id,which in styles
 			continue
 		parts2.Insert(part)
 	}
-	if !isntFirst
-	{
-		parts2.Insert("font:$(default.text.font)")
-		parts2.Insert("size:" editFontSize)
-	}
 	; Set colors
 	GuiControlGet fore,, txtFgClr%id%
 	GuiControlGet back,, txtBgClr%id%
@@ -174,9 +177,16 @@ for id,which in styles
 	for _,part in parts2
 		str .= "," part
 	StringTrimLeft str, str, 1
+	if (!isntFirst)  ; style.*.32
+	{
+		SetTheProp("default.text.font", ddlFont)
+		SetTheProp("default.text.size", editFontSize)
+		SetTheProp("default.text.fore", fore)
+		SetTheProp("default.text.back", back)
+		str := "fore:$(default.text.fore),back:$(default.text.back),font:$(default.text.font),size:$(default.text.size)"
+	}
 	SetTheProp(which.prop, str)
 }
-SetTheProp("default.text.font", ddlFont)
 FileDelete, %StyleFileName%
 FileAppend, % StyleText, %StyleFileName%
 scite.ReloadProps()
