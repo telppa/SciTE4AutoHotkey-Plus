@@ -415,7 +415,7 @@ SelectItem:
 		If Not i {
 			
 			;Try with labels
-			i := CheckLabelMatch(clickedLabel, iInLinePos)
+			i := CheckLabelMatch(clickedLabel ":")
 			If Not i
 				Return
 			
@@ -477,16 +477,14 @@ LaunchFile(sFilePath, iLine) {
 	SendMessage, 2024, iLine - 1, 0,, ahk_id %hSci%
 }
 
-CheckLabelMatch(sHaystack, iPos) {
+CheckLabelMatch(sHaystack) {
 	Global sLabels0
 	
-	maxLen := 0, maxIdx := 0
-	Loop % sLabels0 ;We need to do it without the trailing colon
-		If (i := InStr(sHaystack, SubStr(sLabels%A_Index%, 1, (j := StrLen(sLabels%A_Index%)) - 1)))
-			If (i <= iPos) And (i + j >= iPos) And (j > maxLen)
-				maxLen := j, maxIdx := A_Index
+	Loop % sLabels0
+		If (sHaystack = sLabels%A_Index%)
+			Return A_Index
 	
-	Return maxIdx
+	Return 0
 }
 
 GUIInteract(wParam, lParam, msg, hwnd) {
@@ -2047,46 +2045,14 @@ CheckTextClick(x, y) {
 		SendMessage, 2008, 0, 0,, ahk_id %hSci% ;SCI_GETCURRENTPOS
 	Else
 		SendMessage, 2023, x, y,, ahk_id %hSci% ;SCI_POSITIONFROMPOINTCLOSE
-	iPos := ErrorLevel, iInLinePos := iPos
+	iPos := ErrorLevel
 	
 	;Check for error
 	If (iPos = 0xFFFFFFFF)
 		Return False
 	Else {
-		
-		;SCI_LINEFROMPOSITION
-		SendMessage, 2166, iPos, 0,, ahk_id %hSci%
-		line := ErrorLevel
-		
-		;SCI_POSITIONFROMLINE
-		SendMessage, 2167, line, 0,, ahk_id %hSci%
-		iInLinePos -= ErrorLevel
-		
-		;Get line text
-		lineText := Sci_GetLineText(hSci, line)
-		
-		;Get possible function name
-		clickedFunc := lineText
-		
-		;Trim after and before the first illegal character
-		If (i := RegExMatch(clickedFunc, "(*UCP)[^\w#@\$\?\[\]]", "", iInLinePos + 1))
-			StringLeft, clickedFunc, clickedFunc, i - 1
-		If (i := RegExMatch(StringReverse(clickedFunc), "(*UCP)[^\w#@\$\?\[\]]", ""
-													  , StrLen(clickedFunc) - iInLinePos + 1))
-			StringTrimLeft, clickedFunc, clickedFunc, StrLen(clickedFunc) - i + 1
-		
-		;Get possible label name
-		clickedLabel := lineText
-		
-		;Trim after and before the first illegal character
-		If (i := RegExMatch(clickedLabel, "(*UCP)[^\w\Q@#$[]?~``!%^&*+-()={}|\:;""'<>./\E]", ""
-										, iInLinePos + 1))
-			StringLeft, clickedLabel, clickedLabel, i - 1
-		If (i := RegExMatch(StringReverse(clickedLabel), "(*UCP)[^\w\Q@#$[]?~``!%^&*+-()={}|\:;""'<>./\E]", ""
-													   , StrLen(clickedLabel) - iInLinePos + 1)) {
-			i := StrLen(clickedLabel) - i + 1, iInLinePos -= i
-			StringTrimLeft, clickedLabel, clickedLabel, i
-		}
+		clickedFunc  := SciUtil_GetWord(hSci, iPos)
+		clickedLabel := clickedFunc
 		
 		;Return true if there's something to check
 		Return (clickedLabel Or clickedFunc)
