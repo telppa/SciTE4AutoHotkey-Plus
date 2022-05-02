@@ -224,7 +224,7 @@ SummonGUI:
 			}
 			
 			;Check if new text has been selected
-			s := Sci_GetSelText(hSci)
+			s := SciUtil_GetSelection(hSci)
 			If (s <> sSelText) And Not InStr(s, "`n") {
 				
 				;Keep the old
@@ -279,7 +279,7 @@ SummonGUI:
 		AppendFilename()
 	
 	;Check if text is selected
-	sSelText := Sci_GetSelText(hSci)
+	sSelText := SciUtil_GetSelection(hSci)
 	If (sSelText <> "") And Not RegExMatch(sSelText, "[\r\n]") {
 		
 		;Copy the selected text in the textbox
@@ -406,10 +406,7 @@ SelectItem:
 	If bCheckClick {
 		
 		;Try with functions first (internal first)
-		clickedFunc .= "()", i := 0
-		While (A_Index <= sFuncs0) And Not i
-			If (sFuncs%A_Index% = clickedFunc)
-				i := A_Index
+		i := CheckFuncMatch(clickedFunc "()")
 		
 		;Check if we found something
 		If Not i {
@@ -475,6 +472,16 @@ LaunchFile(sFilePath, iLine) {
 	SendMessage, 2370, 0, 0,, ahk_id %hSci%
 	SendMessage, 2024, iLine + ErrorLevel - 1, 0,, ahk_id %hSci%
 	SendMessage, 2024, iLine - 1, 0,, ahk_id %hSci%
+}
+
+CheckFuncMatch(sHaystack) {
+	Global sFuncs0
+	
+	Loop % sFuncs0
+		If (sHaystack = sFuncs%A_Index%)
+			Return A_Index
+	
+	Return 0
 }
 
 CheckLabelMatch(sHaystack) {
@@ -655,7 +662,7 @@ AnalyseScript:
 	sScanFile0 := 0
 	
 	;Get full text
-	sScript := Sci_GetText(hSci)
+	sScript := SciUtil_GetText(hSci)
 	
 	If bDirectives
 		GetScriptDirectives(sScript)
@@ -1891,121 +1898,6 @@ GetMaxCharacters(hLB, iWidth) { ;We need the listbox to get the font used
 /********************\
  Scintilla functions |
 				   */
-
-Sci_GetText(hSci) {
-	
-	;Retrieve text length. SCI_GETLENGTH
-	SendMessage 2006, 0, 0,, ahk_id %hSci%
-	iLength := ErrorLevel + 1
-	
-	;0x38 = PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_VM_WRITE
-	WinGet, pidSci, PID, ahk_id %hSci%
-	If Not (hProc := DllCall("OpenProcess", "UInt", 0x38, "Int", 0, "UInt", pidSci, "Ptr"))
-		Return
-	
-	;MEM_COMMIT=0x1000, PAGE_READWRITE=4
-	If Not (ptrBuf := DllCall("VirtualAllocEx", "UInt", hProc, "UInt", 0, "UInt", iLength
-											  , "UInt", 0x1000, "UInt", 4, "Ptr"))
-		Return
-	
-	;Fill buffer with text. SCI_GETTEXT
-	SendMessage 2182, iLength, ptrBuf,, ahk_id %hSci%
-	
-	;Read buffer
-	VarSetCapacity(sText, iLength)
-	DllCall("ReadProcessMemory", "Ptr", hProc, "Ptr", ptrBuf, "Ptr", &sText, "UInt", iLength, "UInt", 0)
-	VarSetCapacity(sText, -1)
-	
-	;We're done with the remote buffer
-	DllCall("VirtualFreeEx", "Ptr", hProc, "Ptr", ptrBuf, "UInt", 0, "UInt", 0x8000) ;MEM_RELEASE = 0x8000
-	DllCall("CloseHandle", "Ptr", hProc)
-	
-	;Check if codepage conversion is necessary. SCI_GETCODEPAGE
-	SendMessage, 2137, 0, 0,, ahk_id %hSci%
-	If ((A_IsUnicode And ErrorLevel != 1200) Or (!A_IsUnicode And ErrorLevel != 1252))
-		sText := StrGet(&sText, "CP" . ErrorLevel)
-	
-	Return sText
-}
-
-Sci_GetSelText(hSci) {
-	
-	;Get length. SCI_GETSELTEXT
-	SendMessage 2161, 0, 0,, ahk_id %hSci%
-	iLength := ErrorLevel
-	
-	;Check if it's none
-	If (iLength = 1)
-		Return ""
-	
-	;0x38 = PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_VM_WRITE
-	WinGet, pidSci, PID, ahk_id %hSci%
-	If Not (hProc := DllCall("OpenProcess", "UInt", 0x38, "Int", 0, "UInt", pidSci, "Ptr"))
-		Return
-	
-	;MEM_COMMIT=0x1000, PAGE_READWRITE=4
-	If Not (ptrBuf := DllCall("VirtualAllocEx", "UInt", hProc, "UInt", 0, "UInt", iLength
-											  , "UInt", 0x1000, "UInt", 4, "Ptr"))
-		Return
-	
-	;Fill buffer. SCI_GETSELTEXT
-	SendMessage, 2161, 0, ptrBuf,, ahk_id %hSci%
-	
-	;Read buffer
-	VarSetCapacity(sText, iLength)
-	DllCall("ReadProcessMemory", "Ptr", hProc, "Ptr", ptrBuf, "Ptr", &sText, "UInt", iLength, "UInt", 0)
-	VarSetCapacity(sText, -1)
-	
-	;We're done with the remote buffer
-	DllCall("VirtualFreeEx", "Ptr", hProc, "Ptr", ptrBuf, "UInt", 0, "UInt", 0x8000) ;MEM_RELEASE = 0x8000
-	DllCall("CloseHandle", "Ptr", hProc)
-	
-	;Get the current codepage used. SCI_GETCODEPAGE
-	SendMessage, 2137, 0, 0,, ahk_id %hSci%
-	If ((A_IsUnicode And ErrorLevel != 1200) Or (!A_IsUnicode And ErrorLevel != 1252))
-		sText := StrGet(&sText, "CP" . ErrorLevel)
-	
-	Return sText
-}
-
-Sci_GetLineText(hSci, iLine) {
-	
-	;Retrieve line length. SCI_LINELENGTH
-	SendMessage 2350, iLine, 0,, ahk_id %hSci%
-	iLength := ErrorLevel + 1
-	
-	;0x38 = PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_VM_WRITE
-	WinGet, pidSci, PID, ahk_id %hSci%
-	If Not (hProc := DllCall("OpenProcess", "UInt", 0x38, "Int", 0, "UInt", pidSci, "Ptr"))
-		Return
-	
-	;MEM_COMMIT=0x1000, PAGE_READWRITE=4
-	If Not (ptrBuf := DllCall("VirtualAllocEx", "UInt", hProc, "UInt", 0, "UInt", iLength
-											  , "UInt", 0x1000, "UInt", 4, "Ptr"))
-		Return
-	
-	;Fill buffer with text. SCI_GETLINE
-	SendMessage 2153, iLine, ptrBuf,, ahk_id %hSci%
-	
-	;Read buffer
-	VarSetCapacity(sText, iLength)
-	DllCall("ReadProcessMemory", "Ptr", hProc, "Ptr", ptrBuf, "Ptr", &sText, "UInt", iLength, "UInt", 0)
-	VarSetCapacity(sText, -1)
-	
-	;We're done with the remote buffer
-	DllCall("VirtualFreeEx", "Ptr", hProc, "Ptr", ptrBuf, "UInt", 0, "UInt", 0x8000) ;MEM_RELEASE = 0x8000
-	DllCall("CloseHandle", "Ptr", hProc)
-	
-	;Get the current codepage used. SCI_GETCODEPAGE
-	SendMessage, 2137, 0, 0,, ahk_id %hSci%
-	If ((A_IsUnicode And ErrorLevel != 1200) Or (!A_IsUnicode And ErrorLevel != 1252))
-		sText := StrGet(&sText, "CP" . ErrorLevel)
-	
-	;Trim off ending characters
-	sText := RegExReplace(sText, "\R")
-	
-	Return sText
-}
 
 Sci_VScrollVisible(hSci) {
 	
