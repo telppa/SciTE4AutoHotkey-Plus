@@ -559,7 +559,8 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 		bMDown := flags & 0x0010
 		bMUp   := flags & 0x0020
 		
-		;Check for line history. Shift+Wheel
+		; Check for line history.
+		; Shift+滚轮 功能
 		If (flags & 0x0400) And GetKeyState("Shift", "P") And _SciTEIsActive() {
 			iWheelTurns := HID_GetInputInfo(lParam, (14 + A_PtrSize * 2) | 0x1100)
 			If (iWheelTurns <> -1) {    ;Check for error
