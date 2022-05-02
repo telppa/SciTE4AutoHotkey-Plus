@@ -15,14 +15,16 @@
 	
 	; Get SciTE object
 	oSciTE := GetSciTEInstance()
-	if !oSciTE
+	
+	; Get SciTE window handle and Scintilla handle
+	hSciTE := oSciTE.SciTEHandle
+	ControlGet, hSci, Hwnd,, Scintilla1, ahk_id %hSciTE%  ; Scintilla1 = edit panel, Scintilla2 = output panel
+	
+	if !hSci
 	{
 		MsgBox, 16, TillaGoto, Cannot find SciTE!
 		ExitApp
 	}
-	
-	; Get SciTE window handle
-	oSciTE_hwnd := oSciTE.SciTEHandle
 	
 	; Read TillaGoto settings using SciTE's property system
 	bTrayIcon        := oSciTE.ResolveProp("tillagoto.show.tray.icon") + 0
@@ -67,6 +69,7 @@
 	#SingleInstance Ignore
 	SetTitleMatchMode, RegEx
 	DetectHiddenWindows, On
+	SetBatchLines, -1
 	Menu, Tray, NoStandard
 	Menu, Tray, Icon, %A_ScriptDir%\..\toolicon.icl, 16
 	Menu, Tray, Tip, TillaGoto for SciTE4AutoHotkey
@@ -105,18 +108,19 @@
 	OnMessage(256, "GUIInteract")  ; 方向键与翻页键与 Ctrl+Home Ctrl+End 在 GUI 中选择项目
 	OnMessage(522, "GUIInteract")  ; 实际并没有产生任何效果，可能是因为 win10 自带鼠标穿透操控的功能
 	
-	;Register summon hotkey before Quick Mode
-	Hotkey, IfWinActive, ahk_id %hGui%
-	Hotkey, %uSummonGUI%, SummonGUI
-	
 	;Check if we're in quick mode
 	If bQuickMode
-		Goto SummonGUI ;Go straight to summoning the GUI
+	{
+		; Register summon hotkey before Quick Mode
+		Hotkey, IfWinActive, ahk_id %hGui%
+		Hotkey, %uSummonGUI%, SummonGUI
+		Goto SummonGUI_QuickMode ;Go straight to summoning the GUI
+	}
 	
 	; Register main hotkeys
 	Hotkey, If, _SciTEIsActive()
 	Hotkey, %uSummonGUI%, SummonGUI
-	Hotkey, %uGotoDef%,   GotoDefinition
+	Hotkey, %uGotoDef%,   SummonGUI_Keyboard
 	Hotkey, %uGoBack%,    PreviousView
 	Hotkey, %uGoForward%, NextView
 	
@@ -126,7 +130,7 @@
 	If bQuitWithEditor {
 		Loop {
 			Sleep, 1000 ;Check if we need to quit
-			If Not WinExist("ahk_id " oSciTE_hwnd)
+			If Not WinExist("ahk_id " hSciTE)
 				ExitApp
 		}
 	}
@@ -137,11 +141,11 @@ TrayClose:
 ExitApp
 
 ; Necessary for the conditional hotkey/hotstring expression to be registered
-#If _SciTEIsActive()
+#If bUseMButton And _SciTEIsActive()
 MButton::
 HandleMButton()
 {
-	Global bShowing, clickX, clickY, bCheckClick
+	Global bShowing, clickX, clickY
 	
 	Critical
 	
@@ -155,19 +159,18 @@ HandleMButton()
 	MouseGetPos, clickX, clickY,, sControl
 	
 	; Make sure the click was made inside the Scintilla control
-	If Not InStr(sControl, "Scintilla")
+	If Not InStr(sControl, "Scintilla1")
 		Return
 	
 	;Prep data for check click
-	ControlGet, hSci, Hwnd,, %sControl%
 	ControlGetPos, cX, cY,,, %sControl%
 	
 	; 没有用 CoordMode 而是用计算的方式得到了点击的坐标
-	clickX -= cX, clickY -= cY, bCheckClick := True
+	clickX -= cX, clickY -= cY
 	
-	SetTimer, SummonGUI, -1
+	SetTimer, SummonGUI_Mouse, -1
 }
-
+#If _SciTEIsActive()
 +WheelDown::
 +WheelUp::
 HandleShiftWheel()
@@ -182,90 +185,21 @@ HandleShiftWheel()
 		   */
 
 ;User summoned the GUI
+SummonGUI_QuickMode:
+SummonGUI_Keyboard:
+SummonGUI_Mouse:
 SummonGUI:
 	
-	;Switch thread to full speed
-	SetBatchLines, -1
+	;Check if editor is valid
+	hEditor := _SciTEIsActive()
+	If !hEditor
+		Return ;We were summoned from a foreign active window
 	
-	;Check if focus is not on us
-	If Not WinActive("ahk_id " hGui) {
-		
-		;Check if editor is valid
-		hEditor := _SciTEIsActive()
-		If !hEditor
-			Return ;We were summoned from a foreign active window
-	}
+	if (A_ThisLabel = "SummonGUI_Keyboard")
+		clickX := -1, clickY := -1
 	
-	;Check if we're already showing
-	If bShowing {
-		
-		;Check if we're currently active
-		If WinActive("ahk_id " hGui) {
-			
-			;Check if there's an item currently selected. LB_GETCURSEL
-			SendMessage, 0x188, 0, 0,, ahk_id %hlblList%
-			
-			;Check for LB_ERR
-			If (ErrorLevel <> 0xFFFFFFFF)
-				Goto SelectItem
-			Else
-				ControlFocus,, ahk_id %htxtSearch% ;Put focus back on the textbox
-			
-		}
-		; 中键点击走了这个分支
-		Else { ;We're not active. That means the editor is active
-			;Check if the mouse was used
-			If bCheckClick {
-				If CheckTextClick(clickX, clickY) {
-					Gosub, SelectItem
-					If Not bCheckClick
-						Return ;SelectItem found a match. We're done
-				}
-				bCheckClick := False
-				
-				;clickText failed. Validate listbox selection if any. LB_GETCURSEL
-				SendMessage, 0x188, 0, 0,, ahk_id %hlblList%
-				
-				;Check for error. LB_ERR
-				If (ErrorLevel <> 0xFFFFFFFF)
-					Goto, SelectItem
-			}
-			
-			;Check if new text has been selected
-			s := SciUtil_GetSelection(hSci)
-			If (s <> sSelText) And Not InStr(s, "`n") {
-				
-				;Keep the old
-				sSelText := s
-				
-				;Copy the selected text in the textbox
-				GuiControl,, txtSearch, %sSelText%
-				
-				;Create a list based on sel
-				CreateList(sSelText)
-				
-				;Check if it's just one match. If so, go to it. LB_GETCOUNT.
-				SendMessage, 395, 0, 0,, ahk_id %hlblList%
-				If (ErrorLevel = 1)
-					Goto SelectItem
-				
-				;Select all. EM_SETSEL
-				SendMessage, 177, 0, -1,, ahk_id %htxtSearch%
-			}
-			
-			;Focus on textbox
-			WinActivate, ahk_id %hGui%
-			ControlFocus,, ahk_id %htxtSearch%
-		}
-	}
-	
-	;Get handle to focused control
-	ControlGetFocus, cSci, ahk_id %hEditor%
-	
-	;Check if it fits the class name
-	If InStr(cSci, "Scintilla")
-		ControlGet, hSci, Hwnd,, %cSci%, ahk_id %hEditor%
-	Else Return
+	if (A_ThisLabel = "SummonGUI_Keyboard" or A_ThisLabel = "SummonGUI_Mouse")
+		bCheckClick := CheckTextClick(clickX, clickY)
 	
 	;Get the filename
 	sScriptPath := oSciTE.CurrentFile
@@ -274,40 +208,16 @@ SummonGUI:
 	
 	;Check if we're doing CheckOnClick
 	If bCheckClick {
-		If CheckTextClick(clickX, clickY) {
-			Gosub, SelectItem
-			If Not bCheckClick
-				Return
-		}
-		bCheckClick := False
+		Gosub, SelectItem
+		Return
 	}
 	
 	;Check if we have to append filename
 	If (iIncludeMode & 0x10000000)
 		AppendFilename()
 	
-	;Check if text is selected
-	sSelText := SciUtil_GetSelection(hSci)
-	If (sSelText <> "") And Not RegExMatch(sSelText, "[\r\n]") {
-		
-		;Copy the selected text in the textbox
-		GuiControl,, txtSearch, %sSelText%
-		
-		;Create a list based on sel
-		CreateList(sSelText)
-		
-		;Check if it's just one match. If so, go to it. LB_GETCOUNT.
-		SendMessage, 395, 0, 0,, ahk_id %hlblList%
-		If (ErrorLevel = 1)
-			Goto SelectItem
-		
-		;Select all. EM_SETSEL
-		SendMessage, 177, 0, -1,, ahk_id %htxtSearch%
-		
-	} Else {    ;Otherwise, empty the textbox and show the whole list
-		GuiControl,, txtSearch,
-		CreateList()
-	}
+	GuiControl,, txtSearch,
+	CreateList()
 	
 	;Set up textbox and listbox width
 	If bWideView {
@@ -335,7 +245,7 @@ SummonGUI:
 	
 	;Get window info
 	WinGetPos, iX, iY,,, ahk_id %hEditor%
-	ControlGetPos, sX, sY, sW, sH, %cSci%, ahk_id %hEditor%
+	ControlGetPos, sX, sY, sW, sH,, ahk_id %hSci%
 	iX += sX + (Not bPosLeft ? sW - (iW + (iMargin * 2)*A_ScreenDPI/96) - (Sci_VScrollVisible(hSci) ? SM_CXVSCROLL : 0) - 2 : 2)
 	iY += sY + 2
 	
@@ -400,11 +310,6 @@ NextView:
 	LineHistory(True)
 Return
 
-GotoDefinition:
-	clickX := -1, clickY := -1, bCheckClick := True
-	Goto, SummonGUI
-Return
-
 lblList_Event:
 	If (A_GuiEvent <> "DoubleClick")
 		Return
@@ -413,19 +318,12 @@ SelectItem:
 	;Check if we're doing CheckTextClick
 	If bCheckClick {
 		
-		;Try with functions first (internal first)
-		i := CheckFuncMatch(clickedFunc "()")
-		
-		;Check if we found something
-		If Not i {
-			
-			;Try with labels
-			i := CheckLabelMatch(clickedLabel ":")
-			If Not i
-				Return
-			
+		if (i := CheckFuncMatch(clickedFunc "()"))        ; Try with functions first (internal first)
+			bIsFunc := True
+		Else if (i := CheckLabelMatch(clickedLabel ":"))  ; Try with labels
 			bIsFunc := False
-		} Else bIsFunc := True
+		Else
+			Return
 		
 		;Move the caret to the position before going to item
 		SendMessage, 2025, iPos, 0,, ahk_id %hSci% ;SCI_GOTOPOS
@@ -468,8 +366,8 @@ SelectItem:
 Return
 
 _SciTEIsActive() {
-	global oSciTE_hwnd
-	return WinActive("ahk_id " oSciTE_hwnd)
+	global hSciTE
+	return WinActive("ahk_id " hSciTE)
 }
 
 LaunchFile(sFilePath, iLine) {
@@ -1888,15 +1786,28 @@ CheckTextClick(x, y) {
 	;Check for error
 	If (iPos = 0xFFFFFFFF)
 		Return False
-	Else {
-		clickedFunc  := SciUtil_GetWord(hSci, iPos)
-		clickedLabel := clickedFunc
+	Else
+	{
+		SendMessage, 2143, 0, 0,, ahk_id %hSci%  ; SCI_GETSELECTIONSTART
+		selStartPos := ErrorLevel
+		SendMessage, 2145, 0, 0,, ahk_id %hSci%  ; SCI_GETSELECTIONEND
+		selEndPos   := ErrorLevel
+		
+		; if we click a selection, text is selection text. otherwise text is the word under the click.
+		If (iPos>=selStartPos And iPos<=selEndPos)
+		{
+			clickedFunc  := SciUtil_GetSelection(hSci)
+			clickedLabel := clickedFunc
+		}
+		Else
+		{
+			clickedFunc  := SciUtil_GetWord(hSci, iPos)
+			clickedLabel := clickedFunc
+		}
 		
 		;Return true if there's something to check
 		Return (clickedLabel Or clickedFunc)
 	}
-	
-	Return False
 }
 
 StringReverse(s) {
