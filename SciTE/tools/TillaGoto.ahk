@@ -108,6 +108,8 @@ _SciTEIsActive()
 	SysGet, SM_CYHSCROLL, 3
 	
 	;Check if we'll be using the caching feature
+	; 如果包含了库文件，库文件内容一般是不会变的
+	; 所以通过通过 CRC32 校验并缓存库文件内容可以加速分析
 	If bCacheFiles {
 		GetFileCRC32() ;Initialize GetFileCRC32
 		OnExit, DeleteCache ;Register sub to delete cache upon exiting the script
@@ -126,11 +128,11 @@ _SciTEIsActive()
 	SendMessage, 417,,,, ahk_id %hlblList% ;LB_GETITEMHEIGHT
 	iGUIItemHeight := ErrorLevel
 	
-	;Catch WM_KEYDOWN and WM_MOUSEWHEEL
-	OnMessage(256, "GUIInteract")
-	OnMessage(522, "GUIInteract")
-	;Catch WM_INPUT 搞不懂为什么要用获取原始输入的方式来抓鼠标中键
-	OnMessage(255, "GUIInteract")
+	; Catch WM_KEYDOWN and WM_MOUSEWHEEL
+	OnMessage(256, "GUIInteract")  ; 方向键与翻页键与 Ctrl+Home Ctrl+End 在 GUI 中选择项目
+	OnMessage(522, "GUIInteract")  ; 实际并没有产生任何效果，可能是因为 win10 自带鼠标穿透操控的功能
+	; Catch WM_INPUT
+	OnMessage(255, "GUIInteract")  ; 鼠标中键激活、 Shift+滚轮 在最近历史中跳转
 	
 	;Register the mouse with RIDEV_INPUTSINK
 	If HID_Register(1, 2, hGui, 0x00000100)
@@ -498,7 +500,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 		
 		;Check if it's the textbox
 		If (hwnd = htxtSearch) {
-			If (wParam = 38) {  ;Up
+			If (wParam = 38) {         ;Up
 				If Not WrapSel(True) {
 					ControlSend,, {Up}, ahk_id %hlblList%
 					Return True
@@ -557,7 +559,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 		bMDown := flags & 0x0010
 		bMUp   := flags & 0x0020
 		
-		;Check for line history
+		;Check for line history. Shift+Wheel
 		If (flags & 0x0400) And GetKeyState("Shift", "P") And _SciTEIsActive() {
 			iWheelTurns := HID_GetInputInfo(lParam, (14 + A_PtrSize * 2) | 0x1100)
 			If (iWheelTurns <> -1) {    ;Check for error
