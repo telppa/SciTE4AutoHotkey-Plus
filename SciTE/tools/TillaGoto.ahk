@@ -1,90 +1,63 @@
-﻿/*! TheGood    
+﻿/*! TheGood
 	TillaGoto - Go to functions and labels in your script
 	Last updated: December 30, 2010
+	
+	SciTE4AutoHotkey version (by fincs) - Many, MANY changes in order to make it well-behaved
+	
+	Usage, changelog and help can be found in the thread:
+	http://www.autohotkey.com/forum/viewtopic.php?t=41575
 	
 	修改作者：兔子
 	更新日志：
 		2016.04.20 彻底支持代码中存在中文的情况；可完美分析并定位出代码中的中文标签、函数。
 	
-	Usage, changelog and help can be found in the thread:
-	http://www.autohotkey.com/forum/viewtopic.php?t=41575
 */
-
-/*! SciTE4AutoHotkey version - Many, MANY changes in order to make it well-behaved
-*/
-
-; Get SciTE object
-oSciTE := GetSciTEInstance()
-if !oSciTE
-{
-	MsgBox, 16, TillaGoto, Cannot find SciTE!
-	ExitApp
-}
-
-; Get SciTE window handle
-oSciTE_hwnd := oSciTE.SciTEHandle
-
-; Read TillaGoto settings using SciTE's property system
-bTrayIcon        := oSciTE.ResolveProp("tillagoto.show.tray.icon") + 0
-iGUIWidth        := oSciTE.ResolveProp("tillagoto.gui.width") + 0
-iGUIHeight       := oSciTE.ResolveProp("tillagoto.gui.height") + 0
-iMargin          := oSciTE.ResolveProp("tillagoto.gui.margin") + 0
-iTransparency    := oSciTE.ResolveProp("tillagoto.gui.transparency") + 0
-bPosLeft         := oSciTE.ResolveProp("tillagoto.gui.posleft") + 0
-bWideView        := oSciTE.ResolveProp("tillagoto.gui.wide.view") + 0
-iAlignFilenames  := oSciTE.ResolveProp("tillagoto.gui.align.filenames") + 0
-cGUIBG           := oSciTE.ResolveProp("tillagoto.gui.bgcolor")
-cControlBG       := oSciTE.ResolveProp("tillagoto.gui.controlbgcolor")
-cControlFG       := oSciTE.ResolveProp("tillagoto.gui.controlfgcolor")
-iControlFontSize := oSciTE.ResolveProp("tillagoto.gui.font.size") + 0
-fControlFont     := oSciTE.ResolveProp("tillagoto.gui.font")
-bSortEntries     := oSciTE.ResolveProp("tillagoto.gui.sort.entries") + 0
-uSummonGUI       := oSciTE.ResolveProp("tillagoto.hk.summon.gui")
-uGoBack          := oSciTE.ResolveProp("tillagoto.hk.go.back")
-uGoForward       := oSciTE.ResolveProp("tillagoto.hk.go.forward")
-uGotoDef         := oSciTE.ResolveProp("tillagoto.hk.goto.def")
-bFilterComments  := oSciTE.ResolveProp("tillagoto.filter.comments") + 0
-bQuickMode       := oSciTE.ResolveProp("tillagoto.quick.mode") + 0
-bQuitWithEditor  := oSciTE.ResolveProp("tillagoto.quit.with.editor") + 0
-bMatchEverywhere := oSciTE.ResolveProp("tillagoto.match.everywhere") + 0
-bUseMButton      := oSciTE.ResolveProp("tillagoto.use.mbutton") + 0
-iCancelWait      := oSciTE.ResolveProp("tillagoto.cancel.timeout") + 0
-iIncludeMode     := oSciTE.ResolveProp("tillagoto.include.mode") + 0
-bCacheFiles      := oSciTE.ResolveProp("tillagoto.cache.files") + 0
-bDirectives      := oSciTE.ResolveProp("tillagoto.directives") + 0
-
-; #1D2125 -> 1D2125
-cGUIBG     := LTrim(cGUIBG, "#")
-cControlBG := LTrim(cControlBG, "#")
-cControlFG := LTrim(cControlFG, "#")
-
-_AhkScriptIsActive()
-{
-	global oSciTE
-	return _SciTEIsActive() ;&& oSciTE.ResolveProp("Language") = "ahk1" ; Alternate test: FileExt = "ahk"
-}
-
-_GetSciTEHandle()
-{
-	global oSciTE_hwnd
-	return oSciTE_hwnd
-}
-
-_GetSciTEFile()
-{
-	global oSciTE
-	return oSciTE.CurrentFile
-}
-
-_SciTEIsActive()
-{
-	global oSciTE
-	return WinActive("ahk_id " _GetSciTEHandle())
-}
-
-; Necessary for the conditional hotkey/hotstring expression to be registered
-#if _AhkScriptIsActive()
-
+	
+	; Get SciTE object
+	oSciTE := GetSciTEInstance()
+	if !oSciTE
+	{
+		MsgBox, 16, TillaGoto, Cannot find SciTE!
+		ExitApp
+	}
+	
+	; Get SciTE window handle
+	oSciTE_hwnd := oSciTE.SciTEHandle
+	
+	; Read TillaGoto settings using SciTE's property system
+	bTrayIcon        := oSciTE.ResolveProp("tillagoto.show.tray.icon") + 0
+	iGUIWidth        := oSciTE.ResolveProp("tillagoto.gui.width") + 0
+	iGUIHeight       := oSciTE.ResolveProp("tillagoto.gui.height") + 0
+	iMargin          := oSciTE.ResolveProp("tillagoto.gui.margin") + 0
+	iTransparency    := oSciTE.ResolveProp("tillagoto.gui.transparency") + 0
+	bPosLeft         := oSciTE.ResolveProp("tillagoto.gui.posleft") + 0
+	bWideView        := oSciTE.ResolveProp("tillagoto.gui.wide.view") + 0
+	iAlignFilenames  := oSciTE.ResolveProp("tillagoto.gui.align.filenames") + 0
+	cGUIBG           := oSciTE.ResolveProp("tillagoto.gui.bgcolor")
+	cControlBG       := oSciTE.ResolveProp("tillagoto.gui.controlbgcolor")
+	cControlFG       := oSciTE.ResolveProp("tillagoto.gui.controlfgcolor")
+	iControlFontSize := oSciTE.ResolveProp("tillagoto.gui.font.size") + 0
+	fControlFont     := oSciTE.ResolveProp("tillagoto.gui.font")
+	bSortEntries     := oSciTE.ResolveProp("tillagoto.gui.sort.entries") + 0
+	uSummonGUI       := oSciTE.ResolveProp("tillagoto.hk.summon.gui")
+	uGoBack          := oSciTE.ResolveProp("tillagoto.hk.go.back")
+	uGoForward       := oSciTE.ResolveProp("tillagoto.hk.go.forward")
+	uGotoDef         := oSciTE.ResolveProp("tillagoto.hk.goto.def")
+	bFilterComments  := oSciTE.ResolveProp("tillagoto.filter.comments") + 0
+	bQuickMode       := oSciTE.ResolveProp("tillagoto.quick.mode") + 0
+	bQuitWithEditor  := oSciTE.ResolveProp("tillagoto.quit.with.editor") + 0
+	bMatchEverywhere := oSciTE.ResolveProp("tillagoto.match.everywhere") + 0
+	bUseMButton      := oSciTE.ResolveProp("tillagoto.use.mbutton") + 0
+	iCancelWait      := oSciTE.ResolveProp("tillagoto.cancel.timeout") + 0
+	iIncludeMode     := oSciTE.ResolveProp("tillagoto.include.mode") + 0
+	bCacheFiles      := oSciTE.ResolveProp("tillagoto.cache.files") + 0
+	bDirectives      := oSciTE.ResolveProp("tillagoto.directives") + 0
+	
+	; #1D2125 -> 1D2125
+	cGUIBG     := LTrim(cGUIBG, "#")
+	cControlBG := LTrim(cControlBG, "#")
+	cControlFG := LTrim(cControlFG, "#")
+	
 	;Keep backup values
 	bFilterCommentsOrig := bFilterComments
 	iIncludeModeOrig := iIncludeMode
@@ -107,7 +80,7 @@ _SciTEIsActive()
 	SysGet, SM_CXVSCROLL, 2
 	SysGet, SM_CYHSCROLL, 3
 	
-	;Check if we'll be using the caching feature
+	; Check if we'll be using the caching feature
 	; 如果包含了库文件，库文件内容一般是不会变的
 	; 所以通过通过 CRC32 校验并缓存库文件内容可以加速分析
 	If bCacheFiles {
@@ -146,8 +119,10 @@ _SciTEIsActive()
 	If bQuickMode
 		Goto SummonGUI ;Go straight to summoning the GUI
 	
-	;Register main hotkeys
-	Hotkey, If, _AhkScriptIsActive()
+	; Necessary for the conditional hotkey/hotstring expression to be registered
+	#If _SciTEIsActive()
+	; Register main hotkeys
+	Hotkey, If, _SciTEIsActive()
 	Hotkey, %uSummonGUI%, SummonGUI
 	Hotkey, %uGotoDef%,   GotoDefinition
 	Hotkey, %uGoBack%,    PreviousView
@@ -159,7 +134,7 @@ _SciTEIsActive()
 	If bQuitWithEditor {
 		Loop {
 			Sleep, 1000 ;Check if we need to quit
-			If Not WinExist("ahk_id " _GetSciTEHandle())
+			If Not WinExist("ahk_id " oSciTE_hwnd)
 				ExitApp
 		}
 	}
@@ -168,7 +143,23 @@ Return
 
 TrayClose:
 ExitApp
-
+/*
+MButton::
+HandleMButton()
+{
+	Global bShowing
+	
+	
+	Return
+}
++WheelDown::
++WheelUp::
+HandleShiftWheel()
+{
+	
+	Return
+}
+*/
 /************\
  GUI related |
 		   */
@@ -260,7 +251,7 @@ SummonGUI:
 	Else Return
 	
 	;Get the filename
-	sScriptPath := _GetSciTEFile()
+	sScriptPath := oSciTE.CurrentFile
 	
 	Gosub, AnalyseScript
 	
@@ -369,7 +360,7 @@ GuiEscape:
 Return
 
 CheckFocus:
-	t := _GetSciTEFile()
+	t := oSciTE.CurrentFile
 	If Not WinActive("ahk_id " hGui) And Not WinActive("ahk_id " hEditor) Or (t <> sScriptPath) {
 		SetTimer, CheckFocus, Off
 		Gosub, GuiEscape
@@ -458,6 +449,11 @@ SelectItem:
 	
 	Goto GuiEscape  ;Done
 Return
+
+_SciTEIsActive() {
+	global oSciTE_hwnd
+	return WinActive("ahk_id " oSciTE_hwnd)
+}
 
 LaunchFile(sFilePath, iLine) {
 	Global cSci, oSciTE
@@ -593,7 +589,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 			bIgnoreMUp := True ;So that we don't launch if the press started somewhere else
 		}
 		Else If bMUp And bUseMButton And (Not bIgnoreMUp Or bShowing) And _SciTEIsActive() {  ; 释放中键。短按中键在此实现（原理是打断长按中键的过程）
-		
+			
 			;Cancel timer
 			SetTimer, GuiEscape, Off
 			
@@ -618,7 +614,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 			bIgnoreMUp := False
 		
 		Return 0
-	
+		
 	}
 }
 
@@ -1990,7 +1986,7 @@ ShowLine(line) {
 LineHistory(bForward, iRecordMode = 0) {
 	Static
 	Local t
-	Global sScriptPath, hEditor, hSci, bShowing
+	Global sScriptPath, hEditor, hSci, bShowing, oSciTE
 	
 	;If we're not showing, we need to find out what script we're on
 	If Not bShowing {
@@ -2005,7 +2001,7 @@ LineHistory(bForward, iRecordMode = 0) {
 		Else Return
 		
 		;Get the filename
-		sScriptPath := _GetSciTEFile()
+		sScriptPath := oSciTE.CurrentFile
 	}
 	
 	;Match file
