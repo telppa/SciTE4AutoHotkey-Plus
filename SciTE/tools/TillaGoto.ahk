@@ -16,11 +16,12 @@
 	; Get SciTE object
 	oSciTE := GetSciTEInstance()
 	
-	; Get SciTE window handle and Scintilla handle
+	; Get SciTE window handle and Scintilla1 handle
 	hSciTE := oSciTE.SciTEHandle
-	ControlGet, hSci, Hwnd,, Scintilla1, ahk_id %hSciTE%  ; Scintilla1 = edit panel, Scintilla2 = output panel
+	; Scintilla1 = edit panel, Scintilla2 = output panel
+	ControlGet, hSci, Hwnd,, Scintilla1, ahk_id %hSciTE%
 	
-	if !hSci
+	If !hSci
 	{
 		MsgBox, 16, TillaGoto, Cannot find SciTE!
 		ExitApp
@@ -149,7 +150,7 @@ HandleMButton()
 	
 	Critical
 	
-	if (bShowing)
+	If (bShowing)
 	{
 		SetTimer, GuiEscape, -300
 		; Return
@@ -191,14 +192,13 @@ SummonGUI_Mouse:
 SummonGUI:
 	
 	;Check if editor is valid
-	hEditor := _SciTEIsActive()
-	If !hEditor
+	If Not _SciTEIsActive()
 		Return ;We were summoned from a foreign active window
 	
-	if (A_ThisLabel = "SummonGUI_Keyboard")
+	If (A_ThisLabel = "SummonGUI_Keyboard")
 		clickX := -1, clickY := -1
 	
-	if (A_ThisLabel = "SummonGUI_Keyboard" or A_ThisLabel = "SummonGUI_Mouse")
+	If (A_ThisLabel = "SummonGUI_Keyboard" or A_ThisLabel = "SummonGUI_Mouse")
 		bCheckClick := CheckTextClick(clickX, clickY)
 	
 	;Get the filename
@@ -244,13 +244,13 @@ SummonGUI:
 	ControlMove,,,,, iGUIHeight * iGUIItemHeight + (ErrorLevel > iW ? SM_CYHSCROLL : 0) + 4, ahk_id %hlblList%
 	
 	;Get window info
-	WinGetPos, iX, iY,,, ahk_id %hEditor%
+	WinGetPos, iX, iY,,, ahk_id %hSciTE%
 	ControlGetPos, sX, sY, sW, sH,, ahk_id %hSci%
 	iX += sX + (Not bPosLeft ? sW - (iW + (iMargin * 2)*A_ScreenDPI/96) - (Sci_VScrollVisible(hSci) ? SM_CXVSCROLL : 0) - 2 : 2)
 	iY += sY + 2
 	
 	;Make sure we should still show the GUI
-	If !_SciTEIsActive()
+	If Not _SciTEIsActive()
 		Return
 	
 	Gui, Show, w0 h0
@@ -288,7 +288,7 @@ Return
 
 CheckFocus:
 	t := oSciTE.CurrentFile
-	If Not WinActive("ahk_id " hGui) And Not WinActive("ahk_id " hEditor) Or (t <> sScriptPath) {
+	If Not WinActive("ahk_id " hGui) And Not _SciTEIsActive() Or (t <> sScriptPath) {
 		SetTimer, CheckFocus, Off
 		Gosub, GuiEscape
 	}
@@ -318,9 +318,9 @@ SelectItem:
 	;Check if we're doing CheckTextClick
 	If bCheckClick {
 		
-		if (i := CheckFuncMatch(clickedFunc "()"))        ; Try with functions first (internal first)
+		If (i := CheckFuncMatch(clickedFunc "()"))        ; Try with functions first (internal first)
 			bIsFunc := True
-		Else if (i := CheckLabelMatch(clickedLabel ":"))  ; Try with labels
+		Else If (i := CheckLabelMatch(clickedLabel ":"))  ; Try with labels
 			bIsFunc := False
 		Else
 			Return
@@ -371,13 +371,10 @@ _SciTEIsActive() {
 }
 
 LaunchFile(sFilePath, iLine) {
-	Global cSci, oSciTE
+	Global hSci, oSciTE
 	
 	;Open the file in SciTE
 	oSciTE.OpenFile(sFilePath)
-	
-	;Get handle to Scintilla control
-	ControlGet, hSci, Hwnd,, %cSci%, A
 	
 	;Make the target line appear on top
 	SendMessage, 2370, 0, 0,, ahk_id %hSci%
@@ -1847,19 +1844,17 @@ ShowLine(line) {
 LineHistory(bForward, iRecordMode = 0) {
 	Static
 	Local t
-	Global sScriptPath, hEditor, hSci, bShowing, oSciTE
+	Global sScriptPath, hSciTE, hSci, bShowing, oSciTE
 	
 	;If we're not showing, we need to find out what script we're on
 	If Not bShowing {
 		
-		If Not (hEditor := _SciTEIsActive())
+		If Not _SciTEIsActive()
 			Return
 		
-		;Get Scintilla control handle
-		ControlGetFocus, cSci, ahk_id %hEditor%
-		If InStr(cSci, "Scintilla")
-			ControlGet, hSci, Hwnd,, %cSci%, ahk_id %hEditor%
-		Else Return
+		SendMessage, 2381, 0, 0,, ahk_id %hSci%  ; GETFOCUS = 2381
+		If (!ErrorLevel)
+			Return
 		
 		;Get the filename
 		sScriptPath := oSciTE.CurrentFile
