@@ -200,10 +200,12 @@ SummonGUI:
 			;Check for LB_ERR
 			If (ErrorLevel <> 0xFFFFFFFF)
 				Goto SelectItem
-			Else ControlFocus,, ahk_id %htxtSearch% ;Put focus back on the textbox
+			Else
+				ControlFocus,, ahk_id %htxtSearch% ;Put focus back on the textbox
 			
-		} Else { ;We're not active. That means the editor is active
-			
+		}
+		; 中键点击走了这个分支
+		Else { ;We're not active. That means the editor is active
 			;Check if the mouse was used
 			If bCheckClick {
 				If CheckTextClick(clickX, clickY) {
@@ -494,7 +496,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 	Critical
 	
 	;Check which message it is
-	If (msg = 256) {    ;WM_KEYDOWN
+	If (msg = 256) {                              ; WM_KEYDOWN
 		
 		IfEqual wParam, 13, Gosub SelectItem ;Enter
 		
@@ -528,7 +530,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 				Return WrapSel(wParam = 38) ? True : ""
 		}
 	} 
-	Else If (msg = 522) And (hwnd = htxtSearch) { ;WM_MOUSEWHEEL
+	Else If (msg = 522) And (hwnd = htxtSearch) { ; WM_MOUSEWHEEL
 		
 		;Check if the listbox is even populated
 		SendMessage, 395, 0, 0,, ahk_id %hlblList%
@@ -547,7 +549,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 				ControlSend,, % bForward ? "{Up}" : "{Down}", ahk_id %hlblList%
 		
 	}
-	Else If (msg = 255) { ;WM_INPUT
+	Else If (msg = 255) {                         ; WM_INPUT
 		
 		;Get flags
 		flags := HID_GetInputInfo(lParam, (12 + A_PtrSize * 2) | 0x0100)
@@ -578,13 +580,15 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 		If Not (bMDown Or bMUp)
 			Return 0
 		
-		If bMDown And bShowing {
+		If bMDown And bShowing {                                                              ; GUI 显示时按下中键。长按中键在此实现
 			SetTimer, GuiEscape, -%iCancelWait%
 			bIgnoreMUp := True
-		} Else If bMDown And Not _SciTEIsActive()
+		}
+		Else If bMDown And Not _SciTEIsActive() {                                             ; 其它地方按下中键
 			bIgnoreMUp := True ;So that we don't launch if the press started somewhere else
-		Else If bMUp And bUseMButton And (Not bIgnoreMUp Or bShowing) And _SciTEIsActive() {
-			
+		}
+		Else If bMUp And bUseMButton And (Not bIgnoreMUp Or bShowing) And _SciTEIsActive() {  ; 释放中键。短按中键在此实现（原理是打断长按中键的过程）
+		
 			;Cancel timer
 			SetTimer, GuiEscape, Off
 			
@@ -598,6 +602,8 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 			;Prep data for check click
 			ControlGet, hSci, Hwnd,, %sControl%
 			ControlGetPos, cX, cY,,, %sControl%
+			
+			; 没有用 CoordMode 而是用计算的方式得到了点击的坐标
 			clickX -= cX, clickY -= cY, bCheckClick := True
 			
 			SetTimer, SummonGUI, -1
@@ -2039,7 +2045,8 @@ CheckTextClick(x, y) {
 	;Check if we need to look for position
 	If (x = -1) And (y = -1)
 		SendMessage, 2008, 0, 0,, ahk_id %hSci% ;SCI_GETCURRENTPOS
-	Else SendMessage, 2023, x, y,, ahk_id %hSci% ;SCI_POSITIONFROMPOINTCLOSE
+	Else
+		SendMessage, 2023, x, y,, ahk_id %hSci% ;SCI_POSITIONFROMPOINTCLOSE
 	iPos := ErrorLevel, iInLinePos := iPos
 	
 	;Check for error
@@ -2378,10 +2385,5 @@ GetFileCRC32(path = False) {
 	}
 }
 
-;用于计算字符在指定代码页下的长度
-StrPutVar(string, ByRef var, encoding)
-{
-	VarSetCapacity(var, StrPut(string, encoding)
-	* ((encoding="utf-16"||encoding="cp1200") ? 2 : 1))  ; 确定容量. StrPut 返回字符数,但 VarSetCapacity 需要字节数
-	return StrPut(string, &var, encoding)								 ; 复制或转换字符串
-}
+#Include %A_LineFile%\..\..\toolbar\Lib\SciUtil.ahk
+#Include %A_LineFile%\..\..\toolbar\Lib\StrPutVar.ahk
