@@ -104,12 +104,6 @@
 	; Catch WM_KEYDOWN and WM_MOUSEWHEEL
 	OnMessage(256, "GUIInteract")  ; 方向键与翻页键与 Ctrl+Home Ctrl+End 在 GUI 中选择项目
 	OnMessage(522, "GUIInteract")  ; 实际并没有产生任何效果，可能是因为 win10 自带鼠标穿透操控的功能
-	; Catch WM_INPUT
-	OnMessage(255, "GUIInteract")  ; 鼠标中键激活、 Shift+滚轮 在最近历史中跳转
-	
-	;Register the mouse with RIDEV_INPUTSINK
-	If HID_Register(1, 2, hGui, 0x00000100)
-		MsgBox, 0x1010, HID_Register failed!, ErrorLevel = %ErrorLevel%`nMouse features will not properly work.
 	
 	;Register summon hotkey before Quick Mode
 	Hotkey, IfWinActive, ahk_id %hGui%
@@ -119,8 +113,6 @@
 	If bQuickMode
 		Goto SummonGUI ;Go straight to summoning the GUI
 	
-	; Necessary for the conditional hotkey/hotstring expression to be registered
-	#If _SciTEIsActive()
 	; Register main hotkeys
 	Hotkey, If, _SciTEIsActive()
 	Hotkey, %uSummonGUI%, SummonGUI
@@ -143,23 +135,48 @@ Return
 
 TrayClose:
 ExitApp
-/*
+
+; Necessary for the conditional hotkey/hotstring expression to be registered
+#If _SciTEIsActive()
 MButton::
 HandleMButton()
 {
-	Global bShowing
+	Global bShowing, clickX, clickY, bCheckClick
 	
+	Critical
 	
-	Return
+	if (bShowing)
+	{
+		SetTimer, GuiEscape, -300
+		; Return
+	}
+	
+	; Get mouse data
+	MouseGetPos, clickX, clickY,, sControl
+	
+	; Make sure the click was made inside the Scintilla control
+	If Not InStr(sControl, "Scintilla")
+		Return
+	
+	;Prep data for check click
+	ControlGet, hSci, Hwnd,, %sControl%
+	ControlGetPos, cX, cY,,, %sControl%
+	
+	; 没有用 CoordMode 而是用计算的方式得到了点击的坐标
+	clickX -= cX, clickY -= cY, bCheckClick := True
+	
+	SetTimer, SummonGUI, -1
 }
+
 +WheelDown::
 +WheelUp::
 HandleShiftWheel()
 {
-	
-	Return
+	; Shift+WheelDown = Alt+Right
+	LineHistory(InStr(A_ThisHotkey, "Down") ? 1 : 0)
 }
-*/
+#If
+
 /************\
  GUI related |
 		   */
@@ -491,8 +508,7 @@ CheckLabelMatch(sHaystack) {
 }
 
 GUIInteract(wParam, lParam, msg, hwnd) {
-	Local iCount, flags, bMDown, bMUp, sControl, cX, cY, bForward
-	Static bLButtonDown := False, bIgnoreMUp := False
+	Local bForward
 	
 	Critical
 	
@@ -548,72 +564,6 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 		Loop % Abs(wParam)
 			If Not WrapSel(bForward)
 				ControlSend,, % bForward ? "{Up}" : "{Down}", ahk_id %hlblList%
-		
-	}
-	Else If (msg = 255) {                         ; WM_INPUT
-		
-		;Get flags
-		flags := HID_GetInputInfo(lParam, (12 + A_PtrSize * 2) | 0x0100)
-		
-		If (flags = -1) ;Check if we got an error
-			Return 0
-		
-		;Check if middle mouse button is down/up
-		bMDown := flags & 0x0010
-		bMUp   := flags & 0x0020
-		
-		; Check for line history.
-		; Shift+滚轮 功能
-		If (flags & 0x0400) And GetKeyState("Shift", "P") And _SciTEIsActive() {
-			iWheelTurns := HID_GetInputInfo(lParam, (14 + A_PtrSize * 2) | 0x1100)
-			If (iWheelTurns <> -1) {    ;Check for error
-				iWheelTurns := Round(iWheelTurns / 120)
-				bForward := iWheelTurns > 0
-				Loop % Abs(iWheelTurns)
-					LineHistory(bForward)
-			}
-			
-			;Done here
-			Return 0
-		}
-		
-		;To save time for most cases this branch will be executed
-		If Not (bMDown Or bMUp)
-			Return 0
-		
-		If bMDown And bShowing {                                                              ; GUI 显示时按下中键。长按中键在此实现
-			SetTimer, GuiEscape, -%iCancelWait%
-			bIgnoreMUp := True
-		}
-		Else If bMDown And Not _SciTEIsActive() {                                             ; 其它地方按下中键
-			bIgnoreMUp := True ;So that we don't launch if the press started somewhere else
-		}
-		Else If bMUp And bUseMButton And (Not bIgnoreMUp Or bShowing) And _SciTEIsActive() {  ; 释放中键。短按中键在此实现（原理是打断长按中键的过程）
-			
-			;Cancel timer
-			SetTimer, GuiEscape, Off
-			
-			;Get mouse data
-			MouseGetPos, clickX, clickY,, sControl
-			
-			;Make sure the click was made inside the Scintilla control
-			If Not InStr(sControl, "Scintilla")
-				Return 0
-			
-			;Prep data for check click
-			ControlGet, hSci, Hwnd,, %sControl%
-			ControlGetPos, cX, cY,,, %sControl%
-			
-			; 没有用 CoordMode 而是用计算的方式得到了点击的坐标
-			clickX -= cX, clickY -= cY, bCheckClick := True
-			
-			SetTimer, SummonGUI, -1
-		}
-		
-		If bMUp And bIgnoreMUp
-			bIgnoreMUp := False
-		
-		Return 0
 		
 	}
 }
@@ -1926,7 +1876,7 @@ LineFromPosEx(ByRef s, pos) {
 }
 
 CheckTextClick(x, y) {
-	Local line, lineText, i
+	Global hSci, iPos, clickedFunc, clickedLabel
 	
 	;Check if we need to look for position
 	If (x = -1) And (y = -1)
@@ -2076,109 +2026,6 @@ LH_SetCurLine(ByRef uLine) {
 	SendMessage, 2025, uLine >> 16, 0,, ahk_id %hSci% ;SCI_GOTOPOS
 	SendMessage, 2152, 0, 0,, ahk_id %hSci% ;SCI_GETFIRSTVISIBLELINE
 	SendMessage, 2168, 0, (uLine & 0xFFFF) - ErrorLevel,, ahk_id %hSci% ;SCI_LINESCROLL
-}
-
-/****************************\
- HID functions (from AHKHID) |
-						   */
-
-HID_Register(UsagePage = False, Usage = False, Handle = False, Flags = 0) {
-	
-	;Prep var
-	VarSetCapacity(uDev, (8 + A_PtrSize), 0)
-	
-	;Check if hwnd needs to be null. RIDEV_REMOVE, RIDEV_EXCLUDE
-	Handle := ((Flags & 0x00000001) Or (Flags & 0x00000010)) ? 0 : Handle
-	
-	NumPut(UsagePage, uDev, 0, "UShort")
-	NumPut(Usage,     uDev, 2, "UShort")
-	NumPut(Flags,     uDev, 4, "UInt")
-	NumPut(Handle,    uDev, 8, "Ptr")
-	
-	;Call
-	r := DllCall("RegisterRawInputDevices", "Ptr", &uDev, "UInt", 1, "UInt", 8 + A_PtrSize)
-	
-	;Check for error
-	If Not r Or ErrorLevel {
-		ErrorLevel := "RegisterRawInputDevices call failed."
-		. "`nReturn value: " r
-		. "`nErrorLevel: "   ErrorLevel
-		. "`nLine: "         A_LineNumber
-		. "`nLast Error: "   A_LastError
-		Return True
-	}
-	
-	Return False
-}
-
-HID_GetInputInfo(InputHandle, Flag) {
-	Static uRawInput, iLastHandle := 0
-	
-	;Check if it's the same handle
-	If (InputHandle = iLastHandle) ;We can retrieve the data without having to call again
-		Return NumGet(uRawInput, Flag, HID_NumIsShort(Flag) ? (HID_NumIsSigned(Flag) ? "Short" : "UShort")
-															: (HID_NumIsSigned(Flag) ? "Int"
-															: (Flag = 8 ? "Ptr" : "UInt")))
-	Else {    ;We need to get a fresh copy
-		
-		;Get raw data size                                           RID_INPUT
-		r := DllCall("GetRawInputData", "Ptr", InputHandle, "UInt", 0x10000003, "Ptr", 0
-									  , "UInt*", iSize, "UInt", 8 + A_PtrSize * 2)
-		If (r = -1) Or ErrorLevel {
-			ErrorLevel := "GetRawInputData call failed."
-			. "`nReturn value: " r
-			. "`nErrorLevel: "   ErrorLevel
-			. "`nLine: "         A_LineNumber
-			. "`nLast Error: "   A_LastError
-			Return -1
-		}
-		
-		;Prep var
-		VarSetCapacity(uRawInput, iSize)
-		
-		;Get raw data                                                RID_INPUT
-		r := DllCall("GetRawInputData", "Ptr", InputHandle, "UInt", 0x10000003, "Ptr", &uRawInput
-									  , "UInt*", iSize, "UInt", 8 + A_PtrSize * 2)
-		If (r = -1) Or ErrorLevel {
-			ErrorLevel := "GetRawInputData call failed."
-			. "`nReturn value: " r
-			. "`nErrorLevel: "   ErrorLevel
-			. "`nLine: "         A_LineNumber
-			. "`nLast Error: "   A_LastError
-			Return -1
-		} Else If (r <> iSize) {
-			ErrorLevel := "GetRawInputData call failed."
-			. "`nReturn value: " r
-			. "`nErrorLevel: "   ErrorLevel
-			. "`nLine: "         A_LineNumber
-			. "`nLast Error: "   A_LastError
-			Return -1
-		}
-		
-		;Keep handle reference of current uRawInput
-		iLastHandle := InputHandle
-		
-		;Retrieve data
-		Return NumGet(uRawInput, Flag, HID_NumIsShort(Flag) ? (HID_NumIsSigned(Flag) ? "Short" : "UShort")
-															: (HID_NumIsSigned(Flag) ? "Int"
-															: (Flag = 8 ? "Ptr" : "UInt")))
-	}
-}
-
-;Internal use only
-HID_NumIsShort(ByRef Flag) {
-	If (Flag & 0x0100) {
-		Flag ^= 0x0100 ;Remove it
-		Return True
-	} Return False
-}
-
-;Internal use only
-HID_NumIsSigned(ByRef Flag) {
-	If (Flag & 0x1000) {
-		Flag ^= 0x1000 ;Remove it
-		Return True
-	} Return False
 }
 
 /************************\
