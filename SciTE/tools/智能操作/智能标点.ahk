@@ -36,7 +36,7 @@ return
   }
 return
 
-#If style="代码" and WinActive("ahk_id " . SciTE_Hwnd)
+#If style="代码" and WinActive("ahk_id " SciTE_Hwnd) and !WinExist("ahk_group IME_CN")
   ; 按键本身就是符号。
   $`::发送原义字符("``")
   $[::发送原义字符("[")

@@ -7,7 +7,7 @@
 return
 
 ; 自动完成状态下，使用 Tab 将展开缩略语，并选中第一个参数。
-#If WinActive("ahk_id " . SciTE_Hwnd) and WinExist("ahk_class ListBoxX")
+#If WinActive("ahk_id " SciTE_Hwnd) and WinExist("ahk_class ListBoxX") and !WinExist("ahk_group IME_CN")
 ~$Tab::
   Tab展开()
   {
@@ -25,7 +25,7 @@ return
 
 ; 使用 Tab 在参数间跳跃。
 ; 智能 Tab 启用期间， Tab 键只起 “在参数间跳跃” 这一个作用。
-#If (智能Tab已启用) and WinActive("ahk_id " . SciTE_Hwnd) and !WinExist("ahk_class SoPY_Comp")
+#If (智能Tab已启用) and WinActive("ahk_id " SciTE_Hwnd) and !WinExist("ahk_group IME_CN")
 $Tab::
   Tab跳跃()
   {
@@ -100,7 +100,7 @@ $Tab::
 ; “搜狗输入法框” 存在时，回车键作用为上屏输入的英文。
 ; “自动完成框” 与 “搜狗输入法框” 均存在时，回车键作用为上屏输入的英文。
 ; “自动完成框” 与 “搜狗输入法框” 均不存在时，回车键作用为 “关闭智能 Tab ” 。
-#If (智能Tab已启用) and WinActive("ahk_id " . SciTE_Hwnd) and !WinExist("ahk_class ListBoxX") and !WinExist("ahk_class SoPY_Comp")
+#If (智能Tab已启用) and WinActive("ahk_id " SciTE_Hwnd) and !WinExist("ahk_class ListBoxX") and !WinExist("ahk_group IME_CN")
 $NumpadEnter::
 $Enter::
   Enter跳跃()
