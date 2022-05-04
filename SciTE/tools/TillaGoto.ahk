@@ -515,9 +515,10 @@ AnalyseScript:
 		; FilterComments(sScript)
 	
 	;Get labels and functions
-	GetScriptLabels(sScript)
-	GetScriptHotkeys(sScript)
-	GetScriptFunctions(sScript)
+	encoding := SciUtil_GetCP(hSci)
+	GetScriptLabels(sScript, False, encoding)
+	GetScriptHotkeys(sScript, False, encoding)
+	GetScriptFunctions(sScript, False, encoding)
 	
 	;Check if we're doing #Include files
 	If (iIncludeMode & 0x00000001) {
@@ -646,7 +647,7 @@ FindLibFile(sLib) {
 }
 
 ScanScriptFile(sPath, bRecurse = False, bFuncsOnly = False, bIsInclude = False) {
-	Local sFile, s, i, sInclude, sScriptDir, iCacheIndex, iCacheType, sWorkDir
+	Local encoding, sFile, s, i, sInclude, sScriptDir, iCacheIndex, iCacheType, sWorkDir
 	
 	sPath := AbsolutePath(sPath)
 	
@@ -662,6 +663,9 @@ ScanScriptFile(sPath, bRecurse = False, bFuncsOnly = False, bIsInclude = False) 
 	sPaths0 += 1
 	sPaths%sPaths0% := sPath
 	sPaths%sPaths0%_Inc := bIsInclude
+	
+	; get file encoding with bom. if no bom, we think encoding is 0, which is consistent with scite think.
+	encoding := GetFileEncodingWithBom(sPath)
 	
 	;Get the script's dir and set the default include path to it
 	StringLeft sScriptDir, sPath, InStr(sPath, "\", False, 0) - 1
@@ -684,7 +688,7 @@ ScanScriptFile(sPath, bRecurse = False, bFuncsOnly = False, bIsInclude = False) 
 			If Not (iCacheType & 0x001) Or (iCacheType & 0x001) And GetCachedScriptFunctions(iCacheIndex) {
 				
 				If Not sFile {
-					FileRead, sFile, %sPath%
+					FileRead, sFile, *p%encoding% %sPath%
 					ApplyCommentFilterSetting(sFile)
 				}
 				
@@ -700,7 +704,7 @@ ScanScriptFile(sPath, bRecurse = False, bFuncsOnly = False, bIsInclude = False) 
 				If Not (iCacheType & 0x010) Or (iCacheType & 0x010) And GetCachedScriptLabels(iCacheIndex) {
 					
 					If Not sFile {
-						FileRead, sFile, %sPath%
+						FileRead, sFile, *p%encoding% %sPath%
 						ApplyCommentFilterSetting(sFile)
 					}
 					
@@ -715,7 +719,7 @@ ScanScriptFile(sPath, bRecurse = False, bFuncsOnly = False, bIsInclude = False) 
 				If Not (iCacheType & 0x100) Or (iCacheType & 0x100) And GetCachedScriptHotkeys(iCacheIndex) {
 					
 					If Not sFile {
-						FileRead, sFile, %sPath%
+						FileRead, sFile, *p%encoding% %sPath%
 						ApplyCommentFilterSetting(sFile)
 					}
 					
@@ -733,7 +737,7 @@ ScanScriptFile(sPath, bRecurse = False, bFuncsOnly = False, bIsInclude = False) 
 	} Else {    ;We don't cache
 		
 		;Load file and comment if requested
-		FileRead, sFile, %sPath%
+		FileRead, sFile, *p%encoding% %sPath%
 		ApplyCommentFilterSetting(sFile)
 		
 		If (iIncludeMode & 0x00000100)
@@ -757,7 +761,7 @@ ScanScriptFile(sPath, bRecurse = False, bFuncsOnly = False, bIsInclude = False) 
 		} Else { ;We'll have to manually look for the include files
 			
 			If Not sFile {
-				FileRead, sFile, %sPath%
+				FileRead, sFile, *p%encoding% %sPath%
 				ApplyCommentFilterSetting(sFile)
 			}
 			
@@ -881,8 +885,8 @@ CacheFile(sType, iStart, iStop, iCacheIndex) {
 }
 
 ;This sub analyses the script and add the labels in it to the array
-GetScriptLabels(ByRef s, bExternal = False) {
-	Local i, i_utf8, strout, t, u, v
+GetScriptLabels(ByRef s, bExternal := False, encoding := "") {
+	Local i, pos, t, u, v
 	
 	u := GetScriptEscapeChar(s)
 	v := GetScriptCommentFlag(s)
@@ -893,7 +897,7 @@ GetScriptLabels(ByRef s, bExternal = False) {
 		
 		;Get next label. All valid (non-hotkey) labels are detected.
 		;(invalid characters are commas, spaces, and escape char)
-		;“\w”包含“a-zA-Z0-9_”，同时“(*UCP)”表示支持中文
+		; “\w” 包含 “a-zA-Z0-9_” ，同时 “(*UCP)” 表示支持中文日文韩文等
 		i := RegExMatch(s, "m)(*ANYCRLF)(*UCP)^[[:blank:]]*(?!\Q" v "\E)"
 						 . "\K[\w\Q@#$[]?~``!%^&*+-()={}|\:;""'<>./\E]+:"
 						 . "(?=([[:blank:]]*[\r\n]|[[:blank:]]+\Q" v "\E))", t, i)
@@ -917,8 +921,10 @@ GetScriptLabels(ByRef s, bExternal = False) {
 				sLabels%sLabels0%_Line := LineFromPosEx(s, i)
 			} Else {
 				sLabels%sLabels0%_File := 0
-				i_utf8:=StrPutVar(SubStr(s, 1, i), strout, "utf-8")-1
-				sLabels%sLabels0%_Line := LineFromPos(i_utf8)
+				; i is the pos in utf-16, we need to transform utf-16 pos to scintilla code page pos.
+				; The possible values of encoding are 0 65001 932 936 949 950 1361
+				pos := StrPut(SubStr(s, 1, i), "cp" encoding) - 1
+				sLabels%sLabels0%_Line := LineFromPos(pos)
 			}
 			
 			sLabels%sLabels0% := t    ;Add to array
@@ -957,8 +963,8 @@ GetCachedScriptLabels(iCacheIndex) {
 }
 
 ;This sub analyses the script and add the hotkeys in it to the array (uses the same array as labels)
-GetScriptHotkeys(ByRef s, bExternal = False) {
-	Local i, i_utf8, strout, n, t, u, v
+GetScriptHotkeys(ByRef s, bExternal := False, encoding := "") {
+	Local i, pos, n, t, u, v
 	
 	i := 1
 	Loop {
@@ -996,8 +1002,8 @@ GetScriptHotkeys(ByRef s, bExternal = False) {
 			sLabels%sLabels0%_Line := LineFromPosEx(s, i)
 		} Else {
 			sLabels%sLabels0%_File := 0
-			i_utf8:=StrPutVar(SubStr(s, 1, i), strout, "utf-8")-1
-			sLabels%sLabels0%_Line := LineFromPos(i_utf8)
+			pos := StrPut(SubStr(s, 1, i), "cp" encoding) - 1
+			sLabels%sLabels0%_Line := LineFromPos(pos)
 		}
 		
 		sLabels%sLabels0% := t    ;Add to array
@@ -1047,8 +1053,8 @@ IsValidHotkey(ByRef s) {
 }
 
 ;This sub analyses the script and add the functions in it to the array
-GetScriptFunctions(ByRef s, bExternal = False) {
-	Local i, i_utf8, strout, t, u
+GetScriptFunctions(ByRef s, bExternal := False, encoding := "") {
+	Local i, pos, t, u
 	
 	u := GetScriptCommentFlag(s)
 	
@@ -1057,7 +1063,7 @@ GetScriptFunctions(ByRef s, bExternal = False) {
 	Loop {
 		
 		;Get the next function
-		;“\w”包含“a-zA-Z0-9_”，同时“(*UCP)”表示支持中文
+		; “\w” 包含 “a-zA-Z0-9_” ，同时 “(*UCP)” 表示支持中文日文韩文等
 		i := RegExMatch(s, "m)(*ANYCRLF)(*UCP)^[[:blank:]]*\K[\w#@\$\?\[\]]+"
 						 . "(?=\(.*?\)(\s+\Q" u "\E.*?[\r\n]+)*?\s+\{)", t, i)
 		
@@ -1076,8 +1082,8 @@ GetScriptFunctions(ByRef s, bExternal = False) {
 				sFuncs%sFuncs0%_Line := LineFromPosEx(s, i)
 			} Else {
 				sFuncs%sFuncs0%_File := 0
-				i_utf8:=StrPutVar(SubStr(s, 1, i), strout, "utf-8")-1
-				sFuncs%sFuncs0%_Line := LineFromPos(i_utf8)
+				pos := StrPut(SubStr(s, 1, i), "cp" encoding) - 1
+				sFuncs%sFuncs0%_Line := LineFromPos(pos)
 			}
 			
 			sFuncs%sFuncs0% := t
@@ -1754,20 +1760,14 @@ Sci_VScrollVisible(hSci) {
 }
 
 LineFromPos(pos) {
-	Global
-	SendMessage, 2166, pos - 1, 0,, ahk_id %hSci% ;SCI_LINEFROMPOSITION
-	Return ErrorLevel + 1
+	Global hSci
+	SendMessage, 2166, pos, 0,, ahk_id %hSci% ;SCI_LINEFROMPOSITION
+	Return ErrorLevel + 1  ; line is base on 0, so we need add 1.
 }
 
 LineFromPosEx(ByRef s, pos) {
-	If Not (i := RegExMatch(s, "[\r]?[\n]", t)) ;Get break used
-		Return 1 ;We're on the first line
-	Else {
-		n := 1, j := StrLen(t)
-		While i And (i < pos)
-			i := InStr(s, t, False, i + j), n++
-		Return n
-	}
+	StrReplace(SubStr(s, 1, pos), "`n", "`n", OutputVarCount)
+	Return OutputVarCount + 1
 }
 
 CheckTextClick(x, y) {
@@ -1805,11 +1805,6 @@ CheckTextClick(x, y) {
 		;Return true if there's something to check
 		Return (clickedLabel Or clickedFunc)
 	}
-}
-
-StringReverse(s) {
-	DllCall(A_IsUnicode ? "msvcrt\_wcsrev" : "msvcrt\_strrev", "Ptr", &s, "CDecl")
-	Return s
 }
 
 /***************\
@@ -1990,6 +1985,24 @@ GetFileCRC32(path = False) {
 		FileRead, Buffer, %path%
 		Return DllCall(&CRC32, "Ptr", &Buffer, "UInt", Bytes, "Int", -1, "Ptr", &CRC32LookupTable, "CDecl UInt")
 	}
+}
+
+GetFileEncodingWithBom(path)
+{
+  f := FileOpen(path, "r")
+  f.Seek(0)
+  header2 := Format("{:X}{:X}", f.ReadUChar(), f.ReadUChar())
+  header3 := Format("{}{:X}", header2, f.ReadUChar())
+  f.Close()
+  
+  if (header2="FFFE")
+    return, 1200
+  else if (header2="FEFF")
+    return, 1201
+  else if (header3="EFBBBF")
+    return, 65001
+  else
+    return, 0
 }
 
 #Include %A_LineFile%\..\..\toolbar\Lib\SciUtil.ahk
