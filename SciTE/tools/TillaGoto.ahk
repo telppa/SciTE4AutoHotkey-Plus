@@ -1791,7 +1791,8 @@ CheckTextClick(x, y) {
 		selEndPos   := ErrorLevel
 		
 		; if we click a selection, text is selection text. otherwise text is the word under the click.
-		If (iPos>=selStartPos And iPos<=selEndPos)
+		; selEndPos>selStartPos means real have a selection.
+		If (selEndPos>selStartPos And iPos>=selStartPos And iPos<=selEndPos)
 		{
 			clickedFunc  := SciUtil_GetSelection(hSci)
 			clickedLabel := clickedFunc
