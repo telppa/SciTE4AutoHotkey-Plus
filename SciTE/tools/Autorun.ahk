@@ -48,17 +48,18 @@ SetWorkingDir, %A_ScriptDir%
 return
 
 中文输入法窗口组:
-	GroupAdd, IME_CN, ahk_class BAIDU_CLASS_IME_87C946A9-47CC-4068-A02B-9381C1F11B24  ; 百度拼音（无法与五笔区分）
-	GroupAdd, IME_CN, ahk_class QQPinyinCompWndTSF                                    ; QQ拼音
-	GroupAdd, IME_CN, ahk_class QQWubiCompWndII                                       ; QQ五笔
-	GroupAdd, IME_CN, ahk_class SoPY_Comp                                             ; 搜狗拼音
-	GroupAdd, IME_CN, ahk_class SoWB_Comp                                             ; 搜狗五笔
-	GroupAdd, IME_CN, ahk_class Microsoft.IME.UIManager.CandidateWindow.Host          ; 微软拼音（新版 class = ApplicationFrameWindow 控件 text = Microsoft Text Input Application 新旧版都无法与五笔区分）
-	GroupAdd, IME_CN, ahk_class INPUT_MAIN_WND_CLASS                                  ; 2345拼音
-	GroupAdd, IME_CN, ahk_class PalmInputUICand                                       ; 手心拼音
-	GroupAdd, IME_CN, ahk_exe iFlyInput.exe                                           ; 讯飞拼音（新版 class = BaseGui 旧版 class = PinyinputComposition ）
-	GroupAdd, IME_CN, ahk_class GadgetWindow_10000                                    ; 谷歌拼音
-	GroupAdd, IME_CN, ahk_class APNGWndCls                                            ; 必应拼音
+	; 以下3款输入法无法区分状态栏和文字框
+	; GroupAdd, IME_CN, ahk_exe iFlyInput.exe         ; 讯飞拼音（新版 class = BaseGui 旧版 class = PinyinputComposition ）
+	; GroupAdd, IME_CN, ahk_class GadgetWindow_10000  ; 谷歌拼音
+	; GroupAdd, IME_CN, ahk_class APNGWndCls          ; 必应拼音
+	GroupAdd, IME_CN, inputBar ahk_class BAIDU_CLASS_IME_87C946A9-47CC-4068-A02B-9381C1F11B24  ; 百度拼音（无法与五笔区分）
+	GroupAdd, IME_CN, ahk_class QQPinyinCompWndTSF                                             ; QQ拼音
+	GroupAdd, IME_CN, ahk_class QQWubiCompWndII                                                ; QQ五笔
+	GroupAdd, IME_CN, ahk_class SoPY_Comp                                                      ; 搜狗拼音
+	GroupAdd, IME_CN, ahk_class SoWB_Comp                                                      ; 搜狗五笔
+	GroupAdd, IME_CN, ahk_class Microsoft.IME.UIManager.CandidateWindow.Host                   ; 微软拼音（新版 class = ApplicationFrameWindow 控件 text = Microsoft Text Input Application 新旧版都无法与五笔区分）
+	GroupAdd, IME_CN, ahk_class INPUT_MAIN_WND_CLASS                                           ; 2345拼音
+	GroupAdd, IME_CN, ahk_class PalmInputUICand                                                ; 手心拼音
 return
 
 ; 响应 scite 的事件并分发
