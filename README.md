@@ -4,7 +4,13 @@
 #### 由于原版早已不更新了，故多年来在原版基础上做了非常多的改进，目的只有一个，让大家用得更顺手。  
 ---
   
-#### 可在 [Github (总是最新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases") 或 [蓝奏云 (累积更新)](https://ahk.lanzouh.com/ig18z03rr18h "蓝奏云") 下载打包版。  
+#### 下载地址  
+
+* [Github (实时更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases")  
+   
+* [Github (累积更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases")  
+* [蓝奏云 (累积更新)](https://ahk.lanzouh.com/ig18z03rr18h "蓝奏云")  
+
 ---
   
 ##### 1. 自动完成增强版  
