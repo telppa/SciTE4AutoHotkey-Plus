@@ -102,8 +102,12 @@ ANSI与UTF8转为UTF8BOM()
   }
   else
   {
+    ; SCI_GETFIRSTVISIBLELINE = 2152
+    firstVisibleLine := oSciTE.Msg(2152)
     text := oSciTE.GetDocument()
     oSciTE.SetDocument(text, "65001")
+    ; SCI_SETFIRSTVISIBLELINE = 2613
+    oSciTE.Msg(2613, firstVisibleLine)
   }
   
   ; IDM_ENCODING_UTF8 = 153
