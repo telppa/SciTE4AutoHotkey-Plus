@@ -1054,7 +1054,7 @@ GetScriptFunctions(ByRef s, bExternal := False, encoding := "") {
 		;Get the next function
 		; “\w” 包含 “a-zA-Z0-9_” ，同时 “(*UCP)” 表示支持中文日文韩文等
 		i := RegExMatch(s, "m)(*ANYCRLF)(*UCP)^[[:blank:]]*\K[\w#@\$\?\[\]]+"
-						 . "(?=\(.*?\)(\s+\Q" u "\E.*?[\r\n]+)*?\s+\{)", t, i)
+						 . "(?=\(.*?\)(\s+\Q" u "\E.*?[\r\n]+)*?\s*\{)", t, i)
 		
 		;Check if we found something
 		If Not i
