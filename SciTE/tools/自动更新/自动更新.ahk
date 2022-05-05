@@ -44,7 +44,7 @@ return
 	; 从 README.md 中提取当前更新信息
 	if (返回值!="")
 	{
-		更新日志:=strMatch(返回值, "- 更新日志：", "<details>")
+		更新日志:=strMatch(返回值, "#### 更新日志：", "<details>")
 		
 		RegExMatch(更新日志, "m)(*ANYCRLF)^> ([\d\.]{10})", 版本号)
 		版本号:= "v" StrReplace(版本号1, ".")                                             ; 2022.04.25 -> v20220425
