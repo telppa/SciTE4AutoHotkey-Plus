@@ -47,17 +47,17 @@ return
 		更新日志:=strMatch(返回值, "- 更新日志：", "<details>")
 		
 		RegExMatch(更新日志, "m)(*ANYCRLF)^> ([\d\.]{10})", 版本号)
-		版本号:= "v" StrReplace(版本号1, ".")                                      ; 2022.04.25 -> v20220425
+		版本号:= "v" StrReplace(版本号1, ".")                                             ; 2022.04.25 -> v20220425
 		
-		更新日志:=RegExReplace(更新日志, "m)(*ANYCRLF)^[ \t]*$\r\n", "")           ; 移除空行
-		更新日志:=RegExReplace(更新日志, "m)(*ANYCRLF)^> ([\d\.]{10})", "$1`r`n")  ; 移除 “> ”
-		更新日志:=RegExReplace(更新日志, "m)(*ANYCRLF)^> \* ", "    ")             ; 移除 “> * ”
+		更新日志:=RegExReplace(更新日志, "m)(*ANYCRLF)^[ \t]*$\r\n", "")                  ; 移除空行
+		更新日志:=RegExReplace(更新日志, "m)(*ANYCRLF)^> ([\d\.]{10})", "$1`r`n")         ; 移除 “> ”
+		更新日志:=RegExReplace(更新日志, "m)(*ANYCRLF)^> \* ", "    ")                    ; 移除 “> * ”
 		
-		link_github:=Trim(strMatch(返回值, "[Github](", """"), " `t`r`n`v`f")      ; github 链接
-		link_lanzou:=Trim(strMatch(返回值, "[蓝奏云](", """"), " `t`r`n`v`f")      ; lanzou 链接
+		link_github:=Trim(strMatch(返回值, "[Github (累积更新)](", """"), " `t`r`n`v`f")  ; github 链接
+		link_lanzou:=Trim(strMatch(返回值, "[蓝奏云 (累积更新)](", """"), " `t`r`n`v`f")  ; lanzou 链接
 		
 		if (更新日志="" or 版本号="v" or link_github="" or link_lanzou="")
-				gosub, GFW
+			gosub, GFW
 		
 		Result := MsgBoxEx(更新日志, 版本号 "版已更新", "蓝奏云下载|Github 下载|主页", 0, "", "AlwaysOnTop")
 		
@@ -81,7 +81,7 @@ GFW:
 	Result := MsgBoxEx(说明, "检测到新版 SciTE4AutoHotkey-Plus", "Github 下载|主页", 0, "", "AlwaysOnTop")
 	
 	If (Result == "Github 下载") {
-		Run, %link_github%
+		Run, https://github.com/telppa/SciTE4AutoHotkey-Plus/releases
 	} Else If (Result == "主页") {
 		Run, https://github.com/telppa/SciTE4AutoHotkey-Plus
 	} Else If (Result == "Cancel") {
