@@ -63,11 +63,10 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v5.6
+Gui Show, w620 h505, %l_gui_10% v5.6.1
 
-; 首次运行则显示帮助
-if (!FileExist("settings.ini"))
-  帮助()
+; 始终显示帮助
+帮助()
 return
 
 GuiEscape:
