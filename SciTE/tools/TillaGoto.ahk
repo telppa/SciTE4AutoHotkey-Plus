@@ -12,6 +12,8 @@
 		2016.04.20 彻底支持代码中存在中文的情况；可完美分析并定位出代码中的中文标签、函数。
 	
 */
+	; 避免 GUI 显示时强制退出报错
+	ComObjError(false)
 	
 	; Get SciTE object
 	oSciTE := GetSciTEInstance()
@@ -47,7 +49,6 @@
 	uGoForward       := oSciTE.ResolveProp("tillagoto.hk.go.forward")
 	uGotoDef         := oSciTE.ResolveProp("tillagoto.hk.goto.def")
 	bFilterComments  := oSciTE.ResolveProp("tillagoto.filter.comments") + 0
-	bQuickMode       := oSciTE.ResolveProp("tillagoto.quick.mode") + 0
 	bQuitWithEditor  := oSciTE.ResolveProp("tillagoto.quit.with.editor") + 0
 	bMatchEverywhere := oSciTE.ResolveProp("tillagoto.match.everywhere") + 0
 	bUseMButton      := oSciTE.ResolveProp("tillagoto.use.mbutton") + 0
@@ -108,15 +109,6 @@
 	; Catch WM_KEYDOWN and WM_MOUSEWHEEL
 	OnMessage(256, "GUIInteract")  ; 方向键与翻页键与 Ctrl+Home Ctrl+End 在 GUI 中选择项目
 	OnMessage(522, "GUIInteract")  ; 实际并没有产生任何效果，可能是因为 win10 自带鼠标穿透操控的功能
-	
-	;Check if we're in quick mode
-	If bQuickMode
-	{
-		; Register summon hotkey before Quick Mode
-		Hotkey, IfWinActive, ahk_id %hGui%
-		Hotkey, %uSummonGUI%, SummonGUI
-		Goto SummonGUI_QuickMode ;Go straight to summoning the GUI
-	}
 	
 	; Register main hotkeys
 	Hotkey, If, _SciTEIsActive()
@@ -186,14 +178,13 @@ HandleShiftWheel()
 		   */
 
 ;User summoned the GUI
-SummonGUI_QuickMode:
 SummonGUI_Keyboard:
 SummonGUI_Mouse:
 SummonGUI:
 	
-	;Check if editor is valid
-	If Not _SciTEIsActive()
-		Return ;We were summoned from a foreign active window
+	; only work for ahk1. This condition cannot be judged in #If, an error will occur.
+	If (oSciTE.ResolveProp("Language")!="ahk1")
+		return
 	
 	If (A_ThisLabel = "SummonGUI_Keyboard")
 		clickX := -1, clickY := -1
@@ -277,8 +268,6 @@ SummonGUI:
 Return
 
 GuiEscape:
-	If bQuickMode
-		ExitApp
 	bShowing := False
 	Gui, Cancel
 	Gui, Show, Hide w0 h0
