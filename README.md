@@ -4,15 +4,14 @@
 #### 由于原版早已不更新了，故多年来在原版基础上做了非常多的改进，目的只有一个，让大家用得更顺手。  
 ---
   
-#### 下载地址  
-
+#### 下载地址：  
 * [Github (实时更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases")  
   
 * [Github (累积更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases")  
 * [蓝奏云 (累积更新)](https://ahk.lanzouh.com/ig18z03rr18h "蓝奏云")  
-
 ---
   
+#### 特性演示：  
 ##### 1. 自动完成增强版  
 ![自动完成增强版](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/1.%20自动完成增强版.gif)  
   
@@ -87,9 +86,10 @@
   
 ##### 25. 集成等宽字体  
 ![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/25.%20集成等宽字体.png)  
----
-  
-- 更新日志：  
+
+---  
+
+#### 更新日志：  
 > 2022.04.26  
 > * 新增 “AHK DllCall 终结者” （系统函数转代码工具）。  
 > * 新增 “Structor” （结构体转代码工具）。  
