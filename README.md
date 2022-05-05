@@ -7,7 +7,7 @@
 #### 下载地址  
 
 * [Github (实时更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases")  
-   
+  
 * [Github (累积更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases")  
 * [蓝奏云 (累积更新)](https://ahk.lanzouh.com/ig18z03rr18h "蓝奏云")  
 
