@@ -32,11 +32,15 @@ IfNotExist, %UserPropsFile%
 FileEncoding, UTF-8
 FileRead, UserProps, %UserPropsFile%
 
-p_style  := FindProp("import Styles\\(.*)\.style", "Classic")
+; disable utf-8. because we can auto detected codepage when the codepage is not utf-8.
+cplist_v := "0|932|936|950|949|1361"
+cplist_n := "English (single byte character set)|Japanese|Simplified Chinese|Traditional Chinese|Korean Wansung|Korean Johab"
+p_style  := FindProp("import Styles\\(.*)\.style", "SciTE4AutoHotkey-Plus")
 p_locale := FindProp("locale\.properties=locales\\(.*)\.locale\.properties", "English")
-p_backup := FindProp("make\.backup=([01])", 1)
+p_encoding := FindProp("code\.page=(" cplist_v ")", 0)
+p_backup := FindProp("make\.backup=([01])", 0)
 p_savepos := FindProp("save\.position=([01])", 1)
-p_zoom := FindProp("magnification=(-?\d+)", -1)
+p_zoom := FindProp("magnification=(-?\d+)", 0)
 
 if (A_Args.1 = "/regenerate")
 {
@@ -50,15 +54,19 @@ org_zoom := p_zoom
 
 stylelist := CountStylesAndChoose(ch1)
 localelist := CountLocalesAndChoose(ch2)
+p_encoding := FindInList(cplist_v, p_encoding)
 
 Gui, +ToolWindow +AlwaysOnTop
 Gui, Margin, 10, 20
 
 Gui, Add, Text, Section +Right w100, Language:
-Gui, Add, DDL, ys-4 R10 Choose%ch2% vp_locale w150, %localelist%
+Gui, Add, DDL, ys-4 R10 Choose%ch2% vp_locale w220, %localelist%
 
 Gui, Add, Text, xs Section +Right w100, Style:
-Gui, Add, DDL, ys-4 Choose%ch1% vp_style gDDL_Choose w150, %stylelist%|New...
+Gui, Add, DDL, ys-4 Choose%ch1% vp_style gDDL_Choose w220, %stylelist%|New...
+
+Gui, Add, Text, xs Section +Right w100, Codepage:
+Gui, Add, DDL, ys-4 +AltSubmit Choose%p_encoding% vp_encoding w220, %cplist_n%
 
 Gui, Add, Text, xs Section +Right w100, Default zoom:
 Gui, Add, Edit, ys-4 w50
@@ -71,7 +79,7 @@ Gui, Add, Text, xs Section +Right w100, Remember window position:
 Gui, Add, CheckBox, ys Checked%p_savepos% vp_savepos
 
 Gui, Add, Button, xs+6 Section gUpdate w100 h36, Update
-Gui, Add, Button, ys xs+148 gEditStyle w100 h36, Edit style
+Gui, Add, Button, ys xs+218 gEditStyle w100 h36, Edit style
 Gui, Show,, SciTE settings
 return
 
@@ -123,6 +131,8 @@ Update:
 Gui, Submit, NoHide
 Update2:
 
+p_encoding := GetItem(cplist_v, p_encoding)
+
 FileRead, qvar, %LocalSciTEPath%\Styles\%p_style%.style.properties
 p_extra := ""
 if RegExMatch(qvar, "`am)^s4ahk\.style=1$")
@@ -163,10 +173,13 @@ UserProps =
 # THIS FILE IS SCRIPT-GENERATED - DON'T TOUCH
 locale.properties=locales\%p_locale%.locale.properties
 make.backup=%p_backup%
+code.page=%p_encoding%
+output.code.page=%p_encoding%
 save.position=%p_savepos%
 magnification=%p_zoom%
 import Styles\%p_style%.style
-%p_extra%import _extensions
+%p_extra%
+import _extensions
 )
 
 FileDelete, %UserPropsFile%

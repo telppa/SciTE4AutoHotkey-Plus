@@ -22,14 +22,14 @@ return
   ; _config.properties 文件由 菜单栏——工具——设置 生成。
   ; 例1设置 codepage 为 GBK ，那么 utf8 无头与 ansi 都会按 GBK 处理，这时 oSciTE.Msg(2137) 读到的值就是 936 。
   ; 例2设置 codepage 为 utf-8 ，那么 utf8 无头与 ansi 都会按 utf8 处理，这时 oSciTE.Msg(2137) 读到的值就是 65001 。
-  ; 例3设置 codepage 为 system ，那么 utf8 无头与 ansi 都会按 cp0 处理，这时 oSciTE.Msg(2137) 读到的值就是 0 。
-  ; 例1、例2、例3中， utf8bom utf16le utf16be 因为有头，所以都能正确显示。
+  ; 例3设置 codepage 为 single byte ，那么 utf8 无头与 ansi 都会按 cp0 处理，这时 oSciTE.Msg(2137) 读到的值就是 0 。
+  ; 例1、例2、例3中， utf8bom utf16le utf16be 因为有头，所以都能正确显示，读到的值都是 65001 。
   ; 例1中， utf8 无头被错当 GBK 处理，所以乱码。
   ; 例2中， ansi 被错当 utf8 处理，所以乱码。
   ; 例3中， uft8 无头被错当 cp0 处理，所以乱码。
-  ; 综合所述，不同语言下，最佳的 codepage 设置就是 system 。
-  ; 因为它能在中日韩等不同国家下，都正确显示 ansi 和 utf8bom 。
-  ; 只需在 oSciTE.Msg(2137) = 0 时判断一下内容到底是 ansi 还是 utf8 无头，即可正确区分所有。
+  ; 特别注意：例3中， ansi 编码的文件显示起来看着正常，但当选择其中的双字节文字时（例如中文），就会出现乱码。
+  ; 综上所述，所有的用户都需要按照自己的语言选择对应的 codepage 。
+  ; 英语等单字节编码语言，选 single byte 或 utf-8 ，简中选 GBK ，日语选 Shift-JIS 。
   codePageWarning := false
   
   ; GETCODEPAGE = 2137
