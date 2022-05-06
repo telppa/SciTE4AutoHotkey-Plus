@@ -112,8 +112,8 @@
 	
 	; Register main hotkeys
 	Hotkey, If, _SciTEIsActive()
-	Hotkey, %uSummonGUI%, SummonGUI
-	Hotkey, %uGotoDef%,   SummonGUI_Keyboard
+	Hotkey, %uSummonGUI%, Press_uSummonGUI
+	Hotkey, %uGotoDef%,   Press_uGotoDef
 	Hotkey, %uGoBack%,    PreviousView
 	Hotkey, %uGoForward%, NextView
 	
@@ -138,30 +138,24 @@ ExitApp
 MButton::
 HandleMButton()
 {
-	Global bShowing, clickX, clickY
+	Global clickX, clickY
 	
 	Critical
-	
-	If (bShowing)
-	{
-		SetTimer, GuiEscape, -300
-		; Return
-	}
 	
 	; Get mouse data
 	MouseGetPos, clickX, clickY,, sControl
 	
-	; Make sure the click was made inside the Scintilla control
+	; Make sure the click was made inside the Scintilla1 control
 	If Not InStr(sControl, "Scintilla1")
 		Return
 	
-	;Prep data for check click
+	; Prep data for check click
 	ControlGetPos, cX, cY,,, %sControl%
 	
 	; 没有用 CoordMode 而是用计算的方式得到了点击的坐标
 	clickX -= cX, clickY -= cY
 	
-	SetTimer, SummonGUI_Mouse, -1
+	SetTimer, Press_MButton, -1
 }
 #If _SciTEIsActive()
 +WheelDown::
@@ -171,37 +165,78 @@ HandleShiftWheel()
 	; Shift+WheelDown = Alt+Right
 	LineHistory(InStr(A_ThisHotkey, "Down") ? 1 : 0)
 }
+#If bShowing
+Esc::
+HandleEsc()
+{
+	SetTimer, GuiEscape, -1
+}
 #If
 
 /************\
  GUI related |
 		   */
 
-;User summoned the GUI
-SummonGUI_Keyboard:
-SummonGUI_Mouse:
-SummonGUI:
-	
+; User press MButton or uGotoDef(Shift+Enter).
+Press_MButton:
+Press_uGotoDef:
 	; only work for ahk1. This condition cannot be judged in #If, an error will occur.
 	If (oSciTE.ResolveProp("Language")!="ahk1")
 		return
 	
-	If (A_ThisLabel = "SummonGUI_Keyboard")
+	If (A_ThisLabel = "Press_uGotoDef")
 		clickX := -1, clickY := -1
 	
-	If (A_ThisLabel = "SummonGUI_Keyboard" or A_ThisLabel = "SummonGUI_Mouse")
-		bCheckClick := CheckTextClick(clickX, clickY)
+	bCheckClick := CheckTextClick(clickX, clickY)
 	
-	;Get the filename
-	sScriptPath := oSciTE.CurrentFile
-	
-	Gosub, AnalyseScript
-	
-	;Check if we're doing CheckOnClick
-	If bCheckClick {
+	; click a word.
+	If (bCheckClick)
+	{
+		; if GUI is showing, we don't need analyse again.
+		If (!bShowing)
+		{
+			; Get the filename
+			sScriptPath := oSciTE.CurrentFile
+			Gosub, AnalyseScript
+		}
+		
+		; jump to define if we click some word
 		Gosub, SelectItem
-		Return
 	}
+	; click nothing.
+	Else
+	{
+		If (bShowing)
+		{
+			WinActivate, ahk_id %hGui%
+			; Put the focus on the textbox
+			ControlFocus,, ahk_id %htxtSearch%
+		}
+		Else
+			Gosub, CreateGUI
+	}
+return
+
+Press_uSummonGUI:
+	; only work for ahk1. This condition cannot be judged in #If, an error will occur.
+	If (oSciTE.ResolveProp("Language")!="ahk1")
+		return
+	
+	; if GUI is showing, put the focus on it.
+	If (bShowing)
+	{
+		WinActivate, ahk_id %hGui%
+		; Put the focus on the textbox
+		ControlFocus,, ahk_id %htxtSearch%
+	}
+	Else
+		Gosub, CreateGUI
+return
+
+CreateGUI:
+	; Get the filename
+	sScriptPath := oSciTE.CurrentFile
+	Gosub, AnalyseScript
 	
 	;Check if we have to append filename
 	If (iIncludeMode & 0x10000000)
@@ -269,6 +304,7 @@ Return
 
 GuiEscape:
 	bShowing := False
+	SetTimer, CheckFocus, Off
 	Gui, Cancel
 	Gui, Show, Hide w0 h0
 	VarSetCapacity(sScript, 0)
@@ -276,8 +312,11 @@ GuiEscape:
 Return
 
 CheckFocus:
-	t := oSciTE.CurrentFile
-	If Not WinActive("ahk_id " hGui) And Not _SciTEIsActive() Or (t <> sScriptPath) {
+	TabSwitched    := oSciTE.CurrentFile != sScriptPath
+	GuiActivated   := WinActive("ahk_id " hGui)
+	SciteActivated := _SciTEIsActive()
+	If (TabSwitched Or (Not GuiActivated And Not SciteActivated))
+	{
 		SetTimer, CheckFocus, Off
 		Gosub, GuiEscape
 	}
@@ -1035,7 +1074,7 @@ GetCachedScriptHotkeys(iCacheIndex) {
 IsValidHotkey(ByRef s) {
 	Critical
 	Hotkey, IfWinActive, Title ;Make sure it'll be a variant and not override a current shortcut
-	Hotkey, % s, SummonGUI, UseErrorLevel Off ;Using SummonGUI only to test
+	Hotkey, % s, CreateGUI, UseErrorLevel Off ;Using CreateGUI only to test
 	i := ErrorLevel ;Keep ErrorLevel value (because the next command will change it)
 	Hotkey, IfWinActive ;Turn off context sensitivity
 	Return (i <> 2)
