@@ -210,7 +210,9 @@ Press_uGotoDef:
 		{
 			WinActivate, ahk_id %hGui%
 			; Put the focus on the textbox
-			ControlFocus,, ahk_id %htxtSearch%
+			GuiControlGet, t, FocusV
+			if (t!="txtSearch")
+				GuiControl, Focus, txtSearch
 		}
 		Else
 			Gosub, CreateGUI
@@ -227,7 +229,9 @@ Press_uSummonGUI:
 	{
 		WinActivate, ahk_id %hGui%
 		; Put the focus on the textbox
-		ControlFocus,, ahk_id %htxtSearch%
+		GuiControlGet, t, FocusV
+		if (t!="txtSearch")
+			GuiControl, Focus, txtSearch
 	}
 	Else
 		Gosub, CreateGUI
@@ -287,7 +291,7 @@ CreateGUI:
 	SetTimer, CheckFocus, 50
 	
 	;Put the focus on the textbox
-	ControlFocus,, ahk_id %htxtSearch%
+	GuiControl, Focus, txtSearch
 	
 	;Do the fade-in effect
 	i := 0
@@ -304,9 +308,9 @@ Return
 
 GuiEscape:
 	bShowing := False
-	SetTimer, CheckFocus, Off
 	Gui, Cancel
 	Gui, Show, Hide w0 h0
+	SetTimer, CheckFocus, Off
 	VarSetCapacity(sScript, 0)
 	EmptyMem()
 Return
@@ -469,7 +473,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 			If (wParam = 38) Or (wParam = 40)
 				Return WrapSel(wParam = 38) ? True : ""
 		}
-	} 
+	}
 	Else If (msg = 522) And (hwnd = htxtSearch) { ; WM_MOUSEWHEEL
 		
 		;Check if the listbox is even populated
@@ -925,37 +929,40 @@ GetScriptLabels(ByRef s, bExternal := False, encoding := "") {
 		
 		;Get next label. All valid (non-hotkey) labels are detected.
 		;(invalid characters are commas, spaces, and escape char)
-		; “\w” 包含 “a-zA-Z0-9_” ，同时 “(*UCP)” 表示支持中文日文韩文等
-		i := RegExMatch(s, "m)(*ANYCRLF)(*UCP)^[[:blank:]]*(?!\Q" v "\E)"
-						 . "\K[\w\Q@#$[]?~``!%^&*+-()={}|\:;""'<>./\E]+:"
+		i := RegExMatch(s, "mS)(*ANYCRLF)^[[:blank:]]*(?!\Q" v "\E)"
+						 . "\K[^\s\Q," u "\E]+:"  ; label name can use any word except A_Space \t \r \n \, EscapeChar
 						 . "(?=([[:blank:]]*[\r\n]|[[:blank:]]+\Q" v "\E))", t, i)
 		
 		;Make sure we found something
 		If Not i
 			Break
 		
-		;We found a label. Trim everything after the last colon
-		StringLeft t, t, InStr(t, ":", False, 0)
-		
-		;Make sure it doesn't contain an escape character (unless if it's to escape the comment flag)
-		If Not RegExMatch(t, "\Q" u "\E(?!\Q" v "\E)") {
+		; make sure we found a:, not a::
+		If (SubStr(t, -1, 2)!="::")
+		{
+			;We found a label. Trim everything after the last colon
+			StringLeft t, t, InStr(t, ":", False, 0)
 			
-			;Erase any occurence of the escape char
-			StringReplace, t, t, %u%,, All
-			
-			sLabels0 += 1    ;Increase counter
-			If bExternal {
-				sLabels%sLabels0%_File := sPaths0
-				sLabels%sLabels0%_Line := LineFromPosEx(s, i)
-			} Else {
-				sLabels%sLabels0%_File := 0
-				; i is the pos in utf-16, we need to transform utf-16 pos to scintilla code page pos.
-				; The possible values of encoding are 0 65001 932 936 949 950 1361
-				pos := StrPut(SubStr(s, 1, i), "cp" encoding) - 1
-				sLabels%sLabels0%_Line := LineFromPos(pos)
+			;Make sure it doesn't contain an escape character (unless if it's to escape the comment flag)
+			If Not RegExMatch(t, "\Q" u "\E(?!\Q" v "\E)") {
+				
+				;Erase any occurence of the escape char
+				StringReplace, t, t, %u%,, All
+				
+				sLabels0 += 1    ;Increase counter
+				If bExternal {
+					sLabels%sLabels0%_File := sPaths0
+					sLabels%sLabels0%_Line := LineFromPosEx(s, i)
+				} Else {
+					sLabels%sLabels0%_File := 0
+					; i is the pos in utf-16, we need to transform utf-16 pos to scintilla code page pos.
+					; The possible values of encoding are 0 65001 932 936 949 950 1361
+					pos := StrPut(SubStr(s, 1, i), "cp" encoding) - 1
+					sLabels%sLabels0%_Line := LineFromPos(pos)
+				}
+				
+				sLabels%sLabels0% := t    ;Add to array
 			}
-			
-			sLabels%sLabels0% := t    ;Add to array
 		}
 		
 		;Set i to the beginning of the next line
@@ -1091,8 +1098,9 @@ GetScriptFunctions(ByRef s, bExternal := False, encoding := "") {
 	Loop {
 		
 		;Get the next function
-		; “\w” 包含 “a-zA-Z0-9_” ，同时 “(*UCP)” 表示支持中文日文韩文等
-		i := RegExMatch(s, "m)(*ANYCRLF)(*UCP)^[[:blank:]]*\K[\w#@\$\?\[\]]+"
+		; “\w” 包含 “a-zA-Z0-9_” ，同时 “(*UCP)” 表示 \w 支持中文日文韩文等
+		i := RegExMatch(s, "mS)(*ANYCRLF)(*UCP)^[[:blank:]]*(?!\Q" u "\E)"
+						 . "\K[\w\Q#@$\E]+"  ; func name can use a-z, A-Z, unicode char, 0-9, and _#@$ .
 						 . "(?=\(.*?\)(\s+\Q" u "\E.*?[\r\n]+)*?\s*\{)", t, i)
 		
 		;Check if we found something
