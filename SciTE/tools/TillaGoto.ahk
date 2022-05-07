@@ -135,26 +135,20 @@ TrayClose:
 ExitApp
 
 ; Necessary for the conditional hotkey/hotstring expression to be registered
-#If bUseMButton And _SciTEIsActive()
+#If bUseMButton And _SciTEIsUnderMouse()
 MButton::
 HandleMButton()
 {
-	Global clickX, clickY
+	Global hSci, clickX, clickY
 	
 	Critical
 	
-	; Get mouse data
-	MouseGetPos, clickX, clickY,, sControl
-	
-	; Make sure the click was made inside the Scintilla1 control
-	If Not InStr(sControl, "Scintilla1")
-		Return
-	
-	; Prep data for check click
-	ControlGetPos, cX, cY,,, %sControl%
-	
-	; 没有用 CoordMode 而是用计算的方式得到了点击的坐标
-	clickX -= cX, clickY -= cY
+	VarSetCapacity(lpPoint, 8, 0)
+	DllCall("GetCursorPos", "Ptr", &lpPoint)
+	DllCall("ScreenToClient", "Ptr", hSci, "Ptr", &lpPoint)
+	; get mouse pos in control Scintilla1
+	clickX := NumGet(lpPoint, 0, "Int")
+	clickY := NumGet(lpPoint, 4, "Int")
 	
 	SetTimer, Press_MButton, -1
 }
@@ -293,6 +287,10 @@ CreateGUI:
 	bFocusOnGui := True
 	SetTimer, CheckFocus, 50
 	
+	; Put the focus on the textbox.
+	; When you first call GUI, you don't need this. When you call GUI a second time, you will need this.
+	GuiControl, Focus, txtSearch
+	
 	;Do the fade-in effect
 	i := 0
 	While (i <= iTransparency) {
@@ -404,8 +402,17 @@ SelectItem:
 Return
 
 _SciTEIsActive() {
-	global hSciTE
+	Global hSciTE
 	return WinActive("ahk_id " hSciTE)
+}
+
+_SciTEIsUnderMouse()
+{
+	Global hSci
+	
+	MouseGetPos, , , , OutputVarControl, 2
+	If (OutputVarControl=hSci)
+		return, True
 }
 
 LaunchFile(sFilePath, iLine) {
@@ -656,7 +663,7 @@ AnalyseScript:
 Return
 
 FindLibFile(sLib) {
-	global oSciTE
+	Global oSciTE
 	
 	;Append extension if none given
 	StringRight, t, sLib, 4
