@@ -101,6 +101,7 @@
 	Gui, Add, Edit, w%iGUIWidth% vtxtSearch gtxtSearch_Event hwndhtxtsearch ; height is automatically set by font size
 	sortOpt := bSortEntries ? "Sort" : ""
 	Gui, Add, ListBox, %sortOpt% wp vlblList glblList_Event hwndhlblList +HScroll +256 ;LBS_NOINTEGRALHEIGHT
+	Gui, Add, Button, w0 h0 vlooksLikeNoFocus ; this control only work for handle focus when gui is not active
 	
 	;Get the height of a listbox item
 	SendMessage, 417,,,, ahk_id %hlblList% ;LB_GETITEMHEIGHT
@@ -207,13 +208,7 @@ Press_uGotoDef:
 	Else
 	{
 		If (bShowing)
-		{
-			WinActivate, ahk_id %hGui%
-			; Put the focus on the textbox
-			GuiControlGet, t, FocusV
-			if (t!="txtSearch")
-				GuiControl, Focus, txtSearch
-		}
+			FocusOnGui()
 		Else
 			Gosub, CreateGUI
 	}
@@ -226,16 +221,28 @@ Press_uSummonGUI:
 	
 	; if GUI is showing, put the focus on it.
 	If (bShowing)
-	{
-		WinActivate, ahk_id %hGui%
-		; Put the focus on the textbox
-		GuiControlGet, t, FocusV
-		if (t!="txtSearch")
-			GuiControl, Focus, txtSearch
-	}
+		FocusOnGui()
 	Else
 		Gosub, CreateGUI
 return
+
+FocusOnGui()
+{
+	Global bFocusOnGui, hGui, txtSearch
+	
+	Critical
+	
+	bFocusOnGui := True
+	
+	WinActivate, ahk_id %hGui%
+	
+	; Put the focus on the textbox
+	GuiControlGet, t, FocusV
+	If (t!="txtSearch")
+		GuiControl, Focus, txtSearch
+	
+	Critical, Off
+}
 
 CreateGUI:
 	; Get the filename
@@ -288,10 +295,8 @@ CreateGUI:
 	Gui, Show, AutoSize x%iX% y%iY%
 	
 	bShowing := True
+	bFocusOnGui := True
 	SetTimer, CheckFocus, 50
-	
-	;Put the focus on the textbox
-	GuiControl, Focus, txtSearch
 	
 	;Do the fade-in effect
 	i := 0
@@ -316,13 +321,19 @@ GuiEscape:
 Return
 
 CheckFocus:
-	TabSwitched    := oSciTE.CurrentFile != sScriptPath
 	GuiActivated   := WinActive("ahk_id " hGui)
 	SciteActivated := _SciTEIsActive()
-	If (TabSwitched Or (Not GuiActivated And Not SciteActivated))
+	AppSwitched    := !GuiActivated And !SciteActivated
+	TabSwitched    := oSciTE.CurrentFile != sScriptPath
+	If (AppSwitched Or TabSwitched)
 	{
 		SetTimer, CheckFocus, Off
 		Gosub, GuiEscape
+	}
+	Else If (bFocusOnGui And SciteActivated And !GuiActivated)
+	{
+		bFocusOnGui := False
+		GuiControl, Focus, looksLikeNoFocus ; move focus on a zero size control, to make it looks like no focus.
 	}
 Return
 
