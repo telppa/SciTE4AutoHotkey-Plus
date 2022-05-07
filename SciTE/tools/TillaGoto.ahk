@@ -208,7 +208,7 @@ Press_uGotoDef:
 	Else
 	{
 		If (bShowing)
-			FocusOnGui()
+			SetFocusOnGui()
 		Else
 			Gosub, CreateGUI
 	}
@@ -221,25 +221,20 @@ Press_uSummonGUI:
 	
 	; if GUI is showing, put the focus on it.
 	If (bShowing)
-		FocusOnGui()
+		SetFocusOnGui()
 	Else
 		Gosub, CreateGUI
 return
 
-FocusOnGui()
+SetFocusOnGui()
 {
 	Global bFocusOnGui, hGui, txtSearch
 	
 	Critical
 	
 	bFocusOnGui := True
-	
 	WinActivate, ahk_id %hGui%
-	
-	; Put the focus on the textbox
-	GuiControlGet, t, FocusV
-	If (t!="txtSearch")
-		GuiControl, Focus, txtSearch
+	GuiControl, Focus, txtSearch
 	
 	Critical, Off
 }
