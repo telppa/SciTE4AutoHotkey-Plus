@@ -351,9 +351,8 @@ lblList_Event:
 		Return
 SelectItem:
 	
-	;Check if we're doing CheckTextClick
+	; from Press_MButton or Press_uGotoDef
 	If bCheckClick {
-		
 		If (i := CheckFuncMatch(clickedFunc "()"))        ; Try with functions first (internal first)
 			bIsFunc := True
 		Else If (i := CheckLabelMatch(clickedLabel ":"))  ; Try with labels
@@ -365,9 +364,9 @@ SelectItem:
 		SendMessage, 2025, iPos, 0,, ahk_id %hSci% ;SCI_GOTOPOS
 		
 		bCheckClick := False
-		
-	} Else {
-		
+	}
+	; from GUIInteract. when user press enter
+	Else {
 		;Get selected item index. LB_GETCURSEL
 		SendMessage, 0x188, 0, 0,, ahk_id %hlblList%
 		
@@ -384,14 +383,12 @@ SelectItem:
 	}
 	
 	If bIsFunc {
-		
 		;Check if it's external
 		If sFuncs%i%_File
 			LaunchFile(GetFile(sFuncs%i%_File, True), sFuncs%i%_Line)
 		Else ShowLine(sFuncs%i%_Line)
-		
-	} Else {
-		
+	}
+	Else {
 		;Check if it's external
 		If sLabels%i%_File
 			LaunchFile(GetFile(sLabels%i%_File, True), sLabels%i%_Line)
@@ -455,7 +452,11 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 	;Check which message it is
 	If (msg = 256) {                              ; WM_KEYDOWN
 		
-		IfEqual wParam, 13, Gosub SelectItem ;Enter
+		If (wParam=13) ;Enter
+		{
+			SetTimer, SelectItem, -1
+			Return
+		}
 		
 		;Check if it's the textbox
 		If (hwnd = htxtSearch) {
