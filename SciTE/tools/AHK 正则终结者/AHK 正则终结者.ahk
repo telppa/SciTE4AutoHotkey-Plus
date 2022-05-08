@@ -1,5 +1,15 @@
 ﻿/*
 更新日志：
+  2022.05.08
+    移除部分废弃的参数。
+    为界面改色扫清了障碍。
+    重构 以指定代码页计算匹配对象位置及长度()
+    版本号1.5.1。
+
+  2022.04.07
+    修复参考窗口中两个错误的正则示例。
+    版本号1.5。
+
   2021.11.15
     窗口失去焦点时自动关闭提示框。
     版本号1.42。
@@ -113,9 +123,9 @@ return
 
   sci1.GetText(sci1.getLength()+1, 正则)  ; 获取正则
   sci2.GetText(sci2.getLength()+1, 文本)  ; 获取文本
-  ; sci2.ClearDocumentStyle()               ; 清空高亮. 此种方式会导致自动换行或不换行均出现问题!!!
-  sci2.StartStyling(0, 0x1f)              ; 使用默认高亮重绘所有文本,起清空高亮的作用
-  , sci2.SetStyling(sci2.getLength(), 1)
+  ; sci2.ClearDocumentStyle()             ; 清空高亮. 此种方式会导致自动换行或不换行均出现问题!!!
+  sci2.StartStyling(0)                    ; 这里的0是坐标。 StartStyling() 必须在前
+  , sci2.SetStyling(sci2.getLength(), 0)  ; 使用样式0，从坐标0开始重绘所有文本，起清空高亮的作用
 
   if (兼容模式=1)
     正则:=RegEx.AddOptions(正则, "m", "(*ANYCRLF)")
@@ -137,20 +147,20 @@ return
     btt(,,, 3)
 
   匹配对象:=以指定代码页计算匹配对象位置及长度(文本, 原始匹配对象, "UTF-8")
-  loop, % 匹配对象["GlobalCount"]                          ; 由于统一了非全局模式与全局模式返回值,使得非全局模式的 "GlobalCount" 的值必然为 1 ,因此可一并通过以下代码实现高亮
+  loop, % 匹配对象["GlobalCount"]
   {
     全局索引:=A_Index
-    高亮风格:=Mod(全局索引, 2)=1 ? 0 : 3                   ; 高亮风格总是为 0 或 3 , SCE_AHKL_LPPDEFINED1+3=SCE_AHKL_LPPDEFINED4. 即 全局1高亮风格+3=全局2高亮风格
+    高亮风格:=Mod(全局索引, 2)=1 ? 0 : 3  ; 高亮风格总是为 0 或 3 , SCE_AHKL_LPPDEFINED1+3=SCE_AHKL_LPPDEFINED4. 即 全局1高亮风格+3=全局2高亮风格
 
-    sci2.StartStyling(匹配对象[全局索引]["Pos"][0], 0x1f)  ; 整体高亮. 之所以设置 6种 高亮风格,是为了完美区隔每个整体及其子模式
+    sci2.StartStyling(匹配对象[全局索引]["Pos"][0])  ; 整体高亮. 之所以设置 6种 高亮风格,是为了完美区隔每个整体及其子模式
     , sci2.SetStyling(匹配对象[全局索引]["Len"][0], SCE_AHKL_LPPDEFINED1+高亮风格)
     loop, % 匹配对象[全局索引]["Count"]
     {
       if (Mod(A_Index, 2)=1)
-        sci2.StartStyling(匹配对象[全局索引]["Pos"][A_Index], 0x1f)				; 子模式1 高亮
+        sci2.StartStyling(匹配对象[全局索引]["Pos"][A_Index])				; 子模式1 高亮
         , sci2.SetStyling(匹配对象[全局索引]["Len"][A_Index], SCE_AHKL_LPPDEFINED2+高亮风格)
       else
-        sci2.StartStyling(匹配对象[全局索引]["Pos"][A_Index], 0x1f)				; 子模式2 高亮
+        sci2.StartStyling(匹配对象[全局索引]["Pos"][A_Index])				; 子模式2 高亮
         , sci2.SetStyling(匹配对象[全局索引]["Len"][A_Index], SCE_AHKL_LPPDEFINED3+高亮风格)
     }
   }

@@ -51,18 +51,24 @@ The margins are numbered 0 to 4. Using a margin number outside the valid range h
   , sci2.StyleSetSize(32, 12)
   , sci2.SetWrapMode(true)                                    ; 似乎会影响文本的显示和高亮的显示,还是先屏蔽了吧
   , sci2.SetWrapVisualFlags(1|2)
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED1, 0x000000)		      ; 设置高亮文字颜色1
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED1, 0xFFFFA1)		      ; 设置高亮背景颜色1
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED2, 0xAA0000)		      ; 设置高亮文字颜色2
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED2, 0xFFFFA1)		      ; 设置高亮背景颜色2
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED3, 0x00AA00)		      ; 设置高亮文字颜色3
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED3, 0xFFFFA1)		      ; 设置高亮背景颜色3
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED4, 0x000000)		      ; 设置高亮文字颜色4
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED4, 0x808022)		      ; 设置高亮背景颜色4
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED5, 0xAA0000)		      ; 设置高亮文字颜色5
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED5, 0x808022)		      ; 设置高亮背景颜色5
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED6, 0x00AA00)		      ; 设置高亮文字颜色6
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED6, 0x808022)		      ; 设置高亮背景颜色6
+  
+  , sci2.StyleSetBack(32, 0xFFFFFF)                           ; 无字处背景色
+  , sci2.StyleSetBack(0, 0xFFFFFF)                            ; 有字处背景色
+  
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED1, 0x000000)		      ; 亮黄文字
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED1, 0xFFFFA1)		      ; 亮黄背景
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED2, 0xAA0000)		      ; 亮黄子模式1
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED2, 0xFFFFA1)		      ; 亮黄子模式1
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED3, 0x00AA00)		      ; 亮黄子模式2
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED3, 0xFFFFA1)		      ; 亮黄子模式2
+  
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED4, 0x000000)		      ; 暗黄文字
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED4, 0x808022)		      ; 暗黄背景
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED5, 0xAA0000)		      ; 暗黄子模式1
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED5, 0x808022)		      ; 暗黄子模式1
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED6, 0x00AA00)		      ; 暗黄子模式2
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED6, 0x808022)		      ; 暗黄子模式2
+  
   , sci2.SetModEventMask(SC_MOD_INSERTTEXT|SC_MOD_DELETETEXT)
   , sci2.Notify := "Notify"
 
@@ -70,7 +76,7 @@ The margins are numbered 0 to 4. Using a margin number outside the valid range h
   Gui, Add, Button, v主页, 主页
   Gui, Add, Button, v存储正则 +Disabled, 存储正则
   Gui, Add, Button, v生成代码, 生成代码
-  Gui, Show, CEnter w370 h545, AHK 正则终结者 v1.5
+  Gui, Show, CEnter w370 h545, AHK 正则终结者 v1.5.1
 
   ; 窗口创建后再设置文本内容可以避免内容初始被选中
   sci1.SetText(不再使用的参数, 初始正则框内容)                ; 添加文本. 第一个参数是一个不再使用了的参数
@@ -192,7 +198,7 @@ SetWindowPos(hWnd, x, y, w, h, hWndInsertAfter := 0, uFlags := 0x14)  ; uFlags :
 
 WM_ACTIVATE(wParam)
 {
-  if (wParam & 0xFFFF = 0)
+  if (wParam = 0)
   {
     btt(,,, 1)
     btt(,,, 2)
