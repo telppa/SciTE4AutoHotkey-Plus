@@ -7,10 +7,28 @@
 	Usage, changelog and help can be found in the thread:
 	http://www.autohotkey.com/forum/viewtopic.php?t=41575
 	
-	修改作者：兔子
-	更新日志：
-		2016.04.20 彻底支持代码中存在中文的情况；可完美分析并定位出代码中的中文标签、函数。
+	快捷键：
+		鼠标中键点文字 或 tillagoto.hk.goto.def  （默认 Shift+Enter ） 可跳到文字对应的定义处。
+		Shift+滚轮     或 tillagoto.hk.go.back   （默认 Alt+左右箭头） 可跳回或跳前。
+		鼠标中键点空白 或 tillagoto.hk.summon.gui（默认 F12）          激活 GUI 。
+		Esc                                                            关闭 GUI 。
 	
+	修改快捷键：
+		可在文件 tillagoto.properties 中配置。
+	
+	更新日志：
+		2016.04.20
+			彻底支持代码中存在中文的情况。
+			可完美分析并定位出代码中的中文标签、函数。
+		2022.05.08
+			修复热键、标签、函数识别 bug 。
+			支持任意文件编码，任意语言文字（例如中英日韩）的标签、函数的识别。
+			支持鼠标中键点击任意语言文字（例如中英日韩）的标签、函数时跳转。
+			优化跳转后的显示位置。
+			重构部分代码。
+			重构操作逻辑。
+			加入提示。
+			界面改进。
 */
 	; 避免 GUI 显示时强制退出报错
 	ComObjError(false)
@@ -108,8 +126,9 @@
 	iGUIItemHeight := ErrorLevel
 	
 	; Catch WM_KEYDOWN and WM_MOUSEWHEEL
-	OnMessage(256, "GUIInteract")  ; 方向键与翻页键与 Ctrl+Home Ctrl+End 在 GUI 中选择项目
-	OnMessage(522, "GUIInteract")  ; 实际并没有产生任何效果，可能是因为 win10 自带鼠标穿透操控的功能
+	OnMessage(0x100, "GUIInteract")  ; 方向键与翻页键与 Ctrl+Home Ctrl+End 在 GUI 中选择项目
+	OnMessage(0x20A, "GUIInteract")  ; 实际并没有产生任何效果，可能是因为 win10 自带鼠标穿透操控的功能
+	OnMessage(0x200, "WM_MouseMove")
 	
 	; Register main hotkeys
 	Hotkey, If, _SciTEIsActive()
@@ -158,7 +177,7 @@ HandleMButton()
 HandleShiftWheel()
 {
 	; Shift+WheelDown = Alt+Right
-	LineHistory(InStr(A_ThisHotkey, "Down") ? 1 : 0)
+	LineHistory(InStr(A_ThisHotkey, "Down") ? True : False)
 }
 #If bShowing
 Esc::
@@ -326,6 +345,7 @@ CheckFocus:
 	Else If (bFocusOnGui And SciteActivated And !GuiActivated)
 	{
 		bFocusOnGui := False
+		Gosub, CloseToolTip
 		GuiControl, Focus, looksLikeNoFocus ; move focus on a zero size control, to make it looks like no focus.
 	}
 Return
@@ -358,7 +378,11 @@ SelectItem:
 		Else If (i := CheckLabelMatch(clickedLabel ":"))  ; Try with labels
 			bIsFunc := False
 		Else
+		{
+			ToolTip, 没有找到与 “%clickedFunc%” 相关的函数或标签
+			SetTimer, CloseToolTip, -2000
 			Return
+		}
 		
 		;Move the caret to the position before going to item
 		SendMessage, 2025, iPos, 0,, ahk_id %hSci% ;SCI_GOTOPOS
@@ -398,6 +422,10 @@ SelectItem:
 	Goto GuiEscape  ;Done
 Return
 
+CloseToolTip:
+	ToolTip
+Return
+
 _SciTEIsActive() {
 	Global hSciTE
 	return WinActive("ahk_id " hSciTE)
@@ -412,45 +440,13 @@ _SciTEIsUnderMouse()
 		return, True
 }
 
-LaunchFile(sFilePath, iLine) {
-	Global hSci, oSciTE
-	
-	;Open the file in SciTE
-	oSciTE.OpenFile(sFilePath)
-	
-	;Make the target line appear on top
-	SendMessage, 2370, 0, 0,, ahk_id %hSci%
-	SendMessage, 2024, iLine + ErrorLevel - 1, 0,, ahk_id %hSci%
-	SendMessage, 2024, iLine - 1, 0,, ahk_id %hSci%
-}
-
-CheckFuncMatch(sHaystack) {
-	Global sFuncs0
-	
-	Loop % sFuncs0
-		If (sHaystack = sFuncs%A_Index%)
-			Return A_Index
-	
-	Return 0
-}
-
-CheckLabelMatch(sHaystack) {
-	Global sLabels0
-	
-	Loop % sLabels0
-		If (sHaystack = sLabels%A_Index%)
-			Return A_Index
-	
-	Return 0
-}
-
 GUIInteract(wParam, lParam, msg, hwnd) {
 	Local bForward
 	
 	Critical
 	
 	;Check which message it is
-	If (msg = 256) {                              ; WM_KEYDOWN
+	If (msg = 0x100) {                              ; WM_KEYDOWN
 		
 		If (wParam=13) ;Enter
 		{
@@ -488,7 +484,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 				Return WrapSel(wParam = 38) ? True : ""
 		}
 	}
-	Else If (msg = 522) And (hwnd = htxtSearch) { ; WM_MOUSEWHEEL
+	Else If (msg = 0x20A) And (hwnd = htxtSearch) { ; WM_MOUSEWHEEL
 		
 		;Check if the listbox is even populated
 		SendMessage, 395, 0, 0,, ahk_id %hlblList%
@@ -507,6 +503,14 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 				ControlSend,, % bForward ? "{Up}" : "{Down}", ahk_id %hlblList%
 		
 	}
+}
+
+WM_MouseMove()
+{
+	If (A_GuiControl="txtSearch")
+		ToolTip, 语法示例：“() pp” 可匹配 apple()
+	Else
+		SetTimer, CloseToolTip, -1
 }
 
 WrapSel(bUp) {
@@ -1862,29 +1866,66 @@ CheckTextClick(x, y) {
  Line functions |
 			  */
 
-ShowLine(line) {
-	Global hSci
+CheckFuncMatch(sHaystack) {
+	Global sFuncs0
 	
+	Loop % sFuncs0
+		If (sHaystack = sFuncs%A_Index%)
+			Return A_Index
+	
+	Return 0
+}
+
+CheckLabelMatch(sHaystack) {
+	Global sLabels0
+	
+	Loop % sLabels0
+		If (sHaystack = sLabels%A_Index%)
+			Return A_Index
+	
+	Return 0
+}
+
+LaunchFile(sFilePath, line) {
+	Global oSciTE
+	
+	;Open the file in SciTE
+	oSciTE.OpenFile(sFilePath)
+	
+	DisplayTargetLine(line)
+}
+
+ShowLine(line) {
 	;Record current line before moving
 	LineHistory(0, 1)
 	
-	;Get the first visible line. SCI_GETFIRSTVISIBLELINE
-	SendMessage, 2152, 0, 0,, ahk_id %hSci%
-	
-	If (ErrorLevel < line - 1) {
-		
-		;Get the number of lines on screen. SCI_LINESONSCREEN
-		SendMessage, 2370, 0, 0,, ahk_id %hSci%
-		
-		;Go to the line wanted + lines on screen. SCI_GOTOLINE
-		SendMessage, 2024, line - 1 + ErrorLevel, 0,, ahk_id %hSci%
-	}
-	
-	;Go to the actual line we want. SCI_GOTOLINE
-	SendMessage, 2024, line - 1, 0,, ahk_id %hSci%
+	DisplayTargetLine(line)
 	
 	;Record new line
 	LineHistory(0, 2)
+}
+
+DisplayTargetLine(line)
+{
+	Global hSci
+	Static  SCI_GotoLine            := 2024
+				, SCI_GetFirstVisibleLine := 2152
+				, SCI_VisibleFromDocLine  := 2220
+				, SCI_LINESCROLL          := 2168
+	
+	; Line is zero base
+	line := line - 1
+	
+	SendMessage, SCI_GotoLine, line, 0,, ahk_id %hSci%
+	
+	; Get our line on screen pos
+	SendMessage, SCI_GetFirstVisibleLine, 0, 0,, ahk_id %hSci%
+	firstVisibleLine := ErrorLevel
+	SendMessage, SCI_VisibleFromDocLine, line, 0,, ahk_id %hSci%
+	ourLineOnScreen := ErrorLevel - firstVisibleLine + 1
+	
+	; Make sure our line on screen is number 6, that means 5 lines before our line.
+	SendMessage, SCI_LINESCROLL, 0, ourLineOnScreen - 6,, ahk_id %hSci%
 }
 
 LineHistory(bForward, iRecordMode = 0) {
