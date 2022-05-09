@@ -173,8 +173,10 @@ HandleMButton()
 +WheelUp::
 HandleShiftWheel()
 {
-	; Shift+WheelDown = Alt+Right
-	LineHistory(InStr(A_ThisHotkey, "Down") ? True : False)
+	If (InStr(A_ThisHotkey, "WheelUp"))
+		view.previous()
+	Else
+		view.next()
 }
 #If bShowing
 Esc::
@@ -355,11 +357,11 @@ txtSearch_Event:
 Return
 
 PreviousView:
-	LineHistory(False)
+	view.previous()
 Return
 
 NextView:
-	LineHistory(True)
+	view.next()
 Return
 
 lblList_Event:
@@ -398,10 +400,11 @@ SelectItem:
 			Return
 		}
 		
-		; Move the caret to the position, LineHistory() will record pos.
+		; Move the caret to the position, view.save() will record pos.
 		SendMessage, 2025, iPos, 0,, ahk_id %hSci%  ; SCI_GOTOPOS
 	}
 	
+	view.save()
 	If bIsFunc {
 		;Check if it's external
 		If sFuncs%i%_File
@@ -414,6 +417,7 @@ SelectItem:
 			LaunchFile(GetFile(sLabels%i%_File, True), sLabels%i%_Line)
 		Else ShowLine(sLabels%i%_Line)
 	}
+	view.save()
 	
 	Goto GuiEscape  ;Done
 Return
@@ -1892,28 +1896,20 @@ LaunchFile(sFilePath, line) {
 }
 
 ShowLine(line) {
-	;Record current line before moving
-	LineHistory(0, 1)
-	
 	DisplayTargetLine(line)
-	
-	;Record new line
-	LineHistory(0, 2)
 }
 
 DisplayTargetLine(line)
 {
 	Global hSci, hSciTE
-	Static  SCI_GotoLine            := 2024
-				, SCI_GetFirstVisibleLine := 2152
+	Static  SCI_GetFirstVisibleLine := 2152
 				, SCI_VisibleFromDocLine  := 2220
 				, SCI_LINESCROLL          := 2168
+				, SCI_GotoLine            := 2024
 				, SCI_SETFOCUS            := 2380
 	
 	; Line is zero base
 	line := line - 1
-	
-	SendMessage, SCI_GotoLine, line, 0,, ahk_id %hSci%
 	
 	; Get our line on screen pos
 	SendMessage, SCI_GetFirstVisibleLine, 0, 0,, ahk_id %hSci%
@@ -1924,102 +1920,81 @@ DisplayTargetLine(line)
 	; Make sure our line on screen is number 6, that means 5 lines before our line.
 	SendMessage, SCI_LINESCROLL, 0, ourLineOnScreen - 6,, ahk_id %hSci%
 	
+	; SCI_LINESCROLL scrolls the view to the right place, SCI_GotoLine make caret display.
+	SendMessage, SCI_GotoLine, line, 0,, ahk_id %hSci%
+	
 	; Make sure it have focus, otherwise the caret line will not highlight.
 	WinActivate, ahk_id %hSciTE%
 	SendMessage, SCI_SETFOCUS, 1, 0,, ahk_id %hSci%
 }
 
-LineHistory(bForward, iRecordMode = 0) {
-	Static
-	Local t
-	Global sScriptPath, hSciTE, hSci, bShowing, oSciTE
+class view
+{
+	static oView:=[], i:=0
 	
-	;If we're not showing, we need to find out what script we're on
-	If Not bShowing {
+	save()
+	{
+		Global oSciTE, hSci
 		
-		If Not _SciTEIsActive()
+		prePath := this.oView[this.i, "path"]
+		preline := this.oView[this.i, "firstVisibleLine"]
+		
+		path := oSciTE.CurrentFile
+		SendMessage, 2152, 0, 0,, ahk_id %hSci%  ; SCI_GETFIRSTVISIBLELINE
+		line := ErrorLevel
+		
+		; Avoid duplicate views
+		If (path=prePath And line=preLine)
 			Return
 		
-		SendMessage, 2381, 0, 0,, ahk_id %hSci%  ; GETFOCUS = 2381
-		If (!ErrorLevel)
+		this.i += 1
+		i := this.i
+		
+		this.oView[i, "path"] := path
+		this.oView[i, "firstVisibleLine"] := line
+		
+		SendMessage, 2008, 0, 0,, ahk_id %hSci%  ; SCI_GETCURRENTPOS
+		this.oView[i, "pos"] := ErrorLevel
+		
+		; delete all of keys behide i (e.g. 123456 back to 3, create F, then we want 123F not 123F56)
+		this.oView.RemoveAt(i + 1, this.oView.MaxIndex() - i)
+	}
+	
+	previous()
+	{
+		If (this.i <= 1)
 			Return
 		
-		;Get the filename
-		sScriptPath := oSciTE.CurrentFile
+		this.i -= 1
+		this._load()
 	}
 	
-	;Match file
-	iCurFile := 0
-	Loop %iFile0% {
-		If (iFile%A_Index% = sScriptPath) {
-			iCurFile := A_Index
-			iCurLine := iFile%A_Index%_Cur
-			Break
-		}
+	next()
+	{
+		If (this.i >= this.oView.MaxIndex() or this.i = 0)
+			Return
+		
+		this.i += 1
+		this._load()
 	}
 	
-	;If we're working on a new file, expand array
-	If Not iCurFile {
-		iFile0 += 1
-		iCurLine := 1
-		iCurFile := iFile0
-		iFile%iCurFile%_Count := 0
-		iFile%iCurFile% := sScriptPath
+	_load()
+	{
+		Global oSciTE, hSci
+		
+		i := this.i
+		
+		path := this.oView[i, "path"]
+		pos  := this.oView[i, "pos"]
+		line := this.oView[i, "firstVisibleLine"]
+		
+		If (oSciTE.CurrentFile!=path)
+			oSciTE.OpenFile(path)
+		
+		SendMessage, 2025, pos, 0,, ahk_id %hSci%                ; SCI_GOTOPOS
+		SendMessage, 2152, 0, 0,, ahk_id %hSci%                  ; SCI_GETFIRSTVISIBLELINE
+		SendMessage, 2168, 0, line - ErrorLevel,, ahk_id %hSci%  ; SCI_LINESCROLL
 	}
-	
-	;Check if we just need to record
-	If (iRecordMode = 1)    ;Record current line
-		LH_GetCurLine(iLines%iCurLine%_%iCurFile%)
-	Else If (iRecordMode = 2) { ;Record to the next line
-		
-		iCurLine += 1
-		LH_GetCurLine(iLines%iCurLine%_%iCurFile%)
-		
-		;Set as the new limit
-		iFile%iCurFile%_Count := iCurLine
-		
-	} Else If bForward {  ;Forward
-		
-		;Check if it is possible
-		If (iCurLine < iFile%iCurFile%_Count) {
-			
-			;Record the line we're on now
-			LH_GetCurLine(iLines%iCurLine%_%iCurFile%)
-			
-			;Show the next line
-			iCurLine += 1
-			LH_SetCurLine(iLines%iCurLine%_%iCurFile%)
-		}
-	} Else {    ;Backward
-		
-		;Check if it is possible
-		If (iCurLine > 1) {
-			
-			;Record the line we're on now
-			LH_GetCurLine(iLines%iCurLine%_%iCurFile%)
-			
-			;Show the previous line
-			iCurLine -= 1
-			LH_SetCurLine(iLines%iCurLine%_%iCurFile%)
-		}
-	}
-	
-	iFile%iCurFile%_Cur := iCurLine
-}
-
-LH_GetCurLine(ByRef uLine) {
-	Global hSci
-	SendMessage, 2152, 0, 0,, ahk_id %hSci% ;SCI_GETFIRSTVISIBLELINE
-	uLine := ErrorLevel
-	SendMessage 2008, 0, 0,, ahk_id %hSci% ;SCI_GETCURRENTPOS
-	uLine += ErrorLevel << 16
-}
-
-LH_SetCurLine(ByRef uLine) {
-	Global hSci
-	SendMessage, 2025, uLine >> 16, 0,, ahk_id %hSci% ;SCI_GOTOPOS
-	SendMessage, 2152, 0, 0,, ahk_id %hSci% ;SCI_GETFIRSTVISIBLELINE
-	SendMessage, 2168, 0, (uLine & 0xFFFF) - ErrorLevel,, ahk_id %hSci% ;SCI_LINESCROLL
 }
 
 /************************\
