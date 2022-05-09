@@ -137,9 +137,6 @@
 	Hotkey, %uGoBack%,    PreviousView
 	Hotkey, %uGoForward%, NextView
 	
-	;Optimize before starting loop or ending autoexecute section
-	EmptyMem()
-	
 	If bQuitWithEditor {
 		Loop {
 			Sleep, 1000 ;Check if we need to quit
@@ -329,7 +326,6 @@ GuiEscape:
 	Gosub, CloseToolTip
 	SetTimer, CheckFocus, Off
 	VarSetCapacity(sScript, 0)
-	EmptyMem()
 Return
 
 CheckFocus:
@@ -2029,15 +2025,6 @@ LH_SetCurLine(ByRef uLine) {
 /************************\
  Miscellaneous functions |
 					   */
-
-;EmptyMem() by heresy
-;http://www.autohotkey.com/forum/viewtopic.php?t=32876
-EmptyMem(PID="AHK Rocks"){
-	pid:=(pid="AHK Rocks") ? DllCall("GetCurrentProcessId") : pid
-	h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid, "Ptr")
-	DllCall("SetProcessWorkingSetSize", "Ptr", h, "Int", -1, "Int", -1)
-	DllCall("CloseHandle", "Ptr", h)
-}
 
 ;Based on Lazslo's CRC32() and MCode() functions
 ;http://www.autohotkey.com/forum/viewtopic.php?p=158999#158999
