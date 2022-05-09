@@ -157,8 +157,6 @@ HandleMButton()
 {
 	Global hSci, clickX, clickY
 	
-	Critical
-	
 	VarSetCapacity(lpPoint, 8, 0)
 	DllCall("GetCursorPos", "Ptr", &lpPoint)
 	DllCall("ScreenToClient", "Ptr", hSci, "Ptr", &lpPoint)
@@ -193,6 +191,8 @@ HandleEsc()
 ; User press MButton or uGotoDef(Shift+Enter).
 Press_MButton:
 Press_uGotoDef:
+	Critical
+	
 	; only work for ahk1. This condition cannot be judged in #If, an error will occur.
 	If (oSciTE.ResolveProp("Language")!="ahk1")
 		return
@@ -226,6 +226,8 @@ return
 
 ; User press uSummonGUI(F12).
 Press_uSummonGUI:
+	Critical
+	
 	; only work for ahk1. This condition cannot be judged in #If, an error will occur.
 	If (oSciTE.ResolveProp("Language")!="ahk1")
 		return
@@ -241,13 +243,9 @@ SetFocusOnGui()
 {
 	Global bFocusOnGui, hGui, txtSearch
 	
-	Critical
-	
 	bFocusOnGui := True
 	WinActivate, ahk_id %hGui%
 	GuiControl, Focus, txtSearch
-	
-	Critical, Off
 }
 
 CreateGUI:
@@ -318,7 +316,6 @@ CreateGUI:
 	
 	If Not iTransparency Or (iTransparency = 255) ;Turn off if opaque
 		WinSet, Transparent, OFF, ahk_id %hGui%
-	
 Return
 
 GuiEscape:
@@ -400,23 +397,15 @@ SelectItem:
 			Return
 		}
 		
-		; Move the caret to the position, view.save() will record pos.
+		; Move the caret to the position, view.save() will record this pos.
 		SendMessage, 2025, iPos, 0,, ahk_id %hSci%  ; SCI_GOTOPOS
 	}
 	
 	view.save()
-	If bIsFunc {
-		;Check if it's external
-		If sFuncs%i%_File
-			LaunchFile(GetFile(sFuncs%i%_File, True), sFuncs%i%_Line)
-		Else ShowLine(sFuncs%i%_Line)
-	}
-	Else {
-		;Check if it's external
-		If sLabels%i%_File
-			LaunchFile(GetFile(sLabels%i%_File, True), sLabels%i%_Line)
-		Else ShowLine(sLabels%i%_Line)
-	}
+	If bIsFunc
+		ShowLine(sFuncs%i%_Line, sFuncs%i%_File)
+	Else
+		ShowLine(sLabels%i%_Line, sLabels%i%_File)
 	view.save()
 	
 	Goto GuiEscape  ;Done
@@ -426,7 +415,8 @@ CloseToolTip:
 	ToolTip
 Return
 
-_SciTEIsActive() {
+_SciTEIsActive()
+{
 	Global hSciTE
 	return WinActive("ahk_id " hSciTE)
 }
@@ -440,7 +430,8 @@ _SciTEIsUnderMouse()
 		return, True
 }
 
-GUIInteract(wParam, lParam, msg, hwnd) {
+GUIInteract(wParam, lParam, msg, hwnd)
+{
 	Local bForward
 	
 	Critical
@@ -935,7 +926,8 @@ CacheFile(sType, iStart, iStop, iCacheIndex) {
 }
 
 ;This sub analyses the script and add the labels in it to the array
-GetScriptLabels(ByRef s, bExternal := False, encoding := "") {
+GetScriptLabels(ByRef s, bExternal := False, encoding := "")
+{
 	Local i, pos, t, u, v
 	
 	u := GetScriptEscapeChar(s)
@@ -1016,7 +1008,8 @@ GetCachedScriptLabels(iCacheIndex) {
 }
 
 ;This sub analyses the script and add the hotkeys in it to the array (uses the same array as labels)
-GetScriptHotkeys(ByRef s, bExternal := False, encoding := "") {
+GetScriptHotkeys(ByRef s, bExternal := False, encoding := "")
+{
 	Local i, pos, n, t, u, v
 	
 	i := 1
@@ -1096,7 +1089,8 @@ GetCachedScriptHotkeys(iCacheIndex) {
 }
 
 ;This sub checks the validity of a hotkey
-IsValidHotkey(ByRef s) {
+IsValidHotkey(ByRef s)
+{
 	Critical
 	Hotkey, IfWinActive, Title ;Make sure it'll be a variant and not override a current shortcut
 	Hotkey, % s, CreateGUI, UseErrorLevel Off ;Using CreateGUI only to test
@@ -1106,7 +1100,8 @@ IsValidHotkey(ByRef s) {
 }
 
 ;This sub analyses the script and add the functions in it to the array
-GetScriptFunctions(ByRef s, bExternal := False, encoding := "") {
+GetScriptFunctions(ByRef s, bExternal := False, encoding := "")
+{
 	Local i, pos, t, u
 	
 	u := GetScriptCommentFlag(s)
@@ -1573,18 +1568,16 @@ CreateList(filter = "") {
 	GuiControl, +Redraw, lblList
 }
 
-GetFile(i, bWholePath = False) {
+GetFile(i)
+{
 	Static s, lastIdx := -1
-	If bWholePath
-		Return sPaths%i%
+	
+	If (i = lastIdx)
+		Return s
 	Else {
-		If (i = lastIdx)
-			Return s
-		Else {
-			s := SubStr(sPaths%i%, InStr(sPaths%i%, "\", False, 0) + 1)
-			s := (SubStr(s, -3) = ".ahk" ? SubStr(s, 1, -4) : s)    ;Trim ".ahk"
-			Return s
-		}
+		s := SubStr(sPaths%i%, InStr(sPaths%i%, "\", False, 0) + 1)
+		s := (SubStr(s, -3) = ".ahk" ? SubStr(s, 1, -4) : s)    ;Trim ".ahk"
+		Return s
 	}
 }
 
@@ -1813,18 +1806,21 @@ Sci_VScrollVisible(hSci) {
 	Return (ErrorLevel > i)
 }
 
-LineFromPos(pos) {
+LineFromPos(pos)
+{
 	Global hSci
 	SendMessage, 2166, pos, 0,, ahk_id %hSci% ;SCI_LINEFROMPOSITION
 	Return ErrorLevel + 1  ; line is base on 0, so we need add 1.
 }
 
-LineFromPosEx(ByRef s, pos) {
+LineFromPosEx(ByRef s, pos)
+{
 	StrReplace(SubStr(s, 1, pos), "`n", "`n", OutputVarCount)
 	Return OutputVarCount + 1
 }
 
-CheckTextClick(x, y) {
+CheckTextClick(x, y)
+{
 	Global hSci, iPos, clickedFunc, clickedLabel
 	
 	;Check if we need to look for position
@@ -1866,7 +1862,8 @@ CheckTextClick(x, y) {
  Line functions |
 			  */
 
-CheckFuncMatch(sHaystack) {
+CheckFuncMatch(sHaystack)
+{
 	Global sFuncs0
 	
 	Loop % sFuncs0
@@ -1876,7 +1873,8 @@ CheckFuncMatch(sHaystack) {
 	Return 0
 }
 
-CheckLabelMatch(sHaystack) {
+CheckLabelMatch(sHaystack)
+{
 	Global sLabels0
 	
 	Loop % sLabels0
@@ -1886,16 +1884,15 @@ CheckLabelMatch(sHaystack) {
 	Return 0
 }
 
-LaunchFile(sFilePath, line) {
-	Global oSciTE
+ShowLine(line, externalFileIndex)
+{
+	; This is only for let sPaths%i% become a global var. So don't try to create other var in this func!
+	Global
 	
-	;Open the file in SciTE
-	oSciTE.OpenFile(sFilePath)
+	; line in external file, so we open it first.
+	If (externalFileIndex)
+		oSciTE.OpenFile(sPaths%externalFileIndex%)
 	
-	DisplayTargetLine(line)
-}
-
-ShowLine(line) {
 	DisplayTargetLine(line)
 }
 
@@ -1935,6 +1932,8 @@ class view
 	save()
 	{
 		Global oSciTE, hSci
+		
+		Critical
 		
 		prePath := this.oView[this.i, "path"]
 		preline := this.oView[this.i, "firstVisibleLine"]
@@ -1981,6 +1980,8 @@ class view
 	_load()
 	{
 		Global oSciTE, hSci
+		
+		Critical
 		
 		i := this.i
 		
