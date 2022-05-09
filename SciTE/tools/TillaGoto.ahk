@@ -201,10 +201,8 @@ Press_uGotoDef:
 	If (A_ThisLabel = "Press_uGotoDef")
 		clickX := -1, clickY := -1
 	
-	bCheckClick := CheckTextClick(clickX, clickY)
-	
-	; click a word.
-	If (bCheckClick)
+	; click on a word.
+	If (CheckTextClick(clickX, clickY))
 	{
 		; if GUI is showing, we don't need analyse again.
 		If (!bShowing)
@@ -227,6 +225,7 @@ Press_uGotoDef:
 	}
 return
 
+; User press uSummonGUI(F12).
 Press_uSummonGUI:
 	; only work for ahk1. This condition cannot be judged in #If, an error will occur.
 	If (oSciTE.ResolveProp("Language")!="ahk1")
@@ -327,6 +326,7 @@ GuiEscape:
 	bShowing := False
 	Gui, Cancel
 	Gui, Show, Hide w0 h0
+	Gosub, CloseToolTip
 	SetTimer, CheckFocus, Off
 	VarSetCapacity(sScript, 0)
 	EmptyMem()
@@ -342,7 +342,7 @@ CheckFocus:
 		SetTimer, CheckFocus, Off
 		Gosub, GuiEscape
 	}
-	Else If (bFocusOnGui And SciteActivated And !GuiActivated)
+	Else If (SciteActivated And !GuiActivated And bFocusOnGui)
 	{
 		bFocusOnGui := False
 		Gosub, CloseToolTip
@@ -367,30 +367,14 @@ NextView:
 Return
 
 lblList_Event:
-	If (A_GuiEvent <> "DoubleClick")
-		Return
+	If (A_GuiEvent = "DoubleClick")
+		Gosub, SelectItem_FromGUI
+Return
+
+SelectItem_FromGUI:
 SelectItem:
-	
-	; from Press_MButton or Press_uGotoDef
-	If bCheckClick {
-		If (i := CheckFuncMatch(clickedFunc "()"))        ; Try with functions first (internal first)
-			bIsFunc := True
-		Else If (i := CheckLabelMatch(clickedLabel ":"))  ; Try with labels
-			bIsFunc := False
-		Else
-		{
-			ToolTip, 没有找到与 “%clickedFunc%” 相关的函数或标签
-			SetTimer, CloseToolTip, -2000
-			Return
-		}
-		
-		;Move the caret to the position before going to item
-		SendMessage, 2025, iPos, 0,, ahk_id %hSci% ;SCI_GOTOPOS
-		
-		bCheckClick := False
-	}
-	; from GUIInteract. when user press enter
-	Else {
+	; from GUI. when user press enter or double click listbox item.
+	If (A_ThisLabel="SelectItem_FromGUI") {
 		;Get selected item index. LB_GETCURSEL
 		SendMessage, 0x188, 0, 0,, ahk_id %hlblList%
 		
@@ -404,6 +388,22 @@ SelectItem:
 		;Retrieve function flag in high-word and set i to the index in low-word
 		bIsFunc := (i >> 16)
 		i &= 0xFFFF
+	}
+	; from Press_MButton or Press_uGotoDef
+	Else {
+		If (i := CheckFuncMatch(clickedFunc "()"))        ; Try with functions first (internal first)
+			bIsFunc := True
+		Else If (i := CheckLabelMatch(clickedLabel ":"))  ; Try with labels
+			bIsFunc := False
+		Else
+		{
+			ToolTip, 没有找到与 “%clickedFunc%” 相关的函数或标签
+			SetTimer, CloseToolTip, -2000
+			Return
+		}
+		
+		; Move the caret to the position, LineHistory() will record pos.
+		SendMessage, 2025, iPos, 0,, ahk_id %hSci%  ; SCI_GOTOPOS
 	}
 	
 	If bIsFunc {
@@ -450,7 +450,7 @@ GUIInteract(wParam, lParam, msg, hwnd) {
 		
 		If (wParam=13) ;Enter
 		{
-			SetTimer, SelectItem, -1
+			SetTimer, SelectItem_FromGUI, -1
 			Return
 		}
 		
@@ -1907,11 +1907,12 @@ ShowLine(line) {
 
 DisplayTargetLine(line)
 {
-	Global hSci
+	Global hSci, hSciTE
 	Static  SCI_GotoLine            := 2024
 				, SCI_GetFirstVisibleLine := 2152
 				, SCI_VisibleFromDocLine  := 2220
 				, SCI_LINESCROLL          := 2168
+				, SCI_SETFOCUS            := 2380
 	
 	; Line is zero base
 	line := line - 1
@@ -1926,6 +1927,10 @@ DisplayTargetLine(line)
 	
 	; Make sure our line on screen is number 6, that means 5 lines before our line.
 	SendMessage, SCI_LINESCROLL, 0, ourLineOnScreen - 6,, ahk_id %hSci%
+	
+	; Make sure it have focus, otherwise the caret line will not highlight.
+	WinActivate, ahk_id %hSciTE%
+	SendMessage, SCI_SETFOCUS, 1, 0,, ahk_id %hSci%
 }
 
 LineHistory(bForward, iRecordMode = 0) {
