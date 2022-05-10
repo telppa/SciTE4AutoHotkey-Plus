@@ -18,12 +18,12 @@
 	
 	更新日志：
 		2016.04.20
-			彻底支持代码中存在中文的情况。
-			可完美分析并定位出代码中的中文标签、函数。
-		2022.05.08
+			支持分析并定位出代码中的中文标签、函数。
+		2022.05.10
 			修复热键、标签、函数识别 bug 。
 			支持任意文件编码，任意语言文字（例如中英日韩）的标签、函数的识别。
 			支持鼠标中键点击任意语言文字（例如中英日韩）的标签、函数时跳转。
+			支持跨文件跳转与跳回。
 			优化跳转后的显示位置。
 			重构部分代码。
 			重构操作逻辑。
@@ -1016,7 +1016,7 @@ GetScriptHotkeys(ByRef s, bExternal := False, encoding := "")
 	Loop {
 		
 		;Get next hotkey
-		i := RegExMatch(s, "m)(*ANYCRLF)^[[:blank:]]*\K[a-zA-Z0-9\Q%(){}|:""?#_!@^+&<>*~$``-=\[]';/\.,\E]+"
+		i := RegExMatch(s, "mS)(*ANYCRLF)^[[:blank:]]*\K[a-zA-Z0-9\Q%(){}|:""?#_!@^+&<>*~$``-=\[]';/\.,\E]+"
 						 . "([[:blank:]]+&[[:blank:]]+[a-zA-Z0-9\Q%(){}|:""?#_!@^+&<>*~$``-=\[]';/\.,\E]+)?"
 						 . "([[:blank:]]+Up)?(?=::)", t, i)
 		
@@ -1927,7 +1927,7 @@ DisplayTargetLine(line)
 
 class view
 {
-	static oView:=[], i:=0
+	static oView:=[], i:=1, init:=True
 	
 	save()
 	{
@@ -1946,7 +1946,12 @@ class view
 		If (path=prePath And line=preLine)
 			Return
 		
-		this.i += 1
+		; From history 123456 back to 1, create F, we want F not 1F. that's why we need init.
+		If (this.init)
+			this.init := False
+		Else
+			this.i += 1
+		
 		i := this.i
 		
 		this.oView[i, "path"] := path
@@ -1955,7 +1960,7 @@ class view
 		SendMessage, 2008, 0, 0,, ahk_id %hSci%  ; SCI_GETCURRENTPOS
 		this.oView[i, "pos"] := ErrorLevel
 		
-		; delete all of keys behide i (e.g. 123456 back to 3, create F, then we want 123F not 123F56)
+		; delete all of keys behide i (e.g. from history 123456 back to 3, create F, we want 123F not 123F56)
 		this.oView.RemoveAt(i + 1, this.oView.MaxIndex() - i)
 	}
 	
@@ -1966,11 +1971,14 @@ class view
 		
 		this.i -= 1
 		this._load()
+		
+		If (this.i = 1)
+			this.init := True
 	}
 	
 	next()
 	{
-		If (this.i >= this.oView.MaxIndex() or this.i = 0)
+		If (this.i >= this.oView.MaxIndex())
 			Return
 		
 		this.i += 1
