@@ -96,6 +96,8 @@ return
 F2::
 ANSI与UTF8转为UTF8BOM()
 {
+  Critical
+  
   encoding := FileGetEncoding(oSciTE.CurrentFile)
   
   if (encoding=65001)
@@ -111,10 +113,14 @@ ANSI与UTF8转为UTF8BOM()
   {
     ; SCI_GETFIRSTVISIBLELINE = 2152
     firstVisibleLine := oSciTE.SciMsg(2152)
+    ; SCI_DOCLINEFROMVISIBLE = 2221
+    firstDocLine := oSciTE.SciMsg(2221, firstVisibleLine)
+    
     text := oSciTE.GetDocument()
     oSciTE.SetDocument(text, "65001")
-    ; SCI_SETFIRSTVISIBLELINE = 2613
-    oSciTE.SciMsg(2613, firstVisibleLine)
+    
+    ; SCI_LINESCROLL = 2168
+    oSciTE.SciMsg(2168, 0, firstDocLine)
   }
   
   ; IDM_ENCODING_UTF8 = 153
