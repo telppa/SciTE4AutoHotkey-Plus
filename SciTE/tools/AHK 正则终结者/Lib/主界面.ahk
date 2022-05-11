@@ -1,7 +1,7 @@
 ﻿/*
 http://www.scintilla.org/ScintillaDoc.html
 
-sci.SetHscrollBar(true), sci.SetVscrollBar(true)	; 开启横竖滚动条
+sci.SetHscrollBar(true), sci.SetVscrollBar(true)  ; 开启横竖滚动条
 sci.SetScrollWidthTracking(true)                  ; 滚动条宽度不变
 sci.SetMarginLeft(0,20)                           ; 左边距,可以凭空设置出一个边距
 
@@ -45,7 +45,7 @@ The margins are numbered 0 to 4. Using a margin number outside the valid range h
   Gui, Add, Text, x44 y150 h2 +0x10 vGB文本
 
   ; scintilla 界面的大小完全由标签 GuiSize 控制了，这里的参数没有意义。
-  sci2 := new scintilla(主界面, "", "", "", "", DllPath)			; 文本框
+  sci2 := new scintilla(主界面, "", "", "", "", DllPath)      ; 文本框
   , sci2.SetMarginWidthn(1, 0)
   , sci2.SetCodepage(65001)                                   ; 使用 65001 ,需在 SCI 库文件中替换 5 个 "CP0" 为 "UTF-8". 意义在于, UTF-8 支持的字符比 ANSI 多
   , sci2.StyleSetSize(32, 12)
@@ -55,19 +55,24 @@ The margins are numbered 0 to 4. Using a margin number outside the valid range h
   , sci2.StyleSetBack(32, 0xFFFFFF)                           ; 无字处背景色
   , sci2.StyleSetBack(0, 0xFFFFFF)                            ; 有字处背景色
   
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED1, 0x000000)		      ; 亮黄文字
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED1, 0xFFFFA1)		      ; 亮黄背景
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED2, 0xAA0000)		      ; 亮黄子模式1
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED2, 0xFFFFA1)		      ; 亮黄子模式1
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED3, 0x00AA00)		      ; 亮黄子模式2
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED3, 0xFFFFA1)		      ; 亮黄子模式2
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED1, 0x000000)         ; 亮黄文字
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED1, 0xFFFFA1)         ; 亮黄背景
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED2, 0xAA0000)         ; 亮黄子模式1
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED2, 0xFFFFA1)         ; 亮黄子模式1
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED3, 0x00AA00)         ; 亮黄子模式2
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED3, 0xFFFFA1)         ; 亮黄子模式2
   
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED4, 0x000000)		      ; 暗黄文字
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED4, 0x808022)		      ; 暗黄背景
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED5, 0xAA0000)		      ; 暗黄子模式1
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED5, 0x808022)		      ; 暗黄子模式1
-  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED6, 0x00AA00)		      ; 暗黄子模式2
-  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED6, 0x808022)		      ; 暗黄子模式2
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED4, 0x000000)         ; 暗黄文字
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED4, 0x808022)         ; 暗黄背景
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED5, 0xAA0000)         ; 暗黄子模式1
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED5, 0x808022)         ; 暗黄子模式1
+  , sci2.StyleSetFore(SCE_AHKL_LPPDEFINED6, 0x00AA00)         ; 暗黄子模式2
+  , sci2.StyleSetBack(SCE_AHKL_LPPDEFINED6, 0x808022)         ; 暗黄子模式2
+  
+  , sci2.StyleSetUnderline(SCE_AHKL_LPPDEFINED2, 1)           ; 子模式带下划线
+  , sci2.StyleSetUnderline(SCE_AHKL_LPPDEFINED3, 1)           ; 子模式带下划线
+  , sci2.StyleSetUnderline(SCE_AHKL_LPPDEFINED5, 1)           ; 子模式带下划线
+  , sci2.StyleSetUnderline(SCE_AHKL_LPPDEFINED6, 1)           ; 子模式带下划线
   
   , sci2.SetModEventMask(SC_MOD_INSERTTEXT|SC_MOD_DELETETEXT)
   , sci2.Notify := "Notify"
@@ -76,7 +81,7 @@ The margins are numbered 0 to 4. Using a margin number outside the valid range h
   Gui, Add, Button, v主页, 主页
   Gui, Add, Button, v存储正则 +Disabled, 存储正则
   Gui, Add, Button, v生成代码, 生成代码
-  Gui, Show, CEnter w370 h545, AHK 正则终结者 v1.5.1
+  Gui, Show, CEnter w370 h545, AHK 正则终结者 v1.5.2
 
   ; 窗口创建后再设置文本内容可以避免内容初始被选中
   sci1.SetText(不再使用的参数, 初始正则框内容)                ; 添加文本. 第一个参数是一个不再使用了的参数
@@ -177,14 +182,14 @@ Notify(wParam, lParam, msg, hwnd, obj)
 
 查找SciLexer_dll路径()
 {
-  IfExist, %A_ScriptDir%\SciLexer.dll		    ; 当前目录
+  IfExist, %A_ScriptDir%\SciLexer.dll       ; 当前目录
     return, A_ScriptDir "\SciLexer.dll"
 
   SplitPath, A_AhkPath, , ahkexedir
-  IfExist, %ahkexedir%\SciTE\SciLexer.dll	  ; SciTE 目录
+  IfExist, %ahkexedir%\SciTE\SciLexer.dll   ; SciTE 目录
     return, ahkexedir "\SciTE\SciLexer.dll"
 
-  IfExist, %ahkexedir%\SciLexer.dll		      ; AHK EXE 目录
+  IfExist, %ahkexedir%\SciLexer.dll         ; AHK EXE 目录
     return, ahkexedir "\SciLexer.dll"
 
   MsgBox, 4112, 错误, 没找到 SciLexer.dll`n这是实现高亮的必要文件，尝试找到并放在当前目录或 AutoHotkey.exe 目录或 SciTE 目录。

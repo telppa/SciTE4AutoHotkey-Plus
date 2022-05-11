@@ -15,8 +15,9 @@
   Menu, 正则参考菜单, Add, ??`t0或1次匹配(非贪婪模式), InsertRegEx
   Menu, 正则参考菜单, Add, {n`,m}?`t最少匹配n次`,最多匹配m次(非贪婪模式), InsertRegEx
   Menu, 正则参考菜单, Add,
-  Menu, 正则参考菜单, Add, ()`t子表达式分组, InsertRegEx
   Menu, 正则参考菜单, Add, |`t或, InsertRegEx
+  Menu, 正则参考菜单, Add, ()`t子表达式分组, InsertRegEx
+  Menu, 正则参考菜单, Add, (?选项)`t改变后续模式选项, InsertRegEx
   Menu, 正则参考菜单, Add, []`t范围内的字符, InsertRegEx
   Menu, 正则参考菜单, Add, [^]`t不在范围内的字符, InsertRegEx
   Menu, 正则参考菜单, Add,
