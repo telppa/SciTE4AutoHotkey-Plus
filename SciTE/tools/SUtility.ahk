@@ -1,28 +1,33 @@
 ﻿/*
 	更新日志：
-		2022.05.10
+		2022.05.11
 			基于 Kawvin 0.2_2018.08.01 版重构。
-			脚本片段可分类或不分类。
+			代码片段可分类或不分类。
 			支持多关键词搜索。
 			限制快捷键作用域。
 			bug 修复。
 			界面微调。
 			添加提示。
-			版本号 2.0 。
+			版本号 2.1 。
+	
+	历史贡献：
+		fincs
+		快乐就好
+		Kawvin
+		空
 */
 
 Label_PreSetting:    ;{ 预设置
 	#NoEnv
 	#NoTrayIcon
 	#SingleInstance Ignore
-	DetectHiddenWindows, On
 	FileEncoding, UTF-8
 	Menu, Tray, Icon, %A_ScriptDir%\..\toolicon.icl, 11
 ;}
 
 Label_DefVar:        ;{ 定义变量
-	ver := 2.0
-	progName := "脚本片段管理器"
+	ver := 2.1
+	progName := "代码片段管理器"
 	oSciTE := GetSciTEInstance()
 	if !oSciTE
 	{
@@ -31,30 +36,29 @@ Label_DefVar:        ;{ 定义变量
 	}
 	
 	textFont := oSciTE.ResolveProp("default.text.font")
-	LocalSciTEPath := oSciTE.UserDir
 	scitehwnd := oSciTE.SciTEHandle
+	LocalSciTEPath := oSciTE.UserDir
 	
-	sdir = %LocalSciTEPath%\Scriptlets
-	IfNotExist, %sdir%
-	{
-		MsgBox, 16, %progName%, 脚本片段文件夹 【%sdir%】 不存在！
-		ExitApp
-	}
+	sdir := LocalSciTEPath "\Scriptlets"
+	if (!InStr(FileExist(sdir), "D"))
+		FileCreateDir, %sdir%
 ;}
 
 if 1 = /insert       ;{ 命令行调用 - 插入到 SciTE
 {
 	if 2 =
 	{
-		MsgBox, 64, %progName%, 命令行调用示例： %A_ScriptName% /insert "脚本片段名"
+		MsgBox, 64, %progName% - 插入到 SciTE, 命令行示例：`n`n%A_ScriptName% /insert "代码片段文件名（不含后缀）"
 		ExitApp
 	}
 	IfNotExist, %sdir%\%2%.scriptlet
 	{
-		MsgBox, 52, %progName%,
+		MsgBox, 52, %progName% - 插入到 SciTE,
 		(LTrim
-		无效的脚本片段： 【%2%】 。
-		工具栏图标对应的脚本片段不存在。
+		插入失败！
+		
+		无效的代码片段： 【%2%】 。
+		工具栏图标对应的代码片段不存在。
 		点击 “确定” 编辑工具栏配置文件。
 		)
 		IfMsgBox, Yes
@@ -67,20 +71,20 @@ if 1 = /insert       ;{ 命令行调用 - 插入到 SciTE
 }
 ;}
 
-if 1 = /addScriptlet ;{ 命令行调用 - 添加脚本片段
+if 1 = /addScriptlet ;{ 命令行调用 - 添加代码片段
 {
 	defaultScriptlet := oSciTE.Selection
 	if defaultScriptlet =
 	{
-		MsgBox, 16, %progName%, 选中内容为空！
+		MsgBox, 16, %progName% - 添加代码片段, 添加失败！`n`n选中内容为空。
 		ExitApp
 	}
-	gosub AddBtn ; that does it all
+	gosub AddBtn  ; that does it all
 	if !_RC
-		ExitApp ; Maybe the user has cancelled the action.
-	MsgBox, 68, %progName%, 脚本片段添加成功。 是否打开脚本片段管理器？
+		ExitApp     ; Maybe the user has cancelled the action.
+	MsgBox, 68, %progName% - 添加代码片段, 添加成功。`n`n是否打开代码片段管理器？
 	IfMsgBox, Yes
-		Reload ; no parameters are passed to script
+		Reload      ; no parameters are passed to script
 	ExitApp
 }
 ;}
@@ -129,7 +133,7 @@ return
 AddBtn:              ;{ 新建
 	Gui +OwnDialogs
 	
-	InputBox, fname2create, 新建, 输入要创建的脚本片段名称`n`n格式1： 名称`n格式2： 分类_名称
+	InputBox, fname2create, 新建代码片段, 输入要创建的代码片段名称`n`n格式1： 名称`n格式2： 分类_名称
 	if ErrorLevel
 		return
 	if !fname2create
@@ -138,7 +142,7 @@ AddBtn:              ;{ 新建
 	fname2create := ValidateFilename(fname2create)
 	if (FileExist(sdir "\" fname2create ".scriptlet"))
 	{
-		MsgBox, 48, 新建失败, 该名称已存在！`n请输入其他的名称。
+		MsgBox, 48, %progName% - 新建, 创建失败！`n`n 【%fname2create%】 已存在，请输入其他名称。
 		return
 	}
 	
@@ -154,7 +158,7 @@ RenBtn:              ;{ 重命名
 	
 	if (selected := getSelItemName())
 	{
-		InputBox, fname2create, 重命名, 输入脚本片段的新名称`n`n格式1： 名称`n格式2： 分类_名称
+		InputBox, fname2create, 重命名代码片段, 输入代码片段的新名称`n`n格式1： 名称`n格式2： 分类_名称
 		if ErrorLevel
 			return
 		if !fname2create
@@ -165,7 +169,7 @@ RenBtn:              ;{ 重命名
 		fname2create := ValidateFilename(fname2create)
 		if (FileExist(sdir "\" fname2create ".scriptlet"))
 		{
-			MsgBox, 48, 重命名失败, 该名称已存在！`n请输入其他的名称。
+			MsgBox, 48, %progName% - 重命名, 重命名失败！`n`n 【%fname2create%】 已存在，请输入其他名称。
 			return
 		}
 		
@@ -183,7 +187,7 @@ SubBtn:              ;{ 删除
 	
 	if (selected := getSelItemName())
 	{
-		MsgBox, 52, 删除, 确认删除 【%selected%】 ？
+		MsgBox, 52, %progName% - 删除, 确认删除 【%selected%】 ？
 		IfMsgBox, No
 			return
 		
@@ -199,7 +203,7 @@ return
 ToolbarBtn:          ;{ 添加到工具栏
 	if (selected := getSelItemName())
 	{
-		SendString=`n=脚本片段： "%selected%"|`%LOCALAHK`% tools\SUtility.ahk /insert "%selected%"||`%ICONRES`%`,12
+		SendString=`n=代码片段： "%selected%"|`%LOCALAHK`% tools\SUtility.ahk /insert "%selected%"||`%ICONRES`%`,12
 		FileAppend, %SendString%, %LocalSciTEPath%\UserToolbar.properties
 		showTip(ErrorLevel ? "添加失败" : "添加成功")
 		oSciTE.Message(0x1000+2)
