@@ -48,7 +48,7 @@ return
       if (!fileTransformed.HasKey(path))  ; 没有转换过编码
       {
         fileTransformed[path] := true
-        对显示为ANSI的文件进行转换()
+        对显示为ANSI的文件进行转换(path)
       }
     }
   }
@@ -70,12 +70,19 @@ return
     , A_ScreenWidth, A_ScreenHeight, , "Style4", {TargetHWND:SciTE_Hwnd, CoordMode:"Client"})
 }
 
-对显示为ANSI的文件进行转换()
+对显示为ANSI的文件进行转换(path)
 {
-  encoding := FileGetEncoding(oSciTE.CurrentFile)
+  encoding := FileGetEncoding(path)
+  
+  ; 显示为 ANSI 的文件经探测实际编码为 UTF8 无头
   if (encoding=65001)
-    ; IDM_ENCODING_UCOOKIE = 154
-    oSciTE.SendDirectorMsg("menucommand:154")
+  {
+    ; 避免快速的切换标签导致对错误对象进行转码
+    if (oSciTE.CurrentFile=path)
+      oSciTE.SendDirectorMsg("menucommand:154")  ; IDM_ENCODING_UCOOKIE = 154
+    else
+      更新fileTransformed(path)
+  }
 }
 
 更新fileTransformed(path)
