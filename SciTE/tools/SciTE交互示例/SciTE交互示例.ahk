@@ -178,12 +178,12 @@ oSciTE.ReloadProps()
 oSciTE.ResolveProp(propname)
 
 ; 向 Scintilla 发消息
-oSciTE.Msg(msg , wParam, lParam)
+oSciTE.SciMsg(msg , wParam, lParam)
 
 ; 向 SciTE 发消息
 oSciTE.Message(msg , wParam, lParam)
 
-; 用 Director 接口向 SciTE 发消息
+; 向 SciTE Director 接口发消息
 ; https://www.scintilla.org/SciTEDirector.html
 ; 使用宏进行光标左移操作
 oSciTE.SendDirectorMsg("macrocommand:2304;0II;0;0")

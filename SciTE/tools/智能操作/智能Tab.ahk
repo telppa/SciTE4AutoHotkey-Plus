@@ -191,7 +191,7 @@ getNext()
 {
   curPos  := oSciTE.GetCurPos()
   ; SCI_WORDENDPOSITION = 2267
-  nextPos := oSciTE.Msg(2267, curPos, false)
+  nextPos := oSciTE.SciMsg(2267, curPos, false)
   return, oSciTE.GetTextRange(curPos, nextPos)
 }
 
@@ -202,7 +202,7 @@ selNext()
   if (matchPos[1]!=0)
   {
     ; SCI_SETSELECTIONSTART = 2142, SCI_SETSELECTIONEND = 2144
-    oSciTE.Msg(2142, matchPos[1])
-    oSciTE.Msg(2144, matchPos[2])
+    oSciTE.SciMsg(2142, matchPos[1])
+    oSciTE.SciMsg(2144, matchPos[2])
   }
 }

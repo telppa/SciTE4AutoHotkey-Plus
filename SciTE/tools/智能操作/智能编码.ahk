@@ -20,9 +20,9 @@ return
   ; scite 的处理逻辑是，有 bom 头的按头识别，无头的按配置文件中 code.page 值处理。
   ; code.page 值真正生效的配置文件是 _config.properties 。
   ; _config.properties 文件由 菜单栏——工具——设置 生成。
-  ; 例1设置 codepage 为 GBK ，那么 utf8 无头与 ansi 都会按 GBK 处理，这时 oSciTE.Msg(2137) 读到的值就是 936 。
-  ; 例2设置 codepage 为 utf-8 ，那么 utf8 无头与 ansi 都会按 utf8 处理，这时 oSciTE.Msg(2137) 读到的值就是 65001 。
-  ; 例3设置 codepage 为 single byte ，那么 utf8 无头与 ansi 都会按 cp0 处理，这时 oSciTE.Msg(2137) 读到的值就是 0 。
+  ; 例1设置 codepage 为 GBK ，那么 utf8 无头与 ansi 都会按 GBK 处理，这时 oSciTE.SciMsg(2137) 读到的值就是 936 。
+  ; 例2设置 codepage 为 utf-8 ，那么 utf8 无头与 ansi 都会按 utf8 处理，这时 oSciTE.SciMsg(2137) 读到的值就是 65001 。
+  ; 例3设置 codepage 为 single byte ，那么 utf8 无头与 ansi 都会按 cp0 处理，这时 oSciTE.SciMsg(2137) 读到的值就是 0 。
   ; 例1、例2、例3中， utf8bom utf16le utf16be 因为有头，所以都能正确显示，读到的值都是 65001 。
   ; 例1中， utf8 无头被错当 GBK 处理，所以乱码。
   ; 例2中， ansi 被错当 utf8 处理，所以乱码。
@@ -33,7 +33,7 @@ return
   codePageWarning := false
   
   ; GETCODEPAGE = 2137
-  if (WinActive("ahk_id " SciTE_Hwnd) and oSciTE.Msg(2137)!=65001)
+  if (WinActive("ahk_id " SciTE_Hwnd) and oSciTE.SciMsg(2137)!=65001)
   {
     path := oSciTE.CurrentFile
     SplitPath, path, , , ext
@@ -101,20 +101,20 @@ ANSI与UTF8转为UTF8BOM()
   if (encoding=65001)
   {
     ; SCI_GETLENGTH = 2006
-    len := oSciTE.Msg(2006)
+    len := oSciTE.SciMsg(2006)
     ; 通过在文末插入并删除一个空格来创造保存点。
     oSciTE.InsertText(" ", len)
     ; SCI_DELETERANGE = 2645
-    oSciTE.Msg(2645, len, 1)
+    oSciTE.SciMsg(2645, len, 1)
   }
   else
   {
     ; SCI_GETFIRSTVISIBLELINE = 2152
-    firstVisibleLine := oSciTE.Msg(2152)
+    firstVisibleLine := oSciTE.SciMsg(2152)
     text := oSciTE.GetDocument()
     oSciTE.SetDocument(text, "65001")
     ; SCI_SETFIRSTVISIBLELINE = 2613
-    oSciTE.Msg(2613, firstVisibleLine)
+    oSciTE.SciMsg(2613, firstVisibleLine)
   }
   
   ; IDM_ENCODING_UTF8 = 153

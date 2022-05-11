@@ -120,8 +120,8 @@ return
   ; 从而避免被识别为单按了 shift
   Send, {Blind}{vkE8}
   
-  GETFOCUS      := oSciTE.Msg(2381)
-  GETSELECTIONS := oSciTE.Msg(2570)
+  GETFOCUS      := oSciTE.SciMsg(2381)
+  GETSELECTIONS := oSciTE.SciMsg(2570)
   ; 没有获取焦点（可能焦点在查找框中），或输入是花括号，或是多光标模式下，则用按键方式模拟
   if (!GETFOCUS or (字符="{" or 字符="}") or GETSELECTIONS>1)
   {
@@ -147,8 +147,8 @@ return
   CurPos := oSciTE.GetCurPos
   
   ; GetCharAt = 2007
-  PrevChar := Chr(oSciTE.Msg(2007, CurPos - 2))
-  NextChar := Chr(oSciTE.Msg(2007, CurPos))
+  PrevChar := Chr(oSciTE.SciMsg(2007, CurPos - 2))
+  NextChar := Chr(oSciTE.SciMsg(2007, CurPos))
   
   NextWord := oSciTE.GetWord(CurPos + 1)
   If (NextWord != "" && NextWord != "`r`n") {

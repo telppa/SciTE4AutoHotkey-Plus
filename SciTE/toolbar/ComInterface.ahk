@@ -24,7 +24,7 @@ GetEnd
 DeleteEnd
 ReplaceSel
 FindText
-Msg
+SciMsg
 
 ; Meta
 GetVersion & Version = CoI_GetVersion
@@ -143,7 +143,7 @@ CoI_FindText(this, text, startPos := "", endPos := "", flag := "")
 	return, SciUtil_FindText(scintillahwnd, text, startPos, endPos, flag)
 }
 
-CoI_Msg(this, msg, wParam := 0, lParam := 0)
+CoI_SciMsg(this, msg, wParam := 0, lParam := 0)
 {
 	global scintillahwnd
 	
