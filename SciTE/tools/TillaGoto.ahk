@@ -8,8 +8,8 @@
 	http://www.autohotkey.com/forum/viewtopic.php?t=41575
 	
 	快捷键：
-		鼠标中键点文字 或 tillagoto.hk.goto.def  （默认 Shift+Enter ） 可跳到文字对应的定义处。
-		Shift+滚轮     或 tillagoto.hk.go.back   （默认 Alt+左右箭头） 可跳回或跳前。
+		鼠标中键点文字 或 tillagoto.hk.goto.def  （默认 Alt+Enter ）   可跳到文字对应的定义处。
+		Alt+滚轮       或 tillagoto.hk.go.back   （默认 Alt+左右箭头） 可跳回或跳前。
 		鼠标中键点空白 或 tillagoto.hk.summon.gui（默认 F12）          激活 GUI 。
 		Esc                                                            关闭 GUI 。
 	
@@ -19,7 +19,7 @@
 	更新日志：
 		2016.04.20
 			支持分析并定位出代码中的中文标签、函数。
-		2022.05.10
+		2022.05.12
 			修复热键、标签、函数识别 bug 。
 			支持任意文件编码，任意语言文字（例如中英日韩）的标签、函数的识别。
 			支持鼠标中键点击任意语言文字（例如中英日韩）的标签、函数时跳转。
@@ -119,7 +119,8 @@
 	Gui, Add, Edit, w%iGUIWidth% vtxtSearch gtxtSearch_Event hwndhtxtsearch ; height is automatically set by font size
 	sortOpt := bSortEntries ? "Sort" : ""
 	Gui, Add, ListBox, %sortOpt% wp vlblList glblList_Event hwndhlblList +HScroll +256 ;LBS_NOINTEGRALHEIGHT
-	Gui, Add, Button, w0 h0 vlooksLikeNoFocus ; this control only work for handle focus when gui is not active
+	Gui, Add, Edit, w0 h0 vlooksLikeNoFocus gPress_uGotoDef -Tabstop ; handle focus when gui is not active, and handle the call from outer.
+	Gui, Show, Hide, TillaGoto
 	
 	;Get the height of a listbox item
 	SendMessage, 417,,,, ahk_id %hlblList% ;LB_GETITEMHEIGHT
@@ -167,8 +168,8 @@ HandleMButton()
 	SetTimer, Press_MButton, -1
 }
 #If _SciTEIsActive()
-+WheelDown::
-+WheelUp::
+!WheelDown::
+!WheelUp::
 HandleShiftWheel()
 {
 	If (InStr(A_ThisHotkey, "WheelUp"))
@@ -320,10 +321,9 @@ Return
 
 GuiEscape:
 	bShowing := False
-	Gui, Cancel
-	Gui, Show, Hide w0 h0
+	SetTimer, CheckFocus, Off  ; this must before Gui Cancel, otherwise scite will lost focus.
 	Gosub, CloseToolTip
-	SetTimer, CheckFocus, Off
+	Gui, Show, Hide
 	VarSetCapacity(sScript, 0)
 Return
 
@@ -1943,7 +1943,7 @@ class view
 		line := ErrorLevel
 		
 		; Avoid duplicate views
-		If (path=prePath And line=preLine)
+		If (path=prePath And line=preLine And !this.init)
 			Return
 		
 		; From history 123456 back to 1, create F, we want F not 1F. that's why we need init.
@@ -1967,7 +1967,11 @@ class view
 	previous()
 	{
 		If (this.i <= 1)
+		{
+			ToolTip, 已跳回起点
+			SetTimer, CloseToolTip, -2000
 			Return
+		}
 		
 		this.i -= 1
 		this._load()
@@ -1979,7 +1983,11 @@ class view
 	next()
 	{
 		If (this.i >= this.oView.MaxIndex())
+		{
+			ToolTip, 已跳至终点
+			SetTimer, CloseToolTip, -2000
 			Return
+		}
 		
 		this.i += 1
 		this._load()
