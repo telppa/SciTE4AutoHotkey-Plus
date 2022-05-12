@@ -23,7 +23,7 @@ SetBatchLines -1
 
 Global C
     , AppName := "Structor"
-    , Version := "1.2.1"
+    , Version := "1.2.2"
     , g_AppData := A_ScriptDir
     , StructSize32 := 0
     , StructSize64 := 0
@@ -285,6 +285,7 @@ GenerateCode:
 
     Cap := ""
     Condition := ""
+    IncludePlanBFunc := ""
 
     If (StructSize32 == StructSize64) {
         StructSize := (Chk32bit) ? StructSize32 : StructSize64
@@ -429,7 +430,19 @@ GenerateCode:
 
         If (fGet) {
             If (fStr) {
-                Get .= Format("{} := StrGet(&{} + {}, {}, {}){}`r`n", u . Member, StructName, Offset, Length, Encoding, Tips)
+                
+                Get .= Format("; Plan A.`r`n{} := StrGet(&{} + {}, {}, {}){}`r`n", u . Member, StructName, Offset, Length, Encoding, Tips)
+                
+                ; sometimes it's a pointer.
+                PlanB =
+                (LTrim
+                ; Plan B. Try this if Plan A fails.
+                ; Pointer_{1} := NumGet({2}, {3}, "Ptr")
+                ; {1} := StrGet(Pointer_{1}, {4}){5}`r`n
+                )
+                PlanB := Format(PlanB, Member, StructName, Offset, Encoding, Tips)
+                Get .= PlanB
+                
             } Else {
                 Get .= Format("{} := NumGet({}, {}, {})`r`n", u . Member, StructName, Offset, AHKType)
             }
@@ -437,7 +450,21 @@ GenerateCode:
 
         If (fPut) {
             If (fStr) {
-                Put .= Format("{}StrPut({}, &{} + {}, {}, {}){}`r`n", u, Member, StructName, Offset, Length, Encoding, Tips)
+                
+                Put .= Format("; Plan A.`r`n{}StrPut({}, &{} + {}, {}, {}){}`r`n", u, Member, StructName, Offset, Length, Encoding, Tips)
+                
+                ; sometimes it's a pointer.
+                PlanB =
+                (LTrim
+                ; Plan B. Try this if Plan A fails.
+                ; {1} := "Put your string here."
+                ; StrPutVar({1}, Pointer_{1}, {4})
+                ; NumPut(&Pointer_{1}, {2}, {3}, "Ptr"){5}`r`n
+                )
+                PlanB := Format(PlanB, Member, StructName, Offset, Encoding, Tips)
+                Put .= PlanB
+                IncludePlanBFunc := True
+                
             } Else {
                 Put .= Format("{}NumPut({}, {}, {}, {})`r`n", u, Member, StructName, Offset, AHKType)
             }
@@ -454,6 +481,19 @@ GenerateCode:
 
     If (Get != "") {
         Get .= "`r`n"
+    }
+
+    if (IncludePlanBFunc) {
+        PlanBFunc =
+        (LTrim
+        StrPutVar(str, ByRef var, encoding)
+        {
+        %A_Space%%A_Space%factor := (encoding="utf-16" or encoding="cp1200") ? 2 : 1
+        %A_Space%%A_Space%VarSetCapacity(var, StrPut(str, encoding) * factor)
+        %A_Space%%A_Space%return StrPut(str, &var, encoding)
+        }
+        )
+        Put .= "`r`n" PlanBFunc
     }
 
     If (Cap != "") {
