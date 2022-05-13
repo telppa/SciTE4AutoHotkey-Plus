@@ -108,7 +108,7 @@ static
 global
 local
 ByRef
-Class ClassName [extends BaseClassName]
+class ClassName [extends BaseClassName]
 
 Sleep , Milliseconds
 

@@ -72,7 +72,7 @@ static
 global
 local
 ByRef
-Class
+class
 Sleep
 SetTimer
 Critical
