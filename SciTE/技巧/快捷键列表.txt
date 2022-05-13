@@ -73,6 +73,15 @@ Ctrl+Shift+Up
 Ctrl+Shift+Down
 选中至上一行、下一行
 
+Ctrl+点击折叠符号
+折叠当前及其子项目
+
+Shift+点击折叠符号
+展开当前及其子项目
+
+Ctrl+Shift+点击折叠栏
+全部折叠/展开
+
 中键点击单词
 Alt+Enter
 跳至定义
