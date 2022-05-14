@@ -674,5 +674,5 @@ end
 dofile(props['SciteDefaultHome'].."/extensions/跳到新行.lua")
 dofile(props['SciteDefaultHome'].."/extensions/自动完成增强版.lua")
 dofile(props['SciteDefaultHome'].."/extensions/新建文件时默认UTF-8带BOM.lua")
--- 用于区分 lexers 加载 ahk 还是 ahk2
+-- lpeg_s4a.lua 用于区分 lexers 加载 ahk 还是 ahk2
 -- dofile(props['SciteUserHome']..'/lexers/lpeg_s4a.lua')

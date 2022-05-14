@@ -122,8 +122,9 @@ return
   
   GETFOCUS      := oSciTE.SciMsg(2381)
   GETSELECTIONS := oSciTE.SciMsg(2570)
-  ; 没有获取焦点（可能焦点在查找框中），或输入是花括号，或是多光标模式下，则用按键方式模拟
-  if (!GETFOCUS or (字符="{" or 字符="}") or GETSELECTIONS>1)
+  ; 没有获取焦点（可能焦点在查找框中），或输入是花括号或句号，或是多光标模式下，则用按键方式模拟
+  ; 花括号与句号需要 自动完成增强版.lua 中的 handleChar() 进行处理，所以必须用按键方式去模拟
+  if (!GETFOCUS or (字符="{" or 字符="}" or 字符=".") or GETSELECTIONS>1)
   {
     ; 虽然 U+ 与 {Text} 方式个人测试表现完全相同，但 kawvin 却在 2022.04.26 反馈前者让他无法输入标点，后者可以。
     ; 所以干脆换回 {Text} 方式。
