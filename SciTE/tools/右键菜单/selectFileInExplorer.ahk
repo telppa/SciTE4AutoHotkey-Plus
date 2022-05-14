@@ -14,7 +14,10 @@ selectFileInExplorer(path)
     if (InStr(FileExist(OutDir), "D"))
       onlyFolderExist := true
     else
+    {
+      MsgBox 0x40010, , 无法打开文件所在目录。
       return
+    }
   }
   
   oWin := isFolderOpened(OutDir)
