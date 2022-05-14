@@ -175,9 +175,10 @@ return
 ;所以正确的解决方式是,通过 sci.SetModEventMask 过滤得到需要的 modificationType
 Notify(wParam, lParam, msg, hwnd, obj)
 {
+  Critical
+  
   if (obj.scnCode = SCN_MODIFIED)
     gosub, 实时响应
-  return
 }
 
 查找SciLexer_dll路径()
