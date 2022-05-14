@@ -27,14 +27,11 @@ Label_PreSetting:    ;{ 预设置
 ;}
 
 Label_DefVar:        ;{ 定义变量
-  ver := 2.1
+  ver := 2.2
   progName := "代码片段管理器"
-  oSciTE := GetSciTEInstance()
-  if !oSciTE
-  {
-    MsgBox, 16, %progName%, 先打开 SciTE4AutoHotkey 再运行我。
+  
+  if (!oSciTE := GetSciTEInstance())
     ExitApp
-  }
   
   textFont := oSciTE.ResolveProp("default.text.font")
   scitehwnd := oSciTE.SciTEHandle

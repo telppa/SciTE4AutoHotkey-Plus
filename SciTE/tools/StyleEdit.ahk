@@ -20,12 +20,8 @@ if 0 != 1
 
 StyleFileName = %1%
 
-scite := GetSciTEInstance()
-if !scite
-{
-	MsgBox 16, SciTE Style Editor, Can't find SciTE!
+if (!scite := GetSciTEInstance())
 	ExitApp
-}
 
 FileEncoding UTF-8
 FileRead StyleText, %StyleFileName%

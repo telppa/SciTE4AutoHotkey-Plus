@@ -12,14 +12,11 @@ SetWorkingDir, %A_ScriptDir%
 	global oSciTE
 	; 屏蔽退出时的无用报错
 	ComObjError(false)
-	oSciTE := ComObjActive("SciTE4AHK.Application")
-	SciTE_Hwnd := oSciTE.SciTEHandle
 	
-	if (!SciTE_Hwnd)
-	{
-		MsgBox 0x40030, SciTE4AutoHotkey-Plus, 辅助功能加载失败！`n`n请尝试退出 SciTE4AutoHotkey-Plus 并以普通权限重新运行。
+	if (!oSciTE := GetSciTEInstance())
 		ExitApp
-	}
+	
+	SciTE_Hwnd := oSciTE.SciTEHandle
 	
 	OnMessage(0x004A, "Receive_WM_COPYDATA")
 	

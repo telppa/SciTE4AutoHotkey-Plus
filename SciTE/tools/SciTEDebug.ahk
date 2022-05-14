@@ -36,12 +36,8 @@ if A_Args.Length() = 0
 }
 
 ; Get the COM SciTE object
-oSciTE := GetSciTEInstance()
-if !oSciTE
-{
-	MsgBox, 16, %g_appTitle%, SciTE must be running!
+if (!oSciTE := GetSciTEInstance())
 	ExitApp
-}
 
 global dbgTextFont := oSciTE.ResolveProp("default.text.font")
 dbgAddr := oSciTE.ResolveProp("ahk.debugger.address")

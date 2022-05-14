@@ -34,18 +34,13 @@
 	ComObjError(false)
 	
 	; Get SciTE object
-	oSciTE := GetSciTEInstance()
+	if (!oSciTE := GetSciTEInstance())
+		ExitApp
 	
 	; Get SciTE window handle and Scintilla1 handle
 	hSciTE := oSciTE.SciTEHandle
 	; Scintilla1 = edit panel, Scintilla2 = output panel
 	ControlGet, hSci, Hwnd,, Scintilla1, ahk_id %hSciTE%
-	
-	If !hSci
-	{
-		MsgBox, 16, TillaGoto, Cannot find SciTE!
-		ExitApp
-	}
 	
 	; Read TillaGoto settings using SciTE's property system
 	bTrayIcon        := oSciTE.ResolveProp("tillagoto.show.tray.icon") + 0

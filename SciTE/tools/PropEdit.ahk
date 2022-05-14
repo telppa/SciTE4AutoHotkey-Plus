@@ -10,12 +10,8 @@ SetWorkingDir, %A_ScriptDir%
 
 Menu, Tray, Icon, ..\toolicon.icl, 17
 
-scite := GetSciTEInstance()
-if !scite
-{
-	MsgBox, 16, SciTE properties editor, Can't find SciTE!
+if (!scite := GetSciTEInstance())
 	ExitApp
-}
 
 scite_hwnd := scite.GetSciTEHandle()
 

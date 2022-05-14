@@ -5,12 +5,8 @@
 #NoEnv
 SetWorkingDir, %A_ScriptDir%
 
-oSciTE := GetSciTEInstance()
-if !oSciTE
-{
-	MsgBox, 16, SciTE4AutoHotkey, Cannot find SciTE!
+if (!oSciTE := GetSciTEInstance())
 	ExitApp
-}
 
 SciTEDir := oSciTE.SciTEDir
 A_AhkBin := oSciTE.ResolveProp("AutoHotkey")

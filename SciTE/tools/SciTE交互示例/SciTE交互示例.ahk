@@ -3,7 +3,8 @@
 Run, ..\..\SciTE.exe
 MsgBox,  262208, , 等待2秒, 2		; 等2秒以便 COM 接口加载完成
 
-oSciTE := ComObjActive("SciTE4AHK.Application")
+if (!oSciTE := GetSciTEInstance())
+	ExitApp
 
 ; 获取 SciTE 版本
 MsgBox, % "获取 SciTE 版本`n`n" oSciTE.Version
@@ -132,7 +133,8 @@ hSci:=获取Scintilla句柄()
 MsgBox, % "获取 Scintilla 句柄，不是 SciTE 的`n`n" hSci
 获取Scintilla句柄()
 {
-	oSciTE  := ComObjActive("SciTE4AHK.Application")
+	global oSciTE
+	
 	hEditor := oSciTE.SciTEHandle
 	; COM 得到的句柄是 SciTE 的，而需要的是 Scintilla 的
 	; Get handle to focused control
@@ -165,6 +167,7 @@ SciUtil_Autocompletion_Show(hSci, text)
 	mem.close()
 }
 
+#Include ..\..\tools\Lib\GetSciTEInstance.ahk
 #Include ..\..\toolbar\Lib\StrPutVar.ahk
 #Include ..\..\toolbar\Lib\SciUtil.ahk
 
