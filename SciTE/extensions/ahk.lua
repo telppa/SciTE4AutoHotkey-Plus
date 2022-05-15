@@ -178,7 +178,10 @@ function DBGp_Disconnect()
 end
 
 function DBGp_Inspect()
-	if not prepared then return end
+	if not prepared then
+		print("You need to start debugger first!\n需先启动调试模式！")
+		return
+	end
 	
 	local word = editor:GetSelText()
 	if word == "" then
@@ -490,7 +493,7 @@ function OpenInclude()
 	
 	local CurrentLine = editor:GetLine(editor:LineFromPosition(editor.CurrentPos))
 	if not string.find(CurrentLine, "^%s*%#[Ii][Nn][Cc][Ll][Uu][Dd][Ee]") then
-		print("Not an include line!")
+		print("Not an include line!\n行内不含关键字 #Include ！")
 		return
 	end
 	local place = string.find(CurrentLine, "%#[Ii][Nn][Cc][Ll][Uu][Dd][Ee]")
