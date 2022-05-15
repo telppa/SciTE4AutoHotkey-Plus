@@ -1,5 +1,5 @@
 -- 此函数必须配合pipe才能让ahk运行选区代码
-function GetSelText_IfSelNotEmpty()
+function RunSelection()
 	local AHK=props["AutoHotkey"].." /CP65001 "
 				AHK=string.gsub(AHK,"\\","\/")		-- 斜杠需要转换一下
 	local selText=editor:GetSelText()
