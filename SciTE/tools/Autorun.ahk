@@ -68,7 +68,7 @@ Receive_WM_COPYDATA(wParam, lParam)
 	
 	switch event[1]
 	{
-		case "closed":更新fileTransformed(event[2])  ; 智能编码
+		case "closed":更新fileEncodingDetected(event[2])  ; 智能编码
 	}
 	
 	return true
