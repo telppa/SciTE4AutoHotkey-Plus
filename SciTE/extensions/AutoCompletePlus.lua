@@ -1,5 +1,8 @@
 --[[
     更新日志：
+    1.6
+        修复中文输入法在注释中输入英文会触发自动完成的问题。 bug #3
+        修复 INCREMENTAL = false 模式下，空白内容也可能触发自动完成的问题。
     1.5
         修复 %abc 无法触发自动完成的问题。 bug #2
         支持 .abc 形式的关键词提取与匹配。
@@ -101,7 +104,10 @@ local function setLexerSpecificStuff()
     if IGNORE_STYLES[editor.Lexer] then
         -- Define a function for calling later:
         shouldIgnorePos = function(pos)
-            return isInTable(IGNORE_STYLES[editor.Lexer], editor.StyleAt[pos])
+            local flag1 = isInTable(IGNORE_STYLES[editor.Lexer], editor.StyleAt[pos])
+            -- use chinese ime to type "win" in comment, StyleAt[pos] = 0(that's wrong), StyleAt[pos-1] = 1 or 2(that's right).
+            local flag2 = (editor.StyleAt[pos-1] == 1 or editor.StyleAt[pos-1] == 2) -- bug #3
+            return (flag1 or flag2)
         end
     else
         -- Optional: Disable autocomplete popups for unknown lexers.
@@ -203,10 +209,6 @@ local function handleChar(char, calledByHotkey)
         saveCache()
         buffer.namesCache = true
     end
-    if not INCREMENTAL and editor:AutoCActive() then
-        -- Nothing to do.
-        return false
-    end
 
     --[[
         行模式的意义就是——关键字在换行后就被实时创建，同时又不会因为每次更新关键字都是全文更新而造成性能问题。
@@ -247,7 +249,7 @@ local function handleChar(char, calledByHotkey)
     if len < MIN_PREFIX_LEN then
         if editor:AutoCActive() then
             if len == 0 then
-            if DEBUG_MODE then print("branch1") end
+                if DEBUG_MODE then print("branch1") end
                 -- Happens sometimes after typing ")".
                 editor:AutoCCancel()
                 return
@@ -256,15 +258,21 @@ local function handleChar(char, calledByHotkey)
             -- keep it updated even though len < MIN_PREFIX_LEN.
         else
             if char then
-            if DEBUG_MODE then print("branch2") end
+                if DEBUG_MODE then print("branch2") end
                 -- Not enough text to trigger autocomplete, so return.
                 return
             end
             -- Otherwise, we were called explicitly without a param.
         end
     end
+
+    if not INCREMENTAL and editor:AutoCActive() then
+        -- Nothing to do.
+        return false
+    end
+
     if not editor:AutoCActive() then
-    if DEBUG_MODE then print("branch3") end
+        if DEBUG_MODE then print("branch3") end
         -- 由于自动完成可以通过包括但不限于 中途{enter}、中途{tab}、全部输完等方式完成。
         -- 为了避免 bug 也为了避免到处去清空 list_old ，因此统一在只要没有自动完成框时就清空旧变量！
         list_old = ""
@@ -294,7 +302,7 @@ local function handleChar(char, calledByHotkey)
     end
     if DEBUG_MODE then print("3.1|匹配列表："..table.concat(menuItems, "\1")) end
     if notempty(menuItems) then
-    if DEBUG_MODE then print("branch4") end
+        if DEBUG_MODE then print("branch4") end
         -- Show or update the auto-complete list.
         local list = table.concat(menuItems, "\1")
         editor.AutoCIgnoreCase = IGNORE_CASE
@@ -303,7 +311,7 @@ local function handleChar(char, calledByHotkey)
         editor.AutoCMaxHeight = 5
         -- if not editor:AutoCActive() then -- 另一种降低闪烁的方式，和 SciTE 原版一样，只要自动完成框出现了，就只跳转位置而不刷新。
         if list~=list_old then -- 降低自动完成框的闪烁，只有匹配的关键字发生变化时才刷新。
-        if DEBUG_MODE then print("branch5") end
+            if DEBUG_MODE then print("branch5") end
             editor:AutoCShow(len, list)
             list_old=list
         end
@@ -312,31 +320,31 @@ local function handleChar(char, calledByHotkey)
             -- User has completely typed the only item, so cancel.
             if CASE_CORRECT then
                 if CASE_CORRECT_INSTANT or #menuItems == 1 then
-                if DEBUG_MODE then print("branch6") end
+                    if DEBUG_MODE then print("branch6") end
                     -- Make sure the correct item is selected.
                     editor:AutoCShow(len, menuItems[1])
                     editor:AutoCComplete()
                 end
                 if #menuItems > 1 then
-                if DEBUG_MODE then print("branch7") end
+                    if DEBUG_MODE then print("branch7") end
                     editor:AutoCShow(len, list)
                 end
             end
             if #menuItems == 1 then
-            if DEBUG_MODE then print("branch8") end
+                if DEBUG_MODE then print("branch8") end
                 editor:AutoCCancel()
                 return
             end
         end
         lastAutoCItem = #menuItems - 1
         if lastAutoCItem == 0 and calledByHotkey and CHOOSE_SINGLE then
-        if DEBUG_MODE then print("branch9") end
+            if DEBUG_MODE then print("branch9") end
             editor:AutoCComplete()
         end
     else
         -- No relevant items.
         if editor:AutoCActive() then
-        if DEBUG_MODE then print("branch10") end
+            if DEBUG_MODE then print("branch10") end
             editor:AutoCCancel()
         end
     end
