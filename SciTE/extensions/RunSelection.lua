@@ -1,15 +1,15 @@
--- ´Ëº¯Êı±ØĞëÅäºÏpipe²ÅÄÜÈÃahkÔËĞĞÑ¡Çø´úÂë
+-- æ­¤å‡½æ•°å¿…é¡»é…åˆpipeæ‰èƒ½è®©ahkè¿è¡Œé€‰åŒºä»£ç 
 function RunSelection()
 	local AHK=props["AutoHotkey"].." /CP65001 "
-				AHK=string.gsub(AHK,"\\","\/")		-- Ğ±¸ÜĞèÒª×ª»»Ò»ÏÂ
+				AHK=string.gsub(AHK,"\\","\/")		-- æ–œæ éœ€è¦è½¬æ¢ä¸€ä¸‹
 	local selText=editor:GetSelText()
 	local checkEmpty=string.gsub(selText, "%s", "")
 	local empty=[[
-								MsgBox, Ã»ÓĞÈÎºÎ´úÂë±»Ñ¡ÖĞ!
+								MsgBox, æ²¡æœ‰ä»»ä½•ä»£ç è¢«é€‰ä¸­!
 								ExitApp
 							]]
 	if checkEmpty=="" then
-		os.execute(AHK..empty)		-- ÕâÀïĞèÒªÓÃpipe´«²Î²ÅĞĞ
+		os.execute(AHK..empty)		-- è¿™é‡Œéœ€è¦ç”¨pipeä¼ å‚æ‰è¡Œ
 	else
 		os.execute(AHK..selText)
 	end

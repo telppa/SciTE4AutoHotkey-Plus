@@ -1,6 +1,6 @@
 dofile(props['SciteDefaultHome'].."/extensions/ahk.lua")
 
--- 只读模式下屏蔽保存功能，避免保存只读窗口的内容对主窗口造成混乱
+-- 鍙妯″紡涓嬪睆钄戒繚瀛樺姛鑳斤紝閬垮厤淇濆瓨鍙绐楀彛鐨勫唴瀹瑰涓荤獥鍙ｉ�犳垚娣蜂贡
 function OnBeforeSave(path)
 	return true
 end

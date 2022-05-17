@@ -674,6 +674,7 @@ end
 
 -- 以下是 SciTE4AutoHotkey-Plus 的设置
 
+dofile(props['SciteDefaultHome'].."/extensions/Run.lua")
 dofile(props['SciteDefaultHome'].."/extensions/MoveToNewLine.lua")
 dofile(props['SciteDefaultHome'].."/extensions/AutoCompletePlus.lua")
 -- dofile(props['SciteDefaultHome'].."/extensions/RunSelection.lua")

@@ -7,6 +7,9 @@ selectFileInExplorer(A_Args[1])
 ; 与命令 explorer.exe /select,１.txt 不同的是，不会重复打开已经存在的文件夹
 selectFileInExplorer(path)
 {
+  ; 转换斜杠 / -> \ ，否则 SplitPath 解析时会出错
+  path := StrReplace(path, "/", "\")
+  
   ; 确保目标文件或至少目标文件夹存在
   SplitPath, path, OutFileName, OutDir
   if (!FileExist(path))

@@ -1,4 +1,4 @@
--- ²Ëµ¥À¸ - Ñ¡Ïî - ´ò¿ª ÓÃ»§ËõÂÔÓï¶¨ÒåÎÄ¼ş Ö¸ÏòµÄÂ·¾¶²»¶Ô£¬ËùÒÔÓÃÕâ¸öº¯Êı×öĞŞÕı
+-- èœå•æ  - é€‰é¡¹ - æ‰“å¼€ ç”¨æˆ·ç¼©ç•¥è¯­å®šä¹‰æ–‡ä»¶ æŒ‡å‘çš„è·¯å¾„ä¸å¯¹ï¼Œæ‰€ä»¥ç”¨è¿™ä¸ªå‡½æ•°åšä¿®æ­£
 function OpenUserAhkAbbrevsFile()
 	local SciteUserHome = props["SciteUserHome"]
 	local user_ahk_abbrevs_path = SciteUserHome.."/user.ahk.abbrevs.properties"

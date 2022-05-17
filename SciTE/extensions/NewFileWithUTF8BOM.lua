@@ -1,5 +1,5 @@
--- sunwind£¨1576157£©ËÑ¼¯ÕûÀí
--- event OnClear ÍêÃÀ½â¾öĞÂ½¨ÎÄ¼şÊ±Ä¬ÈÏµÄÎÄ¼ş±àÂë
+-- sunwindï¼ˆ1576157ï¼‰æœé›†æ•´ç†
+-- event OnClear å®Œç¾è§£å†³æ–°å»ºæ–‡ä»¶æ—¶é»˜è®¤çš„æ–‡ä»¶ç¼–ç 
 
 local oldOnClear = OnClear
 function OnClear()
@@ -9,9 +9,9 @@ function OnClear()
     end
   end
   if props['FileName'] == "" then
---  ĞÂ½¨Ê±Ä¬ÈÏ²ÉÓÃUTF-8´øBOM±àÂë·½Ê½
+--  æ–°å»ºæ—¶é»˜è®¤é‡‡ç”¨UTF-8å¸¦BOMç¼–ç æ–¹å¼
     scite.MenuCommand(IDM_ENCODING_UTF8)
---  ĞÂ½¨Ê±Ä¬ÈÏ²ÉÓÃUTF-8ÎŞBOM±àÂë·½Ê½
+--  æ–°å»ºæ—¶é»˜è®¤é‡‡ç”¨UTF-8æ— BOMç¼–ç æ–¹å¼
 --  scite.MenuCommand(IDM_ENCODING_UCOOKIE)
   end
   return false

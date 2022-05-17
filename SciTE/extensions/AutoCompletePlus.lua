@@ -1,32 +1,32 @@
 --[[
-    ¸üĞÂÈÕÖ¾£º
+    æ›´æ–°æ—¥å¿—ï¼š
     1.6
-        ĞŞ¸´ÖĞÎÄÊäÈë·¨ÔÚ×¢ÊÍÖĞÊäÈëÓ¢ÎÄ»á´¥·¢×Ô¶¯Íê³ÉµÄÎÊÌâ¡£ bug #3
-        ĞŞ¸´ INCREMENTAL = false Ä£Ê½ÏÂ£¬¿Õ°×ÄÚÈİÒ²¿ÉÄÜ´¥·¢×Ô¶¯Íê³ÉµÄÎÊÌâ¡£
+        ä¿®å¤ä¸­æ–‡è¾“å…¥æ³•åœ¨æ³¨é‡Šä¸­è¾“å…¥è‹±æ–‡ä¼šè§¦å‘è‡ªåŠ¨å®Œæˆçš„é—®é¢˜ã€‚ bug #3
+        ä¿®å¤ INCREMENTAL = false æ¨¡å¼ä¸‹ï¼Œç©ºç™½å†…å®¹ä¹Ÿå¯èƒ½è§¦å‘è‡ªåŠ¨å®Œæˆçš„é—®é¢˜ã€‚
     1.5
-        ĞŞ¸´ %abc ÎŞ·¨´¥·¢×Ô¶¯Íê³ÉµÄÎÊÌâ¡£ bug #2
-        Ö§³Ö .abc ĞÎÊ½µÄ¹Ø¼ü´ÊÌáÈ¡ÓëÆ¥Åä¡£
-        È¥³ıÎÄ¼ş±àÂë¼ì²â¹¦ÄÜ£¨ÒÑÓÉ ÖÇÄÜ±àÂë.ahk ¸üºÃµÄÊµÏÖ£©¡£
+        ä¿®å¤ %abc æ— æ³•è§¦å‘è‡ªåŠ¨å®Œæˆçš„é—®é¢˜ã€‚ bug #2
+        æ”¯æŒ .abc å½¢å¼çš„å…³é”®è¯æå–ä¸åŒ¹é…ã€‚
+        å»é™¤æ–‡ä»¶ç¼–ç æ£€æµ‹åŠŸèƒ½ï¼ˆå·²ç”± æ™ºèƒ½ç¼–ç .ahk æ›´å¥½çš„å®ç°ï¼‰ã€‚
     1.4
-        ºÏ²¢µ÷ÊÔ¹¦ÄÜ¡£
+        åˆå¹¶è°ƒè¯•åŠŸèƒ½ã€‚
     1.3
-        Ôö¼ÓÎÄ¼ş±àÂë¼ì²â¹¦ÄÜ¡£
+        å¢åŠ æ–‡ä»¶ç¼–ç æ£€æµ‹åŠŸèƒ½ã€‚
     1.2
-        ºÏ²¢ fincs ºÍ Lexikos µÄÑùÊ½¡£
+        åˆå¹¶ fincs å’Œ Lexikos çš„æ ·å¼ã€‚
     1.1
-        ĞŞ¸´ÒÑ¾­´ò¿ªÁËÎÄ¼şÓÖĞÂ½¨¿ÕÎÄµµÊ±×Ô¶¯Íê³É¹¦ÄÜÊ§Ğ§µÄÎÊÌâ¡£ bug #1
+        ä¿®å¤å·²ç»æ‰“å¼€äº†æ–‡ä»¶åˆæ–°å»ºç©ºæ–‡æ¡£æ—¶è‡ªåŠ¨å®ŒæˆåŠŸèƒ½å¤±æ•ˆçš„é—®é¢˜ã€‚ bug #1
     1.0
-        ĞŞ¸´ÁË Lexikos µÄ¹Ø¼ü×Ö¿³Í·¡¢È¡´Ê³¤¶È²»ÕıÈ·¡¢ api ÎÄ¼ş²»´æÔÚ»á±¨´íµÄ bug ¡£
-        ÊµÏÖÁËÖĞÎÄ¡¢Ó¢ÎÄ£¨Ó¦¸ÃÒ²°üÀ¨º«ÎÄÈÕÎÄµÈ£©¹Ø¼ü×ÖµÄÌáÊ¾¡£
-        ÊµÏÖÁËÊµÊ±ÌáÈ¡¹Ø¼ü×Ö£¨Ô­°æ½öÔÚ´ò¿ªÎÄ¼şÊ±ÌáÈ¡£©£¬½â¾öÁËÊµÊ±ÌáÈ¡¹Ø¼ü×ÖµÄĞÔÄÜÎÊÌâ¡£
-        ¸Ä½øÁË×Ô¶¯Íê³É¿òµÄÉÁË¸ÎÊÌâ¡£
-        ÊµÏÖÁË¿çÎÄ¼ş¹Ø¼ü×Ö¹²Ïí£¬µ«Ä¬ÈÏ¹Ø±ÕÁËÕâ¸ö¹¦ÄÜ¡£
-        lua Ò²¿ÉÒÔ×Ô¶¯Íê³É¡£
+        ä¿®å¤äº† Lexikos çš„å…³é”®å­—ç å¤´ã€å–è¯é•¿åº¦ä¸æ­£ç¡®ã€ api æ–‡ä»¶ä¸å­˜åœ¨ä¼šæŠ¥é”™çš„ bug ã€‚
+        å®ç°äº†ä¸­æ–‡ã€è‹±æ–‡ï¼ˆåº”è¯¥ä¹ŸåŒ…æ‹¬éŸ©æ–‡æ—¥æ–‡ç­‰ï¼‰å…³é”®å­—çš„æç¤ºã€‚
+        å®ç°äº†å®æ—¶æå–å…³é”®å­—ï¼ˆåŸç‰ˆä»…åœ¨æ‰“å¼€æ–‡ä»¶æ—¶æå–ï¼‰ï¼Œè§£å†³äº†å®æ—¶æå–å…³é”®å­—çš„æ€§èƒ½é—®é¢˜ã€‚
+        æ”¹è¿›äº†è‡ªåŠ¨å®Œæˆæ¡†çš„é—ªçƒé—®é¢˜ã€‚
+        å®ç°äº†è·¨æ–‡ä»¶å…³é”®å­—å…±äº«ï¼Œä½†é»˜è®¤å…³é—­äº†è¿™ä¸ªåŠŸèƒ½ã€‚
+        lua ä¹Ÿå¯ä»¥è‡ªåŠ¨å®Œæˆã€‚
     
-    ¿ÉÒÔ¼ÌĞø¸Ä½øµÄµØ·½£º
-        ×Ô¶¯Íê³É¿òÏÔÊ¾³öµÄÄÚÈİ²»±ä£¨¹ö¶¯ÌõÏÂÃæµÄ±ä»¯ÎŞËùÎ½£¬·´Õı¿´²»¼û£©¾Í¿ÉÒÔ²»Ë¢ĞÂ¡£Õâ½«½øÒ»²½½µµÍÉÁË¸ÎÊÌâ¡£
-        ×îÍêÃÀµÄÊµÊ±ÌáÈ¡¹Ø¼ü×ÖÓ¦¸ÃÊÇÊµÊ±È«ÎÄ¼ş¸üĞÂ£¬µ«ÕâÑù»áÓĞĞÔÄÜÎÊÌâ¡£
-        ±È½ÏÕÛÖÔµÄ·½Ê½ÊÇ×¥È¡ÎÄ¼şËùÓĞ±»ĞŞ¸ÄµÄµÄĞĞ£¬È»ºó½øĞĞ´¦Àí£¬µ«Ä¿Ç°Ôİ×ö²»µ½¡£
+    å¯ä»¥ç»§ç»­æ”¹è¿›çš„åœ°æ–¹ï¼š
+        è‡ªåŠ¨å®Œæˆæ¡†æ˜¾ç¤ºå‡ºçš„å†…å®¹ä¸å˜ï¼ˆæ»šåŠ¨æ¡ä¸‹é¢çš„å˜åŒ–æ— æ‰€è°“ï¼Œåæ­£çœ‹ä¸è§ï¼‰å°±å¯ä»¥ä¸åˆ·æ–°ã€‚è¿™å°†è¿›ä¸€æ­¥é™ä½é—ªçƒé—®é¢˜ã€‚
+        æœ€å®Œç¾çš„å®æ—¶æå–å…³é”®å­—åº”è¯¥æ˜¯å®æ—¶å…¨æ–‡ä»¶æ›´æ–°ï¼Œä½†è¿™æ ·ä¼šæœ‰æ€§èƒ½é—®é¢˜ã€‚
+        æ¯”è¾ƒæŠ˜è¡·çš„æ–¹å¼æ˜¯æŠ“å–æ–‡ä»¶æ‰€æœ‰è¢«ä¿®æ”¹çš„çš„è¡Œï¼Œç„¶åè¿›è¡Œå¤„ç†ï¼Œä½†ç›®å‰æš‚åšä¸åˆ°ã€‚
     
     base on AutoComplete v0.8 by Lexikos
     https://gist.github.com/Lexikos/bc17b8d55ae8a8102e35
@@ -38,8 +38,8 @@
 --[[
     List of styles per lexer that autocomplete should not occur within.
     Should include comments and strings.
-    ÏÂÃæÑùÊ½ÁĞ±íÖĞ²»ÌáÈ¡¹Ø¼ü×Ö¡¢²»½øĞĞ»¨À¨ºÅ×Ô¶¯Ëõ½ø¡£
-    ²»Òª°ÑÑùÊ½20°üº¬½øÈ¥£¬Õâ»áµ¼ÖÂ %ms ÎŞ·¨´¥·¢ msgbox µÄ×Ô¶¯Íê³É¡£ bug #2
+    ä¸‹é¢æ ·å¼åˆ—è¡¨ä¸­ä¸æå–å…³é”®å­—ã€ä¸è¿›è¡ŒèŠ±æ‹¬å·è‡ªåŠ¨ç¼©è¿›ã€‚
+    ä¸è¦æŠŠæ ·å¼20åŒ…å«è¿›å»ï¼Œè¿™ä¼šå¯¼è‡´ %ms æ— æ³•è§¦å‘ msgbox çš„è‡ªåŠ¨å®Œæˆã€‚ bug #2
 --]]
 local IGNORE_STYLES = {
     [SCLEX_AHK1] = {1,2,3,6},
@@ -47,32 +47,32 @@ local IGNORE_STYLES = {
     [SCLEX_LUA]  = {1,2,3,6,7,8,12}
 }
 
-local DEBUG_MODE = false                      -- µ÷ÊÔÄ£Ê½¡£
-local SHARING_KEYWORDS_BETWEEN_FILES = false  -- ¿çÎÄ¼ş¹Ø¼ü×Ö¹²Ïí¡£±ÈÈçÍ¬Ê±´ò¿ª AB Á½¸öÎÄ¼ş£¬ A ÎÄ¼şÖĞ×¥µ½µÄ¹Ø¼ü×Ö ¡°haha¡± £¬ÔÚ B ÎÄ¼şÖĞÒ²¿ÉÒÔÌáÊ¾¡£
-local INCREMENTAL = false                     -- ¸ù¾İ¹Ø¼ü×Ö±ä»¯²»¶Ï¼õÉÙ×Ô¶¯Íê³ÉÁĞ±íÄÚÈİ¡£ false ÔòºÍ SciTE Ô­°æÒ»ÖÂ£¬Ö»±ä¶¯¹â±ê£¬²»¸Ä±äÁĞ±í¡£
-local IGNORE_CASE = true                      -- ¹Ø¼ü×ÖÆ¥ÅäÊ±ºöÂÔ´óĞ¡Ğ´
-local CASE_CORRECT = true                     -- ×Ô¶¯¾ÀÕı´óĞ¡Ğ´
+local DEBUG_MODE = false                      -- è°ƒè¯•æ¨¡å¼ã€‚
+local SHARING_KEYWORDS_BETWEEN_FILES = false  -- è·¨æ–‡ä»¶å…³é”®å­—å…±äº«ã€‚æ¯”å¦‚åŒæ—¶æ‰“å¼€ AB ä¸¤ä¸ªæ–‡ä»¶ï¼Œ A æ–‡ä»¶ä¸­æŠ“åˆ°çš„å…³é”®å­— â€œhahaâ€ ï¼Œåœ¨ B æ–‡ä»¶ä¸­ä¹Ÿå¯ä»¥æç¤ºã€‚
+local INCREMENTAL = false                     -- æ ¹æ®å…³é”®å­—å˜åŒ–ä¸æ–­å‡å°‘è‡ªåŠ¨å®Œæˆåˆ—è¡¨å†…å®¹ã€‚ false åˆ™å’Œ SciTE åŸç‰ˆä¸€è‡´ï¼Œåªå˜åŠ¨å…‰æ ‡ï¼Œä¸æ”¹å˜åˆ—è¡¨ã€‚
+local IGNORE_CASE = true                      -- å…³é”®å­—åŒ¹é…æ—¶å¿½ç•¥å¤§å°å†™
+local CASE_CORRECT = true                     -- è‡ªåŠ¨çº æ­£å¤§å°å†™
 local CASE_CORRECT_INSTANT = false
 local WRAP_ARROW_KEYS = false
-local MIN_PREFIX_LEN = 2                      -- ×îÉÙÊäÈë¼¸¸ö×Ö·ûºó£¬¿ªÊ¼Æ¥Åä×Ô¶¯Íê³ÉÁĞ±í¡£ Number of chars to type before the autocomplete list appears.
-local MIN_IDENTIFIER_LEN = 3                  -- Ìí¼Óµ½×Ô¶¯Íê³ÉÁĞ±íµÄ¹Ø¼ü×ÖµÄ×îĞ¡³¤¶È£¨²»Ó°Ïì´Ó ¡°ahk.api¡± Ìí¼Ó¹Ø¼ü×ÖµÄ³¤¶È£©¡£ Length of shortest word to add to the autocomplete list.
+local MIN_PREFIX_LEN = 2                      -- æœ€å°‘è¾“å…¥å‡ ä¸ªå­—ç¬¦åï¼Œå¼€å§‹åŒ¹é…è‡ªåŠ¨å®Œæˆåˆ—è¡¨ã€‚ Number of chars to type before the autocomplete list appears.
+local MIN_IDENTIFIER_LEN = 3                  -- æ·»åŠ åˆ°è‡ªåŠ¨å®Œæˆåˆ—è¡¨çš„å…³é”®å­—çš„æœ€å°é•¿åº¦ï¼ˆä¸å½±å“ä» â€œahk.apiâ€ æ·»åŠ å…³é”®å­—çš„é•¿åº¦ï¼‰ã€‚ Length of shortest word to add to the autocomplete list.
 
 --[[
     List of regex patterns for finding suggestions for the autocomplete menu:
-    Õâ¸ö±í´ïÊ½µÄ±¾ÖÊ£¬¾ÍÊÇÍ¨¹ıÅÅ³ı ASCII Âë±íµÄ×Ö·û£¬À´¹¹½¨Ò»¸ö×Ö·û×é¡£
-    ÌØ±ğ×¢Òâ£¬Õâ¸ö±í´ïÊ½ÊÇ¸ø ¡°editor:findtext()¡± Ê¹ÓÃµÄ£¬ÄÇÃ´¿´ÆğÀ´Ó¦¸Ã×ñÑ­ SciTE µÄÕıÔòÓï·¨¡£
-    ¿ÉÊÇÊµ¼ÊÉÏËüÊÇµ÷ÓÃµÄ lua £¬²¢ÇÒÄ¬ÈÏ´óĞ¡Ğ´²»Ãô¸Ğ£¬¼´Ê¹Ö¸¶¨ ¡°SCFIND_REGEXP¡± ²ÎÊıÒ²Èç´Ë£¡£¡£¡
-    Òò´Ë»¹ĞèÒªÊÖ¶¯¼ÓÉÏ ¡°SCFIND_MATCHCASE¡± ²ÎÊı£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡
-    [\46] ±íÊ¾ ¡°.¡± ¡£Êµ¼ù±íÃ÷ ¡°\.¡± ¸úÔ¤ÆÚ²»Ò»ÖÂËùÒÔÓÃÕâÖÖĞ´·¨Ìæ´ú¡£
-    [^\1-\64\91-\94\96\123-\127] ÔÚ ASCII Âë±íÖĞµÈÓÚ [a-zA-Z_] µ«ÒòÎªÊ¹ÓÃÁËÅÅ³ıµÄĞÎÊ½£¬ËùÒÔ¿ÉÒÔÆ¥Åäµ½ÖĞÎÄ¡£
-    [^\1-\47\58-\64\91-\94\96\123-\127] ÔÚ ASCII Âë±íÖĞµÈÓÚ [a-zA-Z0-9_] µ«ÒòÎªÊ¹ÓÃÁËÅÅ³ıµÄĞÎÊ½£¬ËùÒÔ¿ÉÒÔÆ¥Åäµ½ÖĞÎÄ¡£
-    Òò´ËÕû¸ö±í´ïÊ½µÄÒâË¼¾ÍÊÇ {"\.*[a-zA-Z_ÖĞÎÄÈÕÎÄº«ÎÄ][a-zA-Z0-9_ÖĞÎÄÈÕÎÄº«ÎÄ]+"}
-    ĞèÒª×¢ÒâµÄÊÇ£¬Èç¹ûÔÚ SciTE ±à¼­Æ÷ÖĞÊ¹ÓÃÕâ¸ö±í´ïÊ½£¬ĞèÒª°Ñ ¡°\1¡± Ìæ»»Îª ¡°\x00¡± ¡£
-    Ô­ÒòÊÇ ¡°\0¡± Ò²¾ÍÊÇ¿Õ×Ö·û»áÈÃ lua ³ö´í£¬Òò´Ë lua Ê¹ÓÃÕâ¸ö±í´ïÊ½¾Í±ØĞë´Ó ¡°\1¡± ¿ªÊ¼¡£
-    ÁíÒ»¸öĞèÒª×¢ÒâµÄµØ·½ÊÇ£¬Õâ¸ö±í´ïÊ½»áÍ¬ÑùÆ¥Åäµ½ÖĞÎÄµÄ±êµã£¬ÀıÈç ¡°£¬¡± ¡°¡£¡± µÈµÈ¡£
-    Ö®ËùÒÔÕâÀïÈÃËüÆ¥Åäµ½±êµãµÄÔ­ÒòÊÇ£¬ lua ºÍ SciTE ¶¼²»Ö§³Ö unicode ×Ö·ûµÄÆ¥Åä£¬Òò´ËÄÑÒÔµ¥¶ÀÖ»Æ¥Åäºº×Ö¡£
-    ÁíÒ»¸öÔ­ÒòÔòÊÇ£¬Êµ¼ÊÉÏÔÚ´úÂëÖĞ£¬ÄãÊÇ¿ÉÒÔÓÃÖĞÎÄ±êµã×÷Îª±äÁ¿ÃûµÄ£¬¼ÓÉÏ±í´ïÊ½±»ÏŞÖÆÎª²»ÔÚ×¢ÊÍµÈµØ·½Æ¥Åä£¬Òò´ËÈ·Êµ¿ÉÒÔÆ¥Åäµ½ÕıÈ·½á¹û¡£
-    ÕâÊÇ SciTE ±à¼­Æ÷ÖĞ Ctrl+F Ê¹ÓÃµÄ°æ±¾ {"\.*[^\x00-\x40\x5B-\x5E\x60\x7B-\x7F][^\x00-\x2F\x3A-\x40\x5B-\x5E\x60\x7B-\x7F]+"}
+    è¿™ä¸ªè¡¨è¾¾å¼çš„æœ¬è´¨ï¼Œå°±æ˜¯é€šè¿‡æ’é™¤ ASCII ç è¡¨çš„å­—ç¬¦ï¼Œæ¥æ„å»ºä¸€ä¸ªå­—ç¬¦ç»„ã€‚
+    ç‰¹åˆ«æ³¨æ„ï¼Œè¿™ä¸ªè¡¨è¾¾å¼æ˜¯ç»™ â€œeditor:findtext()â€ ä½¿ç”¨çš„ï¼Œé‚£ä¹ˆçœ‹èµ·æ¥åº”è¯¥éµå¾ª SciTE çš„æ­£åˆ™è¯­æ³•ã€‚
+    å¯æ˜¯å®é™…ä¸Šå®ƒæ˜¯è°ƒç”¨çš„ lua ï¼Œå¹¶ä¸”é»˜è®¤å¤§å°å†™ä¸æ•æ„Ÿï¼Œå³ä½¿æŒ‡å®š â€œSCFIND_REGEXPâ€ å‚æ•°ä¹Ÿå¦‚æ­¤ï¼ï¼ï¼
+    å› æ­¤è¿˜éœ€è¦æ‰‹åŠ¨åŠ ä¸Š â€œSCFIND_MATCHCASEâ€ å‚æ•°ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼
+    [\46] è¡¨ç¤º â€œ.â€ ã€‚å®è·µè¡¨æ˜ â€œ\.â€ è·Ÿé¢„æœŸä¸ä¸€è‡´æ‰€ä»¥ç”¨è¿™ç§å†™æ³•æ›¿ä»£ã€‚
+    [^\1-\64\91-\94\96\123-\127] åœ¨ ASCII ç è¡¨ä¸­ç­‰äº [a-zA-Z_] ä½†å› ä¸ºä½¿ç”¨äº†æ’é™¤çš„å½¢å¼ï¼Œæ‰€ä»¥å¯ä»¥åŒ¹é…åˆ°ä¸­æ–‡ã€‚
+    [^\1-\47\58-\64\91-\94\96\123-\127] åœ¨ ASCII ç è¡¨ä¸­ç­‰äº [a-zA-Z0-9_] ä½†å› ä¸ºä½¿ç”¨äº†æ’é™¤çš„å½¢å¼ï¼Œæ‰€ä»¥å¯ä»¥åŒ¹é…åˆ°ä¸­æ–‡ã€‚
+    å› æ­¤æ•´ä¸ªè¡¨è¾¾å¼çš„æ„æ€å°±æ˜¯ {"\.*[a-zA-Z_ä¸­æ–‡æ—¥æ–‡éŸ©æ–‡][a-zA-Z0-9_ä¸­æ–‡æ—¥æ–‡éŸ©æ–‡]+"}
+    éœ€è¦æ³¨æ„çš„æ˜¯ï¼Œå¦‚æœåœ¨ SciTE ç¼–è¾‘å™¨ä¸­ä½¿ç”¨è¿™ä¸ªè¡¨è¾¾å¼ï¼Œéœ€è¦æŠŠ â€œ\1â€ æ›¿æ¢ä¸º â€œ\x00â€ ã€‚
+    åŸå› æ˜¯ â€œ\0â€ ä¹Ÿå°±æ˜¯ç©ºå­—ç¬¦ä¼šè®© lua å‡ºé”™ï¼Œå› æ­¤ lua ä½¿ç”¨è¿™ä¸ªè¡¨è¾¾å¼å°±å¿…é¡»ä» â€œ\1â€ å¼€å§‹ã€‚
+    å¦ä¸€ä¸ªéœ€è¦æ³¨æ„çš„åœ°æ–¹æ˜¯ï¼Œè¿™ä¸ªè¡¨è¾¾å¼ä¼šåŒæ ·åŒ¹é…åˆ°ä¸­æ–‡çš„æ ‡ç‚¹ï¼Œä¾‹å¦‚ â€œï¼Œâ€ â€œã€‚â€ ç­‰ç­‰ã€‚
+    ä¹‹æ‰€ä»¥è¿™é‡Œè®©å®ƒåŒ¹é…åˆ°æ ‡ç‚¹çš„åŸå› æ˜¯ï¼Œ lua å’Œ SciTE éƒ½ä¸æ”¯æŒ unicode å­—ç¬¦çš„åŒ¹é…ï¼Œå› æ­¤éš¾ä»¥å•ç‹¬åªåŒ¹é…æ±‰å­—ã€‚
+    å¦ä¸€ä¸ªåŸå› åˆ™æ˜¯ï¼Œå®é™…ä¸Šåœ¨ä»£ç ä¸­ï¼Œä½ æ˜¯å¯ä»¥ç”¨ä¸­æ–‡æ ‡ç‚¹ä½œä¸ºå˜é‡åçš„ï¼ŒåŠ ä¸Šè¡¨è¾¾å¼è¢«é™åˆ¶ä¸ºä¸åœ¨æ³¨é‡Šç­‰åœ°æ–¹åŒ¹é…ï¼Œå› æ­¤ç¡®å®å¯ä»¥åŒ¹é…åˆ°æ­£ç¡®ç»“æœã€‚
+    è¿™æ˜¯ SciTE ç¼–è¾‘å™¨ä¸­ Ctrl+F ä½¿ç”¨çš„ç‰ˆæœ¬ {"\.*[^\x00-\x40\x5B-\x5E\x60\x7B-\x7F][^\x00-\x2F\x3A-\x40\x5B-\x5E\x60\x7B-\x7F]+"}
 --]]
 local IDENTIFIER_PATTERNS = {"[\46]*[^\1-\64\91-\94\96\123-\127][^\1-\47\58-\64\91-\94\96\123-\127]+"}
 
@@ -86,8 +86,8 @@ props["autocomplete.ahk2.start.characters"] = ""
 
 
 
--- ²»Çø·Ö´óĞ¡Ğ´µÄ»°£¬ normalize º¯Êı¾ÍÖ±½Ó´óĞ´È¡µ½µÄ×Ö·û¡£
--- ½«´óĞ´ºóµÄ×Ö·û´æÎª key £¬¿ÉÒÔ±ÜÃâÖØ¸´¼ÇÂ¼ ¡°word¡± ¡°Word¡± ÕâÑùµÄµ¥´Ê¡£
+-- ä¸åŒºåˆ†å¤§å°å†™çš„è¯ï¼Œ normalize å‡½æ•°å°±ç›´æ¥å¤§å†™å–åˆ°çš„å­—ç¬¦ã€‚
+-- å°†å¤§å†™åçš„å­—ç¬¦å­˜ä¸º key ï¼Œå¯ä»¥é¿å…é‡å¤è®°å½• â€œwordâ€ â€œWordâ€ è¿™æ ·çš„å•è¯ã€‚
 local normalize
 if IGNORE_CASE then
     normalize = string.upper
@@ -118,7 +118,7 @@ end
 
 
 local names = {}
-local unique = {} -- ÈÃ unique ³Ö¾ÃµÄ´¢´æÊı¾İ¡£Õâ¸ö¶ÔÏóÊÇÒÔ unique["key"]=value ĞÎÊ½´¢´æÖµµÄ£¬ËùÒÔ key ¶¼ÊÇÎ¨Ò»µÄ¡£
+local unique = {} -- è®© unique æŒä¹…çš„å‚¨å­˜æ•°æ®ã€‚è¿™ä¸ªå¯¹è±¡æ˜¯ä»¥ unique["key"]=value å½¢å¼å‚¨å­˜å€¼çš„ï¼Œæ‰€ä»¥ key éƒ½æ˜¯å”¯ä¸€çš„ã€‚
 local function unique2names()
     names = {}
     for _,name in pairs(unique) do
@@ -135,35 +135,35 @@ local function saveCache()
     buffer.uniqueForAutoComplete = unique
 end
 local function buildNamesFromPos(_startPos, _endPos)
-    setLexerSpecificStuff() -- »ñÈ¡ĞèÒªºöÂÔµÄÑùÊ½µÄ×ø±ê£¬ÀıÈçËùÓĞ×¢ÊÍ²¿·ÖµÄ×ø±ê¡£
+    setLexerSpecificStuff() -- è·å–éœ€è¦å¿½ç•¥çš„æ ·å¼çš„åæ ‡ï¼Œä¾‹å¦‚æ‰€æœ‰æ³¨é‡Šéƒ¨åˆ†çš„åæ ‡ã€‚
     local startPos, endPos
-    endPos = _startPos - 1 -- ÕâÀï±ØĞë -1 £¬·ñÔòÎÄÊ××¥µ½µÄ¹Ø¼ü×Ö»á±»¿³Í· ¡°msgbox¡± ±ä ¡°sgbox¡± ¡£
-    -- Collect all words matching the given patterns. ¸ù¾İ¹æÔòÌáÈ¡¹Ø¼ü×Ö¡£
+    endPos = _startPos - 1 -- è¿™é‡Œå¿…é¡» -1 ï¼Œå¦åˆ™æ–‡é¦–æŠ“åˆ°çš„å…³é”®å­—ä¼šè¢«ç å¤´ â€œmsgboxâ€ å˜ â€œsgboxâ€ ã€‚
+    -- Collect all words matching the given patterns. æ ¹æ®è§„åˆ™æå–å…³é”®å­—ã€‚
     for i, pattern in ipairs(IDENTIFIER_PATTERNS) do
         while true do
-            -- SCFIND_REGEXP ±íÊ¾Ê¹ÓÃÕıÔò±í´ïÊ½È¥Æ¥Åä¡£Ä¬ÈÏ´óĞ¡Ğ´²»Ãô¸Ğ£¬Òò´ËĞèÒªÊÖ¶¯¼ÓÉÏ´óĞ¡Ğ´Ãô¸ĞµÄ²ÎÊı SCFIND_MATCHCASE £¡
+            -- SCFIND_REGEXP è¡¨ç¤ºä½¿ç”¨æ­£åˆ™è¡¨è¾¾å¼å»åŒ¹é…ã€‚é»˜è®¤å¤§å°å†™ä¸æ•æ„Ÿï¼Œå› æ­¤éœ€è¦æ‰‹åŠ¨åŠ ä¸Šå¤§å°å†™æ•æ„Ÿçš„å‚æ•° SCFIND_MATCHCASE ï¼
             startPos, endPos = editor:findtext(pattern, SCFIND_REGEXP + SCFIND_MATCHCASE, endPos + 1)
             if (not startPos) or (endPos > _endPos) then
                 break
             end
-            -- Æ¥Åäµ½µÄÄÚÈİ²»ÔÚ×¢ÊÍÖĞ
+            -- åŒ¹é…åˆ°çš„å†…å®¹ä¸åœ¨æ³¨é‡Šä¸­
             if not shouldIgnorePos(startPos) then
                 if endPos-startPos >= MIN_IDENTIFIER_LEN then
                     -- Create one key-value pair per unique word:
                     local name = editor:textrange(startPos, endPos)
-                    if DEBUG_MODE then print("±¾´ÎÈ¡µ½µÄ¹Ø¼ü×Ö£º"..name) end
-                    unique[normalize(name)] = name -- normalize ÔÚºöÂÔ´óĞ¡Ğ´µÄÇé¿öÏÂ£¬Êµ¼ÊÉÏÊÇ°ÑËùÓĞµ¥´Ê´óĞ´»¯ÁËÒ»±é£¬ÒÔ±ÜÃâÖØ¸´Ìí¼Óµ¥´Ê¡£
+                    if DEBUG_MODE then print("æœ¬æ¬¡å–åˆ°çš„å…³é”®å­—ï¼š"..name) end
+                    unique[normalize(name)] = name -- normalize åœ¨å¿½ç•¥å¤§å°å†™çš„æƒ…å†µä¸‹ï¼Œå®é™…ä¸Šæ˜¯æŠŠæ‰€æœ‰å•è¯å¤§å†™åŒ–äº†ä¸€éï¼Œä»¥é¿å…é‡å¤æ·»åŠ å•è¯ã€‚
                 end
             end
         end
     end
 end
-local function buildApiNames() -- ´Ó ¡°ahk.api¡± ºÍ ¡°user\user.ahk.api¡± ÎÄ¼şÖĞÈ¡¹Ø¼ü×Ö¡£
+local function buildApiNames() -- ä» â€œahk.apiâ€ å’Œ â€œuser\user.ahk.apiâ€ æ–‡ä»¶ä¸­å–å…³é”®å­—ã€‚
     local apiFiles = props["APIPath"] or ""
-    apiFiles:gsub("[^;]+", function(apiFile) -- For each in ;-delimited list. É¾³ı ¡°;¡± Ö®ÍâµÄ×Ö·û£¬Ò²¾ÍÊÇÉ¾µÃÖ»Ê£·Ö¸ô·û ¡°;¡± ÁË¡£
-        if FileExists(apiFile) then -- ÎÄ¼ş´æÔÚÔÙ½øĞĞ²Ù×÷¡£²»È»»á±¨´íÕÒ²»µ½ÎÄ¼ş¡£
+    apiFiles:gsub("[^;]+", function(apiFile) -- For each in ;-delimited list. åˆ é™¤ â€œ;â€ ä¹‹å¤–çš„å­—ç¬¦ï¼Œä¹Ÿå°±æ˜¯åˆ å¾—åªå‰©åˆ†éš”ç¬¦ â€œ;â€ äº†ã€‚
+        if FileExists(apiFile) then -- æ–‡ä»¶å­˜åœ¨å†è¿›è¡Œæ“ä½œã€‚ä¸ç„¶ä¼šæŠ¥é”™æ‰¾ä¸åˆ°æ–‡ä»¶ã€‚
             for name in io.lines(apiFile) do
-                name = name:gsub("[\(, ].*", "") -- Discard parameters/comments. É¾³ı×óÀ¨ºÅ¡¢¶ººÅ¡¢¿Õ¸ñ¼°ÆäºóÃæµÄÈ«²¿×Ö·û¡£
+                name = name:gsub("[\(, ].*", "") -- Discard parameters/comments. åˆ é™¤å·¦æ‹¬å·ã€é€—å·ã€ç©ºæ ¼åŠå…¶åé¢çš„å…¨éƒ¨å­—ç¬¦ã€‚
                 if string.len(name) > 0 then
                     unique[normalize(name)] = name -- This also "case-corrects"; e.g. "gui" -> "Gui".
                 end
@@ -176,11 +176,11 @@ local function buildDocNames()
 end
 local function buildNames()
     unique = {}
-    -- ´Ó API ÎÄ¼ş´´½¨¹Ø¼ü×Ö
+    -- ä» API æ–‡ä»¶åˆ›å»ºå…³é”®å­—
     buildApiNames()
-    -- ´Óµ±Ç°´ò¿ªÎÄ¼ş´´½¨¹Ø¼ü×Ö
+    -- ä»å½“å‰æ‰“å¼€æ–‡ä»¶åˆ›å»ºå…³é”®å­—
     buildDocNames()
-    -- ½«¹Ø¼ü×Ö×ªÎª×Ô¶¯Íê³ÉÁĞ±í
+    -- å°†å…³é”®å­—è½¬ä¸ºè‡ªåŠ¨å®Œæˆåˆ—è¡¨
     unique2names()
 end
 
@@ -189,18 +189,18 @@ end
 local notempty = next
 local lastAutoCItem = 0 -- Used by handleKey().
 local menuItems
-local list_old = "" -- ´¢´æ¾ÉµÄ list µÄÖµ£¬ÓÃÓÚºÍĞÂµÄ list ×ö¶Ô±È£¬Ã»±ä»¯¾Í²»Ë¢ĞÂÁĞ±í£¬½µµÍÉÁË¸¡£
+local list_old = "" -- å‚¨å­˜æ—§çš„ list çš„å€¼ï¼Œç”¨äºå’Œæ–°çš„ list åšå¯¹æ¯”ï¼Œæ²¡å˜åŒ–å°±ä¸åˆ·æ–°åˆ—è¡¨ï¼Œé™ä½é—ªçƒã€‚
 local function handleChar(char, calledByHotkey)
     -- This function should only run when the Editor pane is focused.
     if not editor.Focus then return false end
     if DEBUG_MODE then print("--------------------") end
     --[[
-        Êµ¼ÊÉÏ£¬Èç¹û´ò¿ª SciTE Ê±Ã»ÓĞÈÎºÎÎÄ¼ş±»´ò¿ª£¬ÄÇÃ´´ËÊ± OnOpen ÊÂ¼şÊÇ»á±»¼¤»îµÄ¡£
-        ÓĞÎÊÌâµÄ¾ÍÊÇÒÑ¾­´ò¿ªÁËÎÄ¼ş£¬´ËÊ±ĞÂ½¨ÎÄ¼ş£¬ OnOpen ÊÂ¼şÓÖ²»»á±»¼¤»î¡£
-        ´ËÊ± OnClear() ÊÇÎ¨Ò»ÄÜÔÚ´´½¨ĞÂÎÄ¼şÊ±±»¼¤»îµÄÊÂ¼ş¡£
-        µ«ÊÇ¼¤»î´ËÊÂ¼şÊ±£¬ buffer ²¢Ã»ÓĞ±»Çå¿Õ£¬Öµ»¹ÊÇÇ°Ò»¸öÎÄ¼şµÄ¡£
-        Ò²¾ÍÊÇËµÔÚÎ¨Ò»ÄÜ¹»±äÏà²¶»ñ´´½¨ĞÂÎÄ¼şµÄÊÂ¼şÖĞ£¬Ã»·¨×öÈÎºÎÊÂ¡£
-        Òò´ËÖ»ÄÜÔÚ´Ë´¦ÑéÖ¤²¢½¨Á¢¹Ø¼ü×ÖÁĞ±í¡£ bug #1
+        å®é™…ä¸Šï¼Œå¦‚æœæ‰“å¼€ SciTE æ—¶æ²¡æœ‰ä»»ä½•æ–‡ä»¶è¢«æ‰“å¼€ï¼Œé‚£ä¹ˆæ­¤æ—¶ OnOpen äº‹ä»¶æ˜¯ä¼šè¢«æ¿€æ´»çš„ã€‚
+        æœ‰é—®é¢˜çš„å°±æ˜¯å·²ç»æ‰“å¼€äº†æ–‡ä»¶ï¼Œæ­¤æ—¶æ–°å»ºæ–‡ä»¶ï¼Œ OnOpen äº‹ä»¶åˆä¸ä¼šè¢«æ¿€æ´»ã€‚
+        æ­¤æ—¶ OnClear() æ˜¯å”¯ä¸€èƒ½åœ¨åˆ›å»ºæ–°æ–‡ä»¶æ—¶è¢«æ¿€æ´»çš„äº‹ä»¶ã€‚
+        ä½†æ˜¯æ¿€æ´»æ­¤äº‹ä»¶æ—¶ï¼Œ buffer å¹¶æ²¡æœ‰è¢«æ¸…ç©ºï¼Œå€¼è¿˜æ˜¯å‰ä¸€ä¸ªæ–‡ä»¶çš„ã€‚
+        ä¹Ÿå°±æ˜¯è¯´åœ¨å”¯ä¸€èƒ½å¤Ÿå˜ç›¸æ•è·åˆ›å»ºæ–°æ–‡ä»¶çš„äº‹ä»¶ä¸­ï¼Œæ²¡æ³•åšä»»ä½•äº‹ã€‚
+        å› æ­¤åªèƒ½åœ¨æ­¤å¤„éªŒè¯å¹¶å»ºç«‹å…³é”®å­—åˆ—è¡¨ã€‚ bug #1
     --]]
     if not buffer.namesCache then
         if DEBUG_MODE then print("OnNewFile_no_cache|   endpos:"..editor.TextLength) end
@@ -211,23 +211,23 @@ local function handleChar(char, calledByHotkey)
     end
 
     --[[
-        ĞĞÄ£Ê½µÄÒâÒå¾ÍÊÇ¡ª¡ª¹Ø¼ü×ÖÔÚ»»ĞĞºó¾Í±»ÊµÊ±´´½¨£¬Í¬Ê±ÓÖ²»»áÒòÎªÃ¿´Î¸üĞÂ¹Ø¼ü×Ö¶¼ÊÇÈ«ÎÄ¸üĞÂ¶øÔì³ÉĞÔÄÜÎÊÌâ¡£
-        È±µã¾ÍÊÇ×îÍêÃÀµÄ×ö·¨Êµ¼ÊÉÏÊÇ»ñÈ¡ÎÄ¼şËùÓĞ±»ĞŞ¸ÄµÄĞĞ£¬È»ºóÌáÈ¡ÕâĞ©ĞĞµÄ¹Ø¼ü×Ö¡£
-        µ«Ä¿Ç°µÄ×ö·¨ÊÇÌáÈ¡°´ÁË»Ø³µµÄÄÇÒ»ĞĞ£¬Õâµ±È»°üÀ¨ÁË´ó²¿·Ö´úÂë±»ĞŞ¸ÄµÄÇé¿ö£¬µ«ÏÔÈ»ĞŞ¸ÄÄ³ĞĞºó£¬Êó±êµã×ßµÄÇé¿öÃ»±»°üÀ¨ÔÚÄÚ¡£
+        è¡Œæ¨¡å¼çš„æ„ä¹‰å°±æ˜¯â€”â€”å…³é”®å­—åœ¨æ¢è¡Œåå°±è¢«å®æ—¶åˆ›å»ºï¼ŒåŒæ—¶åˆä¸ä¼šå› ä¸ºæ¯æ¬¡æ›´æ–°å…³é”®å­—éƒ½æ˜¯å…¨æ–‡æ›´æ–°è€Œé€ æˆæ€§èƒ½é—®é¢˜ã€‚
+        ç¼ºç‚¹å°±æ˜¯æœ€å®Œç¾çš„åšæ³•å®é™…ä¸Šæ˜¯è·å–æ–‡ä»¶æ‰€æœ‰è¢«ä¿®æ”¹çš„è¡Œï¼Œç„¶åæå–è¿™äº›è¡Œçš„å…³é”®å­—ã€‚
+        ä½†ç›®å‰çš„åšæ³•æ˜¯æå–æŒ‰äº†å›è½¦çš„é‚£ä¸€è¡Œï¼Œè¿™å½“ç„¶åŒ…æ‹¬äº†å¤§éƒ¨åˆ†ä»£ç è¢«ä¿®æ”¹çš„æƒ…å†µï¼Œä½†æ˜¾ç„¶ä¿®æ”¹æŸè¡Œåï¼Œé¼ æ ‡ç‚¹èµ°çš„æƒ…å†µæ²¡è¢«åŒ…æ‹¬åœ¨å†…ã€‚
     --]]
     if char == "\n" then
-        -- »ñÈ¡°´ÏÂ»Ø³µÊ±µÄÄÇĞĞµÄÊ×Î²×ø±ê¡£
+        -- è·å–æŒ‰ä¸‹å›è½¦æ—¶çš„é‚£è¡Œçš„é¦–å°¾åæ ‡ã€‚
         local line_num = editor:LineFromPosition(editor.CurrentPos)
         local line_start = editor:PositionFromLine(line_num-1)
         local line_end = editor.LineEndPosition[line_num-1]
-        -- ÕâÀïÊÇ¸üĞÂ unique £¬ËùÒÔ²»ÒªÈ¥Çå¿Õ unique ¡£
+        -- è¿™é‡Œæ˜¯æ›´æ–° unique ï¼Œæ‰€ä»¥ä¸è¦å»æ¸…ç©º unique ã€‚
         buildNamesFromPos(line_start, line_end)
         unique2names()
         saveCache()
-        -- ×Ô¶¯Ëõ½ø
+        -- è‡ªåŠ¨ç¼©è¿›
         local prevStyle = editor.StyleAt[getPrevLinePos()]
         if not isInTable(IGNORE_STYLES[editor.Lexer], prevStyle) then
-            return AutoIndent_OnNewLine() -- fincs Ô­°æÕâÀï¾ÍÓÃµÄ return ¡£
+            return AutoIndent_OnNewLine() -- fincs åŸç‰ˆè¿™é‡Œå°±ç”¨çš„ return ã€‚
         end
     elseif char == "{" then
         local curStyle = editor.StyleAt[editor.CurrentPos-2]
@@ -243,8 +243,8 @@ local function handleChar(char, calledByHotkey)
 
     local pos = editor.CurrentPos
     local startPos = editor:WordStartPosition(pos, true)
-    if editor:textrange(startPos-1, startPos)=="." then startPos = startPos - 1 end -- ÍùÇ°È¡Ò»¸ö×Ö·û¿´ÄÜ²»ÄÜÈ¡µ½ ¡°.¡± ¡£
-    if DEBUG_MODE then print("±¾´Î¼üÈëµÄ¹Ø¼ü×Ö£º"..editor:textrange(startPos, pos)) end
+    if editor:textrange(startPos-1, startPos)=="." then startPos = startPos - 1 end -- å¾€å‰å–ä¸€ä¸ªå­—ç¬¦çœ‹èƒ½ä¸èƒ½å–åˆ° â€œ.â€ ã€‚
+    if DEBUG_MODE then print("æœ¬æ¬¡é”®å…¥çš„å…³é”®å­—ï¼š"..editor:textrange(startPos, pos)) end
     local len = pos - startPos
     if len < MIN_PREFIX_LEN then
         if editor:AutoCActive() then
@@ -273,8 +273,8 @@ local function handleChar(char, calledByHotkey)
 
     if not editor:AutoCActive() then
         if DEBUG_MODE then print("branch3") end
-        -- ÓÉÓÚ×Ô¶¯Íê³É¿ÉÒÔÍ¨¹ı°üÀ¨µ«²»ÏŞÓÚ ÖĞÍ¾{enter}¡¢ÖĞÍ¾{tab}¡¢È«²¿ÊäÍêµÈ·½Ê½Íê³É¡£
-        -- ÎªÁË±ÜÃâ bug Ò²ÎªÁË±ÜÃâµ½´¦È¥Çå¿Õ list_old £¬Òò´ËÍ³Ò»ÔÚÖ»ÒªÃ»ÓĞ×Ô¶¯Íê³É¿òÊ±¾ÍÇå¿Õ¾É±äÁ¿£¡
+        -- ç”±äºè‡ªåŠ¨å®Œæˆå¯ä»¥é€šè¿‡åŒ…æ‹¬ä½†ä¸é™äº ä¸­é€”{enter}ã€ä¸­é€”{tab}ã€å…¨éƒ¨è¾“å®Œç­‰æ–¹å¼å®Œæˆã€‚
+        -- ä¸ºäº†é¿å… bug ä¹Ÿä¸ºäº†é¿å…åˆ°å¤„å»æ¸…ç©º list_old ï¼Œå› æ­¤ç»Ÿä¸€åœ¨åªè¦æ²¡æœ‰è‡ªåŠ¨å®Œæˆæ¡†æ—¶å°±æ¸…ç©ºæ—§å˜é‡ï¼
         list_old = ""
         if shouldIgnorePos(startPos) and not calledByHotkey then
         -- User is typing in a comment or string, so don't automatically
@@ -287,20 +287,20 @@ local function handleChar(char, calledByHotkey)
     for i, name in ipairs(names) do
         local s = normalize(string.sub(name, 1, len))
         --[[
-        ÕâÀï×Ö·û¿ªÊ¼²åÈë×Ô¶¯Íê³É¿òÁË¡£
-        ×Ö·û´®ÊÇ¿ÉÒÔ±È½Ï´óĞ¡µÄ£¬ ¡°ABC¡± ÊÇ´óÓÚ ¡°ABB¡± µÄ¡£
-        µ±ÎÒÃÇÊäÈë ¡°ms¡± Ê±£¬ names »á±»±éÀú£¬Ö±µ½ ¡°Multi¡± Ê±Í£ÏÂ£¬ÒòÎªÔÚ names ÖĞ£¬ Multi ¾ÍÊÇ MsgBox µÄÏÂÒ»¸ö¹Ø¼ü×Ö¡£
-        Ö®ËùÒÔÒªÔÚÏÂÒ»¸ö¹Ø¼ü×ÖµÄµØ·½Í£ÏÂ£¬ÊÇÒòÎªÁĞ±í±»ÅÅĞò¹ı£¬±ÈÈçÎªÁËÍêÕû»ñÈ¡ËùÓĞ ¡°gui¡± ¿ªÍ·µÄ¹Ø¼ü×Ö£¬ÄÇÃ´¾ÍµÃÔÚ ¡°guj¡± Í£ÏÂ¡£
+        è¿™é‡Œå­—ç¬¦å¼€å§‹æ’å…¥è‡ªåŠ¨å®Œæˆæ¡†äº†ã€‚
+        å­—ç¬¦ä¸²æ˜¯å¯ä»¥æ¯”è¾ƒå¤§å°çš„ï¼Œ â€œABCâ€ æ˜¯å¤§äº â€œABBâ€ çš„ã€‚
+        å½“æˆ‘ä»¬è¾“å…¥ â€œmsâ€ æ—¶ï¼Œ names ä¼šè¢«éå†ï¼Œç›´åˆ° â€œMultiâ€ æ—¶åœä¸‹ï¼Œå› ä¸ºåœ¨ names ä¸­ï¼Œ Multi å°±æ˜¯ MsgBox çš„ä¸‹ä¸€ä¸ªå…³é”®å­—ã€‚
+        ä¹‹æ‰€ä»¥è¦åœ¨ä¸‹ä¸€ä¸ªå…³é”®å­—çš„åœ°æ–¹åœä¸‹ï¼Œæ˜¯å› ä¸ºåˆ—è¡¨è¢«æ’åºè¿‡ï¼Œæ¯”å¦‚ä¸ºäº†å®Œæ•´è·å–æ‰€æœ‰ â€œguiâ€ å¼€å¤´çš„å…³é”®å­—ï¼Œé‚£ä¹ˆå°±å¾—åœ¨ â€œgujâ€ åœä¸‹ã€‚
         --]]
-        if s >= prefix then -- ´óÓÚµÈÓÚÓÃµÃºÜÇÉÃî¡£µÈÓÚÊ± ´ú±í¹Ø¼ü×ÖÆ¥Åä£¬´óÓÚÊ± ´ú±íÆ¥ÅäÍêÁË£¬¿ÉÒÔÌø³ö¡£
+        if s >= prefix then -- å¤§äºç­‰äºç”¨å¾—å¾ˆå·§å¦™ã€‚ç­‰äºæ—¶ ä»£è¡¨å…³é”®å­—åŒ¹é…ï¼Œå¤§äºæ—¶ ä»£è¡¨åŒ¹é…å®Œäº†ï¼Œå¯ä»¥è·³å‡ºã€‚
             if s == prefix then
-                table.insert(menuItems, name) -- ÕâÀïÒÑ¾­°ÑËùÓĞÆ¥ÅäµÄ¹Ø¼ü×ÖÈ«²¿´æÈë menuItems ÁË¡£
+                table.insert(menuItems, name) -- è¿™é‡Œå·²ç»æŠŠæ‰€æœ‰åŒ¹é…çš„å…³é”®å­—å…¨éƒ¨å­˜å…¥ menuItems äº†ã€‚
             else
                 break -- There will be no more matches.
             end
         end
     end
-    if DEBUG_MODE then print("3.1|Æ¥ÅäÁĞ±í£º"..table.concat(menuItems, "\1")) end
+    if DEBUG_MODE then print("3.1|åŒ¹é…åˆ—è¡¨ï¼š"..table.concat(menuItems, "\1")) end
     if notempty(menuItems) then
         if DEBUG_MODE then print("branch4") end
         -- Show or update the auto-complete list.
@@ -309,8 +309,8 @@ local function handleChar(char, calledByHotkey)
         editor.AutoCCaseInsensitiveBehaviour = 1 -- Do NOT pre-select a case-sensitive match
         editor.AutoCSeparator = 1
         editor.AutoCMaxHeight = 5
-        -- if not editor:AutoCActive() then -- ÁíÒ»ÖÖ½µµÍÉÁË¸µÄ·½Ê½£¬ºÍ SciTE Ô­°æÒ»Ñù£¬Ö»Òª×Ô¶¯Íê³É¿ò³öÏÖÁË£¬¾ÍÖ»Ìø×ªÎ»ÖÃ¶ø²»Ë¢ĞÂ¡£
-        if list~=list_old then -- ½µµÍ×Ô¶¯Íê³É¿òµÄÉÁË¸£¬Ö»ÓĞÆ¥ÅäµÄ¹Ø¼ü×Ö·¢Éú±ä»¯Ê±²ÅË¢ĞÂ¡£
+        -- if not editor:AutoCActive() then -- å¦ä¸€ç§é™ä½é—ªçƒçš„æ–¹å¼ï¼Œå’Œ SciTE åŸç‰ˆä¸€æ ·ï¼Œåªè¦è‡ªåŠ¨å®Œæˆæ¡†å‡ºç°äº†ï¼Œå°±åªè·³è½¬ä½ç½®è€Œä¸åˆ·æ–°ã€‚
+        if list~=list_old then -- é™ä½è‡ªåŠ¨å®Œæˆæ¡†çš„é—ªçƒï¼Œåªæœ‰åŒ¹é…çš„å…³é”®å­—å‘ç”Ÿå˜åŒ–æ—¶æ‰åˆ·æ–°ã€‚
             if DEBUG_MODE then print("branch5") end
             editor:AutoCShow(len, list)
             list_old=list
@@ -348,7 +348,7 @@ local function handleChar(char, calledByHotkey)
             editor:AutoCCancel()
         end
     end
-    -- ²»ÈÃÆäËü OnChar º¯Êı¼ÌĞø´¦Àí£¬·ñÔò»áÔì³ÉÖĞÎÄ¹Ø¼ü×ÖÏÔÊ¾±»´ò¶Ï¡£
+    -- ä¸è®©å…¶å®ƒ OnChar å‡½æ•°ç»§ç»­å¤„ç†ï¼Œå¦åˆ™ä¼šé€ æˆä¸­æ–‡å…³é”®å­—æ˜¾ç¤ºè¢«æ‰“æ–­ã€‚
     return true
 end
 
@@ -412,14 +412,14 @@ local events = {
     OnChar          = handleChar,
     OnKey           = handleKey,
     OnSwitchFile    = function()
-        -- ²»Í¬ÎÄ¼şµÄ buffer ÖµÊÇÎ¨Ò»µÄ£¬Òò´ËÓÃËüÀ´»º´æ¶ÔÓ¦ÎÄ¼şµÄ¹Ø¼ü×Ö¡£
+        -- ä¸åŒæ–‡ä»¶çš„ buffer å€¼æ˜¯å”¯ä¸€çš„ï¼Œå› æ­¤ç”¨å®ƒæ¥ç¼“å­˜å¯¹åº”æ–‡ä»¶çš„å…³é”®å­—ã€‚
         if not buffer.namesCache then
             --[[
-                ´ò¿ª»òÇĞ»»Ò»¸öÎÄ¼şÊ±£¬Õı³£µÄÊÂ¼şË³ĞòÊÇ OnOpen OnSwitchFile ¡£
-                µ«µ±´ò¿ª SciTE Ê±£¬ÒÑ¾­´ò¿ªÁËÒ»¸ö lua ÎÄ¼ş£¬ÄÇÃ´ÊÂ¼ş±»¼¤»îµÄË³Ğò»áÊÇ OnSwitchFile OnOpen ¡£
-                ÓÉÓÚ OnSwitchFile ÏÈ±»¼¤»î£¬´ËÊ± editor.TextLength µÄÖµ¾Í»áÊÇ0¡£
-                ËùÒÔ´ËÊ± buildNames() ÎŞ·¨»ñµÃÕıÈ·½á¹û¡£
-                Òò´ËĞèÒªÌø¹ı£¬ÔÚ OnOpen ÊÂ¼şÖĞÔÙ´¦Àí¡£
+                æ‰“å¼€æˆ–åˆ‡æ¢ä¸€ä¸ªæ–‡ä»¶æ—¶ï¼Œæ­£å¸¸çš„äº‹ä»¶é¡ºåºæ˜¯ OnOpen OnSwitchFile ã€‚
+                ä½†å½“æ‰“å¼€ SciTE æ—¶ï¼Œå·²ç»æ‰“å¼€äº†ä¸€ä¸ª lua æ–‡ä»¶ï¼Œé‚£ä¹ˆäº‹ä»¶è¢«æ¿€æ´»çš„é¡ºåºä¼šæ˜¯ OnSwitchFile OnOpen ã€‚
+                ç”±äº OnSwitchFile å…ˆè¢«æ¿€æ´»ï¼Œæ­¤æ—¶ editor.TextLength çš„å€¼å°±ä¼šæ˜¯0ã€‚
+                æ‰€ä»¥æ­¤æ—¶ buildNames() æ— æ³•è·å¾—æ­£ç¡®ç»“æœã€‚
+                å› æ­¤éœ€è¦è·³è¿‡ï¼Œåœ¨ OnOpen äº‹ä»¶ä¸­å†å¤„ç†ã€‚
             --]]
             if editor.TextLength > 0 then
                 if DEBUG_MODE then print("OnSwitchFile_no_cache|   endpos:"..editor.TextLength) end
