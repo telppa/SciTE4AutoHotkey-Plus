@@ -1,3 +1,5 @@
+以下是未在菜单栏或右键菜单中列明的快捷键
+
 剩余未被定义的快捷键
 U J M
 
@@ -8,7 +10,7 @@ Ctrl+Keypad*
 
 Ctrl+Tab
 Ctrl+Shift+Tab
-下、上一个标签
+切换下、上一个标签
 
 Tab
 Shift+Tab
@@ -16,7 +18,8 @@ Shift+Tab
 
 Ctrl+BackSpace
 Ctrl+Delete
-删除前、后半部分单词 
+删除前、后半部分单词
+
 Ctrl+Shift+BackSpace
 Ctrl+Shift+Delete
 删除至行首、删除至行尾
@@ -24,54 +27,13 @@ Ctrl+Shift+Delete
 Ctrl+Home
 Ctrl+End
 跳至页首、页尾
+
 Ctrl+Shift+Home
 Ctrl+Shift+End
 选中页首、页尾
 
 Ctrl+Keypad/
-折叠
-
-Ctrl+T
-设置、取消标记
-F2
-Shift+F2
-下、上一个标记
-Alt+F2
-Alt+Shift+F2
-选至下、上一个标记
-
-Ctrl+F3
-Ctrl+Shift+F3
-跳至下、上一个选中内容
-
-Ctrl+Up
-Ctrl+Down
-画面上、下移一行
-
-Ctrl+L
-Ctrl+Shift+L
-剪切、复制行
-Ctrl+K
-删除行
-
-Ctrl+[
-Ctrl+]
-上一段、下一段
-
-Ctrl+Left
-Ctrl+Right
-上个单词、下个单词
-
-Ctrl+/
-Ctrl+\
-上个单词部分、下个单词部分
-
-Alt+Shift+上 下 左 右 home end
-矩形选框多选
-
-Ctrl+Shift+Up
-Ctrl+Shift+Down
-选中至上一行、下一行
+折叠当前
 
 Ctrl+点击折叠符号
 折叠当前及其子项目
@@ -80,14 +42,58 @@ Shift+点击折叠符号
 展开当前及其子项目
 
 Ctrl+Shift+点击折叠栏
-全部折叠/展开
+全部折叠、展开
 
-中键点击单词
-Alt+Enter
+Ctrl+T
+设置、取消标记
+
+F2
+Shift+F2
+跳至下、上一个标记
+
+Alt+F2
+Alt+Shift+F2
+选至下、上一个标记
+
+Ctrl+F3
+Ctrl+Shift+F3
+跳至下、上一个光标下单词或选中内容
+
+Ctrl+Up
+Ctrl+Down
+画面上、下移一行
+
+Ctrl+L
+Ctrl+Shift+L
+剪切、复制行
+
+Ctrl+K
+删除行
+
+Ctrl+[
+Ctrl+]
+跳至上一段、下一段
+
+Ctrl+Left
+Ctrl+Right
+跳至上个单词、下个单词
+
+Ctrl+/
+Ctrl+\
+跳至上个单词部分、下个单词部分
+
+Alt+Shift+上 下 左 右 home end
+矩形选框多选
+
+Shift+Up
+Shift+Down
+选至上一行、下一行
+
+中键点击单词 或 Alt+Enter
 跳至定义
-Alt+滚轮
-Alt+左 右
+
+Alt+滚轮 或 Alt+左 右
 从定义跳回
-中键点击空白
-F12
+
+中键点击空白 或 F12
 呼出 TillaGoto 界面
