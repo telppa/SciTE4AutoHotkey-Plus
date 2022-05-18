@@ -176,6 +176,7 @@ magnification=%p_zoom%
 import Styles\%p_style%.style
 %p_extra%
 import _extensions
+
 )
 
 FileDelete, %UserPropsFile%
