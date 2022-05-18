@@ -120,21 +120,22 @@ IfExist, %LocalSciTEPath%\$NODEFTOOLBAR
 ToolbarProps := GlobalSettings "`n" Util_ReadExtToolbarDef() LocalSettings
 
 ; Load the tools
-ntools = 13
+ntools = 14
 _ToolButs =
 (LTrim Join`n
 -
 Set current platform,1,,autosize
 -
 Run script (F5),2,,autosize
-Debug script (F7),3,,autosize
-Pause script (F5),10,hidden,autosize
-Stop script,4,hidden,autosize
-Run current line of code (F10),5,hidden,autosize
-Run until next line of code (F11),6,hidden,autosize
-Run until function/label exit (Shift+F11),7,hidden,autosize
-Callstack,8,hidden,autosize
-Variable list,9,hidden,autosize
+Quick run script (F6),3,,autosize
+Debug script (F7),4,,autosize
+Pause script (F5),11,hidden,autosize
+Stop script,5,hidden,autosize
+Run current line of code (F10),6,hidden,autosize
+Run until next line of code (F11),7,hidden,autosize
+Run until function/label exit (Shift+F11),8,hidden,autosize
+Callstack,9,hidden,autosize
+Variable list,10,hidden,autosize
 ---
 
 )
@@ -146,6 +147,7 @@ Tools := []
 ; Set up the stock buttons
 IL_Add(_ToolIL, _IconLib, 18)
 IL_Add(_ToolIL, _IconLib, 2)
+IL_Add(_ToolIL, _IconLib, 23)
 IL_Add(_ToolIL, _IconLib, 1)
 IL_Add(_ToolIL, _IconLib, 3)
 IL_Add(_ToolIL, _IconLib, 4)
@@ -156,15 +158,16 @@ IL_Add(_ToolIL, _IconLib, 8)
 IL_Add(_ToolIL, _IconLib, 19)
 Tools[2]  := { Path: "?switch" }
 Tools[4]  := { Path: "?run" }
-Tools[5]  := { Path: "?debug" }
-Tools[6]  := { Path: "?pause" }
-Tools[7]  := { Path: "?stop" }
-Tools[8]  := { Path: "?stepinto" }
-Tools[9]  := { Path: "?stepover" }
-Tools[10] := { Path: "?stepout" }
-Tools[11] := { Path: "?stacktrace" }
-Tools[12] := { Path: "?varlist" }
-i := 11
+Tools[5]  := { Path: "?quickrun" }
+Tools[6]  := { Path: "?debug" }
+Tools[7]  := { Path: "?pause" }
+Tools[8]  := { Path: "?stop" }
+Tools[9]  := { Path: "?stepinto" }
+Tools[10] := { Path: "?stepover" }
+Tools[11] := { Path: "?stepout" }
+Tools[12] := { Path: "?stacktrace" }
+Tools[13] := { Path: "?varlist" }
+i := 12
 
 Loop, Parse, ToolbarProps, `n, `r
 {
@@ -525,6 +528,12 @@ Cmd_Run()
 		PostMessage, 0x111, 1127, 0,, ahk_id %scitehwnd%
 }
 
+Cmd_QuickRun()
+{
+	global
+	PostMessage, 0x111, 1101, 0,, ahk_id %scitehwnd%
+}
+
 Cmd_Pause()
 {
 	global
@@ -579,12 +588,13 @@ Msg_StartDebug(a,b,msg)
 	Toolbar_SetButton(hToolbar, 4, "-hidden")
 	Toolbar_SetButton(hToolbar, 5, "hidden")
 	Toolbar_SetButton(hToolbar, 6, "hidden")
-	Toolbar_SetButton(hToolbar, 7, "-hidden")
+	Toolbar_SetButton(hToolbar, 7, "hidden")
 	Toolbar_SetButton(hToolbar, 8, "-hidden")
 	Toolbar_SetButton(hToolbar, 9, "-hidden")
 	Toolbar_SetButton(hToolbar, 10, "-hidden")
 	Toolbar_SetButton(hToolbar, 11, "-hidden")
 	Toolbar_SetButton(hToolbar, 12, "-hidden")
+	Toolbar_SetButton(hToolbar, 13, "-hidden")
 	dbg_active := true
 	dbg_runshown := true
 }
@@ -594,13 +604,14 @@ Msg_StopDebug()
 	global
 	Toolbar_SetButton(hToolbar, 4, "-hidden")
 	Toolbar_SetButton(hToolbar, 5, "-hidden")
-	Toolbar_SetButton(hToolbar, 6, "hidden")
+	Toolbar_SetButton(hToolbar, 6, "-hidden")
 	Toolbar_SetButton(hToolbar, 7, "hidden")
 	Toolbar_SetButton(hToolbar, 8, "hidden")
 	Toolbar_SetButton(hToolbar, 9, "hidden")
 	Toolbar_SetButton(hToolbar, 10, "hidden")
 	Toolbar_SetButton(hToolbar, 11, "hidden")
 	Toolbar_SetButton(hToolbar, 12, "hidden")
+	Toolbar_SetButton(hToolbar, 13, "hidden")
 	dbg_active := false
 }
 
@@ -613,11 +624,11 @@ Msg_DebugRunToggle()
 	if dbg_runshown
 	{
 		Toolbar_SetButton(hToolbar, 4, "-hidden")
-		Toolbar_SetButton(hToolbar, 6, "hidden")
+		Toolbar_SetButton(hToolbar, 7, "hidden")
 	}else
 	{
 		Toolbar_SetButton(hToolbar, 4, "hidden")
-		Toolbar_SetButton(hToolbar, 6, "-hidden")
+		Toolbar_SetButton(hToolbar, 7, "-hidden")
 	}
 }
 
