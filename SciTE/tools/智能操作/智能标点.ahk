@@ -8,7 +8,7 @@
   因为在 #If 中用表达式进行判断，会触发一个错误，大致与 SendMessage 有关。
   以下是错误重现代码。
   
-  oSciTE := ComObjActive("SciTE4AHK.Application")
+  oSciTE := ComObjActive("{D7334085-22FB-416E-B398-B5038A5A0784}")
   aaaa()
   return
   
