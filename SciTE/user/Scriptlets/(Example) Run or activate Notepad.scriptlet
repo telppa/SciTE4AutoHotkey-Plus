@@ -1,8 +1,0 @@
-; Run or activate Notepad
-; Works with any Windows version
-; (uses window classes instead of
-; windows title).
-IfWinNotExist, ahk_class Notepad
-	Run, notepad.exe
-WinWait, ahk_class Notepad
-WinActivate

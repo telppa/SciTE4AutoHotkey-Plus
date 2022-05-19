@@ -1,0 +1,36 @@
+﻿/**
+作者：
+
+布谷布谷
+
+------------------
+示例：
+
+Array:=[]
+Array["A1","B1","C1"]:=1
+Array["A1","B1","C2","D1"]:=2
+Array["A1","B1","C2","D2","E1"]:=3
+Array["A1","B1","C3","D1","E1"]:=4
+Array["A1","B1","C3","D1","E2"]:=5
+Array["A1","B1","C3","D1","E3"]:=6
+Array["A1","B1","C3","D1","E4"]:=7
+Array["A1","B2"]:=8
+Array["A2","B1","C1","D1","E1"]:=9
+Array["A3"]:=10
+Array["A4","B1"]:=11
+MsgBox % ForArray(Array)
+
+*/
+
+ForArray(obj, _Name:="")
+{
+ for K, V in obj
+	{
+    L := (_Name ? _Name "[" : "obj[") K
+    if IsObject(V)
+			S .= ForArray(V, L)
+    else
+			S .= L "]:=" V "`n"
+	}
+	return, S
+}

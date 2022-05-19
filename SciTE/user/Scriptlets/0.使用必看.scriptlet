@@ -1,0 +1,33 @@
+﻿/**
+  片段开头以 /** 注释的内容，在插入到 SciTE 时会被跳过。
+  注意是 /** 而不是 /* ，并且一定是 开头 。
+
+  所以现在这段内容，就不会显示在 SciTE 中。
+  因此这里就很适合用来记录代码来源地址、用法示例等辅助信息。
+
+  来源：
+  xxxxxx
+
+  示例：
+  xxxxxx
+*/
+
+/**
+  这里也用 /** 进行注释，但却是第二个 /** 了。
+  所以插入到 SciTE 时不会被跳过。
+*/
+
+/*
+  你可以收集大量自己常用的代码，记录在本工具中。
+  需要用到某段代码时以 Ctrl+5 呼出本工具，输入关键词即可定位。
+  最后按 Ctrl+I 或 Alt+Enter 插入到编辑器中。
+*/
+
+; Run or activate Notepad
+; Works with any Windows version
+; (uses window classes instead of
+; windows title).
+IfWinNotExist, ahk_class Notepad
+	Run, notepad.exe
+WinWait, ahk_class Notepad
+WinActivate

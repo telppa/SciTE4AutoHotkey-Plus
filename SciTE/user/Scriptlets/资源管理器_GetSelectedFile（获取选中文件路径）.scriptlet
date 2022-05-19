@@ -1,0 +1,22 @@
+﻿/**
+示例：
+
+MsgBox % GetSelectedFile()
+
+*/
+
+; Gets file path of selected item in Explorer
+GetSelectedFile(hwnd=""){
+	hwnd := hwnd ? hwnd : WinExist("A")
+	WinGetClass class, ahk_id %hwnd%
+	if (class="CabinetWClass" or class="ExploreWClass")
+	{
+		try for window in ComObjCreate("Shell.Application").Windows
+				if (window.hwnd==hwnd)
+					sel := window.Document.SelectedItems
+		for item in sel
+			ToReturn .= item.path "`n"
+	}
+
+	return Trim(ToReturn,"`n")
+}

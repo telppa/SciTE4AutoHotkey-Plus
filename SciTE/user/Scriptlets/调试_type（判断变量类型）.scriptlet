@@ -1,0 +1,22 @@
+﻿/**
+来源：
+
+https://www.autohotkey.com/boards/viewtopic.php?f=6&t=2306&p=12791&hilit=type#p12791
+
+------------------
+示例：
+
+MsgBox % type("")     ; String
+MsgBox % type(1)      ; Integer
+MsgBox % type(1/1)    ; Float
+MsgBox % type("1")    ; String
+MsgBox % type(2**42)  ; Integer
+
+*/
+
+type(v)
+{
+    if IsObject(v)
+        return "Object"
+    return v="" || [v].GetCapacity(1) ? "String" : InStr(v,".") ? "Float" : "Integer"
+}

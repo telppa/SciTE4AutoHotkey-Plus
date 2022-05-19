@@ -1,0 +1,27 @@
+﻿/**
+SysWow64 文件夹，是系统用来存放32位文件的地方。System32 文件夹，是系统用来存放64位文件的地方。
+32位程序访问 System32 目录，会被自动映射到 SysWOW64 目录，而64位程序可以访问两者，不被映射。
+32位与64位程序都可以访问 Program Files (x86) 与 Program Files 目录。
+32位程序的寻址空间最多4G。64位程序可达TB级，想用大内存就得用64位。
+32位程序与64位程序有各自的注册表。
+
+------------------
+示例：
+
+MsgBox % GetMachineType("x:\a.dll")
+
+*/
+
+; 检测 EXE 或 DLL 文件是32位还是64位。
+GetMachineType(PE_File_Path)
+{
+  f:=FileOpen(PE_File_Path, "r")
+  f.Seek(0x3c, 0)
+  f.Seek(f.ReadUInt()+4, 0)
+  switch, f.ReadUShort()
+  {
+    case, 0x14c  : return, 32, f.Close()
+    case, 0x8664 : return, 64, f.Close()
+    default      : return, "ERROR", f.Close()
+  }
+}

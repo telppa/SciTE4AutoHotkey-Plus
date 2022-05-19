@@ -1,0 +1,28 @@
+﻿/**
+来源：
+
+https://autohotkey.com/board/topic/10707-fastest-way-to-remove-html-tags/page-4
+
+------------------
+示例：
+
+html=
+(
+<html>
+<body>
+<p>这是段落。</p>
+<p>这是段落。</p>
+<p>这是段落。</p>
+<p>段落元素由 p 标签定义。</p> 
+</body>
+</html>
+)
+MsgBox % html2text(html)
+
+*/
+
+; "<[^>]+>" 是一个优化过的正则
+html2text(strHTML)
+{
+  return, RegExReplace(strHTML, "<[^>]+>")
+}

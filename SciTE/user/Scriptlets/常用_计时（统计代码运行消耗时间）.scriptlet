@@ -1,0 +1,26 @@
+﻿/**
+示例：
+
+计时()
+ToolTip 123456
+Sleep 2000
+计时()
+
+*/
+
+计时()
+{
+	Static
+	if (CounterBefore="")
+	{
+		DllCall("QueryPerformanceFrequency", "Int64*", freq)
+		, DllCall("QueryPerformanceCounter", "Int64*", CounterBefore)
+	}
+	else
+	{
+		DllCall("QueryPerformanceCounter", "Int64*", CounterAfter)
+		, 耗时:=(CounterAfter - CounterBefore) / freq * 1000
+		, CounterBefore:=""
+		MsgBox, 4096, 耗时, % Format("{1} 毫秒`r`n或`r`n{2} 分 {3} 秒", 耗时, Floor(耗时/1000/60), Round(Mod(耗时/1000,60)))
+	}
+}

@@ -1,0 +1,15 @@
+﻿/**
+示例：
+
+str:="abc中文"
+RawSave(str, "x:\a.raw")
+
+*/
+
+; 二进制数据必须用 ByRef 传，否则会出现各种预期外的截断
+RawSave(ByRef var, filepath)
+{
+  f:=FileOpen(filepath, "w")
+  f.RawWrite(var, VarSetCapacity(var))
+  f.Close()
+}

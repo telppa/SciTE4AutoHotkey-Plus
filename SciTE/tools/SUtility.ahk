@@ -1,5 +1,9 @@
 ﻿/*
   更新日志：
+    2022.05.19
+      增强 新建 与 重命名 按钮。
+      去掉了最小化按钮。
+      版本号 2.3 。
     2022.05.12
       基于 Kawvin 0.2_2018.08.01 版重构。
       代码片段可分类或不分类。
@@ -27,7 +31,7 @@ Label_PreSetting:    ;{ 预设置
 ;}
 
 Label_DefVar:        ;{ 定义变量
-  ver := 2.2
+  ver := 2.3
   progName := "代码片段管理器"
   
   if (!oSciTE := GetSciTEInstance())
@@ -88,7 +92,7 @@ if 1 = /addScriptlet ;{ 命令行调用 - 添加代码片段
 ;}
 
 Label_DrawGUI:       ;{ 绘制窗体
-  Gui, +Owner%scitehwnd% +HwndhGUI
+  Gui, +Owner%scitehwnd% -MinimizeBox +HwndhGUI
   Gui, Margin, 10, 10
   Gui, Font, S9, %textFont%
   
@@ -131,7 +135,7 @@ return
 AddBtn:              ;{ 新建
   Gui +OwnDialogs
   
-  InputBox, fname2create, 新建代码片段, 输入要创建的代码片段名称`n`n格式1： 名称`n格式2： 分类_名称
+  InputBox, fname2create, 新建代码片段, 输入要创建的代码片段名称`n`n格式1： 名称`n格式2： 分类_名称,,,,,,,, % getCategoryName()
   if ErrorLevel
     return
   if !fname2create
@@ -156,12 +160,12 @@ RenBtn:              ;{ 重命名
   
   if (selected := getSelItemName())
   {
-    InputBox, fname2create, 重命名代码片段, 输入代码片段的新名称`n`n格式1： 名称`n格式2： 分类_名称
+    InputBox, fname2create, 重命名代码片段, 输入代码片段的新名称`n`n格式1： 名称`n格式2： 分类_名称,,,,,,,, %selected%
     if ErrorLevel
       return
     if !fname2create
       return
-    if (fname2create = %selected%)
+    if (fname2create = selected)
       return
     
     fname2create := validateFilename(fname2create)
@@ -424,6 +428,21 @@ getSelItemName()
   }
   
   return, out
+}
+
+getCategoryName()
+{
+  id := TV_GetSelection()
+  
+  if (id)
+  {
+    if (TV_GetChild(id))
+      TV_GetText(out, id)
+    else if (TV_GetParent(id))
+      TV_GetText(out, TV_GetParent(id))
+  }
+  
+  return out="" ? "" : out "_"
 }
 
 validateFilename(str)

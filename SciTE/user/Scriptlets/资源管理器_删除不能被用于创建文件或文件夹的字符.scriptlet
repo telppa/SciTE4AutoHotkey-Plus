@@ -1,0 +1,30 @@
+﻿/**
+示例：
+
+fileName := "abc<|>.txt"
+MsgBox % 删除不能被用于创建文件或文件夹的字符(fileName)
+
+*/
+
+; 文件名中如果有特殊符号，可能导致创建失败。
+; 以下是不被系统允许的特殊符号，在创建文件时随便试图使用任意一个就可以看到这个完整列表。
+; 两个常常被忽视的不被允许的字符是换行符。
+删除不能被用于创建文件或文件夹的字符(str)
+{
+	str := StrReplace(str, "`\")
+	str := StrReplace(str, "`/")
+	str := StrReplace(str, "`:")
+	str := StrReplace(str, "`*")
+	str := StrReplace(str, "`?")
+	str := StrReplace(str, """")
+	str := StrReplace(str, "`<")
+	str := StrReplace(str, "`>")
+	str := StrReplace(str, "`|")
+	str := StrReplace(str, "`r")
+	str := StrReplace(str, "`n")
+
+	; 创建的是文件夹的时候，最后一个字符不能是 “.” ，否则会失败。
+	; 创建的是文件时，则会自动删掉最后的 “.” 。
+	; 所以无论何种情况，最后一个字符是 “.” 时，都要被干掉。
+	return, RTrim(str, ".")
+}

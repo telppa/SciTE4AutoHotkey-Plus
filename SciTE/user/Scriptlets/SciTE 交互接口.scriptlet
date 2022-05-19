@@ -1,0 +1,10 @@
+﻿/**
+示例：
+
+直接运行下面代码就可以看到详细方法了。
+
+*/
+
+oSciTE := ComObjActive("{D7334085-22FB-416E-B398-B5038A5A0784}")
+path := oSciTE.SciTEDir "\tools\SciTE交互示例\SciTE交互示例.ahk"
+oSciTE.OpenFile(path)
