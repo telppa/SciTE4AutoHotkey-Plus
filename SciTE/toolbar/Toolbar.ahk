@@ -121,24 +121,48 @@ ToolbarProps := GlobalSettings "`n" Util_ReadExtToolbarDef() LocalSettings
 
 ; Load the tools
 ntools = 14
-_ToolButs =
-(LTrim Join`n
--
-Set current platform,1,,autosize
--
-Run script (F5),2,,autosize
-Quick run script (F6),3,,autosize
-Debug script (F7),4,,autosize
-Pause script (F5),11,hidden,autosize
-Stop script,5,hidden,autosize
-Run current line of code (F10),6,hidden,autosize
-Run until next line of code (F11),7,hidden,autosize
-Run until function/label exit (Shift+F11),8,hidden,autosize
-Callstack,9,hidden,autosize
-Variable list,10,hidden,autosize
----
+if (A_Language="0804")
+{
+	_ToolButs =
+	(LTrim Join`n
+	-
+	运行版本,1,,autosize
+	-
+	运行 (F5),2,,autosize
+	快速运行 (F6),3,,autosize
+	调试 (F7),4,,autosize
+	暂停 (F5),11,hidden,autosize
+	终止,5,hidden,autosize
+	单步步入 (F10),6,hidden,autosize
+	单步步过 (F11),7,hidden,autosize
+	执行到返回 (Shift+F11),8,hidden,autosize
+	调用栈,9,hidden,autosize
+	变量列表,10,hidden,autosize
+	---
 
-)
+	)
+}
+else
+{
+	_ToolButs =
+	(LTrim Join`n
+	-
+	Set current platform,1,,autosize
+	-
+	Run script (F5),2,,autosize
+	Quick run script (F6),3,,autosize
+	Debug script (F7),4,,autosize
+	Pause script (F5),11,hidden,autosize
+	Stop script,5,hidden,autosize
+	Run current line of code (F10),6,hidden,autosize
+	Run until next line of code (F11),7,hidden,autosize
+	Run until function/label exit (Shift+F11),8,hidden,autosize
+	Callstack,9,hidden,autosize
+	Variable list,10,hidden,autosize
+	---
+
+	)
+}
 _ToolIL := IL_Create()
 _IconLib = toolicon.icl
 
@@ -239,57 +263,61 @@ if A_ScreenDPI >= 120
 	Toolbar_SetButtonSize(hToolbar, 24, 24)
 
 ; Build the menus
+if (A_Language="0804")
+{
+	Menu, ExtMonMenu, Add, 安装扩展, ExtMonInstallExt
+	Menu, ExtMonMenu, Add, 移除扩展, ExtMonRemoveExt
+	Menu, ExtMonMenu, Add, 创建扩展, ExtMonCreateExt
+	Menu, ExtMonMenu, Add, 导出扩展, ExtMonExportExt
 
-Menu, ExtMonMenu, Add, 安装扩展, ExtMonInstallExt
-Menu, ExtMonMenu, Add, 移除扩展, ExtMonRemoveExt
-Menu, ExtMonMenu, Add, 创建扩展, ExtMonCreateExt
-Menu, ExtMonMenu, Add, 导出扩展, ExtMonExportExt
+	Menu, ExtMenu, Add, 扩展管理器, extmon
+	Menu, ExtMenu, Add, 重启全部扩展, reloadexts
 
-Menu, ExtMenu, Add, 扩展管理器, extmon
-Menu, ExtMenu, Add, 重启全部扩展, reloadexts
+	Menu, ToolMenu, Add, 扩展, :ExtMenu
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, 编辑 User toolbar properties, editprops
+	Menu, ToolMenu, Add, 编辑 User autorun script, editautorun
+	Menu, ToolMenu, Add, 编辑 User Lua script, editlua
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, 编辑 Global toolbar properties, editglobalprops
+	Menu, ToolMenu, Add, 编辑 Global autorun script, editglobalautorun
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, 编辑 platform properties, editplatforms
+	Menu, ToolMenu, Add, 重启 platforms, reloadplatforms
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, 重启工具栏, reloadtoolbar
+	Menu, ToolMenu, Add, 重启工具栏 (with autorun), reloadtoolbarautorun
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, 检查更新…, check4updates
+}
+else
+{
+	Menu, ExtMonMenu, Add, Install extension, ExtMonInstallExt
+	Menu, ExtMonMenu, Add, Remove extension, ExtMonRemoveExt
+	Menu, ExtMonMenu, Add, Create extension, ExtMonCreateExt
+	Menu, ExtMonMenu, Add, Export extension, ExtMonExportExt
 
-Menu, ToolMenu, Add, 扩展, :ExtMenu
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, 编辑 User toolbar properties, editprops
-Menu, ToolMenu, Add, 编辑 User autorun script, editautorun
-Menu, ToolMenu, Add, 编辑 User Lua script, editlua
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, 编辑 Global toolbar properties, editglobalprops
-Menu, ToolMenu, Add, 编辑 Global autorun script, editglobalautorun
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, 编辑 platform properties, editplatforms
-Menu, ToolMenu, Add, 重启 platforms, reloadplatforms
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, 重启工具栏, reloadtoolbar
-Menu, ToolMenu, Add, 重启工具栏 (with autorun), reloadtoolbarautorun
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, 检查更新…, check4updates
-/*
-Menu, ExtMonMenu, Add, Install extension, ExtMonInstallExt
-Menu, ExtMonMenu, Add, Remove extension, ExtMonRemoveExt
-Menu, ExtMonMenu, Add, Create extension, ExtMonCreateExt
-Menu, ExtMonMenu, Add, Export extension, ExtMonExportExt
+	Menu, ExtMenu, Add, Extension manager, extmon
+	Menu, ExtMenu, Add, Reload extensions, reloadexts
 
-Menu, ExtMenu, Add, Extension manager, extmon
-Menu, ExtMenu, Add, Reload extensions, reloadexts
+	Menu, ToolMenu, Add, Extensions, :ExtMenu
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, Edit User toolbar properties, editprops
+	Menu, ToolMenu, Add, Edit User autorun script, editautorun
+	Menu, ToolMenu, Add, Edit User Lua script, editlua
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, Edit Global toolbar properties, editglobalprops
+	Menu, ToolMenu, Add, Edit Global autorun script, editglobalautorun
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, Edit platform properties, editplatforms
+	Menu, ToolMenu, Add, Reload platforms, reloadplatforms
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, Reload toolbar, reloadtoolbar
+	Menu, ToolMenu, Add, Reload toolbar (with autorun), reloadtoolbarautorun
+	Menu, ToolMenu, Add
+	Menu, ToolMenu, Add, Check for updates..., check4updates
+}
 
-Menu, ToolMenu, Add, Extensions, :ExtMenu
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, Edit User toolbar properties, editprops
-Menu, ToolMenu, Add, Edit User autorun script, editautorun
-Menu, ToolMenu, Add, Edit User Lua script, editlua
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, Edit Global toolbar properties, editglobalprops
-Menu, ToolMenu, Add, Edit Global autorun script, editglobalautorun
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, Edit platform properties, editplatforms
-Menu, ToolMenu, Add, Reload platforms, reloadplatforms
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, Reload toolbar, reloadtoolbar
-Menu, ToolMenu, Add, Reload toolbar (with autorun), reloadtoolbarautorun
-Menu, ToolMenu, Add
-Menu, ToolMenu, Add, Check for updates..., check4updates
-*/
 ; Create group for our windows
 GroupAdd, SciTE4AutoHotkey, ahk_id %scitehwnd%
 GroupAdd, SciTE4AutoHotkey, ahk_id %hwndgui%
