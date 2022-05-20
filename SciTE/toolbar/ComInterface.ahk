@@ -14,6 +14,7 @@ CoI_Methods =
 ; New
 GetCurPos
 SetCurPos
+GetLexerLanguage
 GetStyle
 GetSelection & Selection = CoI_GetSelection
 GetTextRange
@@ -71,6 +72,13 @@ CoI_SetCurPos(this, pos)
 	global scintillahwnd
 	
 	return SciUtil_SetCurPos(scintillahwnd, pos)
+}
+
+CoI_GetLexerLanguage(this)
+{
+	global scintillahwnd
+	
+	return SciUtil_GetLexerLanguage(scintillahwnd)
 }
 
 CoI_GetStyle(this, pos := "")

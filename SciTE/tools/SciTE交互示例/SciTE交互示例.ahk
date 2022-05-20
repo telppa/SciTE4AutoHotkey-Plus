@@ -44,6 +44,9 @@ MsgBox, % "获取光标位置`n`n" oSciTE.GetCurPos
 ; 设置光标位置
 MsgBox, % "设置光标位置`n`n" oSciTE.SetCurPos(5)
 
+; 获取文本类型（多个扩展名可关联到同一文本类型）
+MsgBox, % "获取文本类型`n`n" oSciTE.GetLexerLanguage
+
 ; 获取光标处样式
 MsgBox, % "获取光标处样式`n`n" oSciTE.GetStyle
 

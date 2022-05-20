@@ -24,6 +24,23 @@ SciUtil_SetCurPos(hSci, pos)
 	; SendMessage, 2169, 0, 0,, ahk_id %hSci%
 }
 
+SciUtil_GetLexerLanguage(hSci)
+{
+  ; 没有明确的定义说 Language name 长度是多少
+  ; 只能根据实际情况设为64字节，再在读取时进行限制
+	mem.open(hSci, 64)
+	
+	; SCI_GETLEXERLANGUAGE = 4012
+	SendMessage, 4012, 0, mem.baseAddress,, ahk_id %hSci%
+	
+	; Read buffer
+	mem.read(text)
+	mem.close()
+	
+  ; 最大读取32个字符
+	return, StrGet(&text, 64//2, "CP0")
+}
+
 SciUtil_GetStyle(hSci, pos)
 {
 	; pos 非数字或为空则使用当前位置
