@@ -75,12 +75,22 @@ return
 ; 当然，这也可能跟加入了 50ms 延时有关。
 获取当前位置语法高亮风格()
 {
-  style := oSciTE.GetStyle()
-  
-  if style in 1,2,6  ; 理论上区域20也是可以有中文标点的，但是这会造成输入一个英文双引号后，第二个英文双引号很难输出来，所以只有1、2、6。
-    return, "注释"   ; 在注释区，标点由输入法自行决定。
+  ; 限制智能标点作用域在 ahk 和 lua 中，不然编辑 txt 等纯文本时很烦
+  language := oSciTE.GetLexerLanguage
+  if language not in ahk1,lua
+    return
   else
-    return, "代码"   ; 在代码区，标点始终为英文。
+    style := oSciTE.GetStyle
+  
+  if (language="ahk1")
+    if style in 1,2,6  ; 理论上区域20也是可以有中文标点的，但是这会造成输入一个英文双引号后，第二个英文双引号很难输出来，所以只有1、2、6。
+      return "注释"   ; 在注释区，标点由输入法自行决定。
+  
+  if (language="lua")
+    if style in 1,2,3,6,7,8,12
+      return "注释"
+  
+  return "代码"   ; 在代码区，标点始终为英文。
 }
 
 /*
