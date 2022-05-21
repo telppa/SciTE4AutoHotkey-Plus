@@ -157,9 +157,21 @@ return
 {
   CurPos := oSciTE.GetCurPos
   
-  ; GetCharAt = 2007
-  PrevChar := Chr(oSciTE.SciMsg(2007, CurPos - 2))
-  NextChar := Chr(oSciTE.SciMsg(2007, CurPos))
+  ; 对于单字节语言，例如 “english"|” CurPos 减2就是 “h” 的起始坐标
+  ; 对于多字节语言，例如 “中文测试"|” CurPos 减4才是 “试” 字的起始坐标
+  loop 3
+  {
+    i := A_Index + 1
+    ; CountCharacters = 2633
+    CountCharacters := oSciTE.SciMsg(2633, CurPos - i, CurPos)
+    if (CountCharacters=2 or i=4)
+    {
+      ; GetCharAt = 2007
+      PrevChar := i=4 ? Chr(97) : Chr(oSciTE.SciMsg(2007, CurPos - i))
+      NextChar := Chr(oSciTE.SciMsg(2007, CurPos))
+      break
+    }
+  }
   
   NextWord := oSciTE.GetWord(CurPos + 1)
   If (NextWord != "" && NextWord != "`r`n") {
