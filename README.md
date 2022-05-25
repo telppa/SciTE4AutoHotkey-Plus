@@ -88,7 +88,7 @@
 ![查询类型大小、成员偏移、常量值](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/25.%20查询类型大小、成员偏移、常量值.png)    
   
 ##### 26. 找字识图取色  
-![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/26.%20找字识图取色%20.png)  
+![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/26.%20找字识图取色.png)  
   
 ##### 27. 集成等宽字体  
 ![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/27.%20集成等宽字体.png)  
