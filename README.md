@@ -8,7 +8,7 @@
 * [Github (实时更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases")  
   
 * [Github (累积更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases")  
-* [蓝奏云 (累积更新)](https://ahk.lanzouh.com/ig18z03rr18h "蓝奏云")  
+* [蓝奏云 (累积更新)](https://ahk.lanzouh.com/itysY05epijc "蓝奏云")  
 ---
   
 #### 特性演示：  
@@ -88,7 +88,7 @@
 ![查询类型大小、成员偏移、常量值](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/25.%20查询类型大小、成员偏移、常量值.png)    
   
 ##### 26. 找字识图取色  
-![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/26.%20找字识图取色%20(1).png)  
+![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/26.%20找字识图取色%20.png)  
   
 ##### 27. 集成等宽字体  
 ![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/27.%20集成等宽字体.png)  
