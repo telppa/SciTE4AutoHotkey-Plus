@@ -27,38 +27,38 @@
 ##### 5. 运行选区代码  ctrl+3  
 ![运行选区代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/5.%20运行选区代码.gif)  
   
-##### 6. 自动缩进  
-![自动缩进](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/6.%20自动缩进.gif)  
+##### 6. 热键、标签、函数识别并跳转 f12或中键  
+![热键、标签、函数识别并跳转](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/6.%20热键、标签、函数识别并跳转.gif)  
   
-##### 7. 代码格式化 ctrl+4  
-![代码格式化](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/7.%20代码格式化.gif)  
+##### 7. 多开  
+![多开](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/7.%20多开.gif)  
   
-##### 8. 热键、标签、函数识别并跳转 f12或中键  
-![热键、标签、函数识别并跳转](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/8.%20热键、标签、函数识别并跳转.gif)  
+##### 8. 自动缩进  
+![自动缩进](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/8.%20自动缩进.gif)  
   
-##### 9. 切换ahk版本  
-![切换ahk版本](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/9.%20切换ahk版本.gif)  
+##### 9. 代码格式化 ctrl+4  
+![代码格式化](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/9.%20代码格式化.gif)  
   
-##### 10. 重复行 ctrl+d  
-![重复行](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/10.%20ctrl+d.gif)  
+##### 10. 切换ahk版本  
+![切换ahk版本](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/10.%20切换ahk版本.gif)  
   
-##### 11. 注释行 ctrl+q  
-![注释行](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/11.%20ctrl+q.gif)  
+##### 11. 重复行 ctrl+d  
+![重复行](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/11.%20ctrl+d.gif)  
   
-##### 12. 列编辑 alt+左键  
-![列编辑](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/12.%20alt+左键.gif)  
+##### 12. 注释行 ctrl+q  
+![注释行](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/12.%20ctrl+q.gif)  
   
-##### 13. 多点编辑 ctrl+左键  
-![多点编辑](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/13.%20ctrl+左键.gif)  
+##### 13. 列编辑 alt+左键  
+![列编辑](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/13.%20alt+左键.gif)  
   
-##### 14. 缩略词 ctrl+b  
-![缩略词](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/14.%20ctrl+b.gif)  
+##### 14. 多点编辑 ctrl+左键  
+![多点编辑](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/14.%20ctrl+左键.gif)  
   
-##### 15. 创建对话框  
-![创建对话框](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/15.%20创建对话框.png)  
+##### 15. 缩略词 ctrl+b  
+![缩略词](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/15.%20ctrl+b.gif)  
   
-##### 16. 创建GUI  
-![创建GUI](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/16.%20创建GUI.png)  
+##### 16. 管理代码片段  
+![管理代码片段](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/16.%20管理代码片段.png)  
   
 ##### 17. 获取窗口信息  
 ![获取窗口信息](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/17.%20获取窗口信息.png)  
@@ -66,30 +66,81 @@
 ##### 18. 获取窗口信息增强版  
 ![获取窗口信息增强版](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/18.%20获取窗口信息增强版.png)  
   
-##### 19. 调试正则表达式  
-![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/19.%20调试正则表达式.png)  
+##### 19. 创建对话框  
+![创建对话框](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/19.%20创建对话框.png)  
   
-##### 20. 调试爬虫  
-![调试爬虫](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/20.%20调试爬虫.png)    
+##### 20. 创建GUI  
+![创建GUI](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/20.%20创建GUI.png)  
   
-##### 21. 找字识图取色  
-![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/21.%20找字识图取色%20(1).png)  
+##### 21. 调试正则表达式  
+![调试正则表达式](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/21.%20调试正则表达式.png)  
   
-##### 22. 生成 DllCall 代码  
-![生成 DllCall 代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20生成%20DllCall%20代码.png)    
+##### 22. 调试爬虫  
+![调试爬虫](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/22.%20调试爬虫.png)    
   
-##### 23. 生成结构体代码  
-![生成结构体代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/23.%20生成结构体代码.png)    
+##### 23. 生成 DllCall 代码  
+![生成 DllCall 代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/23.%20生成%20DllCall%20代码.png)    
   
-##### 24. 查询类型大小、成员偏移、常量值  
-![查询类型大小、成员偏移、常量值](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/24.%20查询类型大小、成员偏移、常量值.png)    
+##### 24. 生成结构体代码  
+![生成结构体代码](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/24.%20生成结构体代码.png)    
   
-##### 25. 集成等宽字体  
-![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/25.%20集成等宽字体.png)  
+##### 25. 查询类型大小、成员偏移、常量值  
+![查询类型大小、成员偏移、常量值](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/25.%20查询类型大小、成员偏移、常量值.png)    
+  
+##### 26. 找字识图取色  
+![找字识图取色](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/26.%20找字识图取色%20(1).png)  
+  
+##### 27. 集成等宽字体  
+![集成等宽字体](https://raw.githubusercontent.com/telppa/SciTE4AutoHotkey-Plus/master/SciTE/技巧/27.%20集成等宽字体.png)  
 
 ---  
 
 #### 更新日志：  
+> 2022.05.25  
+> * 新增 “多开” （多开窗口是只读且不可保存的）。  
+> * 新增 “编码探测” （打开任何文件几乎都不会乱码）。  
+> * 新增 “菜单栏 - 帮助 - 使用技巧” 。  
+> * 新增 “菜单栏 - 帮助 - 快捷键列表” 。  
+> * 新增 “工具栏 - 快速运行” （可重复运行任意文件）。  
+> * 新增 “代码片段管理器” 支持代码片段的分类、搜索、注释、插入（基于 Kawvin 版重构）。  
+> * 更新 “TillaGoto” 。  
+  -1.修复热键、标签、函数识别 bug 。  
+  -2.支持任意文件编码，任意语言文字（例如中英日韩）的标签、函数的识别。  
+  -3.支持鼠标中键点击任意语言文字（例如中英日韩）的标签、函数时跳转。  
+  -4.支持跨文件跳转与跳回。  
+  -5.优化跳转后的显示位置。  
+  -6.重构部分代码。  
+  -7.重构操作逻辑。  
+  -8.加入提示。  
+  -9.界面改进。  
+> * 更新 “智能Tab” 输出命令时语法更接近v2。  
+> * 更新 “智能标点” 限制作用域在 ahk 和 lua 中。  
+> * 更新 “中文翻译” 修改部分不准确或有歧义的翻译。  
+> * 更新 “PropEdit” （基础设置工具）。  
+> * 更新 “StyleEdit” （配色设置工具）。  
+> * 更新 “Structor” 为操作字符串提供备用方法。  
+> * 更新 “AHK DllCall 终结者” 默认显示教程链接。  
+> * 更新 “AHK 正则终结者” 更直观的显示子模式的匹配。  
+> * 更新 “交互接口” 新增 GetLexerLanguage 。  
+> * 更新 “交互接口” 初始化出错时显示有价值的提示信息。  
+> * 更新 “交互接口” 统一内部所有对接口进行调用的地方。  
+> * 更新 “交互接口” oSciTE.Sci 改名 oSciTE.SciMsg 。  
+> * 更新 “高亮配色” 。  
+> * 修复 “管理员权限” 运行报错的问题。  
+> * 修复 “智能编码” 错误转换 ANSI 文件。  
+> * 修复 “智能标点” 与部分输入法的兼容性。  
+> * 修复 “智能标点” 3款输入法中英文状态可能被错误切换的问题。  
+> * 修复 “智能标点” 多字节语言下可能出现错误的双引号配对补齐。  
+> * 修复 “自动完成增强版” %后无法被激活的问题。  
+> * 修复 “自动完成增强版” 注释中可能被激活的问题。  
+> * 修复 “自动完成增强版” 无法识别 “.xxx” 的问题。  
+> * 修复 “右键菜单” 部分命令在代码运行时会失效的问题。  
+> * 新增 “快捷键” 上移行 下移行 跳到新行 打开文件所在目录 跳至定义。  
+> * 更改 “快捷键” 补全单词 快速运行 运行Lua 切换标签 删除行 剪切行 复制行 标记 折叠。  
+> * 删除 “快捷键” 补全符号 交换行 。  
+  
+<details><summary>查看历史更新日志</summary><p>
+  
 > 2022.04.26  
 > * 新增 “AHK DllCall 终结者” （系统函数转代码工具）。  
 > * 新增 “Structor” （结构体转代码工具）（原版来自 Adventure IDE 3.0.4）。  
@@ -120,8 +171,6 @@
 > * 增强 “SCI.ahk” 代码易读性。  
 > * 更新 “SCI.ahk” 新增212个常量。  
 > * 更新 “.ahk” 文件编码全部统一为 “UTF-8 BOM” 。  
-  
-<details><summary>查看历史更新日志</summary><p>
   
 > 2021.11.15  
 > * 优化目录结构，将“user”目录完全还给用户，以后升级将不影响用户的自定义设置。  
@@ -381,40 +430,37 @@
 </p></details>
 <details><summary>查看使用技巧</summary><p>
   
-> * 工具栏上的“代码格式化”或Ctrl+4可快速格式化全部或选中代码。  
-> * 工具栏上的“MagicBox”可轻松创建各种MsgBox弹窗。  
-> * 工具栏上的“AutoGUI”可轻松创建GUI。  
-> * 工具栏上的“窗口信息查看”可取各种窗口信息。（简单但较易使用）  
-> * 工具栏上的“强力窗口信息查看”可取到QQ聊天框内容。（强大但使用复杂）  
-> * 工具栏上的“AHK 正则终结者”可清晰显示正则的各种匹配与子匹配。  
-> * 工具栏上的“AHK 爬虫终结者”可模拟伪造各种状态访问网址。（方便调试爬虫）  
-> * 工具栏上的“找字识图取色”可简单高效的进行文字、颜色等查找识别。
-> * 工具栏上的“AHK DllCall 终结者”可生成 DllCall 代码。
-> * 工具栏上的“Structor”可生成结构体代码。
-> * 工具栏上的“Verifier”可查询类型大小、成员偏移、常量值。
+> * 工具栏上的 “代码格式化” 或Ctrl+4可快速格式化全部或选中代码。  
+> * 工具栏上的 “代码片段管理器” 或Ctrl+5可管理代码片段。  
+> * 工具栏上的 “窗口信息查看” 可取各种窗口信息。（简单但较易使用）  
+> * 工具栏上的 “强力窗口信息查看” 可取到QQ聊天框内容。（强大但使用复杂）  
+> * 工具栏上的 “MagicBox” 可轻松创建各种MsgBox弹窗。  
+> * 工具栏上的 “AutoGUI” 可轻松创建GUI。  
+> * 工具栏上的 “AHK 正则终结者” 可清晰显示正则的各种匹配与子匹配。  
+> * 工具栏上的 “AHK 爬虫终结者” 可模拟伪造各种状态访问网址。（方便调试爬虫）  
+> * 工具栏上的 “AHK DllCall 终结者” 可生成 DllCall 代码。  
+> * 工具栏上的 “Structor” 可生成结构体代码。  
+> * 工具栏上的 “Verifier” 可查询类型大小、成员偏移、常量值。  
+> * 工具栏上的 “找字识图取色” 可简单高效的进行文字、颜色等查找识别。  
   
-> * 右键菜单，可“打开文件所在目录”。  
-> * 右键菜单，可“运行选区代码”。  
-> * 右键菜单，可“打开 #Include”（需在#Include语句所在行运行）。  
-> * 菜单栏工具项或标签栏上右键，可“调试一个运行中的脚本”。  
-> * 鼠标移动到标签栏上，可“查看完整路径”。  
+> * 右键菜单中有很多实用功能，例如 “打开 文件所在目录” 。  
+> * 标签上右键 或 菜单栏 —— 工具 中，可 “调试一个运行中的脚本” 。  
+> * 鼠标移动到标签上，可 “查看完整路径” 。  
   
-> * 代码里的标签或函数上按鼠标中键，可直接跳转到对应标签或函数定义的地方。  
-> * 如果常常写库的话，可以用“scriptlet utility”添加标准化的注释代码，之后可用“GenDocs”生成好看的文档。  
-> * 快速运行和运行的区别就是前者可带4个参数，并且发生错误由ahk弹框提示；后者由scite捕获并提示。  
+> * 代码中对着文字按鼠标中键，可直接跳转到文字对应标签或函数定义的地方。  
+> * 快速运行和运行的区别就是前者可重复运行同一文件，并且发生错误由ahk弹框提示；后者由scite捕获并提示。  
 </p></details>
 <details><summary>查看已知问题</summary><p>
   
 > * 1.保存按钮常亮。  
 > * 2.“GenDocs”只支持ANSI格式的文件。  
-> * 3.“TillaGoto”对包含很多“热键”的代码在分析时存在问题。（例如重复定位、坐标计算错误，这些都是原版就有的bug。好消息是并不影响对“标签”“函数”的分析及定位。）  
-> * 4.若要高亮选中文字，则必然高亮光标下文字。（无设置可修改此处）  
-> * 5.导出PDF格式乱码、导出RTF格式乱码。  
-> * 6.调试模式下，直接在代码中查看变量值功能不支持中文变量名。  
-> * 7.SciTE的路径中不要包含中文名，否则部分功能无法实现（例如calltip，单词完成）。  
-> * 8.64位系统下，某些脚本无法被“调试一个运行中的脚本”功能识别。（例如“TillaGoto”）  
-> * 9.“代码格式化工具”不支持对类的格式化。  
-> * 10.“运行选区代码”时选中内容为空则ahk会卡住。  
+> * 3.若要高亮选中文字，则必然高亮光标下文字。（无设置可修改此处）  
+> * 4.导出PDF格式乱码、导出RTF格式乱码。  
+> * 5.调试模式下，直接在代码中查看变量值功能不支持中文变量名。  
+> * 6.SciTE的路径中不要包含中文名，否则部分功能无法实现（例如calltip，单词完成）。  
+> * 7.64位系统下，某些脚本无法被“调试一个运行中的脚本”功能识别。（例如“TillaGoto”）  
+> * 8.“代码格式化工具”不支持对类的格式化。  
+> * 9.“运行选区代码”时选中内容为空则ahk会卡住。  
 </p></details>
 <details><summary>查看已解决问题</summary><p>
   
