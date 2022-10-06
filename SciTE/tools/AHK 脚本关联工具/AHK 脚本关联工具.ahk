@@ -19,6 +19,7 @@ TODO：
 2021.11.05	重构代码，精简界面，修复新建模板时的编码问题，修复编辑模板时的权限问题。
 2022.04.21	为日志系统增加缓存，解决日志写入时的性能问题。微调显示。
 2022.04.24	静默模式下，成功时不提示。微调显示。
+2022.09.02	修复“自定义新建脚本的模板”失败的问题。
 
 修改作者：	布谷布谷
 2022.04.15	增加.ah2 .ahk2 文件的关联，并增加脚本关联选项 
@@ -31,7 +32,7 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 
 ; 版本(仅用于显示）
-Script_Version=v1.2.3
+Script_Version=v1.2.4
 administrator:=(A_IsAdmin?"已":"未" ) . "获得管理员权限"
 
 Gui, Font, bold s15
@@ -407,7 +408,8 @@ Create_Template:
 		txt:="#NoEnv`r`nSendMode Input`r`nSetWorkingDir %A_ScriptDir%`r`n"
 	if (ahk__ = "ahk2" || ahk__ = "ah2")
 		txt:="SendMode ""Input""`r`nSetWorkingDir A_ScriptDir`r`n"
-	FileAppend,%txt%, %A_WinDir%\ShellNew\%Template_Name%, UTF-8
+	FileCreateDir %A_WinDir%\ShellNew
+	FileAppend, %txt%, %A_WinDir%\ShellNew\%Template_Name%, UTF-8
 	IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
 		MsgBox, % 4096+16, , 无法创建脚本模板 ！`n`n请尝试使用管理员权限运行本工具。
 return
