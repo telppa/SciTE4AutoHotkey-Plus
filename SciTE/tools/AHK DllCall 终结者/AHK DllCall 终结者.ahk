@@ -659,8 +659,7 @@ parseMsdnFunctionSyntax(text)
   return, ret
 }
 
-; 不能用 cjson dump 否则 char 会被转为大写的 CHAR 。
-#Include %A_ScriptDir%\Lib\JSON.ahk
+#Include %A_ScriptDir%\Lib\cJson.ahk
 #Include %A_ScriptDir%\Lib\CreateGradient.ahk
 #Include %A_ScriptDir%\Lib\Language.ahk
 #Include %A_ScriptDir%\Lib\测试解析的例子.ahk

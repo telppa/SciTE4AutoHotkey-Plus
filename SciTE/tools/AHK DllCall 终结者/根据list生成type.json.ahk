@@ -188,5 +188,5 @@ findAndWrite(obj, key_find, key_write, value_write, fromOutside:=1)
 }
 
 ; 不能用 cjson dump 否则 char 会被转为大写的 CHAR 。
-#Include %A_ScriptDir%\Lib\JSON.ahk
+#Include %A_ScriptDir%\Lib\cJson.ahk
 #Include <Class_CNG>
