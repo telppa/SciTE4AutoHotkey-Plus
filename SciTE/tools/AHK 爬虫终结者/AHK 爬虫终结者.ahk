@@ -94,10 +94,10 @@
   ; 标签
   Gui, Add, Text, x72 y17 w372 h24 +0x200 Center, 网址
   Gui, Add, Text, x72 y+53 w372 h24 +0x200 Center, 设置
-  Gui, Add, Text, x72 y+137 w372 h24 +0x200 Center, 请求头
+  Gui, Add, Text, x72 y+137 w372 h24 +0x200 Center, 请求标头
   Gui, Add, Text, Section x72 y+77 w372 h24 +0x200 Center, 提交数据
   Gui, Add, Text, x572 y17 w372 h24 +0x200 Center, 返回值
-  Gui, Add, Text, Section x572 ys w131 h24 +0x200 Center, 响应头
+  Gui, Add, Text, Section x572 ys w131 h24 +0x200 Center, 响应标头
   Gui, Add, Text, xs+241 ys w131 h24 +0x200 Center, 代码
   
   Gui, Add, StatusBar, v状态栏, %A_Space%%A_Space%%A_Space%%A_Space%主页
