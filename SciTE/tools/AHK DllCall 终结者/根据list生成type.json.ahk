@@ -9,7 +9,7 @@ loop, Read, list.txt
   if (Trim(A_LoopReadLine, " `t`r`n`v`f")="")
     continue
   
-  ; 去掉 typedef 
+  ; 去掉 typedef
   line:=StrReplace(A_LoopReadLine, "typedef ", "", "", 1)
   ; 星号靠左 将 FLOAT *PFLOAT; 变成 FLOAT* PFLOAT;
   line:=RegExReplace(line, "\s+\*", "* ")
@@ -50,7 +50,7 @@ for k, v in read_ret
 {
   pureType:=StrSplit(k, "|")[1]
   
-  if ( InStr(pureType, "*") 
+  if ( InStr(pureType, "*")
     or InStr(pureType, "CONST ")
     or InStr(pureType, "__nullterminated ")
     or InStr(pureType, " far") )
@@ -152,6 +152,7 @@ getType(text)
   return, ret
 }
 
+; 不加盐的话，没法存储这样的对象 {int:123, INT:123}
 salt(text)
 {
   return, text "|" Crypt.Hash.String("SHA1", text)
@@ -187,6 +188,5 @@ findAndWrite(obj, key_find, key_write, value_write, fromOutside:=1)
     return, true
 }
 
-; 不能用 cjson dump 否则 char 会被转为大写的 CHAR 。
 #Include %A_ScriptDir%\Lib\cJson.ahk
 #Include <Class_CNG>
