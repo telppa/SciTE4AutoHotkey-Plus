@@ -59,9 +59,19 @@ isFolderOpened(path)
         _path := RegExReplace(window.LocationURL, "^\Qfile:///\E")  ; file:///c:/ -> c:/
         _path := StrReplace(_path, "/", "\")                        ; c:/ -> c:\
         _path := RTrim(_path, "\")                                  ; c:\ -> c:
-        if (path = _path)
-          return, window
+        
+        ; 有些时候 window.LocationURL 返回的路径是 uri 编码过的
+        if (path = _path or path = uriDecode(_path))
+          return window
       }
     }
   }
+}
+
+uriDecode(str) {
+  Loop
+    If RegExMatch(str, "i)(?<=%)[\da-f]{1,2}", hex)
+      StringReplace, str, str, `%%hex%, % Chr("0x" . hex), All
+    Else Break
+  Return, str
 }
