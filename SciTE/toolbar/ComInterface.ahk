@@ -295,9 +295,17 @@ CoI_InsertText(this, text, pos := "", moveCaret := "")
 	SciUtil_InsertText(scintillahwnd, text, pos, moveCaret)
 }
 
-CoI_Output(this, text)
+CoI_Output(this, text, codePage := "")
 {
-	Director_Send("output:" CEscape(text))
+	global scintilla2hwnd
+	
+	; activate output pane
+	WinGetPos X, Y, W, H, ahk_id %scintilla2hwnd%
+	if (H = 0)
+		; IDM_TOGGLEOUTPUT = 409
+		Director_Send("menucommand:409")
+	
+	SciUtil_SetText(scintilla2hwnd, text, codePage)
 }
 
 CoI_GetSciTEHandle(this)

@@ -73,6 +73,7 @@ filesmenu := DllCall("GetSubMenu", "ptr", scitemenu, "int", 7, "ptr")
 
 ; Get the HWND of its Scintilla control
 ControlGet, scintillahwnd, Hwnd,, Scintilla1, ahk_id %scitehwnd%
+ControlGet, scintilla2hwnd, Hwnd,, Scintilla2, ahk_id %scitehwnd% ; output pane
 
 SciTEDir := A_WorkingDir
 CurAhkExe := SciTEDir "\..\AutoHotkey.exe" ; Fallback AutoHotkey binary

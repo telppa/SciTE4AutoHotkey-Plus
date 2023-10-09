@@ -121,10 +121,10 @@ text:="这是一段指定位置插入文本"
 oSciTE.InsertText(text, 0)
 MsgBox, 指定位置插入文本
 
-; 在输出框显示文本
-OutputText:="output only support english"
+; 打开输出窗口并显示文本
+OutputText:="this is output pane`n这是输出窗口"
 oSciTE.Output(OutputText)
-MsgBox, 在输出框显示文本
+MsgBox, 打开输出窗口并显示文本
 
 ; 切换标签（标签编号从0开始）
 tabidx:=0
@@ -178,9 +178,12 @@ SciUtil_Autocompletion_Show(hSci, text)
 ; 重载配置，可以理解为让修改后的配置生效
 oSciTE.ReloadProps()
 
-; 取参数值，例如 oSciTE.ResolveProp("tillagoto.gui.width")
-; 取参数值时可以解析引用，例如 oSciTE.ResolveProp("AutoHotkeyDir")
+; 取变量值，例如
+; oSciTE.ResolveProp("tillagoto.gui.width")
+; 取变量值时可以解析引用，例如
 ; AutoHotkeyDir=$(SciteDefaultHome)\..
+; oSciTE.ResolveProp("AutoHotkeyDir")
+; 除了在 Properties file 中定义的变量，内置变量列表可以在 https://www.scintilla.org/SciTEDoc.html 中的 Properties file 一节找到
 oSciTE.ResolveProp(propname)
 
 ; 向 Scintilla 发消息
