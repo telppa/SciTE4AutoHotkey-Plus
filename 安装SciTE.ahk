@@ -2,22 +2,40 @@
 SetWorkingDir, %A_ScriptDir%
 
 ; 管理员权限运行
-RunWith("admin")
+RunWith("Admin")
 
 ; 获取 “AutoHotkey.exe” 位置
 SplitPath, A_AhkPath, , OutDir
+
+; 获取 “AutoHotkey.exe” 位置失败 
 if (OutDir="")
 {
 	Text=
 	(LTrim
-	没找到 AutoHotkey.exe 在哪，手动安装吧！
+	没找到 AutoHotkey.exe 在哪，请手动把 SciTE 文件夹剪切到正确位置。
 
-	把 SciTE 文件夹剪切到正确位置即可，路径中不要包含中文！
+	例如你的 AHK 安装路径为 “D:\Apps\Autohotkey”
+	那么正确的 SciTE 位置就为 “D:\Apps\Autohotkey\SciTE”
 
-	例如你的 AHK 安装目录为 “C:\Program Files\Autohotkey”
-	那么正确的 SciTE 目录就为 “C:\Program Files\Autohotkey\SciTE”
-	
-	“SciTE\user” 目录中如果存在自定义设置（例如自定义配色），请手动备份。
+	注意：
+	1.路径中不要包含中文 或 “Program Files” 或 “Program Files (x86)”
+	2.请手动备份旧版 “SciTE\user” 目录下的自定义设置（例如自定义配色）。
+	)
+	MsgBox 0x40010, 安装失败, % Text
+	ExitApp
+}
+
+; 判断路径中是否含有 “Program Files” 或 “Program Files (x86)”
+if (InStr(OutDir, "Program Files"))
+{
+	Text=
+	(LTrim
+	%OutDir%
+
+	AHK 的安装路径中含有 “Program Files” 或 “Program Files (x86)”
+	这代表 AHK 被安装在系统保护目录中，此目录普通程序无写入权限。
+
+	请重新安装 AHK 到其它位置后再运行本安装程序。
 	)
 	MsgBox 0x40010, 安装失败, % Text
 	ExitApp
@@ -30,7 +48,7 @@ if (StrLen(RegExReplace(OutDir, "[[:ascii:]]"))!=0)
 	(LTrim
 	%OutDir%
 
-	AHK 的安装路径中似乎含有非英文字符（例如中文）。
+	AHK 的安装路径中含有非英文字符（例如中文）。
 	这将导致部分功能失效，例如 CallTip （单词完成）。
 	)
 	MsgBox 0x40030, 警告, % Text
@@ -82,12 +100,13 @@ catch
 {
 	Text=
 	(LTrim
-	移动文件与文件夹失败，手动安装吧！
+	移动文件与文件夹失败，请手动把 SciTE 文件夹剪切到正确位置。
 
-	把 SciTE 文件夹剪切到正确位置即可，路径中不要包含中文！
+	例如你的 AHK 安装路径为 “D:\Apps\Autohotkey”
+	那么正确的 SciTE 位置就为 “D:\Apps\Autohotkey\SciTE”
 
-	例如你的 AHK 安装目录为 “C:\Program Files\Autohotkey”
-	那么正确的 SciTE 目录就为 “C:\Program Files\Autohotkey\SciTE”
+	注意：
+	1.路径中不要包含中文 或 “Program Files” 或 “Program Files (x86)”
 	)
 	MsgBox 0x40010, 安装失败, % Text
 	ExitApp
