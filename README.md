@@ -8,7 +8,7 @@
 * [Github (实时更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/archive/refs/heads/master.zip "Releases")  
   
 * [Github (累积更新)](https://github.com/telppa/SciTE4AutoHotkey-Plus/releases "Releases")  
-* [蓝奏云 (累积更新)](https://ahk.lanzouh.com/itysY05epijc "蓝奏云")  
+* [蓝奏云 (累积更新)](https://ahk.lanzouy.com/i5g931cfodgh "蓝奏云")  
 ---
   
 #### 特性演示：  
