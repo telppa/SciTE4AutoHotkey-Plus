@@ -4,9 +4,11 @@ https://github.com/telppa/BeautifulToolTip
 If you want to add your own style to the built-in style, you can add it directly in btt().
 
 version:
-2021.10.03
+2022.11.29
 
 changelog:
+2022.11.29
+  修复使用btt会改变“上次找到的窗口”的问题。
 2021.10.03
   改变 Include 方式，降低库冲突的可能性。
 2021.09.29
@@ -95,7 +97,7 @@ btt(Text:="", X:="", Y:="", WhichToolTip:="", BulitInStyleOrStyles:="", BulitInO
                     , FontStyle:"Regular Bold Italic BoldItalic Underline Strikeout"}
 
        , Option99 := {TargetHWND:""                                  ; If omitted, active window will be used.
-                    , CoordMode:"Screen Relative Window Client"      ; If omitted, A_CoordModeToolTip will be used.
+                    , CoordMode:"Screen|Relative|Window|Client"      ; If omitted, A_CoordModeToolTip will be used.
                     , Transparent:""                                 ; If omitted, 255 will be used.
                     , MouseNeverCoverToolTip:""                      ; If omitted, 1 will be used.
                     , DistanceBetweenMouseXAndToolTip:""             ; If omitted, 16 will be used. This value can be negative.
@@ -231,7 +233,7 @@ Class BeautifulToolTip
       loop, 20
       {
         ; _BTT1（GUI 名称） 与 _hBTT1（GUI 句柄） 都是临时变量，后者被储存了。
-        Gui, _BTT%A_Index%: +E0x80000 -Caption +ToolWindow +LastFound +AlwaysOnTop +Hwnd_hBTT%A_Index%
+        Gui, _BTT%A_Index%: +E0x80000 -Caption +ToolWindow +AlwaysOnTop +Hwnd_hBTT%A_Index%
         Gui, _BTT%A_Index%: Show, NA
 
           this["hBTT" A_Index] := _hBTT%A_Index%
