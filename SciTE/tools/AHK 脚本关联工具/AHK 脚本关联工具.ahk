@@ -2,7 +2,7 @@
 作者：      甲壳虫<jdchenjian@gmail.com>
 博客：      http://hi.baidu.com/jdchenjian
 脚本说明：  此工具用来修改 AutoHotkey 脚本的右键菜单关联，适用于 AutoHotkey 安装版、绿色版。
-脚本版本：  2023.10.21
+脚本版本：  2023.10.20
 
 TODO：
 静默设置参数支持 ah2 和 ahk2 。
