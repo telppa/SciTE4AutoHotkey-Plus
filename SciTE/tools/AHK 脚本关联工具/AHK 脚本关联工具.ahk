@@ -33,7 +33,7 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 
 ; 版本(仅用于显示）
-Script_Version=v2023.10.21
+Script_Version=v1.2.5
 administrator:=(A_IsAdmin?"已":"未" ) . "获得管理员权限"
 
 Gui, Font, bold s15
