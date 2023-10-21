@@ -116,7 +116,10 @@ catch
 FileCreateShortcut, %OutDir%\SciTE\SciTE.exe, %A_Desktop%\SciTE4AutoHotkey-Plus.lnk, %OutDir%\SciTE\, , SciTE4AutoHotkey-Plus
 
 ; 静默运行脚本关联工具并设置关联
-Run, "%OutDir%\SciTE\tools\AHK 脚本关联工具\AHK 脚本关联工具.ahk" /set
+RunWait "%OutDir%\SciTE\tools\AHK 脚本关联工具\AHK 脚本关联工具.ahk" /set
+; 静默关联失败则手动运行让用户自行设置
+if (ErrorLevel)
+	Run "%OutDir%\SciTE\tools\AHK 脚本关联工具\AHK 脚本关联工具.ahk"
 
 ; 技巧的动画演示
 Text=

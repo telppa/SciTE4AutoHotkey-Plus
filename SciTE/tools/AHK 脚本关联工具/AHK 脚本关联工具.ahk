@@ -2,7 +2,7 @@
 作者：      甲壳虫<jdchenjian@gmail.com>
 博客：      http://hi.baidu.com/jdchenjian
 脚本说明：  此工具用来修改 AutoHotkey 脚本的右键菜单关联，适用于 AutoHotkey 安装版、绿色版。
-脚本版本：  2009-01-21
+脚本版本：  2023.10.21
 
 TODO：
 静默设置参数支持 ah2 和 ahk2 。
@@ -20,6 +20,7 @@ TODO：
 2022.04.21	为日志系统增加缓存，解决日志写入时的性能问题。微调显示。
 2022.04.24	静默模式下，成功时不提示。微调显示。
 2022.09.02	修复“自定义新建脚本的模板”失败的问题。
+2023.10.21	静默模式下，出错时不提示，返回非0退出码。
 
 修改作者：	布谷布谷
 2022.04.15	增加.ah2 .ahk2 文件的关联，并增加脚本关联选项 
@@ -32,7 +33,7 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 
 ; 版本(仅用于显示）
-Script_Version=v1.2.4
+Script_Version=v2023.10.21
 administrator:=(A_IsAdmin?"已":"未" ) . "获得管理员权限"
 
 Gui, Font, bold s15
@@ -87,7 +88,7 @@ loop 8
 
 gosub, Options__
 
-if (A_Args.1="/set")
+if (A_Args.1 = "/set")
 	gosub, Install
 else
 	Gui, Show, AutoSize Center, AHK 脚本关联工具 %Script_Version% ( %administrator% )
@@ -301,9 +302,16 @@ Install:
 	logup("写入注册表")
 	IfNotExist, %AHK_Path%
 	{
-		logup("AutoHotkey 路径错误 ！")
-		MsgBox, % 4096+16, , AutoHotkey 路径错误 ！
-		return
+		if (A_Args.1 = "/set")
+		{
+			ExitApp 1
+		}
+		else
+		{
+			logup("AutoHotkey 路径错误 ！")
+			MsgBox, % 4096+16, , AutoHotkey 路径错误 ！
+			return
+		}
 	}
 	RegWrite_("REG_SZ", RootKey "\" Subkey "." ahk__, , FileType)
 	RegWrite_("REG_SZ", RootKey "\" Subkey "." ahk__ "\ShellNew", "FileName", Template_Name)
@@ -312,13 +320,21 @@ Install:
 	; %AHK_Path%,1 这种图标设置方式没有成功，所以只能改为 Compiler_Path
 	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open","Icon", """" Compiler_Path """")
 	RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Open\Command", , """" AHK_Path """ ""%1"" %*")
+	
 	if State__3
 	{
 		IfNotExist, %Compiler_Path%
 		{
-			logup("编译器路径错误 ！")
-			MsgBox, % 4096+16, , 编译器路径错误 ！
-			return
+			if (A_Args.1 = "/set")
+			{
+				ExitApp 3
+			}
+			else
+			{
+				logup("编译器路径错误 ！")
+				MsgBox, % 4096+16, , 编译器路径错误 ！
+				return
+			}
 		}
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Compile", , "编译脚本")
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Compile","Icon", """" Compiler_Path """")
@@ -333,9 +349,16 @@ Install:
 	{
 		IfNotExist, %Compiler_Path%
 		{
-			logup("编译器路径错误 ！")
-			MsgBox, % 4096+16, , 编译器路径错误 ！
-			return
+			if (A_Args.1 = "/set")
+			{
+				ExitApp 4
+			}
+			else
+			{
+				logup("编译器路径错误 ！")
+				MsgBox, % 4096+16, , 编译器路径错误 ！
+				return
+			}
 		}
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Compile-Gui", , "编译脚本 (GUI)")
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Compile-Gui","Icon", """" Compiler_Path """")
@@ -350,9 +373,16 @@ Install:
 	{
 		IfNotExist, %Editor_Path%
 		{
-			logup("编辑器路径错误 ！")
-			MsgBox, % 4096+16, , 编辑器路径错误 ！
-			return
+			if (A_Args.1 = "/set")
+			{
+				ExitApp 5
+			}
+			else
+			{
+				logup("编辑器路径错误 ！")
+				MsgBox, % 4096+16, , 编辑器路径错误 ！
+				return
+			}
 		}
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Edit", , "编辑脚本")
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\Edit","Icon", """" Editor_Path """")
@@ -371,6 +401,7 @@ Install:
 	}
 	else
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType)
+	
 	if State__7
 	{
 		RegWrite_("REG_SZ", RootKey "\" Subkey FileType "\Shell\runas", "HasLUAShield")
@@ -378,6 +409,7 @@ Install:
 	}
 	else
 		RegDelete_(RootKey "\" Subkey "\" FileType "\Shell\runas")
+	
 	logup("设置完毕 ！")
 	logup("--------------------------------------------------------------")
 	if (A_Args.1="/set")
@@ -411,7 +443,16 @@ Create_Template:
 	FileCreateDir %A_WinDir%\ShellNew
 	FileAppend, %txt%, %A_WinDir%\ShellNew\%Template_Name%, UTF-8
 	IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
-		MsgBox, % 4096+16, , 无法创建脚本模板 ！`n`n请尝试使用管理员权限运行本工具。
+		if (A_Args.1 = "/set")
+		{
+			ExitApp 6
+		}
+		else
+		{
+			logup("无法创建脚本模板 ！")
+			MsgBox, % 4096+16, , 无法创建脚本模板 ！`n`n请尝试使用管理员权限运行本工具。
+			return
+		}
 return
 
 ; 从注册表值字符串中提取路径
