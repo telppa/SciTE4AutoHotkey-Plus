@@ -1,35 +1,42 @@
 ﻿/**
 将时间转换为距 1970年1月1日0时0分0秒 的秒数或毫秒数
-例如 “20111010091500” 即 “2011-10-10 09:15:00” 就被转换为值 “1318238100”
-将 timeBegin 设置为一个偏移值，例如 19700101080000 即可实现带时区的转换
+例如时间 “20111010091500” 即 “2011-10-10 09:15:00” 就被转换为值 “1318238100”
+将 timeBegin 设置为一个偏移值，例如 19700101080000 即可实现带时区（东八区）的转换
 
 ------------------
 示例：
 
 MsgBox % time2int(20111010091500)
+MsgBox % time2int(20111010091500123,, "ms")
 
 */
 
-time2int(time, timeBegin:=1970, intType:="s")
+time2int(time, timeBegin := 1970, intType := "s")
 {
-	if (StrLen(time)=17)	; 传入了带毫秒的时间，提取毫秒数与主时间
-	{
-		mtime := SubStr(time, 15, 3)
-		time  := SubStr(time, 1, 14)
-	}
-	
-	if (StrLen(time)!=14)	; 传入了位数不正确的时间
+	; 传入了位数不正确的时间
+	if (StrLen(time) < 4)
 	{
 		MsgBox, The format required for parameter 1 is YYYYMMDDHH24MISS.
 		return
 	}
 	
-	EnvSub, time, %timeBegin%, Seconds
-	switch, intType
+	; 传入了带毫秒的时间，提取毫秒数与主时间
+	if (StrLen(time) = 17)
 	{
-		default:		int:=time
-		case, "ms":	int:=time (mtime ? mtime : A_MSec)
+		mSec := SubStr(time, 15, 3) ; 末3位
+		time := SubStr(time, 1, 14) ; 除去末3位
 	}
 	
-	return, int
+	EnvSub time, %timeBegin%, Seconds
+	if (time = "")
+		return
+	
+	switch intType
+	{
+		case "s"  : int := time
+		case "ms" : int := time (mSec ? mSec : "000")
+		default   : int := ""
+	}
+	
+	return int
 }

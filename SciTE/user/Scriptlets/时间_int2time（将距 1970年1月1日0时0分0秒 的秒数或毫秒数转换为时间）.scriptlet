@@ -1,0 +1,51 @@
+﻿/**
+将距 1970年1月1日0时0分0秒 的秒数或毫秒数转换为时间
+例如值 “1318238100” 就被转换为时间 “2011-10-10 09:15:00”
+将 timeBegin 设置为一个偏移值，例如 19700101080000 即可实现带时区（东八区）的转换
+
+------------------
+示例：
+
+MsgBox % int2time(1318238100)
+MsgBox % int2time(1318238100,, "yyyy-MM-dd HH:mm:ss.fff")
+MsgBox % int2time(1318238100123,, "yyyy-MM-dd HH:mm:ss.fff", "ms")
+
+*/
+
+int2time(int, timeBegin := 1970, timeFormat := "yyyyMMddHHmmssfff", intType := "s")
+{
+	if      (intType = "s")
+		; 去掉 “HH:mm:ss.fff yyyy-MM-dd” 中的 “.fff”
+		timeFormat := RegExReplace(timeFormat, "([[:punct:] ]*)fff")
+	else if (intType = "ms")
+	{
+		; 传入了带毫秒的时间，提取毫秒数与主时间
+		mSec := SubStr(int, -2, 3) ; 末3位
+		int  := SubStr(int, 1, -3) ; 除去末3位
+		
+		; 将 “HH:mm:ss.fff yyyy-MM-dd” 分成3段
+		if (RegExMatch(timeFormat, "O)([[:punct:] ]*)fff", OutputVar))
+		{
+			timeFormat_part1 := SubStr(timeFormat, 1, OutputVar.Pos - 1)          ; 段1 “HH:mm:ss”
+			timeFormat_part2 := OutputVar.Value                                   ; 段2 “.fff”
+			timeFormat_part3 := SubStr(timeFormat, OutputVar.Pos + OutputVar.Len) ; 段3 “ yyyy-MM-dd”
+			; 转义单引号
+			timeFormat_part2 := StrReplace(timeFormat_part2, "'", "''")
+			; 将标点或空格后面紧跟的 fff 转换为单引号包裹的具体值 例如 “ .fff” 将转换为 “' .123'”
+			timeFormat_part2 := RegExReplace(timeFormat_part2, "([[:punct:] ]*)fff", "'$1" mSec "'")
+			; 合并出新的 timeFormat
+			timeFormat       := timeFormat_part1 timeFormat_part2 timeFormat_part3
+		}
+	}
+	else
+		int := ""
+	
+	; 此处 int 不是数值就会返回空
+	EnvAdd timeBegin, %int%, Seconds
+	if (timeBegin = "")
+		return
+	
+	FormatTime ret, %timebegin%, %timeFormat%
+	
+	return ret
+}
