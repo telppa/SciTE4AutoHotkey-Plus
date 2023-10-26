@@ -75,8 +75,9 @@ filesmenu := DllCall("GetSubMenu", "ptr", scitemenu, "int", 7, "ptr")
 ControlGet, scintillahwnd, Hwnd,, Scintilla1, ahk_id %scitehwnd%
 ControlGet, scintilla2hwnd, Hwnd,, Scintilla2, ahk_id %scitehwnd% ; output pane
 
+SplitPath A_AhkPath, , AhkDir
 SciTEDir := A_WorkingDir
-CurAhkExe := SciTEDir "\..\AutoHotkey.exe" ; Fallback AutoHotkey binary
+CurAhkExe := A_AhkPath
 
 IsPortable := FileExist("$PORTABLE")
 if !IsPortable
@@ -337,19 +338,6 @@ InitComInterface()
 
 ; Register the SciTE director
 Director_Init()
-
-; Retrieve the default AutoHotkey directory
-AhkDir := DirectorReady ? CoI_ResolveProp("", "AutoHotkeyDir") : (SciTEDir "\..")
-if DirectorReady && !IsPortable
-{
-	; Auto-detect the AutoHotkey directory from registry
-	temp := Util_GetAhkPath()
-	if temp
-	{
-		CoI_SendDirectorMsg("", "property:AutoHotkeyDir=" CEscape(temp))
-		AhkDir := temp
-	}
-}
 
 ; Initialize the macro recorder
 Macro_Init()
@@ -702,7 +690,7 @@ GetPath(txt)
 
 ParseCmdLine(cmdline)
 {
-	global _IconLib, curplatform, LocalSciTEPath, SciTEDir, CurAhkExe
+	global _IconLib, curplatform, LocalSciTEPath, SciTEDir, CurAhkExe, AhkDir
 	a := GetSciTEOpenedFile()
 	
 	StringReplace, cmdline, cmdline, `%FILENAME`%, % GetFilename(a), All
@@ -710,11 +698,12 @@ ParseCmdLine(cmdline)
 	StringReplace, cmdline, cmdline, `%FULLFILENAME`%, % a, All
 	StringReplace, cmdline, cmdline, `%LOCALAHK`%, "%A_AhkPath%", All
 	StringReplace, cmdline, cmdline, `%AUTOHOTKEY`%, "%CurAhkExe%", All
+	StringReplace, cmdline, cmdline, `%AUTOHOTKEYDIR`%, % AhkDir, All
 	StringReplace, cmdline, cmdline, `%ICONRES`%, %_IconLib%, All
 	StringReplace, cmdline, cmdline, `%SCITEDIR`%, % SciTEDir, All
 	StringReplace, cmdline, cmdline, `%USERDIR`%, % LocalSciTEPath, All
 	StringReplace, cmdline, cmdline, `%PLATFORM`%, %curplatform%, All
-
+	
 	return cmdline
 }
 
