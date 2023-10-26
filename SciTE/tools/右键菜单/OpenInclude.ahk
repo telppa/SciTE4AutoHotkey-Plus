@@ -14,7 +14,7 @@ CurrentLine := Trim(oSciTE.GetLine, " `t`r`n`v`f")
 if (SubStr(CurrentLine, 1, 8) != "#Include")
 {
   ; 在输出窗口显示文本
-  oSciTE.Output("Not an #Include line! 行内不含关键字 #Include ！")
+  oSciTE.Output("Not an #Include line!`n行内不含关键字 #Include ！`n")
 }
 else
 {
@@ -55,7 +55,7 @@ else
       }
     }
     
-    oSciTE.Output("Library not found! 没有找到库！`n     Specifically: " path)
+    oSciTE.Output("Library not found!`n没有找到库！`n     Specifically: " path "`n")
   }
   else
   {
@@ -70,7 +70,7 @@ else
       ExitApp
     }
     
-    oSciTE.Output("File not found! 没有找到文件！`n     Specifically: " filepath)
+    oSciTE.Output("File not found!`n没有找到文件！`n     Specifically: " filepath "`n")
   }
 }
 ExitApp
