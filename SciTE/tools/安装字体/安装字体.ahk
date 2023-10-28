@@ -1,6 +1,7 @@
 ﻿#NoEnv
 #NoTrayIcon
 #SingleInstance Force
+#Requires AutoHotkey v1.1.33+
 SetWorkingDir, %A_ScriptDir%
 
 ; 管理员权限运行

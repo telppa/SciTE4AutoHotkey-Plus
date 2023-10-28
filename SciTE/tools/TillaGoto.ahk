@@ -30,6 +30,14 @@
 			加入提示。
 			界面改进。
 */
+	#NoEnv
+	#NoTrayIcon
+	#SingleInstance Ignore
+	#Requires AutoHotkey v1.1.33+
+	SetTitleMatchMode, RegEx
+	DetectHiddenWindows, On
+	SetBatchLines, -1
+	
 	; 避免 GUI 显示时强制退出报错
 	ComObjError(false)
 	
@@ -79,12 +87,6 @@
 	bFilterCommentsOrig := bFilterComments
 	iIncludeModeOrig := iIncludeMode
 	
-	#NoEnv
-	#NoTrayIcon
-	#SingleInstance Ignore
-	SetTitleMatchMode, RegEx
-	DetectHiddenWindows, On
-	SetBatchLines, -1
 	Menu, Tray, NoStandard
 	Menu, Tray, Icon, %A_ScriptDir%\..\toolicon.icl, 16
 	Menu, Tray, Tip, TillaGoto for SciTE4AutoHotkey

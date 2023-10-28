@@ -3,6 +3,7 @@
 ;
 
 #NoEnv
+#Requires AutoHotkey v1.1.33+
 SetWorkingDir, %A_ScriptDir%
 
 if (!oSciTE := GetSciTEInstance())

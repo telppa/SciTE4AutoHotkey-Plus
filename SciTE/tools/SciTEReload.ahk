@@ -3,6 +3,7 @@
 ;
 
 #NoEnv
+#Requires AutoHotkey v1.1.33+
 SendMode, Input
 SetWorkingDir, %A_ScriptDir%\..\
 

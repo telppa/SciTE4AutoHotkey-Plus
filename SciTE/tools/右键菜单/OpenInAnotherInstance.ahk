@@ -1,6 +1,7 @@
 ﻿#NoEnv
 #NoTrayIcon
 #SingleInstance Ignore
+#Requires AutoHotkey v1.1.33+
 
 if (!oSciTE := GetSciTEInstance())
   ExitApp

@@ -46,6 +46,7 @@ SingleInstance()
 #NoEnv
 #UseHook
 #KeyHistory 0
+#Requires AutoHotkey v1.1.33+
 
 SetBatchLines, -1
 ListLines, Off

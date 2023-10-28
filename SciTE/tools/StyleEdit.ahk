@@ -5,6 +5,7 @@
 #NoEnv
 #NoTrayIcon
 #SingleInstance Ignore
+#Requires AutoHotkey v1.1.33+
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 SetBatchLines -1

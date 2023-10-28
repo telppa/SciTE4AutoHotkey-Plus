@@ -23,8 +23,9 @@
     增加主页。
     版本号 1.1。
 */
-#SingleInstance Force
 #NoEnv
+#SingleInstance Force
+#Requires AutoHotkey v1.1.33+
 
 界面:
   ; 设置图标必须放第一行，否则失效。

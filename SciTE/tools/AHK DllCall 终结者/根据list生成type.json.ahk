@@ -1,4 +1,6 @@
-﻿arr:={}
+﻿#Requires AutoHotkey v1.1.33+
+
+arr:={}
 loop, Read, list.txt
 {
   ; 跳过注释

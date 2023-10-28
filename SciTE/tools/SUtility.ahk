@@ -26,6 +26,7 @@ Label_PreSetting:    ;{ 预设置
   #NoEnv
   #NoTrayIcon
   #SingleInstance Ignore
+  #Requires AutoHotkey v1.1.33+
   FileEncoding, UTF-8
   Menu, Tray, Icon, %A_ScriptDir%\..\toolicon.icl, 11
 ;}

@@ -1,4 +1,6 @@
-﻿; SciTE 交互示例
+﻿#Requires AutoHotkey v1.1.33+
+
+; SciTE 交互示例
 ; 因为是调用 SciTE 的 COM 接口，所以显然运行本脚本需要 “SciTE.exe” 处于运行状态
 Run, ..\..\SciTE.exe
 MsgBox,  262208, , 等待2秒, 2		; 等2秒以便 COM 接口加载完成

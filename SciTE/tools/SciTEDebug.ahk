@@ -6,6 +6,7 @@
 ;{ Auto-Execute Section
 
 #SingleInstance Ignore
+#Requires AutoHotkey v1.1.33+
 #NoTrayIcon
 SetBatchLines, -1
 SetWorkingDir, %A_ScriptDir%

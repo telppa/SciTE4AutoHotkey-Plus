@@ -125,6 +125,7 @@ loop
 */
 
 #SingleInstance ignore
+#Requires AutoHotkey v1.1.33+
 SetBatchLines, -1
 
 ;set working dir, in case this script is called from some other script in a different dir
