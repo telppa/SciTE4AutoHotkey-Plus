@@ -1,7 +1,7 @@
 ﻿输出structor用的类型列表()
 {
   ; 加载类型数据库
-  FileRead, ahkType, type.json
+  FileRead ahkType, Res\type.json
   ahkType := createAhkTypeFromJson(ahkType)
   
   ; INT_PTR 进行手动分类
@@ -46,8 +46,9 @@
     out .= "`r`n"
   }
   
-  FileDelete, structor用的类型列表.txt
-  FileAppend, %out%, structor用的类型列表.txt
+  FileCreateDir Output
+  FileDelete Output\structor用的类型列表.txt
+  FileAppend %out%, Output\structor用的类型列表.txt, UTF-8
   MsgBox, 0x40000, , 已生成 structor用的类型列表.txt`n`n共转换出%n%个类型
   return
 }

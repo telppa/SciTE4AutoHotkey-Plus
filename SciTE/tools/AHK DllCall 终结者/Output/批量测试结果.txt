@@ -1,48 +1,48 @@
-hWnd := ""
+ï»¿hWnd := ""
 lpText := ""
 lpCaption := ""
 uType := ""
 ret := DllCall("MessageBox", "Ptr", hWnd, "Str", lpText, "Str", lpCaption, "UInt", uType)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 uiAction := ""
 uiParam := ""
 VarSetCapacity(pvParam, , 0)
 fWinIni := ""
 ret := DllCall("SystemParametersInfo", "UInt", uiAction, "UInt", uiParam, "Ptr", &pvParam, "UInt", fWinIni)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hWnd := ""
 ret := DllCall("IsWindowVisible", "Ptr", hWnd)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ¾¯¸æ£ºº¯Êı¿ÉÄÜ´æÔÚ¶îÍâ²ÎÊı£¬Ğè×ÔĞĞÈ·¶¨¡£
+; è­¦å‘Šï¼šå‡½æ•°å¯èƒ½å­˜åœ¨é¢å¤–å‚æ•°ï¼Œéœ€è‡ªè¡Œç¡®å®šã€‚
 lpOut := ""
 lpFmt := ""
 ret := DllCall("wsprintf", "Str", lpOut, "Str", lpFmt)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 lpFrequency := ""
 ret := DllCall("QueryPerformanceFrequency", "Int64*", lpFrequency)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 lpPerformanceCount := ""
 ret := DllCall("QueryPerformanceCounter", "Int64*", lpPerformanceCount)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hWnd := ""
 nBar := ""
 ret := DllCall("GetScrollPos", "Ptr", hWnd, "Int", nBar)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpsi µÄÀàĞÍ LPSCROLLINFO ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpsi çš„ç±»å‹ LPSCROLLINFO å¯¹åº”ä¸º Ptr ã€‚
 hwnd := ""
 nBar := ""
 VarSetCapacity(lpsi, , 0)
 ret := DllCall("GetScrollInfo", "Ptr", hwnd, "Int", nBar, "Ptr", &lpsi)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpSecurityAttributes µÄÀàĞÍ LPSECURITY_ATTRIBUTES ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpSecurityAttributes çš„ç±»å‹ LPSECURITY_ATTRIBUTES å¯¹åº”ä¸º Ptr ã€‚
 lpFileName := ""
 dwDesiredAccess := ""
 dwShareMode := ""
@@ -51,34 +51,34 @@ dwCreationDisposition := ""
 dwFlagsAndAttributes := ""
 hTemplateFile := ""
 ret := DllCall("CreateFile", "Str", lpFileName, "UInt", dwDesiredAccess, "UInt", dwShareMode, "Ptr", &lpSecurityAttributes, "UInt", dwCreationDisposition, "UInt", dwFlagsAndAttributes, "Ptr", hTemplateFile, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpOverlapped µÄÀàĞÍ LPOVERLAPPED ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpOverlapped çš„ç±»å‹ LPOVERLAPPED å¯¹åº”ä¸º Ptr ã€‚
 hFile := ""
 VarSetCapacity(lpBuffer, , 0)
 nNumberOfBytesToWrite := ""
 lpNumberOfBytesWritten := ""
 VarSetCapacity(lpOverlapped, , 0)
 ret := DllCall("WriteFile", "Ptr", hFile, "Ptr", &lpBuffer, "UInt", nNumberOfBytesToWrite, "UInt*", lpNumberOfBytesWritten, "Ptr", &lpOverlapped)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hObject := ""
 ret := DllCall("CloseHandle", "Ptr", hObject)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpOverlapped µÄÀàĞÍ LPOVERLAPPED ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpOverlapped çš„ç±»å‹ LPOVERLAPPED å¯¹åº”ä¸º Ptr ã€‚
 hFile := ""
 VarSetCapacity(lpBuffer, , 0)
 nNumberOfBytesToRead := ""
 lpNumberOfBytesRead := ""
 VarSetCapacity(lpOverlapped, , 0)
 ret := DllCall("ReadFile", "Ptr", hFile, "Ptr", &lpBuffer, "UInt", nNumberOfBytesToRead, "UInt*", lpNumberOfBytesRead, "Ptr", &lpOverlapped)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hInstance := ""
 lpCursorName := ""
 ret := DllCall("LoadCursor", "Ptr", hInstance, "Str", lpCursorName, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 h := ""
 type := ""
@@ -86,7 +86,7 @@ cx := ""
 cy := ""
 flags := ""
 ret := DllCall("CopyImage", "Ptr", h, "UInt", type, "Int", cx, "Int", cy, "UInt", flags, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hInst := ""
 xHotSpot := ""
@@ -96,50 +96,50 @@ nHeight := ""
 VarSetCapacity(pvANDPlane, , 0)
 VarSetCapacity(pvXORPlane, , 0)
 ret := DllCall("CreateCursor", "Ptr", hInst, "Int", xHotSpot, "Int", yHotSpot, "Int", nWidth, "Int", nHeight, "Ptr", &pvANDPlane, "Ptr", &pvXORPlane, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hcur := ""
 id := ""
 ret := DllCall("SetSystemCursor", "Ptr", hcur, "UInt", id)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpRect µÄÀàĞÍ LPRECT ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpRect çš„ç±»å‹ LPRECT å¯¹åº”ä¸º Ptr ã€‚
 hWnd := ""
 VarSetCapacity(lpRect, , 0)
 ret := DllCall("GetWindowRect", "Ptr", hWnd, "Ptr", &lpRect)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hWnd := ""
 ret := DllCall("GetDC", "Ptr", hWnd, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 color := ""
 ret := DllCall("CreateSolidBrush", "UInt", color, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lprc µÄÀàĞÍ const RECT* ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lprc çš„ç±»å‹ const RECT* å¯¹åº”ä¸º Ptr ã€‚
 hDC := ""
 VarSetCapacity(lprc, , 0)
 hbr := ""
 ret := DllCall("FillRect", "Ptr", hDC, "Ptr", &lprc, "Ptr", hbr)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hWnd := ""
 hDC := ""
 ret := DllCall("ReleaseDC", "Ptr", hWnd, "Ptr", hDC)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 ho := ""
 ret := DllCall("DeleteObject", "Ptr", ho)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpSystemTime µÄÀàĞÍ const SYSTEMTIME* ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpSystemTime çš„ç±»å‹ const SYSTEMTIME* å¯¹åº”ä¸º Ptr ã€‚
 VarSetCapacity(lpSystemTime, , 0)
 ret := DllCall("SetSystemTime", "Ptr", &lpSystemTime)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı hAlgorithm µÄÀàĞÍ BCRYPT_ALG_HANDLE ¶ÔÓ¦Îª Ptr ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı phHash µÄÀàĞÍ BCRYPT_HASH_HANDLE* ¶ÔÓ¦Îª Ptr* ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° hAlgorithm çš„ç±»å‹ BCRYPT_ALG_HANDLE å¯¹åº”ä¸º Ptr ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° phHash çš„ç±»å‹ BCRYPT_HASH_HANDLE* å¯¹åº”ä¸º Ptr* ã€‚
 hAlgorithm := ""
 phHash := ""
 pbHashObject := ""
@@ -148,32 +148,32 @@ pbSecret := ""
 cbSecret := ""
 dwFlags := ""
 ret := DllCall("BCryptCreateHash", "Ptr", hAlgorithm, "Ptr*", phHash, "UChar*", pbHashObject, "UInt", cbHashObject, "UChar*", pbSecret, "UInt", cbSecret, "UInt", dwFlags)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı ppAlgList µÄÀàĞÍ BCRYPT_ALGORITHM_IDENTIFIER** ¶ÔÓ¦Îª Ptr* ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° ppAlgList çš„ç±»å‹ BCRYPT_ALGORITHM_IDENTIFIER** å¯¹åº”ä¸º Ptr* ã€‚
 dwAlgOperations := ""
 pAlgCount := ""
 ppAlgList := ""
 dwFlags := ""
 ret := DllCall("BCryptEnumAlgorithms", "UInt", dwAlgOperations, "UInt*", pAlgCount, "Ptr*", ppAlgList, "UInt", dwFlags)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı phAlgorithm µÄÀàĞÍ BCRYPT_ALG_HANDLE* ¶ÔÓ¦Îª Ptr* ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° phAlgorithm çš„ç±»å‹ BCRYPT_ALG_HANDLE* å¯¹åº”ä¸º Ptr* ã€‚
 phAlgorithm := ""
 pszAlgId := ""
 pszImplementation := ""
 dwFlags := ""
 ret := DllCall("BCryptOpenAlgorithmProvider", "Ptr*", phAlgorithm, "WStr", pszAlgId, "WStr", pszImplementation, "UInt", dwFlags)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 lpsz := ""
 ret := DllCall("CharLower", "Str", lpsz, "Str")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpProcessAttributes µÄÀàĞÍ LPSECURITY_ATTRIBUTES ¶ÔÓ¦Îª Ptr ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı lpThreadAttributes µÄÀàĞÍ LPSECURITY_ATTRIBUTES ¶ÔÓ¦Îª Ptr ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı lpStartupInfo µÄÀàĞÍ LPSTARTUPINFOA ¶ÔÓ¦Îª Ptr ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı lpProcessInformation µÄÀàĞÍ LPPROCESS_INFORMATION ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpProcessAttributes çš„ç±»å‹ LPSECURITY_ATTRIBUTES å¯¹åº”ä¸º Ptr ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpThreadAttributes çš„ç±»å‹ LPSECURITY_ATTRIBUTES å¯¹åº”ä¸º Ptr ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpStartupInfo çš„ç±»å‹ LPSTARTUPINFOA å¯¹åº”ä¸º Ptr ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpProcessInformation çš„ç±»å‹ LPPROCESS_INFORMATION å¯¹åº”ä¸º Ptr ã€‚
 lpApplicationName := ""
 VarSetCapacity(lpCommandLine, , 0)
 VarSetCapacity(lpProcessAttributes, , 0)
@@ -185,29 +185,29 @@ lpCurrentDirectory := ""
 VarSetCapacity(lpStartupInfo, , 0)
 VarSetCapacity(lpProcessInformation, , 0)
 ret := DllCall("CreateProcessA", "AStr", lpApplicationName, "AStr", lpCommandLine, "Ptr", &lpProcessAttributes, "Ptr", &lpThreadAttributes, "Int", bInheritHandles, "UInt", dwCreationFlags, "Ptr", &lpEnvironment, "AStr", lpCurrentDirectory, "Ptr", &lpStartupInfo, "Ptr", &lpProcessInformation)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 dwDesiredAccess := ""
 bInheritHandle := ""
 dwProcessId := ""
 ret := DllCall("OpenProcess", "UInt", dwDesiredAccess, "Int", bInheritHandle, "UInt", dwProcessId, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 ProcessHandle := ""
 DesiredAccess := ""
 TokenHandle := ""
 ret := DllCall("OpenProcessToken", "Ptr", ProcessHandle, "UInt", DesiredAccess, "Ptr*", TokenHandle)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpLuid µÄÀàĞÍ PLUID ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpLuid çš„ç±»å‹ PLUID å¯¹åº”ä¸º Ptr ã€‚
 lpSystemName := ""
 lpName := ""
 VarSetCapacity(lpLuid, , 0)
 ret := DllCall("LookupPrivilegeValueA", "AStr", lpSystemName, "AStr", lpName, "Ptr", &lpLuid)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ´íÎó£º²ÎÊı NewState µÄÀàĞÍ PTOKEN_PRIVILEGES ¶ÔÓ¦Î´Öª£¬Ğè×ÔĞĞÈ·¶¨¡£
-; ´íÎó£º²ÎÊı PreviousState µÄÀàĞÍ PTOKEN_PRIVILEGES ¶ÔÓ¦Î´Öª£¬Ğè×ÔĞĞÈ·¶¨¡£
+; é”™è¯¯ï¼šå‚æ•° NewState çš„ç±»å‹ PTOKEN_PRIVILEGES å¯¹åº”æœªçŸ¥ï¼Œéœ€è‡ªè¡Œç¡®å®šã€‚
+; é”™è¯¯ï¼šå‚æ•° PreviousState çš„ç±»å‹ PTOKEN_PRIVILEGES å¯¹åº”æœªçŸ¥ï¼Œéœ€è‡ªè¡Œç¡®å®šã€‚
 TokenHandle := ""
 DisableAllPrivileges := ""
 NewState := ""
@@ -215,60 +215,60 @@ BufferLength := ""
 PreviousState := ""
 ReturnLength := ""
 ret := DllCall("AdjustTokenPrivileges", "Ptr", TokenHandle, "Int", DisableAllPrivileges, "Unknown", NewState, "UInt", BufferLength, "Unknown", PreviousState, "UInt*", ReturnLength)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 lpidProcess := ""
 cb := ""
 lpcbNeeded := ""
 ret := DllCall("EnumProcesses", "UInt*", lpidProcess, "UInt", cb, "UInt*", lpcbNeeded)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hProcess := ""
 hModule := ""
 VarSetCapacity(lpBaseName, , 0)
 nSize := ""
 ret := DllCall("GetModuleBaseNameA", "Ptr", hProcess, "Ptr", hModule, "AStr", lpBaseName, "UInt", nSize, "UInt")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hProcess := ""
 VarSetCapacity(lpImageFileName, , 0)
 nSize := ""
 ret := DllCall("GetProcessImageFileNameA", "Ptr", hProcess, "AStr", lpImageFileName, "UInt", nSize, "UInt")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpfn µÄÀàĞÍ HOOKPROC ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpfn çš„ç±»å‹ HOOKPROC å¯¹åº”ä¸º Ptr ã€‚
 idHook := ""
 VarSetCapacity(lpfn, , 0)
 hmod := ""
 dwThreadId := ""
 ret := DllCall("SetWindowsHookExA", "Int", idHook, "Ptr", &lpfn, "Ptr", hmod, "UInt", dwThreadId, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 hhk := ""
 ret := DllCall("UnhookWindowsHookEx", "Ptr", hhk)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 lpModuleName := ""
 ret := DllCall("GetModuleHandleA", "AStr", lpModuleName, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 nCode := ""
 wParam := ""
 lParam := ""
 ret := DllCall("LowLevelMouseProc", "Int", nCode, "UPtr", wParam, "Ptr", lParam, "Ptr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 ret := DllCall("GetCommandLineA", "AStr")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ´íÎó£º²ÎÊı flags µÄÀàĞÍ SFBS_FLAGS ¶ÔÓ¦Î´Öª£¬Ğè×ÔĞĞÈ·¶¨¡£
-; ´íÎó£º·µ»ØÖµµÄÀàĞÍ LWSTDAPI ¶ÔÓ¦Î´Öª£¬Ğè×ÔĞĞÈ·¶¨¡£
+; é”™è¯¯ï¼šå‚æ•° flags çš„ç±»å‹ SFBS_FLAGS å¯¹åº”æœªçŸ¥ï¼Œéœ€è‡ªè¡Œç¡®å®šã€‚
+; é”™è¯¯ï¼šè¿”å›å€¼çš„ç±»å‹ LWSTDAPI å¯¹åº”æœªçŸ¥ï¼Œéœ€è‡ªè¡Œç¡®å®šã€‚
 ull := ""
 flags := ""
 VarSetCapacity(pszBuf, , 0)
 cchBuf := ""
 ret := DllCall("StrFormatByteSizeEx", "UInt64", ull, "Unknown", flags, "WStr", pszBuf, "UInt", cchBuf, "Unknown")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
 servername := ""
 level := ""
@@ -278,19 +278,19 @@ entriesread := ""
 totalentries := ""
 resume_handle := ""
 ret := DllCall("NetGroupEnum", "WStr", servername, "UInt", level, "Ptr*", bufptr, "UInt", prefmaxlen, "UInt*", entriesread, "UInt*", totalentries, "UPtr*", resume_handle, "UInt")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ÌáÊ¾£º²Â²â²ÎÊı lpClassName µÄÀàĞÍ  ¶ÔÓ¦Îª Ptr ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı lpWindowName µÄÀàĞÍ  ¶ÔÓ¦Îª Ptr ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı dwStyle µÄÀàĞÍ  ¶ÔÓ¦Îª UInt ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı x µÄÀàĞÍ  ¶ÔÓ¦Îª Short ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı y µÄÀàĞÍ  ¶ÔÓ¦Îª Short ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı nWidth µÄÀàĞÍ  ¶ÔÓ¦Îª Short ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı nHeight µÄÀàĞÍ  ¶ÔÓ¦Îª Short ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı hWndParent µÄÀàĞÍ  ¶ÔÓ¦Îª Ptr ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı hMenu µÄÀàĞÍ  ¶ÔÓ¦Îª Ptr ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı hInstance µÄÀàĞÍ  ¶ÔÓ¦Îª Ptr ¡£
-; ÌáÊ¾£º²Â²â²ÎÊı lpParam µÄÀàĞÍ  ¶ÔÓ¦Îª Ptr ¡£
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpClassName çš„ç±»å‹  å¯¹åº”ä¸º Ptr ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpWindowName çš„ç±»å‹  å¯¹åº”ä¸º Ptr ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° dwStyle çš„ç±»å‹  å¯¹åº”ä¸º UInt ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° x çš„ç±»å‹  å¯¹åº”ä¸º Short ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° y çš„ç±»å‹  å¯¹åº”ä¸º Short ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° nWidth çš„ç±»å‹  å¯¹åº”ä¸º Short ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° nHeight çš„ç±»å‹  å¯¹åº”ä¸º Short ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° hWndParent çš„ç±»å‹  å¯¹åº”ä¸º Ptr ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° hMenu çš„ç±»å‹  å¯¹åº”ä¸º Ptr ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° hInstance çš„ç±»å‹  å¯¹åº”ä¸º Ptr ã€‚
+; æç¤ºï¼šçŒœæµ‹å‚æ•° lpParam çš„ç±»å‹  å¯¹åº”ä¸º Ptr ã€‚
 VarSetCapacity(lpClassName, , 0)
 VarSetCapacity(lpWindowName, , 0)
 dwStyle := ""
@@ -303,14 +303,14 @@ hMenu := ""
 hInstance := ""
 VarSetCapacity(lpParam, , 0)
 ret := DllCall("CreateWindowA", "Ptr", &lpClassName, "Ptr", &lpWindowName, "UInt", dwStyle, "Short", x, "Short", y, "Short", nWidth, "Short", nHeight, "Ptr", hWndParent, "Ptr", hMenu, "Ptr", hInstance, "Ptr", &lpParam)
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 
-; ¾¯¸æ£º²Â²â²ÎÊı &psfi µÄÀàĞÍ SHFILEINFO FAR* ¶ÔÓ¦Îª Ptr £¬µ«¿ÉĞÅ¶È½ÏµÍ¡£
+; è­¦å‘Šï¼šçŒœæµ‹å‚æ•° &psfi çš„ç±»å‹ SHFILEINFO FAR* å¯¹åº”ä¸º Ptr ï¼Œä½†å¯ä¿¡åº¦è¾ƒä½ã€‚
 pszPath := ""
 dwFileAttributes := ""
 VarSetCapacity(psfi, , 0)
 cbFileInfo := ""
 uFlags := ""
 ret := DllCall("SHGetFileInfo", "Str", pszPath, "UInt", dwFileAttributes, "Ptr", &psfi, "UInt", cbFileInfo, "UInt", uFlags, "UInt")
-MsgBox, % "·µ»ØÖµ:" ret "`r`n´íÎóÂë:" ErrorLevel
+MsgBox, % "è¿”å›å€¼:" ret "`r`né”™è¯¯ç :" ErrorLevel
 

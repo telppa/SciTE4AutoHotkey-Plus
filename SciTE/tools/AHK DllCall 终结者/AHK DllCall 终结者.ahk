@@ -17,18 +17,18 @@ F12 输出批量测试结果
 #NoTrayIcon
 #SingleInstance Force
 #Requires AutoHotkey v1.1.33+
-SetBatchLines, -1
+SetBatchLines -1
 
-SetWorkingDir, %A_ScriptDir%
+SetWorkingDir %A_ScriptDir%
 
 ; 多语言支持
-gosub, multiLanguage
+gosub multiLanguage
 
 ; 加载配置
-gosub, loadSettings
+gosub loadSettings
 
 ; 设置图标必须放第一行，否则失效。
-Menu, Tray, Icon, %A_ScriptDir%\DllCall.ico
+Menu Tray, Icon, %A_ScriptDir%\DllCall.ico
 
 ; 界面
 Gui +AlwaysOnTop +HwndhGUI
@@ -64,7 +64,7 @@ Gui Add, Text, x10 y10 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Spa
 Gui Add, Picture, x10 y264 w602 h26, % "HBITMAP:" Gradient(602, 26)
 Gui Add, Text, x10 y264 w602 h26 +0x200 +E0x200 +BackgroundTrans, %A_Space%%A_Space%AHK Code
 
-Gui Show, w620 h505, %l_gui_10% v5.6.1
+Gui Show, w620 h505, %l_gui_10% v5.6.2
 
 ; 始终显示帮助
 帮助()
@@ -72,37 +72,37 @@ return
 
 GuiEscape:
 GuiClose:
-  gosub, saveSettings
+  gosub saveSettings
   ExitApp
 return
 
 translateWithDelay:
-  SetTimer, translate, -500
+  SetTimer translate, -500
 return
 
 translate:
-  Gui, Submit, NoHide
+  Gui Submit, NoHide
   GuiControl, , edit2, % createDllCallTemplate(edit1, edit3, multiLine, showError, showWarn, showInfo, createVars, printRetValAndErrorLevel)
 return
 
 loadSettings:
-  IniRead, oneLine, settings.ini, settings, oneLine, 0
-  IniRead, multiLine, settings.ini, settings, multiLine, 1
-  IniRead, showError, settings.ini, settings, showError, 1
-  IniRead, showWarn, settings.ini, settings, showWarn, 1
-  IniRead, showInfo, settings.ini, settings, showInfo, 1
-  IniRead, createVars, settings.ini, settings, createVars, 1
-  IniRead, printRetValAndErrorLevel, settings.ini, settings, printRetValAndErrorLevel, 0
+  IniRead oneLine, settings.ini, settings, oneLine, 0
+  IniRead multiLine, settings.ini, settings, multiLine, 1
+  IniRead showError, settings.ini, settings, showError, 1
+  IniRead showWarn, settings.ini, settings, showWarn, 1
+  IniRead showInfo, settings.ini, settings, showInfo, 1
+  IniRead createVars, settings.ini, settings, createVars, 1
+  IniRead printRetValAndErrorLevel, settings.ini, settings, printRetValAndErrorLevel, 0
 return
 
 saveSettings:
-  IniWrite, %oneLine%, settings.ini, settings, oneLine
-  IniWrite, %multiLine%, settings.ini, settings, multiLine
-  IniWrite, %showError%, settings.ini, settings, showError
-  IniWrite, %showWarn%, settings.ini, settings, showWarn
-  IniWrite, %showInfo%, settings.ini, settings, showInfo
-  IniWrite, %createVars%, settings.ini, settings, createVars
-  IniWrite, %printRetValAndErrorLevel%, settings.ini, settings, printRetValAndErrorLevel
+  IniWrite %oneLine%, settings.ini, settings, oneLine
+  IniWrite %multiLine%, settings.ini, settings, multiLine
+  IniWrite %showError%, settings.ini, settings, showError
+  IniWrite %showWarn%, settings.ini, settings, showWarn
+  IniWrite %showInfo%, settings.ini, settings, showInfo
+  IniWrite %createVars%, settings.ini, settings, createVars
+  IniWrite %printRetValAndErrorLevel%, settings.ini, settings, printRetValAndErrorLevel
 return
 
 #If WinActive("ahk_id " hGUI)
@@ -206,7 +206,7 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
         
         if (rule4)
         {
-          switch, prefix
+          switch prefix
           {
             case "b"  : type := getAhkType("BOOL"),  name := name
             case "c"  : type := getAhkType("Char"),  name := name
@@ -295,7 +295,7 @@ createDllCallTemplate(text, dllName, multiLine:=true, showError:=true, showWarn:
   if (printRetValAndErrorLevel)
     retValAndErrorLevel := "`r`n" l_errorlevel
   
-  return, error warn info varList template retValAndErrorLevel
+  return error warn info varList template retValAndErrorLevel
 }
 
 /* 这是专门给 createDllCallTemplate() 用的
@@ -307,7 +307,7 @@ _lineAppend(str, sLine, nLine)
   oStr[nLine] .= sLine
   for k, v in oStr
     ret .= v "`r`n"
-  return, RTrim(ret, "`r`n")
+  return RTrim(ret, "`r`n")
 }
 
 /* 获取 Win32 类型对应的 AHK 类型
@@ -320,7 +320,7 @@ getAhkType(win32Type)
   ; 加载类型数据库
   if (!IsObject(ahkType))
   {
-    FileRead, ahkType, type.json
+    FileRead ahkType, Res\type.json
     ahkType := createAhkTypeFromJson(ahkType)
   }
   
@@ -361,7 +361,7 @@ getAhkType(win32Type)
   if (OutputVarCount>=2)
     type := "Ptr*"
   
-  return, type
+  return type
 }
 
 /* 以下为测试代码
@@ -478,7 +478,7 @@ createAhkTypeFromJson(text)
   ret.PTSTR      := "Str"
   ret.PCTSTR     := "Str"
   
-  return, ret
+  return ret
 }
 
 /* 这是专门给 createAhkTypeFromJson() 用的
@@ -508,12 +508,12 @@ _forArray(obj, ByRef ret, fromOutside:=true, haveAsterisk:=false)
       {
         if (flag)
         {
-          switch, rootValue
+          switch rootValue
           {
             ; Char* 全转为 AStr ， UShort* 全转为 WStr
-            case "Char"  : ret[k] := "AStr"
-            case "UShort": ret[k] := "WStr"
-            default      : ret[k] := rootValue "*"
+            case "Char"   : ret[k] := "AStr"
+            case "UShort" : ret[k] := "WStr"
+            default       : ret[k] := rootValue "*"
           }
         }
         else
@@ -657,7 +657,7 @@ parseMsdnFunctionSyntax(text)
     }
   }
   
-  return, ret
+  return ret
 }
 
 #Include %A_ScriptDir%\Lib\cJson.ahk

@@ -412,11 +412,12 @@
   `);
   )
 
-  loop, 44
-    out.=createDllCallTemplate(a%A_Index%, "", false, true, true, true, true, true) "`r`n`r`n"
+  loop 44
+    out .= createDllCallTemplate(a%A_Index%, "", false, true, true, true, true, true) "`r`n`r`n"
 
-  FileDelete, 批量测试结果.txt
-  FileAppend, % out, 批量测试结果.txt
+  FileCreateDir Output
+  FileDelete Output\批量测试结果.txt
+  FileAppend % out, Output\批量测试结果.txt, UTF-8
   MsgBox, 0x40000, , 已生成 批量测试结果.txt
   return
 }

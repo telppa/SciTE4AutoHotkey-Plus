@@ -1,4 +1,4 @@
-__int3264=Ptr
+﻿__int3264=Ptr
 __int64=Int64
 __nullterminated CONST CHAR*=AStr
 ACCESS_MASK=UInt

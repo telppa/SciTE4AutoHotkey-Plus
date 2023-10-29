@@ -1,4 +1,4 @@
-, AStrTypes = "__nullterminated CONST CHAR*,CHAR*,CONST CHAR*,INT8*,LPCSTR,LPSTR,PCHAR,PCSTR,PINT8,PSTR"
+﻿, AStrTypes = "__nullterminated CONST CHAR*,CHAR*,CONST CHAR*,INT8*,LPCSTR,LPSTR,PCHAR,PCSTR,PINT8,PSTR"
 , CharTypes = "CCHAR,char,INT8,signed char"
 , DoubleTypes = "double"
 , FloatTypes = "float"

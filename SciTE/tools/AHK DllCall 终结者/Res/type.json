@@ -1,0 +1,366 @@
+{
+	"Char": {
+		"char": {
+			"__nullterminated CONST CHAR*": {
+				"LPCSTR": 0
+			},
+			"CCHAR": 0,
+			"CHAR*": {
+				"LPSTR": 0,
+				"PCHAR": 0,
+				"PSTR": 0
+			},
+			"CHAR": 0,
+			"CONST CHAR*": {
+				"PCSTR": 0
+			}
+		},
+		"signed char": {
+			"INT8*": {
+				"PINT8": 0
+			},
+			"INT8": 0
+		}
+	},
+	"Double": {
+		"double": {
+			"DOUBLE": 0
+		}
+	},
+	"Float": {
+		"float": {
+			"FLOAT*": {
+				"PFLOAT": 0
+			},
+			"FLOAT": 0
+		}
+	},
+	"Int64": {
+		"__int64": {
+			"LONG64*": {
+				"PLONG64": 0
+			},
+			"LONG64": 0
+		},
+		"signed __int64": {
+			"INT64*": {
+				"PINT64": 0
+			},
+			"INT64": 0,
+			"LARGE_INTEGER*": {
+				"PLARGE_INTEGER": 0
+			},
+			"LARGE_INTEGER": 0,
+			"LONGLONG*": {
+				"PLONGLONG": 0
+			},
+			"LONGLONG": {
+				"USN": 0
+			}
+		}
+	},
+	"Int": {
+		"int*": {
+			"LPINT": 0,
+			"PINT": 0
+		},
+		"int": {
+			"BOOL far*": {
+				"LPBOOL": 0
+			},
+			"BOOL*": {
+				"PBOOL": 0
+			},
+			"BOOL": 0,
+			"HFILE": 0,
+			"INT": 0
+		},
+		"long*": {
+			"LPLONG": 0
+		},
+		"long": {
+			"LONG*": {
+				"PLONG": 0
+			},
+			"LONG": {
+				"HRESULT": 0
+			},
+			"NTSTATUS": 0
+		},
+		"signed int": {
+			"INT32*": {
+				"PINT32": 0
+			},
+			"INT32": 0,
+			"LONG32*": {
+				"PLONG32": 0
+			},
+			"LONG32": 0
+		}
+	},
+	"Ptr": {
+		"__int3264": {
+			"INT_PTR*": {
+				"PINT_PTR": 0
+			},
+			"LONG_PTR*": {
+				"PLONG_PTR": 0
+			},
+			"LONG_PTR": {
+				"LPARAM": 0,
+				"LRESULT": 0,
+				"SSIZE_T*": {
+					"PSSIZE_T": 0
+				},
+				"SSIZE_T": 0
+			}
+		},
+		"CONST void*": {
+			"LPCVOID": 0
+		},
+		"void*": {
+			"ADCONNECTION_HANDLE": 0,
+			"LDAP_UDP_HANDLE": 0,
+			"LPVOID": {
+				"SC_LOCK": 0
+			},
+			"PCONTEXT_HANDLE*": {
+				"PPCONTEXT_HANDLE": 0
+			},
+			"PCONTEXT_HANDLE": 0,
+			"PVOID": {
+				"HANDLE*": {
+					"LPHANDLE": 0,
+					"PHANDLE": 0
+				},
+				"HANDLE": {
+					"HACCEL": 0,
+					"HBITMAP": 0,
+					"HBRUSH": 0,
+					"HCOLORSPACE": 0,
+					"HCONVLIST": 0,
+					"HCONV": 0,
+					"HDC": 0,
+					"HDDEDATA": 0,
+					"HDESK": 0,
+					"HDROP": 0,
+					"HDWP": 0,
+					"HENHMETAFILE": 0,
+					"HFONT": 0,
+					"HGDIOBJ": 0,
+					"HGLOBAL": 0,
+					"HHOOK": 0,
+					"HICON": {
+						"HCURSOR": 0
+					},
+					"HINSTANCE": {
+						"HMODULE": 0
+					},
+					"HKEY*": {
+						"PHKEY": 0
+					},
+					"HKEY": 0,
+					"HKL": 0,
+					"HLOCAL": 0,
+					"HMENU": 0,
+					"HMETAFILE": 0,
+					"HPALETTE": 0,
+					"HPEN": 0,
+					"HRGN": 0,
+					"HRSRC": 0,
+					"HSZ": 0,
+					"HWND": 0,
+					"SC_HANDLE": 0,
+					"SERVICE_STATUS_HANDLE": 0,
+					"WINSTA": 0
+				}
+			},
+			"RPC_BINDING_HANDLE": 0
+		}
+	},
+	"Short": {
+		"short": {
+			"SHORT*": {
+				"PSHORT": 0
+			},
+			"SHORT": 0
+		},
+		"signed short": {
+			"INT16*": {
+				"PINT16": 0
+			},
+			"INT16": 0
+		}
+	},
+	"UChar": {
+		"unsigned char": {
+			"BYTE far*": {
+				"LPBYTE": 0
+			},
+			"BYTE*": {
+				"PBYTE": 0
+			},
+			"BYTE": {
+				"BOOLEAN*": {
+					"PBOOLEAN": 0
+				},
+				"BOOLEAN": 0
+			},
+			"UCHAR*": {
+				"PUCHAR": 0,
+				"STRING": {
+					"UNC": 0
+				}
+			},
+			"UCHAR": 0,
+			"UINT8*": {
+				"PUINT8": 0
+			},
+			"UINT8": 0
+		}
+	},
+	"UInt64": {
+		"unsigned __int64": {
+			"DWORD64*": {
+				"PDWORD64": 0
+			},
+			"DWORD64": 0,
+			"DWORDLONG*": {
+				"PDWORDLONG": 0
+			},
+			"DWORDLONG": 0,
+			"QWORD": 0,
+			"UINT64*": {
+				"PUINT64": 0
+			},
+			"UINT64": 0,
+			"ULARGE_INTEGER*": {
+				"PULARGE_INTEGER": 0
+			},
+			"ULARGE_INTEGER": 0,
+			"ULONG64*": {
+				"PULONG64": 0
+			},
+			"ULONG64": 0,
+			"ULONGLONG*": {
+				"PULONGLONG": 0
+			},
+			"ULONGLONG": 0
+		}
+	},
+	"UInt": {
+		"unsigned int": {
+			"DWORD32*": {
+				"PDWORD32": 0
+			},
+			"DWORD32": 0,
+			"UINT*": {
+				"PUINT": 0
+			},
+			"UINT32*": {
+				"PUINT32": 0
+			},
+			"UINT32": 0,
+			"UINT": 0,
+			"ULONG32*": {
+				"PULONG32": 0
+			},
+			"ULONG32": 0
+		},
+		"unsigned long": {
+			"DWORD*": {
+				"LPCOLORREF": 0,
+				"LPDWORD": 0,
+				"PDWORD": {
+					"PLCID": 0
+				}
+			},
+			"DWORD": {
+				"ACCESS_MASK*": {
+					"PACCESS_MASK": 0
+				},
+				"ACCESS_MASK": 0,
+				"COLORREF": 0,
+				"HCALL": 0,
+				"LCID": 0,
+				"LCTYPE": 0,
+				"LGRPID": 0,
+				"NET_API_STATUS": 0,
+				"SECURITY_INFORMATION*": {
+					"PSECURITY_INFORMATION": 0
+				},
+				"SECURITY_INFORMATION": 0,
+				"TOKEN_MANDATORY_POLICY*": {
+					"PTOKEN_MANDATORY_POLICY": 0
+				},
+				"TOKEN_MANDATORY_POLICY": 0
+			},
+			"error_status_t": 0,
+			"ULONG*": {
+				"PULONG": 0
+			},
+			"ULONG": 0
+		}
+	},
+	"UPtr": {
+		"unsigned __int3264": {
+			"UINT_PTR*": {
+				"PUINT_PTR": 0
+			},
+			"UINT_PTR": {
+				"WPARAM": 0
+			},
+			"ULONG_PTR*": {
+				"PULONG_PTR": 0
+			},
+			"ULONG_PTR": {
+				"DWORD_PTR*": {
+					"PDWORD_PTR": 0
+				},
+				"DWORD_PTR": 0,
+				"SIZE_T*": {
+					"PSIZE_T": 0
+				},
+				"SIZE_T": 0
+			}
+		}
+	},
+	"UShort": {
+		"unsigned short": {
+			"const wchar_t*": {
+				"LMCSTR": 0
+			},
+			"UINT16*": {
+				"PUINT16": 0
+			},
+			"UINT16": 0,
+			"USHORT*": {
+				"PUSHORT": 0
+			},
+			"USHORT": 0,
+			"wchar_t": {
+				"CONST WCHAR*": {
+					"LPCWSTR": 0,
+					"PCWSTR": 0
+				},
+				"UNICODE": 0,
+				"WCHAR*": {
+					"BSTR": 0,
+					"LMSTR": 0,
+					"LPWSTR": 0,
+					"PWCHAR": 0,
+					"PWSTR": 0
+				},
+				"WCHAR": 0
+			},
+			"WORD*": {
+				"LPWORD": 0,
+				"PWORD": 0
+			},
+			"WORD": {
+				"ATOM": 0,
+				"LANGID": 0
+			}
+		}
+	}
+}
