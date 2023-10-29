@@ -47,9 +47,11 @@
     Gui Show, Autosize Center Hide, %Title%
     DHW := A_DetectHiddenWindows
     DetectHiddenWindows On
-    WinGetPos,,, ww,, ahk_id %hWnd%
-    GuiControlGet p, Pos, %lb% ; Last button
-    Off := ww - (((px + pw + 14) * A_ScreenDPI) // 96)
+    WinGetPos,,, ww,, ahk_id %hWnd% ; ww = with DPIScale
+    GuiControlGet p, Pos, %lb% ; Last button, px pw = without DPIScale
+    DPIScale := A_ScreenDPI / 96
+    right_boundary_pos := (px + pw + 14)
+    Off := Round(ww/DPIScale - right_boundary_pos)
     For k, v in o {
         GuiControl Move, %k%, % "x" . (v + Off)
     }
