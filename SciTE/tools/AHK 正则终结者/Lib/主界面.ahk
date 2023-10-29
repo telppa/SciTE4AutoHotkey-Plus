@@ -81,7 +81,7 @@ The margins are numbered 0 to 4. Using a margin number outside the valid range h
   Gui, Add, Button, v主页, 主页
   Gui, Add, Button, v存储正则 +Disabled, 存储正则
   Gui, Add, Button, v生成代码, 生成代码
-  Gui, Show, CEnter w370 h545, AHK 正则终结者 v1.5.2
+  Gui, Show, CEnter w370 h545, AHK 正则终结者 v1.5.3
 
   ; 窗口创建后再设置文本内容可以避免内容初始被选中
   sci1.SetText(不再使用的参数, 初始正则框内容)                ; 添加文本. 第一个参数是一个不再使用了的参数
@@ -183,15 +183,15 @@ Notify(wParam, lParam, msg, hwnd, obj)
 
 查找SciLexer_dll路径()
 {
-  IfExist, %A_ScriptDir%\SciLexer.dll       ; 当前目录
-    return, A_ScriptDir "\SciLexer.dll"
+  IfExist %A_ScriptDir%\SciLexer.dll       ; 当前目录
+    return A_ScriptDir "\SciLexer.dll"
+
+  IfExist %A_ScriptDir%\..\..\SciLexer.dll ; SciTE 目录
+    return A_ScriptDir "\..\..\SciLexer.dll"
 
   SplitPath, A_AhkPath, , ahkexedir
-  IfExist, %ahkexedir%\SciTE\SciLexer.dll   ; SciTE 目录
-    return, ahkexedir "\SciTE\SciLexer.dll"
-
-  IfExist, %ahkexedir%\SciLexer.dll         ; AHK EXE 目录
-    return, ahkexedir "\SciLexer.dll"
+  IfExist %ahkexedir%\SciLexer.dll         ; AHK EXE 目录
+    return ahkexedir "\SciLexer.dll"
 
   MsgBox, 4112, 错误, 没找到 SciLexer.dll`n这是实现高亮的必要文件，尝试找到并放在当前目录或 AutoHotkey.exe 目录或 SciTE 目录。
   ExitApp
