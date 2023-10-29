@@ -58,6 +58,8 @@ SendDirectorMsg
 SendDirectorMsgRet
 SendDirectorMsgRetArray
 ResolveProp
+GetProp
+SetProp
 )
 
 CoI_GetCurPos(this)
@@ -402,6 +404,16 @@ CoI_ResolveProp(this, propname)
 	while RegExMatch(propVal, "O)\$\((.+?)\)", o)
 		propVal := SubStr(propVal, 1, o.Pos-1) CoI_ResolveProp(this, o.1) SubStr(propVal, o.Pos+o.Len)
 	return propVal
+}
+
+CoI_GetProp(this, propname)
+{
+	return CoI_ResolveProp(this, propname)
+}
+
+CoI_SetProp(this, propname, propVal)
+{
+	Director_Send(Format("property:{}={}", propname, CEscape(propVal)))
 }
 
 ;------------------------------------------------------------------------------
