@@ -133,6 +133,20 @@ tabidx:=0
 oSciTE.SwitchToTab(tabidx)
 MsgBox, 切换标签
 
+; 取变量值
+; 取变量值时可以解析引用，例如
+; AutoHotkeyDir=$(SciteDefaultHome)\..
+; oSciTE.GetProp("AutoHotkeyDir") 得到的值不是 $(SciteDefaultHome)\.. 而是 xxx\SciTE\..
+; oSciTE.GetProp() 与 oSciTE.ResolveProp() 完全等价
+; 除了在 *.Properties 中定义的变量，内置变量列表可以在 https://www.scintilla.org/SciTEDoc.html 中的 Properties file 一节找到
+bak_prop := oSciTE.GetProp("tillagoto.gui.width")
+MsgBox, % "取变量值`n`n" bak_prop
+
+; 设置变量值
+oSciTE.SetProp("tillagoto.gui.width", 80)
+MsgBox, % "设置变量值`n`n" oSciTE.GetProp("tillagoto.gui.width")
+oSciTE.SetProp("tillagoto.gui.width", bak_prop)
+
 ; 获取 Scintilla 句柄，不是 SciTE 的
 hSci:=获取Scintilla句柄()
 MsgBox, % "获取 Scintilla 句柄，不是 SciTE 的`n`n" hSci
@@ -179,14 +193,6 @@ SciUtil_Autocompletion_Show(hSci, text)
 /*
 ; 重载配置，可以理解为让修改后的配置生效
 oSciTE.ReloadProps()
-
-; 取变量值，例如
-; oSciTE.ResolveProp("tillagoto.gui.width")
-; 取变量值时可以解析引用，例如
-; AutoHotkeyDir=$(SciteDefaultHome)\..
-; oSciTE.ResolveProp("AutoHotkeyDir")
-; 除了在 Properties file 中定义的变量，内置变量列表可以在 https://www.scintilla.org/SciTEDoc.html 中的 Properties file 一节找到
-oSciTE.ResolveProp(propname)
 
 ; 向 Scintilla 发消息
 oSciTE.SciMsg(msg , wParam, lParam)
