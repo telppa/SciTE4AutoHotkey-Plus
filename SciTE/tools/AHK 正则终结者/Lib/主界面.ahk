@@ -190,6 +190,10 @@ Notify(wParam, lParam, msg, hwnd, obj)
     return A_ScriptDir "\..\..\SciLexer.dll"
 
   SplitPath, A_AhkPath, , ahkexedir
+
+  IfExist %ahkexedir%\SciTE\SciLexer.dll     ; SciTE 目录
+    return ahkexedir "\SciTE\SciLexer.dll"
+
   IfExist %ahkexedir%\SciLexer.dll           ; AHK EXE 目录
     return ahkexedir "\SciLexer.dll"
 
