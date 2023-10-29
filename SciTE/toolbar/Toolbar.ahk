@@ -14,9 +14,12 @@
 #Include SciTEMacros.ahk
 #Include ProfileUpdate.ahk
 #Include Extensions.ahk
+#Include ..\tools\AHK 正则终结者\Lib\RunWith.ahk
 SetWorkingDir, %A_ScriptDir%\..
 SetBatchLines, -1
 DetectHiddenWindows, On
+
+runwith(, "u32")
 
 ; CLSID and APPID for this script: don't reuse, please!
 CLSID_SciTE4AHK := "{D7334085-22FB-416E-B398-B5038A5A0784}"
