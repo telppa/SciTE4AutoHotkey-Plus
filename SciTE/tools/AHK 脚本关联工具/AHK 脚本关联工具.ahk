@@ -2,7 +2,7 @@
 作者：      甲壳虫<jdchenjian@gmail.com>
 博客：      http://hi.baidu.com/jdchenjian
 脚本说明：  此工具用来修改 AutoHotkey 脚本的右键菜单关联，适用于 AutoHotkey 安装版、绿色版。
-脚本版本：  2023.10.20
+脚本版本：  2023.10.30
 
 TODO：
 静默设置参数支持 ah2 和 ahk2 。
@@ -21,6 +21,7 @@ TODO：
 2022.04.24	静默模式下，成功时不提示。微调显示。
 2022.09.02	修复“自定义新建脚本的模板”失败的问题。
 2023.10.20	静默模式下，出错时不提示，返回非0退出码。
+2023.10.30	新增一个可能的编辑器路径用于自动定位。
 
 修改作者：	布谷布谷
 2022.04.15	增加.ah2 .ahk2 文件的关联，并增加脚本关联选项 
@@ -34,7 +35,7 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 
 ; 版本(仅用于显示）
-Script_Version=v1.2.5
+Script_Version=v1.2.6
 administrator:=(A_IsAdmin?"已":"未" ) . "获得管理员权限"
 
 Gui, Font, bold s15
@@ -185,11 +186,13 @@ Options__:
 	
 	; 通过 AutoHotkey.exe 的位置来定位基准目录
 	SplitPath, A_AhkPath, , AhkDir
-	FilePattern:=AhkDir . (ahk__="ahk"?"":"\V2") . "\AutoHotkey.exe"
 	; 没有从注册表获得路径则尝试从 AutoHotkey.exe 的位置开始寻找目标
+	FilePattern:=AhkDir . (ahk__="ahk"?"":"\V2") . "\AutoHotkey.exe"
 	(!AHK_Path&&FileExist(FilePattern)&&AHK_Path:=FilePattern)
 	FilePattern:=AhkDir . "\Compiler\Ahk2Exe.exe"
 	(!Compiler_Path&&FileExist(FilePattern)&&Compiler_Path:=FilePattern)
+	FilePattern:=GetFullPathName(A_ScriptDir "\..\..\SciTE.exe")
+	(!Editor_Path&&FileExist(FilePattern)&&Editor_Path:=FilePattern)
 	FilePattern:=AhkDir . "\SciTE\SciTE.exe"
 	(!Editor_Path&&FileExist(FilePattern)&&Editor_Path:=FilePattern)
 	(!Template_Name&&Template_Name:="Template." . ahk__)
@@ -290,9 +293,11 @@ return
 
 ; 默认脚本编辑器
 Default_Editor:
-	IfExist, %AhkDir%\SciTE\SciTE.exe
-		Editor_Path=%AhkDir%\SciTE\SciTE.exe
-	else ifExist, %A_WinDir%\system32\notepad.exe
+	IfExist, %A_ScriptDir%\..\..\SciTE.exe
+			Editor_Path := GetFullPathName(A_ScriptDir "\..\..\SciTE.exe")
+	else IfExist, %AhkDir%\SciTE\SciTE.exe
+			Editor_Path=%AhkDir%\SciTE\SciTE.exe
+	else IfExist, %A_WinDir%\system32\notepad.exe
 			Editor_Path=%A_WinDir%\system32\notepad.exe
 	GuiControl, , Editor_Path, %Editor_Path%
 return
@@ -429,7 +434,7 @@ Edit_Template:
 	IfNotExist, %A_WinDir%\ShellNew\%Template_Name%
 		gosub Create_Template
 
-	ifExist, %A_WinDir%\system32\notepad.exe
+	IfExist, %A_WinDir%\system32\notepad.exe
 		Run, *RunAs notepad.exe %A_WinDir%\ShellNew\%Template_Name%
 	else
 		Run, *RunAs %Editor_Path% %A_WinDir%\ShellNew\%Template_Name%
@@ -471,4 +476,12 @@ PathGetPath(pSourceCmd)
 			Path = %pSourceCmd%
 	}
 	return Path
+}
+
+; 获取绝对路径
+GetFullPathName(path) {
+    cc := DllCall("GetFullPathName", "str", path, "uint", 0, "ptr", 0, "ptr", 0, "uint")
+    VarSetCapacity(buf, cc*(A_IsUnicode?2:1))
+    DllCall("GetFullPathName", "str", path, "uint", cc, "str", buf, "ptr", 0, "uint")
+    return buf
 }
