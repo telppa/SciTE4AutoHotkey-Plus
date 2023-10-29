@@ -19,7 +19,8 @@ if (SubStr(CurrentLine, 1, 8) != "#Include")
 }
 else
 {
-  path := RegExReplace(CurrentLine, "(#Include|#IncludeAgain)( +)(\*i +)*")
+  path := RegExReplace(CurrentLine, "(#Include|#IncludeAgain)( +)(\*i +)*") ; 移除前缀
+  path := RegExReplace(path, "[[:blank:]]+;.*")                             ; 移除注释
   
   ; 如果 path 是 <xxxx> 形式的
   if (SubStr(path, 1, 1)="<" and SubStr(path, 0, 1)=">")
