@@ -183,14 +183,14 @@ Notify(wParam, lParam, msg, hwnd, obj)
 
 查找SciLexer_dll路径()
 {
-  IfExist %A_ScriptDir%\SciLexer.dll       ; 当前目录
+  IfExist %A_ScriptDir%\SciLexer.dll         ; 当前目录
     return A_ScriptDir "\SciLexer.dll"
 
-  IfExist %A_ScriptDir%\..\..\SciLexer.dll ; SciTE 目录
+  IfExist %A_ScriptDir%\..\..\SciLexer.dll   ; SciTE 目录
     return A_ScriptDir "\..\..\SciLexer.dll"
 
   SplitPath, A_AhkPath, , ahkexedir
-  IfExist %ahkexedir%\SciLexer.dll         ; AHK EXE 目录
+  IfExist %ahkexedir%\SciLexer.dll           ; AHK EXE 目录
     return ahkexedir "\SciLexer.dll"
 
   MsgBox, 4112, 错误, 没找到 SciLexer.dll`n这是实现高亮的必要文件，尝试找到并放在当前目录或 AutoHotkey.exe 目录或 SciTE 目录。
