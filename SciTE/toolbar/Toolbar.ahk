@@ -359,10 +359,7 @@ if platforms[curplatform] != temp
 	gosub changeplatform
 
 if DirectorReady
-{
 	CurAhkExe := CoI_ResolveProp("", "AutoHotkey")
-	CoI_SetProp("", "AutoHotkeyDir", AhkDir)
-}
 
 ; Run the autorun script
 if (A_Args.3 != "/NoAutorun")
