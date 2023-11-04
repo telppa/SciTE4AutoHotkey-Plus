@@ -47,7 +47,7 @@ SwitchToTab
 GetDocument & Document = CoI_GetDocument
 SetDocument
 InsertText
-Output
+SetOutput
 
 ; Platform
 GetActivePlatform & ActivePlatform = CoI_GetActivePlatform
@@ -297,7 +297,7 @@ CoI_InsertText(this, text, pos := "", moveCaret := "")
 	SciUtil_InsertText(scintillahwnd, text, pos, moveCaret)
 }
 
-CoI_Output(this, text, codePage := "")
+CoI_SetOutput(this, text, codePage := "")
 {
 	global scintilla2hwnd
 	

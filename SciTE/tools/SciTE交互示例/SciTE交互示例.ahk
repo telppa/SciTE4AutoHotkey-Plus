@@ -125,7 +125,7 @@ MsgBox, 指定位置插入文本
 
 ; 打开输出窗口并显示文本
 OutputText:="this is output pane`n这是输出窗口"
-oSciTE.Output(OutputText)
+oSciTE.SetOutput(OutputText)
 MsgBox, 打开输出窗口并显示文本
 
 ; 切换标签（标签编号从0开始）
