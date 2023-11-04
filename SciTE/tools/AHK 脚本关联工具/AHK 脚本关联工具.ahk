@@ -294,11 +294,11 @@ return
 ; 默认脚本编辑器
 Default_Editor:
 	IfExist, %A_ScriptDir%\..\..\SciTE.exe
-			Editor_Path := GetFullPathName(A_ScriptDir "\..\..\SciTE.exe")
+		Editor_Path := GetFullPathName(A_ScriptDir "\..\..\SciTE.exe")
 	else IfExist, %AhkDir%\SciTE\SciTE.exe
-			Editor_Path=%AhkDir%\SciTE\SciTE.exe
+		Editor_Path=%AhkDir%\SciTE\SciTE.exe
 	else IfExist, %A_WinDir%\system32\notepad.exe
-			Editor_Path=%A_WinDir%\system32\notepad.exe
+		Editor_Path=%A_WinDir%\system32\notepad.exe
 	GuiControl, , Editor_Path, %Editor_Path%
 return
 
