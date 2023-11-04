@@ -604,7 +604,6 @@ end
 dofile(props['SciteDefaultHome'].."/extensions/Run.lua")
 dofile(props['SciteDefaultHome'].."/extensions/MoveToNewLine.lua")
 dofile(props['SciteDefaultHome'].."/extensions/AutoCompletePlus.lua")
--- dofile(props['SciteDefaultHome'].."/extensions/RunSelection.lua")
 dofile(props['SciteDefaultHome'].."/extensions/NewFileWithUTF8BOM.lua")
 dofile(props['SciteDefaultHome'].."/extensions/OpenUserAhkAbbrevsFile.lua")
 -- lpeg_s4a.lua 用于区分 lexers 加载 ahk 还是 ahk2

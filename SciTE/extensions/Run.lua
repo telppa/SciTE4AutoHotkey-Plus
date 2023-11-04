@@ -130,4 +130,22 @@ function Run(cmd)
         exec(0, open, exe, ahk, 0, 0)
     end
     
+    -- 实际就是运行这个命令行 "AutoHotkeyU32.exe" /CP65001 "RunSelection.ahk"
+    if cmd == "RunSelection" then
+        
+        local exe      = '"'..props['LocalAHK']..'"'
+        local ahkfile  = '/CP65001 "'..props['SciteDefaultHome']..'/tools/右键菜单/RunSelection.ahk'..'"'
+        local ahk      = ahkfile
+        
+        -- 转换斜杠 \ -> / 不然会被转义引起预期外的错误
+        exe = string.gsub(exe,"\\","\/")
+        ahk = string.gsub(ahk,"\\","\/")
+        
+        -- 转换编码 从 scite 传过来的参数值编码是 utf-8
+        exe = UTF8_To_UTF16(exe)
+        ahk = UTF8_To_UTF16(ahk)
+        
+        exec(0, open, exe, ahk, 0, 0)
+    end
+    
 end
