@@ -87,11 +87,11 @@ MsgBox, % "替换选中内容`n`n" oSciTE.ReplaceSel("选中内容被替换了")
 
 ; 搜索文本
 matchPos := oSciTE.FindText("SciTE")
-MsgBox, % "搜索文本`n`n" matchPos[1] "|" matchPos[2]
+MsgBox, % "搜索文本`n`n" matchPos.1 "|" matchPos.2
 
 ; 用正则在指定范围搜索文本
 matchPos := oSciTE.FindText("Sci\w+", 0, 100, 0x00200000)
-MsgBox, % "用正则在指定范围搜索文本`n`n" matchPos[1] "|" matchPos[2]
+MsgBox, % "用正则在指定范围搜索文本`n`n" matchPos.1 "|" matchPos.2
 
 ; 打开一个文件
 oSciTE.OpenFile(filename)
@@ -139,13 +139,22 @@ MsgBox, 切换标签
 ; oSciTE.GetProp("AutoHotkeyDir") 得到的值不是 $(SciteDefaultHome)\.. 而是 xxx\SciTE\..
 ; oSciTE.GetProp() 与 oSciTE.ResolveProp() 完全等价
 ; 除了在 *.Properties 中定义的变量，内置变量列表可以在 https://www.scintilla.org/SciTEDoc.html 中的 Properties file 一节找到
-bak_prop := oSciTE.GetProp("tillagoto.gui.width")
+bak_prop := oSciTE.GetProp("default.text.back")
 MsgBox, % "取变量值`n`n" bak_prop
 
 ; 设置变量值
-oSciTE.SetProp("tillagoto.gui.width", 80)
-MsgBox, % "设置变量值`n`n" oSciTE.GetProp("tillagoto.gui.width")
-oSciTE.SetProp("tillagoto.gui.width", bak_prop)
+oSciTE.SetProp("default.text.back", "#999999")
+new_prop := oSciTE.GetProp("default.text.back")
+MsgBox, % "设置变量值`n`n" new_prop
+
+; 重载配置，可以理解为让修改后的配置立即生效
+; 设置变量值虽然是实时生效的，但 SciTE 本身可能并不会立刻读取已修改的新变量值
+; 下面这个改背景色的例子中，如果不重载配置，则需要手动切换窗口后才能看见改色效果
+; 使用 oSciTE.ReloadProps() 会让 SciTE 立刻重载配置，也就能立刻看见改色效果
+oSciTE.ReloadProps()
+MsgBox, 重载配置
+oSciTE.SetProp("default.text.back", bak_prop)
+oSciTE.ReloadProps()
 
 ; 获取 Scintilla 句柄，不是 SciTE 的
 hSci:=获取Scintilla句柄()
@@ -191,9 +200,6 @@ SciUtil_Autocompletion_Show(hSci, text)
 #Include ..\..\toolbar\Lib\SciUtil.ahk
 
 /*
-; 重载配置，可以理解为让修改后的配置生效
-oSciTE.ReloadProps()
-
 ; 向 Scintilla 发消息
 oSciTE.SciMsg(msg , wParam, lParam)
 
