@@ -61,11 +61,12 @@ else
   }
   else
   {
-    filepath := StrReplace(path, "%A_ScriptDir%", oSciTE.ResolveProp("FileDir"))
-    filepath := StrReplace(path, "%A_ScriptFullPath%", oSciTE.ResolveProp("FilePath"))
-    filepath := StrReplace(path, "%A_ScriptName%", oSciTE.ResolveProp("FileNameExt"))
-    filepath := StrReplace(path, "%A_LineFile%", oSciTE.ResolveProp("FilePath"))
-    filepath := GetFullPathName(path)
+    filepath := path
+    filepath := StrReplace(filepath, "%A_ScriptDir%", oSciTE.ResolveProp("FileDir"))
+    filepath := StrReplace(filepath, "%A_ScriptFullPath%", oSciTE.ResolveProp("FilePath"))
+    filepath := StrReplace(filepath, "%A_ScriptName%", oSciTE.ResolveProp("FileNameExt"))
+    filepath := StrReplace(filepath, "%A_LineFile%", oSciTE.ResolveProp("FilePath"))
+    filepath := GetFullPathName(filepath)
     if (FileExist(filepath) and !InStr(FileExist(filepath), "D"))
     {
       oSciTE.OpenFile(filepath)
@@ -78,10 +79,10 @@ else
 ExitApp
 
 GetFullPathName(path) {
-    cc := DllCall("GetFullPathName", "str", path, "uint", 0, "ptr", 0, "ptr", 0, "uint")
-    VarSetCapacity(buf, cc*(A_IsUnicode?2:1))
-    DllCall("GetFullPathName", "str", path, "uint", cc, "str", buf, "ptr", 0, "uint")
-    return buf
+  cc := DllCall("GetFullPathName", "str", path, "uint", 0, "ptr", 0, "ptr", 0, "uint")
+  VarSetCapacity(buf, cc*(A_IsUnicode?2:1))
+  DllCall("GetFullPathName", "str", path, "uint", cc, "str", buf, "ptr", 0, "uint")
+  return buf
 }
 
 #Include %A_LineFile%\..\..\Lib\GetSciTEInstance.ahk
