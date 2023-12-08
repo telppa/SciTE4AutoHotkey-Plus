@@ -38,7 +38,7 @@ return
     SplitPath, path, , , ext
     
     if (!fileEncodingDetected.HasKey(path))
-      fileEncodingDetected[path] := FileGetEncodingWithBom(path)
+      fileEncodingDetected[path] := FileGetCodePageByBom(path)
     
     encoding := fileEncodingDetected[path]
     
@@ -123,4 +123,4 @@ AHK文件转为UTF8BOM()
 #If
 
 #Include %A_LineFile%\..\..\AHK 正则终结者\Lib\BTT.ahk
-#Include %A_LineFile%\..\Ude\Ude.ahk
+#Include %A_LineFile%\..\uchardet\uchardet.ahk

@@ -703,7 +703,7 @@ ScanScriptFile(sPath, bRecurse = False, bFuncsOnly = False, bIsInclude = False) 
 	sPaths%sPaths0%_Inc := bIsInclude
 	
 	; get file encoding with bom. if no bom, we think encoding is 0, which is consistent with scite think.
-	encoding := FileGetEncodingWithBom(sPath)
+	encoding := FileGetCodePageByBom(sPath)
 	
 	;Get the script's dir and set the default include path to it
 	StringLeft sScriptDir, sPath, InStr(sPath, "\", False, 0) - 1
@@ -2060,6 +2060,6 @@ GetFileCRC32(path = False) {
 	}
 }
 
-#Include %A_LineFile%\..\智能操作\Ude\Ude.ahk
+#Include %A_LineFile%\..\智能操作\uchardet\uchardet.ahk
 #Include %A_LineFile%\..\..\toolbar\Lib\SciUtil.ahk
 #Include %A_LineFile%\..\..\toolbar\Lib\StrPutVar.ahk
