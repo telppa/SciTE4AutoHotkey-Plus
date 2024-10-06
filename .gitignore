@@ -1,6 +1,8 @@
 
-Compiler
-整理项目
+/Compiler
+/UX
+/v2
+/整理项目
 AutoHotkey Website.url
 AutoHotkey.chm
 AutoHotkey.exe
@@ -22,4 +24,5 @@ SciTE/tools/Structor/Structor.ini
 SciTE/tools/Structor/Verifier.ini
 SciTE/tools/AHK DllCall 终结者/settings.ini
 SciTE/tools/AHK DllCall 终结者/TODO.txt
+SciTE/中文帮助/AutoHotkey_CN_v2.chm
 todo.txt
