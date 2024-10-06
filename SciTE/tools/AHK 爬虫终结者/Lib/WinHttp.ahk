@@ -1,5 +1,32 @@
 ﻿/*
+使用工具 “AHK 爬虫终结者” 可以用 GUI 的形式使用本库，并自动生成代码。
+
+简单示例：
+  MsgBox % WinHttp.Download("https://www.example.com/")  ; 网页内容
+  MsgBox % WinHttp.ResponseHeaders["Content-type"]       ; 响应头 Content-type 段
+  MsgBox % WinHttp.StatusCode                            ; 状态码
+  MsgBox % WinHttp.Cookie                                ; Cookie
+
+CreateFormData 示例：
+  arrParam := [ ["apple", "tree"]
+              , ["apple2", 12345, "text/plain"]
+              , ["apple3", {"filepath":"1.txt"}, "text/plain"]
+              , ["apple3", {"filepath":"c:\1.jpg"}] ]
+  WinHttp.CreateFormData(retData, retHeader, arrParam)
+  MsgBox % WinHttp.Download("http://snap.ie.sogou.com/recognition", , retHeader, retData)
+
 更新日志：
+  2024.05.12
+  CreateFormData() 破坏性更新，不兼容之前版本的 CreateFormData() 。
+  CreateFormData() 支持自定义 multipart/form-data 每个部分的 Content-Type 。
+  CreateFormData() 返回的 retHeader 可直接用于 WinHttp.Download() 的请求头。
+  略微改进 Download() 。
+  略微改进 解析信息为对象() 。
+  略微改进 解析SetCookie为Cookie() 。
+  更新默认 User-Agent 为 Chrome 102 版本。
+  修复 SaveError() 不能存 Data 和 FilePath 的错误。
+  版本号4.0
+
   2021.11.15
   不再抛出错误，避免打断下载流程。
   错误信息全部记录在 WinHttp.Error 中，故删除 WinHttp.Extra 。
@@ -77,21 +104,6 @@
   请求头 Content-Type: 末尾会自动追加一个 Charset=UTF-8 （需使用 Fiddler 抓包查看）。
 */
 
-/*
-  ; 使用工具 “AHK 爬虫终结者” 可以用 GUI 的形式使用本库，并自动生成代码。
-
-  ; 简单示例
-  MsgBox, % WinHttp.Download("https://www.example.com/")  ; 网页内容
-  MsgBox, % WinHttp.ResponseHeaders["Content-type"]       ; 响应头 Content-type 段
-  MsgBox, % WinHttp.StatusCode                            ; 状态码
-  MsgBox, % WinHttp.Cookie                                ; Cookie
-
-  ; CreateFormData 示例
-  objParam := {"file": ["截图.png"]}
-  WinHttp.CreateFormData(out_postData, out_ContentType, objParam,,,"image/jpg")
-  RequestHeaders := "Content-Type: " out_ContentType
-  MsgBox, % WinHttp.Download("http://snap.ie.sogou.com/recognition",, RequestHeaders, out_postData)
-*/
 class WinHttp
 {
   static ResponseHeaders:={}, StatusCode:="", StatusText:="", Cookie:="", Error:={}
@@ -175,7 +187,7 @@ class WinHttp
   ; User-Agent           浏览器标识，常用于防盗链。
 
   */
-  Download(URL, Options:="", RequestHeaders:="", Data:="", FilePath:="")
+  Download(URL, Options:="", RequestHeaders:="", ByRef Data:="", FilePath:="")
   {
     oOptions        := this.解析信息为对象(Options)
     oRequestHeaders := this.解析信息为对象(RequestHeaders)
@@ -239,7 +251,7 @@ class WinHttp
 
     ; 如果自己不设置 User-Agent 那么实际上会被自动设置为 Mozilla/4.0 (compatible; Win32; WinHttp.WinHttpRequest.5) 。影响数据抓取。
     if (oRequestHeaders["User-Agent"] = "")
-      oRequestHeaders["User-Agent"] := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+      oRequestHeaders["User-Agent"] := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36"
     if (InStr(oRequestHeaders["Accept-Encoding"], "gzip"))     ; 这里必须用 oRequestHeaders["Accept-Encoding"] 而不是 oRequestHeaders.Accept-Encoding 。
       oRequestHeaders.Delete("Accept-Encoding")                ; 删掉含 “gzip” 的 “Accept-Encoding” ，避免服务器返回 gzip 压缩后的数据。
     if (InStr(oRequestHeaders["Connection"], "Keep-Alive"))
@@ -255,6 +267,10 @@ class WinHttp
     {
       wr.Send(Data)
       ValidatedDownloadTimeout := Timeout[2]
+      ; 虽然在 msdn 中，写着 WaitForResponse() 有两个参数，但实际上对于脚本语言，第二个参数就是返回值本身。
+      ; https://docs.microsoft.com/en-us/windows/win32/winhttp/iwinhttprequest-waitforresponse
+      ; https://www.autohotkey.com/boards/viewtopic.php?f=76&t=96806
+      ; https://bbs.csdn.net/topics/240032183
       if (wr.WaitForResponse(ValidatedDownloadTimeout) != -1)  ; 根据测试，返回-1代表正确，返回空值或0一般是超时了。
         this.SaveError("超时。", URL, Options, RequestHeaders, Data, FilePath)
 
@@ -283,12 +299,13 @@ class WinHttp
     else
       return, wr.ResponseText()                                                      ; 存为变量
   }
-
+  
   /*
-  infos 的格式：每行一个参数，行首至第一个冒号为参数名，之后至行尾为参数值。多个参数换行。
-  注意第一行的 “GET /?tn=sitehao123 HTTP/1.1” 其实是没有任何作用的，因为没有 “:” 。但复制过来了也并不会影响正常解析。
-  换句话说， Chrome 开发者工具中的 “Request Headers” 那段内容直接复制过来就能用。
-
+  infos 的格式：
+    每行一个参数，行首至第一个冒号为参数名，第一个冒号至行尾为参数值，多个参数换行。
+    注意第一行的 “GET /?tn=sitehao123 HTTP/1.1” 其实是没有任何作用且不影响正常解析的，因为没有 “:” 。
+    换句话说， Chrome 开发者工具中的 “Request Headers” 那段内容直接复制过来就能用。
+  
   infos=
   (
   GET /?tn=sitehao123 HTTP/1.1
@@ -306,130 +323,146 @@ class WinHttp
   解析信息为对象(infos)
   {
     if (IsObject(infos))
-      return, infos
-
+      return infos
+    
     ; 以下两步可将 “infos” 换行符统一为 “`r`n” ，避免正则表达式提取时出错。
     StringReplace, infos, infos, `r`n, `n, All
     StringReplace, infos, infos, `n, `r`n, All
-
+    
     ; 使用正则而不是 StrSplit() 进行处理的原因是，后者会错误处理这样的情况 “程序会根据 “Proxy:” 的值自动设置” 。
-    infos_temp := this.RegEx.GlobalMatch(infos, "m)^\s*([\w\-]*?):(.*$)", 1)
+    infos_temp := this.RegEx.GlobalMatch(infos, "m)^[ \t]*([\w\-]+?)[ \t]*:(.*$)")
     ; 将正则匹配到的信息存入新的对象中，像这样 {"Connection":"keep-alive", "Cache-Control":"max-age=0"} 。
     obj := {}
-    Loop, % infos_temp.MaxIndex()
+    for k, v in infos_temp
     {
-      name  := Trim(infos_temp[A_Index].Value[1], " `t`r`n`v`f")  ;Trim()的作用就是把“abc: haha”中haha的多余空白符消除
-      value := Trim(infos_temp[A_Index].Value[2], " `t`r`n`v`f")
-
+      ; Trim() 的作用就是把 “abc: haha” 中 haha 的多余空白符消除
+      name  := Trim(v.Value[1], " `t`r`n`v`f")
+      value := Trim(v.Value[2], " `t`r`n`v`f")
+      
       ; “Set-Cookie” 是可以一次返回多条的，因此特殊处理将返回值存入数组。
-      if (name="Set-Cookie")
+      if (name = "Set-Cookie")
       {
-        if (!obj.HasKey(name))
-          obj[name] := []
-        obj[name].Push(value)
+        if (!IsObject(obj["Set-Cookie"]))
+          obj["Set-Cookie"] := []
+        
+        obj["Set-Cookie"].Push(value)
       }
       else
         obj[name] := value
     }
-
-    return, obj
+    
+    return obj
   }
-
+  
   /*
   EnableRedirects:
   ExpectedStatusCode:200
   NumberOfRetries:5
-
-  如果 “ShowEmptyNameAndValue=0” ，那么输出的内容将不包含值为空的行（例如第一行）。
+  
+  如果 “ShowEmptyNameAndValue=false” ，那么输出的内容将不包含值为空的行（例如第一行）。
   */
-  解析对象为信息(obj, ShowEmptyNameAndValue:=1)
+  解析对象为信息(obj, ShowEmptyNameAndValue:=true)
   {
     if (!IsObject(obj))
-      return, obj
-
+      return obj
+    
     for k, v in obj
     {
-      if (ShowEmptyNameAndValue=0 and Trim(v, " `t`r`n`v`f")="")
+      if (ShowEmptyNameAndValue=false and Trim(v, " `t`r`n`v`f")="")
         continue
-
-      if (k="Set-Cookie")
+      
+      if (k = "Set-Cookie")
       {
-        loop, % v.MaxIndex()
-          infos .= k ":" v[A_Index] "`r`n"
+        loop % v.Length()
+          infos .= k ": " v[A_Index] "`r`n"
       }
       else
-        infos .= k ":" v "`r`n"
+        infos .= k ": " v "`r`n"
     }
-    return, infos
+    return infos
   }
-
+  
   /*
-  在 “GetAllResponseHeaders” 中， “Set-Cookie” 可能一次存在多个，比如 “Set-Cookie:name=a; domain=xxx.com `r`n Set-Cookie:name=b; domain=www.xxx.com” 。
-  之后向服务器发送 cookie 的时候，会先验证 domain ，再验证 path ，两者都成功，再发送所有符合条件的 cookies 。
-  domain 的匹配方式是从字符串的尾部开始比较。
-  path 的匹配方式是从头开始逐字符串比较（例如 /blog 匹配 /blog 、 /blogrool 等等）。需要注意的是， path 只在 domain 完成匹配后才比较。
+  在 “GetAllResponseHeaders” 中， “Set-Cookie” 可能一次存在多个，比如：
+    Set-Cookie:name=a; domain=xxx.com 
+    Set-Cookie:name=b; domain=www.xxx.com
+  
+  之后向服务器发送 cookie 的时候，会先验证 domain （从字符串的尾部开始比较），
+  再验证 path （从头开始逐字符串比较，例如 /blog 匹配 /blog 、 /blogrool 等等），
+  两者都匹配再发送所有符合条件的 cookies 。需要注意的是， path 只在 domain 完成匹配后才比较。
+  
   当下次访问 “www.xxx.com” 时，假如有2个符合条件的 cookie ，那么发送给服务器的 cookie 应该是 “name=b; name=a” 。
   当下次访问 “xxx.com” 时，假如只有1个符合条件的 cookie，那么发送给服务器的 cookie 应该是 “name=a” 。
   规则是， path 越详细，越靠前。 domain 越详细，越靠前（ domain 和 path 加起来就是网址了）。
-  另外需要注意的是， “Set-Cookie” 中没有 domain 或者 path 的话，则以当前 url 为准。
-  如果要覆盖一个已有的 cookie 值，那么需要创建一个 name 、 domain 、 path ，完全相同的 “Set-Cookie” （ name 就是 “cookie:name=value; path=/” 中的 name ）。
+  “Set-Cookie” 中没有 domain 或者 path 的话，则以当前 url 为准。
+  
+  如果要覆盖一个已有的 cookie 值，那么需要创建一个 name 、 domain 、 path ，完全相同的 “Set-Cookie” 。
+  name 就是 “cookie:name=value; path=/” 中的 name 。
+  
   当一个 cookie 存在，并且可选条件允许的话，该 cookie 的值会在接下来的每个请求中被发送至服务器。
-  其值被存储在名为 Cookie 的 HTTP 消息头中，并且只包含了 cookie 的值，其它的属性全部被去除（ expires 、 domain 、 path 、 secure 全部没有了）。
-  如果在指定的请求中有多个 cookies ，那么它们会被分号和空格分开，例如：（ Cookie:value1 ; value2 ; name1=value1 ）
-  在没有 expires 属性时， cookie 的寿命仅限于单一的会话中。浏览器的关闭意味这一次会话的结束，所以会话 cookie 只存在于浏览器保持打开的状态之下。
+  其值被存储在名为 Cookie 的 HTTP 请求头中，并且只包含了 cookie 的值，
+  其它的属性将全部被去除（即 expires 、 domain 、 path 、 secure 全部没有了）。
+  
+  如果在指定的请求中有多个 cookies ，那么它们会被分号和空格分开，例如：
+    Cookie:value1 ; value2; name1=value1
+  
+  在没有 expires 属性时， cookie 的寿命仅限于单一的会话中。
+  浏览器的关闭意味这一次会话的结束，所以会话 cookie 只存在于浏览器保持打开的状态之下。
   如果 expires 属性设置了一个过去的时间点，那么这个 cookie 会被立即删除。
   最后一个属性是 secure 。不像其它属性，该属性只是一个标记并且没有其它的值。
   参考 “http://my.oschina.net/hmj/blog/69638” 。
-
+  
   此函数将所有 “Set-Cookie” 忽略全部属性后（例如 Domain 适用站点属性、 Expires 过期时间属性等），存为一个 “Cookie” 。
-  传入的值里只有 Cookie ，直接返回；只有 Set-Cookie ，处理成 Cookie 后返回；两者都有，处理并覆盖 Cookie 后返回；两者都无，直接返回。
+  传入的值里只有 Cookie ，直接返回；
+  只有 Set-Cookie ，处理成 Cookie 后返回；
+  两者都有，处理并覆盖 Cookie 后返回；
+  两者都无，直接返回。
   Cookie 的 name 和 value 不允许包含分号，逗号和空格符。如果包含可以使用 URL 编码。
   参考 “https://blog.oonne.com/site/blog?id=31” “https://www.cnblogs.com/daysme/p/8052930.html”
   */
   解析SetCookie为Cookie(obj)
   {
-    if (!obj.HasKey("Set-Cookie"))  ; 没有待处理的 “Set-Cookie” 则直接返回。
-      return, obj
-
-    Cookies := {}
-    loop, % obj["Set-Cookie"].MaxIndex()
+    ; 没有待处理的 “Set-Cookie” 则直接返回。
+    if (!obj.HasKey("Set-Cookie"))
+      return obj
+    
+    obj["Cookie"] := ""
+    for k, v in obj["Set-Cookie"]
     {
       ; 根据RFC 2965标准，cookie 的 name 可以和属性相同。
       ; 但因为 name 和 value 总在最前面，所以又不会和属性混淆。
       ; https://tools.ietf.org/html/rfc2965
-      Set_Cookie      := StrSplit(obj["Set-Cookie"][A_Index], ";", " `t`r`n`v`f")
+      NameAndValue    := StrSplit(v, ";", " `t`r`n`v`f")[1]
       ; 可以正确处理 value 中含等号的情况 “Set-Cookie:BAIDUID=C04C13BA70E52C330434FAD20C86265C:FG=1;”
-      , NameAndValue  := StrSplit(Set_Cookie[1], "=", " `t`r`n`v`f", 2)
+      , NameAndValue  := StrSplit(NameAndValue, "=", " `t`r`n`v`f", 2)
       , name          := NameAndValue[1]
       , value         := NameAndValue[2]
-      , Cookies[name] := value
+      , obj["Cookie"] .= (A_Index=1) ? (name "=" value) : ("; " name "=" value)
     }
-    obj.Delete("Set-Cookie")        ; “Set-Cookie” 转换完成后就删除。
-
-    obj["Cookie"] := ""             ; 同时存在 “Cookie” 和 “Set-Cookie” 时，后者处理完成的值将覆盖前者。
-    for k, v in Cookies
-      obj["Cookie"] .= k "=" v "; "
-    obj["Cookie"] := RTrim(obj["Cookie"], " ")
-
-    return, obj
+    ; “Set-Cookie” 转换完成后就删除。
+    obj.Delete("Set-Cookie")
+    
+    return obj
   }
 
   ValidateTimeout(Timeout, ConnectTimeout, DownloadTimeout)
   {
+    ; 将字符串等非法值转换为空值，保留数字。
+    Timeout         := Timeout * 1
+    ConnectTimeout  := ConnectTimeout * 1
+    DownloadTimeout := DownloadTimeout * 1
+    
     ; Timeout 为0或正数，则覆盖 ConnectTimeout 和 DownloadTimeout
-    if (Timeout*1>=0)
+    if (Timeout >= 0)
     {
-      ct := Round(Timeout*1)
-      dt := Round(Timeout*1)
+      ct := Round(Timeout)
+      dt := Round(Timeout)
     }
     else
     {
-      ; 将字符串等非法值转换为空值，保留数字。
-      ct := ConnectTimeout*1
-      dt := DownloadTimeout*1
-      ; 将负数转换为空值。即此时可能值为空值、0、正数。
-      ct :=  ct<0 ? "" : Round(ct)
-      dt :=  dt<0 ? "" : Round(dt)
+      ; 将空值或负数转换为空值。即此时可能值为空值、0、正数。
+      ct := ConnectTimeout<0 ? "" : Round(ConnectTimeout)
+      dt := DownloadTimeout<0 ? "" : Round(DownloadTimeout)
     }
     
     ; 空值  零  正
@@ -455,100 +488,145 @@ class WinHttp
     else if (ct>0 and dt>0)
       ct := Max(ct, dt), dt := ct
     
-    return, [ct, dt]
+    return [ct, dt]
   }
 
-  SaveError(Message, URL, Options, RequestHeaders, Data, FilePath)
+  SaveError(Message, URL, Options, RequestHeaders, ByRef Data, FilePath)
   {
     this.Error.Message        := Message
     this.Error.URL            := URL
     this.Error.Options        := Options
     this.Error.RequestHeaders := RequestHeaders
-    this.Error.Data           := this.Data
-    this.Error.FilePath       := this.FilePath
+    this.Error.Data           := Data
+    this.Error.FilePath       := FilePath
   }
 
   /*
-  CreateFormData - Creates "multipart/form-data" for http post by tmplinshi
-
+  Create by tmplinshi, mod by telppa
+  
   https://www.autohotkey.com/boards/viewtopic.php?t=7647
-
-  Usage: CreateFormData(ByRef retData, ByRef retHeader, objParam, BoundaryString, RandomBoundaryLength, MimeType)
-    retData               - (out) Data used for HTTP POST.
-    retHeader             - (out) Content-Type header used for HTTP POST.
-    objParam              - (in)  An object defines the form parameters.
-    BoundaryString        - (in)  default "----WebKitFormBoundary".
-    RandomBoundaryLength  - (in)  default 16.
-    MimeType              - (in)  default auto get MimeType.
-
-  To specify files, use array as the value. Example:
-      objParam := { "key1": "value1"
-                  , "upload[]": ["1.png", "2.png"] }
-
-  Version    : 1.31 / 2021-04-05 - 支持自定义 BoundaryString RandomBoundaryLength MimeType
-                                   默认 BoundaryString 为 ----WebKitFormBoundary + 16位随机数
-               1.30 / 2019-01-13 - The file parameters are now placed at the end of the retData
-               1.20 / 2016-06-17 - Added CreateFormData_WinInet(), which can be used for VxE's HTTPRequest()
-               1.10 / 2015-06-23 - Fixed a bug
-               1.00 / 2015-05-14
+  
+  Usage: CreateFormData(ByRef retData, ByRef retHeader, arrParam, Boundary, RandomBoundaryLength)
+    retData               - (out) Post data used for HTTP POST.
+    retHeader             - (out) Request header used for HTTP POST.
+    arrParam              - (in)  An array defines the form parameters.
+    Boundary              - (in)  default same as chrome "----WebKitFormBoundary".
+    RandomBoundaryLength  - (in)  default same as chrome "16".
+  
+  arrParam example:
+    arrParam := [ ["apple", "tree"]                              ; name is "apple", content is text "tree", no type.
+                , ["apple2", 12345, "text/plain"]                ; name is "apple2", content is text "12345", type is "text/plain".
+                , ["apple3", {"filepath":"1.txt"}, "text/plain"] ; name is "apple3", content is file "1.txt", type is "text/plain".
+                , ["apple3", {"filepath":"c:\1.jpg"}] ]          ; name is "apple3", content is file "c:\1.jpg", auto detect type.
+  
+  Version   : 1.40 / 2024-05-12 - 破坏性更新，不兼容之前版本的 CreateFormData()
+                                  支持自定义 multipart/form-data 每个部分的 Content-Type
+                                  返回的 retHeader 可直接用于 WinHttp.Download() 的请求头
+              1.31 / 2021-04-05 - 支持自定义 Boundary RandomBoundaryLength
+                                  默认 Boundary 与 Chrome 浏览器一致
+              1.30 / 2019-01-13 - The file parameters are now placed at the end of the retData
+              1.20 / 2016-06-17 - Added CreateFormData_WinInet(), which can be used for VxE's HTTPRequest()
+              1.10 / 2015-06-23 - Fixed a bug
+              1.00 / 2015-05-14
   */
-  CreateFormData(ByRef retData, ByRef retHeader, objParam, BoundaryString:="", RandomBoundaryLength:="", MimeType:="") {
-
-    this.NonNull(BoundaryString, "----WebKitFormBoundary")
-    , this.NonNull(RandomBoundaryLength, 16, 1)
-
-    CRLF := "`r`n"
-
-    Boundary := this.RandomBoundary(RandomBoundaryLength)
-    BoundaryLine := "--" . BoundaryString . Boundary
-
+  CreateFormData(ByRef retData, ByRef retHeader, arrParam, Boundary:="----WebKitFormBoundary", RandomBoundaryLength:=16) {
+    ; arrParam 必须是数组
+    if (arrParam.MinIndex()!=1 or arrParam.MaxIndex()!=arrParam.Count())
+      return
+    
+    ; RFC 2046 中定义了 boundary line 由两个连字符（"-"）和 Content-Type 头字段中的 boundary 参数值组成
+    Boundary := Boundary . this.RandomString(RandomBoundaryLength)
+    BoundaryLine := "--" . Boundary
+    
     ; Loop input paramters
     binArrs := []
     fileArrs := []
-    For k, v in objParam
+    for i, v in arrParam
     {
-      If IsObject(v) {
-        For i, FileName in v
-        {
-          str := BoundaryLine . CRLF
-               . "Content-Disposition: form-data; name=""" . k . """; filename=""" . FileName . """" . CRLF
-               . "Content-Type: " . this.NonNull_ret(MimeType, this.GetMimeType(FileName)) . CRLF . CRLF
-          fileArrs.Push( this.BinArr_FromString(str) )
-          fileArrs.Push( this.BinArr_FromFile(FileName) )
-          fileArrs.Push( this.BinArr_FromString(CRLF) )
-        }
-      } Else {
-        str := BoundaryLine . CRLF
-             . "Content-Disposition: form-data; name=""" . k """" . CRLF . CRLF
-             . v . CRLF
-        binArrs.Push( this.BinArr_FromString(str) )
-      }
+      if (v.2.HasKey("filepath"))
+        fileArrs := this.CreateChildFormData(BoundaryLine, v.1, v.2.filepath, v.3, true)
+      else
+        binArrs := this.CreateChildFormData(BoundaryLine, v.1, v.2, v.3)
     }
-
-    binArrs.push( fileArrs* )
-
-    str := BoundaryLine . "--" . CRLF
-    binArrs.Push( this.BinArr_FromString(str) )
-
+    
+    binArrs.push(fileArrs*)
+    
+    ; 结尾要加两个连字符（"-"）
+    str := BoundaryLine . "--`r`n"
+    binArrs.Push(this.BinArr_FromString(str))
+    
     retData := this.BinArr_Join(binArrs*)
-    retHeader := "multipart/form-data; boundary=" . BoundaryString . Boundary
+    retHeader := this.解析信息为对象(retHeader)
+    retHeader["Content-Type"] := "multipart/form-data; boundary=" . Boundary
+    retHeader := this.解析对象为信息(retHeader)
   }
-
-  RandomBoundary(length) {
+  
+  CreateChildFormData(BoundaryLine, Name, TextOrFile, Type:="", IsFile:=false) {
+    CRLF := "`r`n"
+    arr  := []
+    
+    if (IsFile)
+    {
+      file := TextOrFile
+      type := type ? type : this.GetMimeType(file)
+      str =
+      (LTrim Join`r`n
+      %BoundaryLine%
+      Content-Disposition: form-data; name="%name%"; filename="%file%"
+      Content-Type: %type%
+      %CRLF%
+      )
+      
+      arr.Push(this.BinArr_FromString(str))
+      arr.Push(this.BinArr_FromFile(file))
+      arr.Push(this.BinArr_FromString(CRLF))
+    }
+    else
+    {
+      text := TextOrFile
+      if (type)
+      {
+        str =
+        (LTrim Join`r`n
+        %BoundaryLine%
+        Content-Disposition: form-data; name="%name%"
+        Content-Type: %type%
+        
+        %text%%CRLF%
+        )
+      }
+      else
+      {
+        str =
+        (LTrim Join`r`n
+        %BoundaryLine%
+        Content-Disposition: form-data; name="%name%"
+        
+        %text%%CRLF%
+        )
+      }
+      
+      arr.Push(this.BinArr_FromString(str))
+    }
+    
+    return arr
+  }
+  
+  RandomString(Length) {
     str := [0,1,2,3,4,5,6,7,8,9
     ,"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"
     ,"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-    loop, % length
+    loop % Length
     {
-      Random, n, 1, % str.MaxIndex()
+      Random n, 1, % str.MaxIndex()
       ret .= str[n]
     }
-    Return, ret
+    return ret
   }
-
+  
   GetMimeType(FileName) {
     n := FileOpen(FileName, "r").ReadUInt()
-    Return (n        = 0x474E5089) ? "image/png"
+    return (n        = 0x474E5089) ? "image/png"
          : (n        = 0x38464947) ? "image/gif"
          : (n&0xFFFF = 0x4D42    ) ? "image/bmp"
          : (n&0xFFFF = 0xD8FF    ) ? "image/jpeg"
@@ -556,20 +634,20 @@ class WinHttp
          : (n&0xFFFF = 0x4D4D    ) ? "image/tiff"
          : "application/octet-stream"
   }
-
+  
   /*
   https://www.w3schools.com/asp/ado_ref_stream.asp
   https://gist.github.com/tmplinshi/a97d9a99b9aa5a65fd20
   Update: 2015-6-4 - Added BinArr_ToFile()
   */
-  BinArr_FromString(str) {
+  BinArr_FromString(Str) {
     oADO := ComObjCreate("ADODB.Stream")
 
     oADO.Type := 2                        ; adTypeText
     oADO.Mode := 3                        ; adModeReadWrite
     oADO.Open()
     oADO.Charset := "UTF-8"
-    oADO.WriteText(str)
+    oADO.WriteText(Str)
 
     oADO.Position := 0                    ; 位置0， Type 可写。其它位置 Type 只读。 https://www.w3schools.com/asp/prop_stream_type.asp
     oADO.Type := 1                        ; adTypeBinary
@@ -624,5 +702,4 @@ class WinHttp
   }
 
   #IncludeAgain %A_LineFile%\..\RegEx.ahk
-  #IncludeAgain %A_LineFile%\..\NonNull.ahk
 }
