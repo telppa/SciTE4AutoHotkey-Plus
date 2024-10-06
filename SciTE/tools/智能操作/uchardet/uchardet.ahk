@@ -75,6 +75,7 @@ FileGetCodePageByBom(path) {
     return 0
 }
 
+; modified from https://www.autohotkey.com/boards/viewtopic.php?f=82&t=110783
 class UCharDet
 {
 	static DllPath  := A_LineFile "\..\" (A_PtrSize = 8 ? "uchardet.dll" : "uchardet_x86.dll")
