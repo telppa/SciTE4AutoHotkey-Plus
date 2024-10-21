@@ -12,10 +12,10 @@ Modified Version : https://github.com/telppa/Structor
 
 ; Structor - Structure Helper
 
+#Requires AutoHotkey v1.1.33+
 #NoEnv
 #NoTrayIcon
 #SingleInstance Off
-#Requires AutoHotkey v1.1.33+
 SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
 

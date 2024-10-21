@@ -2,8 +2,8 @@
 ; SciTE4AutoHotkey Reload Script
 ;
 
-#NoEnv
 #Requires AutoHotkey v1.1.33+
+#NoEnv
 SendMode, Input
 SetWorkingDir, %A_ScriptDir%\..\
 

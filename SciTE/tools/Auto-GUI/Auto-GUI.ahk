@@ -2,11 +2,11 @@
 ; Tested on AHK v1.1.33.02 Unicode 32/64-bit, Windows XP/7/10.
 
 ; Script options
+#Requires AutoHotkey v1.1.33+
 #NoEnv
 #NoTrayIcon
 #KeyHistory 0
 #SingleInstance Off
-#Requires AutoHotkey v1.1.33+
 SetBatchLines -1
 DetectHiddenWindows On
 SetWinDelay -1

@@ -3,60 +3,57 @@
 ;requires AHK 1.0.44.09
 ;www.autohotkey.com/forum/topic7810.html
 
-Version = v13
-ScriptName =  Auto-Syntax-Tidy %Version%
-
-; Known limitations:
-;  - a space is required after the last ":" for hotkeys, hotstrings and subroutine
-;  - comments might not have the right indentation in certain strongly
-;      encapsulated block-structures, due to not knowing what the next line will bring.
-;  - case correction only works for words longer than 4 characters,
-;      (except: (in all cases) If, Loop, Else
-;               (optional)     Goto, Gui, Run, Exit, Send, Sort, Menu
-;                              Parse, Read, Mouse, SendAndMouse, Default, Permit, Screen, Relative
-;                              Pixel, Toggle, UseErrorLevel, AlwaysOn, AlwaysOff
-;      !!! caution !!! case correction is dangerous, since WinTitles in commands are case sensitive
-;
-;  - after doing indentation in an editor the cursor jumps
-;      to the first position in the last line
-;  - Indentation might fail, if a "{" is the last character of a Loop or If statement that
-;      doesn't support OTB. E.g. "If x = {" or "Loop, Parse, Var, {"
-;
-; Functionality:
-;  - Gui: For drag&drop of files, setting of options and feedback
-;  - command line option "/in" for file and "/log" for log file
-;  - command line option "/hidden" to start script with hidden GUI
-;  - command line option "/watch hwnd" to start script with hidden GUI, closes itself when hwnd closes
-;  - command line option "/toggle" checks if another instance is running and closes both scripts
-;  - command line option "/hidden" to start script without GUI
-;  - Options:
-;          - custom hotkey for indenation
-;          - custom file extension             (overwrites old file if nothing is specified)
-;          - custom indentation                (one tab or a number of spaces)
-;          - different indentation styles      (Rajat, Toralf or BoBo)
-;          - indentation of continuation lines (a number of tabs or spaces)
-;          - indentation preservation of block continuation lines (round brackets) On/Off
-;          - indentation preservation of block comments           (/* ... */)      On/Off
-;          - case correction for syntax words with more than 4 characters  (thanks Rajat)
-;          - statistics for script (lines of code, comments, total and empty an time needed)
-;  - Dropped Files: Contents will be indented and copied to a new file with a user
-;                   defined extension (overwrites old file if nothing is specified).
-;  - Hotkey (F2): Highlighted syntax in an editor will be indented, if nothing is
-;                 highlighted all text will be indented. (thanks ChrisM)
-;  - Gui remembers last position and settings between sessions (thanks Rajat)
-;  - The case of subroutine calls and function calls is adjusted to the case
-;        of their respective definitions
-;  - Ctrl-d toggles debug mode
-;  - 12% faster then version 7 (due to shortened loop cycles) but 90 lines longer
-;
-; !!! Not heavily tested !!!!  ---- !!!!!! Backup your data !!!!!
-;
-; Suggestions are appreciated
-;
-; Wish:
-;  - Option to strip code: Remove empty lines, all comments, and join split expressions (&&/AND/OR/||)
-
 /*
+Known limitations:
+ - a space is required after the last ":" for hotkeys, hotstrings and subroutine
+ - comments might not have the right indentation in certain strongly
+     encapsulated block-structures, due to not knowing what the next line will bring.
+ - case correction only works for words longer than 4 characters,
+     (except: (in all cases) If, Loop, Else
+              (optional)     Goto, Gui, Run, Exit, Send, Sort, Menu
+                             Parse, Read, Mouse, SendAndMouse, Default, Permit, Screen, Relative
+                             Pixel, Toggle, UseErrorLevel, AlwaysOn, AlwaysOff
+     !!! caution !!! case correction is dangerous, since WinTitles in commands are case sensitive
+
+ - after doing indentation in an editor the cursor jumps
+     to the first position in the last line
+ - Indentation might fail, if a "{" is the last character of a Loop or If statement that
+     doesn't support OTB. E.g. "If x = {" or "Loop, Parse, Var, {"
+
+Functionality:
+ - Gui: For drag&drop of files, setting of options and feedback
+ - command line option "/in" for file and "/log" for log file
+ - command line option "/hidden" to start script with hidden GUI
+ - command line option "/watch hwnd" to start script with hidden GUI, closes itself when hwnd closes
+ - command line option "/toggle" checks if another instance is running and closes both scripts
+ - command line option "/hidden" to start script without GUI
+ - Options:
+         - custom hotkey for indenation
+         - custom file extension             (overwrites old file if nothing is specified)
+         - custom indentation                (one tab or a number of spaces)
+         - different indentation styles      (Rajat, Toralf or BoBo)
+         - indentation of continuation lines (a number of tabs or spaces)
+         - indentation preservation of block continuation lines (round brackets) On/Off
+         - indentation preservation of block comments           (/* ... */)      On/Off
+         - case correction for syntax words with more than 4 characters  (thanks Rajat)
+         - statistics for script (lines of code, comments, total and empty an time needed)
+ - Dropped Files: Contents will be indented and copied to a new file with a user
+                  defined extension (overwrites old file if nothing is specified).
+ - Hotkey (F2): Highlighted syntax in an editor will be indented, if nothing is
+                highlighted all text will be indented. (thanks ChrisM)
+ - Gui remembers last position and settings between sessions (thanks Rajat)
+ - The case of subroutine calls and function calls is adjusted to the case
+       of their respective definitions
+ - Ctrl-d toggles debug mode
+ - 12% faster then version 7 (due to shortened loop cycles) but 90 lines longer
+
+!!! Not heavily tested !!!!  ---- !!!!!! Backup your data !!!!!
+
+Suggestions are appreciated
+
+Wish:
+ - Option to strip code: Remove empty lines, all comments, and join split expressions (&&/AND/OR/||)
+
 changes since version 11:
 - tray icon allows to toggle show/hide of GUI and to exit script
 - added progressbar if identation is done inside an editor and blockinput is used to limit interference
@@ -124,9 +121,12 @@ loop
 更新了语法文件。
 */
 
-#SingleInstance ignore
 #Requires AutoHotkey v1.1.33+
+#SingleInstance ignore
 SetBatchLines, -1
+
+Version = v13
+ScriptName =  Auto-Syntax-Tidy %Version%
 
 ;set working dir, in case this script is called from some other script in a different dir
 SetWorkingDir, %A_ScriptDir%

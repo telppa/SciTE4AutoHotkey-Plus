@@ -2,10 +2,10 @@
 ; SciTE4AutoHotkey Settings Editor
 ;
 
+#Requires AutoHotkey v1.1.33+
 #NoEnv
 #NoTrayIcon
 #SingleInstance Ignore
-#Requires AutoHotkey v1.1.33+
 SendMode Input
 SetWorkingDir, %A_ScriptDir%
 

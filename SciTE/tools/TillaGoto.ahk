@@ -30,10 +30,10 @@
 			加入提示。
 			界面改进。
 */
+	#Requires AutoHotkey v1.1.33+
 	#NoEnv
 	#NoTrayIcon
 	#SingleInstance Ignore
-	#Requires AutoHotkey v1.1.33+
 	SetTitleMatchMode, RegEx
 	DetectHiddenWindows, On
 	SetBatchLines, -1

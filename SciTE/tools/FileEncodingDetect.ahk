@@ -1,7 +1,7 @@
-﻿#NoEnv
+﻿#Requires AutoHotkey v1.1.33+
+#NoEnv
 #NoTrayIcon
 #KeyHistory 0
-#Requires AutoHotkey v1.1.33+
 SetBatchLines -1
 
 ; 检测到 bom 则直接退出，这样可以微微的加速

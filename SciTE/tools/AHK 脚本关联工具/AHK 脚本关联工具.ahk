@@ -28,9 +28,9 @@ TODO：
 2022.04.16	增加右键脚本以管理员身份运行,添加注册表操作日志 
 */
 
+#Requires AutoHotkey v1.1.33+
 #NoEnv
 #SingleInstance Force
-#Requires AutoHotkey v1.1.33+
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 

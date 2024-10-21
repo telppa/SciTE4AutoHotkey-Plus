@@ -2,10 +2,10 @@
 ; SciTE4AutoHotkey Autorun Script
 ;
 
+#Requires AutoHotkey v1.1.33+
 #NoEnv
 #NoTrayIcon
 #SingleInstance Force
-#Requires AutoHotkey v1.1.33+
 SetWorkingDir, %A_ScriptDir%
 
 公用:

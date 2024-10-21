@@ -13,10 +13,10 @@ F11 输出全部类型列表
 F12 输出批量测试结果
 */
 
+#Requires AutoHotkey v1.1.33+
 #NoEnv
 #NoTrayIcon
 #SingleInstance Force
-#Requires AutoHotkey v1.1.33+
 SetBatchLines -1
 
 SetWorkingDir %A_ScriptDir%

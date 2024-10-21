@@ -2,8 +2,8 @@
 ; SciTE4AutoHotkey Diagnostics Utility
 ;
 
-#NoEnv
 #Requires AutoHotkey v1.1.33+
+#NoEnv
 SetWorkingDir, %A_ScriptDir%
 
 if (!oSciTE := GetSciTEInstance())

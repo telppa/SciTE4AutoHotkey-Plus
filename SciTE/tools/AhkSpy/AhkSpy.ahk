@@ -25,6 +25,7 @@
     Актуальный исходник - https://raw.githubusercontent.com/serzh82saratov/AhkSpy/master/AhkSpy.ahk
 */
 
+#Requires AutoHotkey v1.1.33+
 
 Global AhkSpyVersion := 4.76
 
@@ -46,7 +47,6 @@ SingleInstance()
 #NoEnv
 #UseHook
 #KeyHistory 0
-#Requires AutoHotkey v1.1.33+
 
 SetBatchLines, -1
 ListLines, Off

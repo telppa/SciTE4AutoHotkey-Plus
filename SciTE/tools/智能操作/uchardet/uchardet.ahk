@@ -1,6 +1,6 @@
-﻿#NoEnv
+﻿#Requires AutoHotkey v1.1.33+
+#NoEnv
 #Warn ClassOverwrite
-#Requires AutoHotkey v1.1.33+
 
 /*
 在 dll 内部，会在编码确定性达到一定程度时返回，所以理论上无需担心速度而限制提供的数据大小，越多越好。

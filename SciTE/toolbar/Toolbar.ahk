@@ -3,10 +3,10 @@
 ;
 ; TillaGoto.iIncludeMode = 0x10111111
 
+#Requires AutoHotkey v1.1.33+
 #NoEnv
 #NoTrayIcon
 #SingleInstance Force ; 这里要用 Force ，否则会出现 Toolbar 启动失败，但又无法退出造成一片空白的情况。
-#Requires AutoHotkey v1.1.33+
 #Include %A_ScriptDir% ; 改变后面 #Include 的默认目录
 #Include PlatformRead.ahk
 #Include ComInterface.ahk

@@ -80,8 +80,8 @@ todo：
 
 */
 
-#NoEnv
 #Requires AutoHotkey v1.1.33+
+#NoEnv
 
 #Include <SCI>                    ; 因为定义了很多全局变量,所以必须放前面. 否则涉及到使用了全局变量的地方,就会不起作用
 

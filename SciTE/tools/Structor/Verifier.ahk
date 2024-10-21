@@ -13,10 +13,10 @@
 
 ; Derived from: https://github.com/ahkscript/AHK-SizeOf-Checker/
 
+#Requires AutoHotkey v1.1.33+
 #NoEnv
 #NoTrayIcon
 #SingleInstance Off
-#Requires AutoHotkey v1.1.33+
 SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
 
