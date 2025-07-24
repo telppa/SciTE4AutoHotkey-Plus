@@ -25,7 +25,7 @@ function find_nearest_fold_header(startLine)
   return nil
 end
 
--- 切换与光标行所在“折叠头”同层级的所有折叠块
+-- 折叠/展开与当前行同层级的所有折叠块，并恢复视图
 function ToggleFoldSameLevel()
   local SC_FOLDLEVELNUMBERMASK = 0x0FFF
   local SC_FOLDLEVELHEADERFLAG = 0x2000
@@ -43,6 +43,9 @@ function ToggleFoldSameLevel()
   local targetLevel = band(editor.FoldLevel[headerLine], SC_FOLDLEVELNUMBERMASK)
   local targetAction = editor.FoldExpanded[headerLine] and SC_FOLDACTION_CONTRACT or SC_FOLDACTION_EXPAND
 
+  -- 记录光标行在屏幕显示中位于第几行
+  local screenIndex_cursor = editor:VisibleFromDocLine(cursorLine) - editor.FirstVisibleLine
+
   local maxLine = editor.LineCount - 1
   local count = 0
 
@@ -53,6 +56,11 @@ function ToggleFoldSameLevel()
       count = count + 1
     end
   end
+
+  -- 延迟恢复视图（让折叠完成后再滚动）
+  scite.SendEditor(SCI_SETYCARETPOLICY, 0, 0) -- 取消自动滚动
+  scite.SendEditor(SCI_SETVISIBLEPOLICY, 0, 0) -- 防止强制显示某行导致跳屏
+  editor:LineScroll(0, editor:VisibleFromDocLine(cursorLine) - editor.FirstVisibleLine - screenIndex_cursor)
 
   local actionName = (targetAction == SC_FOLDACTION_CONTRACT) and "折叠" or "展开"
   print("已" .. actionName .. "层级为 " .. targetLevel .. " 的 " .. count .. " 个折叠头（以第 " .. (headerLine + 1) .. " 行为基准）")
