@@ -13,15 +13,29 @@ function band(a, b)
   return result
 end
 
--- 从光标行向上查找最近的折叠头行
+-- 从光标行向上查找对应的折叠头行
 function find_nearest_fold_header(startLine)
   local SC_FOLDLEVELHEADERFLAG = 0x2000
-  for line = startLine, 0, -1 do
+  local SC_FOLDLEVELNUMBERMASK = 0x0FFF
+
+  -- 如果当前行本身是折叠头，直接返回
+  local startLineFoldLevel = editor.FoldLevel[startLine]
+  if band(startLineFoldLevel, SC_FOLDLEVELHEADERFLAG) ~= 0 then
+    return startLine
+  end
+
+  -- 否则向上找层级比当前行小的折叠头
+  local startLineLevel = band(editor.FoldLevel[startLine], SC_FOLDLEVELNUMBERMASK)
+  for line = startLine - 1, 0, -1 do
     local foldLevel = editor.FoldLevel[line]
     if band(foldLevel, SC_FOLDLEVELHEADERFLAG) ~= 0 then
-      return line
+      local level = band(foldLevel, SC_FOLDLEVELNUMBERMASK)
+      if level < startLineLevel then
+        return line
+      end
     end
   end
+
   return nil
 end
 
